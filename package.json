@@ -32,9 +32,11 @@
   },
   "homepage": "https://github.com/keenwon/elint#readme",
   "dependencies": {
+    "chalk": "^2.4.1",
     "commander": "^2.15.1",
     "eslint": "^4.19.1",
-    "stylelint": "^9.2.0"
+    "stylelint": "^9.2.0",
+    "unicons": "0.0.3"
   },
   "devDependencies": {
     "debug": "^3.1.0"
