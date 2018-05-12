@@ -2,7 +2,7 @@
   "name": "elint",
   "version": "1.0.0",
   "description": "A easy way to lint your code.",
-  "main": "index.js",
+  "main": "lib/elint.js",
   "bin": {
     "elint": "./bin/cli.js"
   },
