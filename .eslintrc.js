@@ -9,6 +9,7 @@ module.exports = {
   },
   'rules': {
     'comma-dangle': 2,
+    'semi': ['error', 'always'],
     'no-console': 0,
     'no-cond-assign': 2,
     'no-constant-condition': 2,
