@@ -4,7 +4,7 @@
   "description": "A easy way to lint your code.",
   "main": "index.js",
   "bin": {
-    "elint": "./bin/elint.js"
+    "elint": "./bin/cli.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
