@@ -1,7 +1,9 @@
 'use strict';
 
+const path = require('path');
 const unmock = require('./mock')();
-const { normalize, verify } = require('../lib/preset');
+const { normalize, verify, getPreset } = require('../lib/preset');
+const { nodeModulesDir } = require('../lib/utils/env');
 
 const mocha = require('mocha');
 const chai = require('chai');
@@ -35,6 +37,30 @@ describe('Preset 测试', function () {
 
     it('存在的 preset', function () {
       return verify('elint-preset-normal').should.equal(true);
+    });
+  });
+
+  describe('# GetPreset 测试', function () {
+    it('空测试', function () {
+      return should.not.exist(getPreset())
+        && should.not.exist(getPreset(''));
+    });
+
+    it('正常情况', function () {
+      const result1 = {
+        stylelint: path.join(nodeModulesDir, 'elint-preset-normal/stylelint.json'),
+        eslint: path.join(nodeModulesDir, 'elint-preset-normal/eslint.json')
+      };
+
+      const result2 = {
+        stylelint: path.join(nodeModulesDir, 'elint-preset-node/stylelint.json'),
+        eslint: path.join(nodeModulesDir, 'elint-preset-node/eslint.json')
+      };
+
+      return getPreset('normal').should.deep.equal(result1)
+        && getPreset('elint-preset-normal').should.deep.equal(result1)
+        && getPreset('node').should.deep.equal(result2)
+        && getPreset('elint-preset-node').should.deep.equal(result2);
     });
   });
 
