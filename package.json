@@ -38,9 +38,12 @@
     "commander": "^2.15.1",
     "eslint": "^4.19.1",
     "execa": "^0.10.0",
+    "fs-extra": "^6.0.1",
     "globby": "^8.0.1",
     "ignore": "^3.3.8",
     "is-valid-glob": "^1.0.0",
+    "lodash": "^4.17.10",
+    "npmi": "^4.0.0",
     "stylelint": "^9.2.0",
     "supports-color": "^4",
     "unicons": "0.0.3"

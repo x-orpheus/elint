@@ -10,7 +10,7 @@ const debug = require('debug')('elint:cli');
 const program = require('commander');
 const pkg = require('../package.json');
 
-const elint = require('../lib/elint');
+const { elint, install } = require('../lib');
 
 debug('process.argv: \n%O', process.argv);
 
@@ -22,10 +22,25 @@ program
   .action(file => {
     const preset = program.preset;
 
+    debug('run eslint...');
     debug(`input files: "${file.join(', ')}"`);
     debug(`input preset: "${preset}"`);
 
     elint(file, program.preset);
+  });
+
+/**
+ * 安装 preset
+ */
+program
+  .command('install [presetName]')
+  .alias('i')
+  .option('-reg, --registry <url>')
+  .description('install or update preset')
+  .action(function (preset) {
+    debug('run install...');
+
+    install(preset);
   });
 
 program.on('--help', function () {
