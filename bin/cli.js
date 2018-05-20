@@ -19,10 +19,7 @@ program
   .description(pkg.description)
   .version(pkg.version)
   .action(files => {
-
     debug('run eslint...');
-    debug(`input files: "${files.join(', ')}"`);
-
     elint(files);
   });
 
@@ -32,12 +29,11 @@ program
 program
   .command('install [presetName]')
   .alias('i')
-  .option('-reg, --registry <url>')
+  .option('-r, --registry <url>')
   .description('install or update preset')
-  .action(function (preset) {
+  .action((preset, options) => {
     debug('run install...');
-
-    install(preset);
+    install(preset, options.registry);
   });
 
 program.on('--help', function () {
