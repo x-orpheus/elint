@@ -10,7 +10,7 @@ const debug = require('debug')('elint:cli');
 const program = require('commander');
 const pkg = require('../package.json');
 
-const { elint, install } = require('../lib');
+const { elint, install, diff } = require('../lib');
 
 debug('process.argv: \n%O', process.argv);
 
@@ -34,6 +34,18 @@ program
   .action((preset, options) => {
     debug('run install...');
     install(preset, options.registry);
+  });
+
+/**
+ * 对比 preset config
+ */
+program
+  .command('diff')
+  .alias('d')
+  .description('diff preset')
+  .action(() => {
+    debug('run diff...');
+    diff();
   });
 
 program.on('--help', function () {
