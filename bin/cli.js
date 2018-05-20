@@ -15,18 +15,15 @@ const { elint, install } = require('../lib');
 debug('process.argv: \n%O', process.argv);
 
 program
-  .arguments('[file...]')
+  .arguments('[files...]')
   .description(pkg.description)
-  .option('-p, --preset [preset]', 'Specify preset')
   .version(pkg.version)
-  .action(file => {
-    const preset = program.preset;
+  .action(files => {
 
     debug('run eslint...');
-    debug(`input files: "${file.join(', ')}"`);
-    debug(`input preset: "${preset}"`);
+    debug(`input files: "${files.join(', ')}"`);
 
-    elint(file, program.preset);
+    elint(files);
   });
 
 /**
