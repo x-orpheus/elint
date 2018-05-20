@@ -2,7 +2,7 @@
 
 const path = require('path');
 const unmock = require('../mock')();
-const findConfigFile = require('../../lib/preset/findConfigFile');
+const findConfigFiles = require('../../lib/preset/findConfigFiles');
 
 const mocha = require('mocha');
 const chai = require('chai');
@@ -23,9 +23,9 @@ describe('FindConfigFile 测试', function () {
   after(() => unmock);
 
   it('目录不存在', function () {
-    return findConfigFile('/a/b/c/d').should.be.deep.equal([])
-      && findConfigFile(123).should.be.deep.equal([])
-      && findConfigFile().should.be.deep.equal([]);
+    return findConfigFiles('/a/b/c/d').should.be.deep.equal([])
+      && findConfigFiles(123).should.be.deep.equal([])
+      && findConfigFiles().should.be.deep.equal([]);
   });
 
   it('常规测试', function () {
@@ -38,8 +38,8 @@ describe('FindConfigFile 测试', function () {
       path.join(presetNormalPath, '.stylelintrc.js')
     ];
 
-    return findConfigFile(presetNodePath).should.be.deep.equal(result1)
-      && findConfigFile(presetNormalPath).should.be.deep.equal(result2);
+    return findConfigFiles(presetNodePath).should.be.deep.equal(result1)
+      && findConfigFiles(presetNormalPath).should.be.deep.equal(result2);
   });
 
 });

@@ -3,7 +3,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const unmock = require('../mock')();
-const updateConfigFile = require('../../lib/preset/updateConfigFile');
+const updateConfigFiles = require('../../lib/preset/updateConfigFiles');
 const { baseDir } = require('../../lib/utils/env');
 
 const mocha = require('mocha');
@@ -33,12 +33,12 @@ describe('UpdateConfigFile 测试', function () {
   });
 
   it('空测试', function () {
-    updateConfigFile();
+    updateConfigFiles();
     return fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(fileList);
   });
 
   it('文件不存在', function () {
-    updateConfigFile('/a/b/c/d/e/f.asdf');
+    updateConfigFiles('/a/b/c/d/e/f.asdf');
     return fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(fileList);
   });
 
@@ -51,7 +51,7 @@ describe('UpdateConfigFile 测试', function () {
       fileName
     );
 
-    updateConfigFile(filePath);
+    updateConfigFiles(filePath);
     return fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(result);
   });
 
@@ -66,8 +66,8 @@ describe('UpdateConfigFile 测试', function () {
     );
 
     // 执行两次，模拟文件已存在
-    updateConfigFile(filePath);
-    updateConfigFile(filePath);
+    updateConfigFiles(filePath);
+    updateConfigFiles(filePath);
 
     return fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(result);
   });
