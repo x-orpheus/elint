@@ -55,7 +55,23 @@ describe('UpdateConfigFile 测试', function () {
     return fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(result);
   });
 
-  it('文件已经存在', function () {
+  it('文件已经存在, keep = false', function () {
+    const fileName = '.stylelintrc.js';
+    const result = [].concat(...fileList, fileName);
+    const filePath = path.join(
+      __dirname,
+      '../test-project/node_modules/elint-preset-node',
+      fileName
+    );
+
+    // 执行两次，模拟文件已存在
+    updateConfigFiles(filePath);
+    updateConfigFiles(filePath);
+
+    return fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(result);
+  });
+
+  it('文件已经存在, keep = true', function () {
     const fileName = '.stylelintrc.js';
     const oldFileName = '.stylelintrc.old.js';
     const result = [].concat(...fileList, fileName, oldFileName);
@@ -66,8 +82,8 @@ describe('UpdateConfigFile 测试', function () {
     );
 
     // 执行两次，模拟文件已存在
-    updateConfigFiles(filePath);
-    updateConfigFiles(filePath);
+    updateConfigFiles(filePath, true);
+    updateConfigFiles(filePath, true);
 
     return fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(result);
   });
