@@ -43,6 +43,7 @@
     "globby": "^8.0.1",
     "ignore": "^3.3.8",
     "is-valid-glob": "^1.0.0",
+    "left-pad": "^1.3.0",
     "lodash": "^4.17.10",
     "npmi": "^4.0.0",
     "stylelint": "^9.2.0",
