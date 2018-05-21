@@ -30,10 +30,14 @@ program
   .command('install [presetName]')
   .alias('i')
   .option('-r, --registry <url>')
+  .option('-k, --keep')
   .description('install or update preset')
   .action((preset, options) => {
     debug('run install...');
-    install(preset, options.registry);
+    install(preset, {
+      registry: options.registry,
+      keep: options.keep
+    });
   });
 
 /**
