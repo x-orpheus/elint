@@ -10,7 +10,7 @@ const debug = require('debug')('elint:cli');
 const program = require('commander');
 const pkg = require('../package.json');
 
-const { elint, install, diff } = require('../lib');
+const { elint, install, diff, commitlint } = require('../lib');
 
 debug('process.argv: \n%O', process.argv);
 
@@ -50,6 +50,19 @@ program
   .action(() => {
     debug('run diff...');
     diff();
+  });
+
+
+/**
+ * 执行 commitlint
+ */
+program
+  .command('commitlint')
+  .alias('cl')
+  .description('run commit lint')
+  .action(() => {
+    debug('run commit lint...');
+    commitlint();
   });
 
 program.on('--help', function () {

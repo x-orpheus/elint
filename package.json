@@ -34,7 +34,9 @@
   },
   "homepage": "https://github.com/keenwon/elint#readme",
   "dependencies": {
+    "@commitlint/core": "^6.2.0",
     "chalk": "^2.4.1",
+    "co": "^4.6.0",
     "commander": "^2.15.1",
     "diff": "^3.5.0",
     "eslint": "^4.19.1",
