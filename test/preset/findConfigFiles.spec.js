@@ -23,9 +23,9 @@ describe('FindConfigFile 测试', function () {
   after(() => unmock);
 
   it('目录不存在', function () {
-    return findConfigFiles('/a/b/c/d').should.be.deep.equal([])
-      && findConfigFiles(123).should.be.deep.equal([])
-      && findConfigFiles().should.be.deep.equal([]);
+    findConfigFiles('/a/b/c/d').should.be.deep.equal([]);
+    findConfigFiles(123).should.be.deep.equal([]);
+    findConfigFiles().should.be.deep.equal([]);
   });
 
   it('常规测试', function () {
@@ -38,8 +38,8 @@ describe('FindConfigFile 测试', function () {
       path.join(presetNormalPath, '.stylelintrc.js')
     ];
 
-    return findConfigFiles(presetNodePath).should.be.deep.equal(result1)
-      && findConfigFiles(presetNormalPath).should.be.deep.equal(result2);
+    findConfigFiles(presetNodePath).should.be.deep.equal(result1);
+    findConfigFiles(presetNormalPath).should.be.deep.equal(result2);
   });
 
 });

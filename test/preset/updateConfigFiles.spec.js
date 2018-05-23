@@ -34,12 +34,12 @@ describe('UpdateConfigFile 测试', function () {
 
   it('空测试', function () {
     updateConfigFiles();
-    return fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(fileList);
+    fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(fileList);
   });
 
   it('文件不存在', function () {
     updateConfigFiles('/a/b/c/d/e/f.asdf');
-    return fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(fileList);
+    fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(fileList);
   });
 
   it('新文件', function () {
@@ -52,7 +52,7 @@ describe('UpdateConfigFile 测试', function () {
     );
 
     updateConfigFiles(filePath);
-    return fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(result);
+    fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(result);
   });
 
   it('文件已经存在, keep = false', function () {
@@ -68,7 +68,7 @@ describe('UpdateConfigFile 测试', function () {
     updateConfigFiles(filePath);
     updateConfigFiles(filePath);
 
-    return fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(result);
+    fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(result);
   });
 
   it('文件已经存在, keep = true, files same', function () {
@@ -84,7 +84,7 @@ describe('UpdateConfigFile 测试', function () {
     updateConfigFiles(filePath, true);
     updateConfigFiles(filePath, true);
 
-    return fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(result);
+    fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(result);
   });
 
   it('文件已经存在, keep = true, files different', function () {
@@ -103,6 +103,6 @@ describe('UpdateConfigFile 测试', function () {
     fs.appendFileSync(destFilePath, 'console.log(1);'); // 修改文件
     updateConfigFiles(filePath, true);
 
-    return fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(result);
+    fs.readdirSync(baseDir).should.be.deep.equalInAnyOrder(result);
   });
 });

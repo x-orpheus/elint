@@ -21,7 +21,7 @@ describe('log 测试', function () {
 
     it('空测试', function () {
       error();
-      return console.log.notCalled.should.be.true;
+      console.log.notCalled.should.be.true;
     });
 
     it('单条信息', function () {
@@ -30,8 +30,8 @@ describe('log 测试', function () {
 
       error('hello world!');
 
-      return console.log.getCall(0).args[0].should.be.equal(except)
-        && console.log.calledOnce.should.be.true;
+      console.log.getCall(0).args[0].should.be.equal(except);
+      console.log.calledOnce.should.be.true;
     });
 
     it('多条信息', function () {
@@ -40,8 +40,8 @@ describe('log 测试', function () {
 
       error(...message);
 
-      return console.log.getCall(0).args[0].should.be.equal(except)
-        && console.log.calledOnce.should.be.true;
+      console.log.getCall(0).args[0].should.be.equal(except);
+      console.log.calledOnce.should.be.true;
     });
   });
 

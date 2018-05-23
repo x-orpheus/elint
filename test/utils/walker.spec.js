@@ -25,8 +25,8 @@ describe('Walker 测试', function () {
         eslint: []
       };
 
-      return walker().should.be.deep.equalInAnyOrder(result)
-        && walker([]).should.be.deep.equalInAnyOrder(result);
+      walker().should.be.deep.equalInAnyOrder(result);
+      walker([]).should.be.deep.equalInAnyOrder(result);
     });
 
     it('单条 glob', function () {
@@ -35,7 +35,7 @@ describe('Walker 测试', function () {
         eslint: [getPath('src/a.js')]
       };
 
-      return walker('src/*.js').should.be.deep.equalInAnyOrder(result);
+      walker('src/*.js').should.be.deep.equalInAnyOrder(result);
     });
 
     it('单条 glob, 匹配空', function () {
@@ -44,7 +44,7 @@ describe('Walker 测试', function () {
         eslint: []
       };
 
-      return walker('src/*.ts').should.be.deep.equalInAnyOrder(result);
+      walker('src/*.ts').should.be.deep.equalInAnyOrder(result);
     });
 
     it('单条 glob, deep', function () {
@@ -56,7 +56,7 @@ describe('Walker 测试', function () {
         ]
       };
 
-      return walker('src/**/*.js').should.be.deep.equalInAnyOrder(result);
+      walker('src/**/*.js').should.be.deep.equalInAnyOrder(result);
     });
 
     it('单条 glob, deep', function () {
@@ -70,7 +70,7 @@ describe('Walker 测试', function () {
         ]
       };
 
-      return walker('src/**/*').should.be.deep.equalInAnyOrder(result);
+      walker('src/**/*').should.be.deep.equalInAnyOrder(result);
     });
 
     it('多条 glob', function () {
@@ -83,7 +83,7 @@ describe('Walker 测试', function () {
         ]
       };
 
-      return walker(['src/*.js', 'src/*.css']).should.be.deep.equalInAnyOrder(result);
+      walker(['src/*.js', 'src/*.css']).should.be.deep.equalInAnyOrder(result);
     });
 
     it('多条 glob, 匹配空', function () {
@@ -92,7 +92,7 @@ describe('Walker 测试', function () {
         eslint: []
       };
 
-      return walker(['src/**/*.ts', 'dist/**/*.ts']).should.be.deep.equalInAnyOrder(result);
+      walker(['src/**/*.ts', 'dist/**/*.ts']).should.be.deep.equalInAnyOrder(result);
     });
 
     it('多条 glob, deep', function () {
@@ -106,7 +106,7 @@ describe('Walker 测试', function () {
         ]
       };
 
-      return walker(['src/**/*.js', 'src/**/*.css']).should.be.deep.equalInAnyOrder(result);
+      walker(['src/**/*.js', 'src/**/*.css']).should.be.deep.equalInAnyOrder(result);
     });
   });
 
@@ -134,7 +134,7 @@ describe('Walker 测试', function () {
         ]
       };
 
-      return walker('**/*.js').should.be.deep.equalInAnyOrder(result);
+      walker('**/*.js').should.be.deep.equalInAnyOrder(result);
     });
 
     it('文件存在，为空，没有任何忽略规则', function () {
@@ -156,7 +156,7 @@ describe('Walker 测试', function () {
 
       createIgnoreFile('');
 
-      return walker('**/*.js').should.be.deep.equalInAnyOrder(result);
+      walker('**/*.js').should.be.deep.equalInAnyOrder(result);
     });
 
     it('单条忽略测试', function () {
@@ -172,7 +172,7 @@ describe('Walker 测试', function () {
 
       createIgnoreFile('**/node_modules/**');
 
-      return walker('**/*.js').should.be.deep.equalInAnyOrder(result);
+      walker('**/*.js').should.be.deep.equalInAnyOrder(result);
     });
 
     it('多条忽略测试', function () {
@@ -186,7 +186,7 @@ describe('Walker 测试', function () {
 
       createIgnoreFile('**/node_modules/**\n**/src/**');
 
-      return walker('**/*.js').should.be.deep.equalInAnyOrder(result);
+      walker('**/*.js').should.be.deep.equalInAnyOrder(result);
     });
 
     it('注释测试', function () {
@@ -200,7 +200,7 @@ describe('Walker 测试', function () {
 
       createIgnoreFile('**/node_modules/**\n**/src/**\n#**/app/**');
 
-      return walker('**/*.js').should.be.deep.equalInAnyOrder(result);
+      walker('**/*.js').should.be.deep.equalInAnyOrder(result);
     });
   });
 });
