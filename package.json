@@ -2,7 +2,7 @@
   "name": "elint",
   "version": "1.0.0",
   "description": "A easy way to lint your code.",
-  "main": "lib/elint.js",
+  "main": "lib/index.js",
   "bin": {
     "elint": "./bin/cli.js"
   },
@@ -18,10 +18,14 @@
   "keywords": [
     "eslint",
     "stylelint",
+    "commitlint",
     "standard",
     "jshint",
     "lint",
-    "linter"
+    "linter",
+    "husky",
+    "hooks",
+    "git hooks"
   ],
   "author": {
     "name": "keenwon",
