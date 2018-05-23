@@ -22,4 +22,10 @@ describe('Normalize 测试', function () {
     normalize('elint-preset-na-me').should.equal('elint-preset-na-me');
   });
 
+  it('scope 测试', function () {
+    normalize('name', '@scope').should.equal('@scope/elint-preset-name');
+    normalize('elint-preset-name', '@scope').should.equal('@scope/elint-preset-name');
+    normalize('elint-preset-na-me', '@scope').should.equal('@scope/elint-preset-na-me');
+  });
+
 });
