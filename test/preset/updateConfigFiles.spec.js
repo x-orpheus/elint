@@ -4,7 +4,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const unmock = require('../mock')();
 const updateConfigFiles = require('../../lib/preset/updateConfigFiles');
-const { baseDir } = require('../../lib/utils/env');
+const { baseDir } = require('../../lib/env');
 
 const mocha = require('mocha');
 const deepEqualInAnyOrder = require('deep-equal-in-any-order');

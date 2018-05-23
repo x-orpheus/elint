@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const unmock = require('../mock')();
 const walker = require('../../lib/utils/walker');
-const { baseDir } = require('../../lib/utils/env');
+const { baseDir } = require('../../lib/env');
 
 const mocha = require('mocha');
 const deepEqualInAnyOrder = require('deep-equal-in-any-order');
