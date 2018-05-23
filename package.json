@@ -41,6 +41,7 @@
     "diff": "^3.5.0",
     "eslint": "^4.19.1",
     "execa": "^0.10.0",
+    "figures": "^2.0.0",
     "fs-extra": "^6.0.1",
     "globby": "^8.0.1",
     "husky": "^1.0.0-rc.6",
@@ -50,8 +51,7 @@
     "lodash": "^4.17.10",
     "npmi": "^4.0.0",
     "stylelint": "^9.2.0",
-    "supports-color": "^4",
-    "unicons": "0.0.3"
+    "supports-color": "^4"
   },
   "devDependencies": {
     "chai": "^4.1.2",

@@ -1,7 +1,7 @@
 'use strict';
 
 const chalk = require('chalk');
-const unicons = require('unicons');
+const figures = require('figures');
 const { error } = require('../../lib/utils/log');
 
 const sinon = require('sinon');
@@ -26,7 +26,7 @@ describe('log 测试', function () {
 
     it('单条信息', function () {
       const message = 'hello world!';
-      const except = chalk.red(`\n  ${unicons.cross} ${message}\n`);
+      const except = chalk.red(`\n  ${figures.cross} ${message}\n`);
 
       error('hello world!');
 
@@ -36,7 +36,7 @@ describe('log 测试', function () {
 
     it('多条信息', function () {
       const message = ['hello', 'world!'];
-      const except = chalk.red(`\n  ${unicons.cross} ${message[0]}\n    ${message[1]}\n`);
+      const except = chalk.red(`\n  ${figures.cross} ${message[0]}\n    ${message[1]}\n`);
 
       error(...message);
 

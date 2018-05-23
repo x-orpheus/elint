@@ -9,25 +9,40 @@
 const debug = require('debug')('elint:cli');
 const program = require('commander');
 const pkg = require('../package.json');
-
-const {
-  elint,
-  install,
-  diff,
-  commitlint,
-  installHooks,
-  uninstallHooks
-} = require('../lib');
+const { elint, install, diff, commitlint, runHooks } = require('../lib');
 
 debug('process.argv: \n%O', process.argv);
 
 program
-  .arguments('[files...]')
   .description(pkg.description)
-  .version(pkg.version)
-  .action(files => {
-    debug('run eslint...');
-    elint(files);
+  .version(pkg.version);
+
+/**
+ * 执行 lint
+ * 不指定 type，执行除了 commitlint 之外的全部
+ */
+program
+  .command('lint [type] [files...]')
+  .alias('l')
+  .description('执行 lint, type: eslint, stylelint, commitlint...')
+  .action((type, files, options) => {
+    debug('run lint...');
+
+    if (type === 'commitlint') {
+      commitlint();
+      return;
+    }
+
+    let parsedFiles, parsedType;
+
+    if (['stylelint', 'eslint'].includes(type)) {
+      parsedFiles = files;
+      parsedType = type;
+    } else {
+      parsedFiles = [type, ...files];
+    }
+
+    elint(parsedFiles, parsedType);
   });
 
 /**
@@ -59,31 +74,15 @@ program
     diff();
   });
 
-program
-  .command('install-hooks')
-  .description('install hooks')
-  .action(() => {
-    debug('run install hooks...');
-    installHooks();
-  });
-
-program
-  .command('uninstall-hooks')
-  .description('uninstall hooks')
-  .action(() => {
-    debug('run uninstall hooks...');
-    uninstallHooks();
-  });
-
 /**
- * 执行 commitlint
+ * install & uninstall hooks
  */
 program
-  .command('commitlint')
-  .description('run commit lint')
-  .action(() => {
-    debug('run commit lint...');
-    commitlint();
+  .command('hooks [action]')
+  .description('install & uninstall hooks')
+  .action(action => {
+    debug(`run ${action} hooks...`);
+    runHooks(action);
   });
 
 program.on('--help', function () {
