@@ -3,7 +3,7 @@
 const debug = require('debug')('elint:preset:updateConfigFile');
 const fs = require('fs-extra');
 const path = require('path');
-const jsDiff = require('diff');
+const md5 = require('md5');
 const { baseDir } = require('../env');
 
 /**
@@ -16,10 +16,10 @@ const { baseDir } = require('../env');
 function isSameFile(newFilePath, oldFilePath) {
   const newFileContent = fs.readFileSync(newFilePath, { encoding: 'utf-8' });
   const oldFileContent = fs.readFileSync(oldFilePath, { encoding: 'utf-8' });
+  const newHash = md5(newFileContent);
+  const oldHash = md5(oldFileContent);
 
-  const diff = jsDiff.structuredPatch('', '', newFileContent, oldFileContent);
-
-  return !diff.hunks.length;
+  return newHash === oldHash;
 }
 
 /**
