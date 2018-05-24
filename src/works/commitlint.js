@@ -1,12 +1,12 @@
 'use strict';
 
+const debug = require('debug')('elint:works:commitlint');
 const co = require('co');
-const {
-  format,
-  load,
-  lint,
-  read
-} = require('@commitlint/core');
+const fs = require('fs-extra');
+const path = require('path');
+const { format, load, lint, read } = require('@commitlint/core');
+const log = require('../utils/log');
+const { baseDir } = require('../env');
 
 /**
  * run commitlint
@@ -15,8 +15,22 @@ const {
  */
 function commitlint() {
   co(function* () {
+    const readOptions = {
+      cwd: baseDir,
+      edit: '.git/COMMIT_EDITMSG'
+    };
+
+    debug('commitlint.read options: %o', readOptions);
+
+    const gitMsgFilePath = path.join(readOptions.cwd, readOptions.edit);
+
+    if (!fs.existsSync(gitMsgFilePath)) {
+      debug(`can not found "${gitMsgFilePath}"`);
+      throw new Error('无法读取 git commit 信息');
+    }
+
     const [message, config] = yield Promise.all([
-      read({ edit: '.git/COMMIT_EDITMSG' }),
+      read(readOptions),
       load()
     ]);
 
@@ -25,8 +39,11 @@ function commitlint() {
     const report = yield lint(message[0], rules, options);
     const formatted = format(report);
 
-    process.stdout.write(formatted.join('\n'));
+    console.log(formatted.join('\n'));
     process.exit(report.errors.length ? 1 : 0);
+  }).catch(error => {
+    log.error(error.message);
+    process.exit(1);
   });
 }
 
