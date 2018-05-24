@@ -9,7 +9,7 @@
 const debug = require('debug')('elint:cli');
 const program = require('commander');
 const pkg = require('../package.json');
-const { elint, install, diff, commitlint, runHooks } = require('../lib');
+const { elint, install, diff, commitlint, runHooks } = require('../src');
 
 debug('process.argv: \n%O', process.argv);
 

@@ -1,8 +1,8 @@
 'use strict';
 
 const path = require('path');
+const exec = require('./lib/exec');
 const walker = require('./utils/walker');
-const worker = require('./utils/worker');
 const report = require('./utils/report');
 
 /**
@@ -24,12 +24,12 @@ function elint(files) {
     process.exit();
   }
 
-  const eslintLinter = path.join(__dirname, 'linters/eslint.js');
-  const stylelintLinter = path.join(__dirname, 'linters/stylelint.js');
+  const eslintLinter = path.join(__dirname, 'works/eslint.js');
+  const stylelintLinter = path.join(__dirname, 'works/stylelint.js');
 
   Promise.all([
-    worker(eslintLinter, ...fileList.eslint),
-    worker(stylelintLinter, ...fileList.stylelint)
+    exec(eslintLinter, ...fileList.eslint),
+    exec(stylelintLinter, ...fileList.stylelint)
   ]).then(([eslintOutput, stylelintOutput]) => {
     report({
       eslint: eslintOutput.stdout,

@@ -1,8 +1,8 @@
 'use strict';
 
 const debug = require('debug')('elint:preset:link');
-const findConfigFiles = require('./findConfigFiles');
-const updateConfigFiles = require('./updateConfigFiles');
+const findConfigFiles = require('./find-config-files');
+const updateConfigFiles = require('./update-config-files');
 
 /**
  * 把各种 lint 的配置文件，移动到根目录

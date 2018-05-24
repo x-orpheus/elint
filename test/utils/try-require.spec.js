@@ -2,7 +2,7 @@
 
 const path = require('path');
 const unmock = require('../mock')();
-const tryRequire = require('../../lib/utils/try-require');
+const tryRequire = require('../../src/utils/try-require');
 
 const mocha = require('mocha');
 const chai = require('chai');

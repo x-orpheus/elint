@@ -2,7 +2,7 @@
 
 const chalk = require('chalk');
 const figures = require('figures');
-const { error, success, info, warn } = require('../../lib/utils/log');
+const { error, success, info, warn } = require('../../src/utils/log');
 
 const sinon = require('sinon');
 const mocha = require('mocha');

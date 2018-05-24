@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "npm run test:lint && npm run test:unit",
-    "test:lint": "eslint --format codeframe \"bin/**/*.js\" \"lib/**/*.js\" \"test/**/*.js\"",
+    "test:lint": "eslint --format codeframe \"bin/**/*.js\" \"src/**/*.js\" \"test/**/*.js\"",
     "test:unit": "nyc --reporter=html --reporter=text mocha \"test/**/*.spec.js\" && nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {

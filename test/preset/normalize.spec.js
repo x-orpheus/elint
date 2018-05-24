@@ -1,6 +1,6 @@
 'use strict';
 
-const normalize = require('../../lib/preset/normalize');
+const normalize = require('../../src/preset/normalize');
 
 const mocha = require('mocha');
 const chai = require('chai');

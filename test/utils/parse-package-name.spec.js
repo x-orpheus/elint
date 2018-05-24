@@ -1,6 +1,6 @@
 'use strict';
 
-const parse = require('../../lib/utils/parse-package-name');
+const parse = require('../../src/utils/parse-package-name');
 
 const mocha = require('mocha');
 const chai = require('chai');

@@ -6,6 +6,6 @@ exports.install = require('./preset/install');
 
 exports.diff = require('./preset/diff');
 
-exports.commitlint = require('./linters/commitlint');
+exports.commitlint = require('./works/commitlint');
 
-exports.runHooks = require('./hook');
+exports.runHooks = require('./hooks');

@@ -1,6 +1,6 @@
 'use strict';
 
-const debug = require('debug')('elint:utils:worker');
+const debug = require('debug')('elint:lib:exec');
 const execa = require('execa');
 
 /**
@@ -9,9 +9,9 @@ const execa = require('execa');
  * @param {...string} argus node 参数
  * @return {Promise} promise
  */
-function worker(...argus) {
+function exec(...argus) {
   debug(`run: node ${argus.join(' ')} --color`);
   return execa('node', [...argus, '--color']);
 }
 
-module.exports = worker;
+module.exports = exec;

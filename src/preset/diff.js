@@ -6,7 +6,7 @@ const path = require('path');
 const jsDiff = require('diff');
 const chalk = require('chalk');
 const leftPad = require('left-pad');
-const findConfigFiles = require('./findConfigFiles');
+const findConfigFiles = require('./find-config-files');
 const { baseDir } = require('../env');
 
 /**

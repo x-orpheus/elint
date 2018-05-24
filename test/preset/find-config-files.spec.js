@@ -2,7 +2,7 @@
 
 const path = require('path');
 const unmock = require('../mock')();
-const findConfigFiles = require('../../lib/preset/findConfigFiles');
+const findConfigFiles = require('../../src/preset/find-config-files');
 
 const mocha = require('mocha');
 const chai = require('chai');
