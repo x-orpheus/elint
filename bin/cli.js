@@ -10,6 +10,7 @@ const debug = require('debug')('elint:cli');
 const program = require('commander');
 const pkg = require('../package.json');
 const { elint, install, diff, commitlint, runHooks } = require('../src');
+const log = require('../src/utils/log');
 
 debug('process.argv: \n%O', process.argv);
 
@@ -89,6 +90,23 @@ program
     runHooks(action);
   });
 
+/**
+ * 未知 command
+ */
+program.on('command:*', function () {
+  const command = program.args.join(' ');
+  const message = [
+    `Invalid command: ${command}`,
+    'See --help for a list of available commands.'
+  ];
+
+  log.error(...message);
+  process.exit(1);
+});
+
+/**
+ * 输出 help
+ */
 program.on('--help', function () {
   console.log('');
   console.log('  Examples:');
