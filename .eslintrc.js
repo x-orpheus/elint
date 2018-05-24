@@ -41,7 +41,7 @@ module.exports = {
     'no-unexpected-multiline': 2,
     'no-unreachable': 2,
     'use-isnan': 2,
-    'valid-jsdoc': 0,
+    'valid-jsdoc': 2,
     'valid-typeof': 2,
     'block-scoped-var': 2,
     'curly': 2,
