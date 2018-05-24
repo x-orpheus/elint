@@ -28,6 +28,10 @@ program
   .action((type, files, options) => {
     debug('run lint...');
 
+    if (!type || !files) {
+      return;
+    }
+
     if (type === 'commitlint') {
       commitlint();
       return;
