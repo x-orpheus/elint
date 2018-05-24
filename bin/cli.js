@@ -8,15 +8,24 @@
 
 const debug = require('debug')('elint:cli');
 const program = require('commander');
-const pkg = require('../package.json');
-const { elint, install, diff, commitlint, runHooks } = require('../src');
+const { description } = require('../package.json');
+const { elint, install, diff, commitlint, runHooks, version } = require('../src');
 const log = require('../src/utils/log');
 
-debug('process.argv: \n%O', process.argv);
+debug('process.argv: %o', process.argv);
 
 program
-  .description(pkg.description)
-  .version(pkg.version);
+  .usage('[command] [options]')
+  .description(description);
+
+/**
+ * 输出 version
+ */
+program
+  .option('-v, --version', 'output the version number', () => {
+    version();
+    process.exit();
+  });
 
 /**
  * 执行 lint
@@ -25,7 +34,7 @@ program
 program
   .command('lint [type] [files...]')
   .alias('l')
-  .description('执行 lint, type: eslint, stylelint, commitlint...')
+  .description('run lint, type: eslint, stylelint, commitlint...')
   .action((type, files, options) => {
     debug('run lint...');
 
@@ -84,6 +93,7 @@ program
  */
 program
   .command('hooks [action]')
+  .alias('h')
   .description('install & uninstall hooks')
   .action(action => {
     debug(`run ${action} hooks...`);
@@ -112,7 +122,7 @@ program.on('--help', function () {
   console.log('  Examples:');
   console.log('');
   console.log('    lint file1.js and file2.css：');
-  console.log('    $ elint --preset normal "file1.js" "file2.css"');
+  console.log('    $ elint lint "file1.js" "file2.css"');
   console.log('');
 });
 

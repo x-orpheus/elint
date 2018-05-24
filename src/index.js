@@ -9,3 +9,5 @@ exports.diff = require('./preset/diff');
 exports.commitlint = require('./works/commitlint');
 
 exports.runHooks = require('./hooks');
+
+exports.version = require('./version');
