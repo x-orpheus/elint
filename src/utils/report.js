@@ -26,23 +26,28 @@ function reduceEmptyLine(string) {
 }
 
 /**
+ * @typedef Output
+ * @property {string} name 段落名
+ * @property {string} content 段落内容
+ */
+
+/**
  * report
  *
- * @param {string} output 要输出到命令行的内容
+ * @param {Output[]} outputs 要输出到命令行的内容
  * @returns {void}
  */
-function report(output) {
+function report(outputs) {
   const arr = [];
 
-  Object.entries(output).forEach(([linterName, linterOutput]) => {
-    if (!linterOutput || !linterOutput.trim()) {
-      return;
-    }
+  outputs.forEach(output => {
+    const name = output.name;
+    const content = output.content;
 
     arr.push('\n');
-    arr.push(`${chalk.bold(`> ${linterName} output:`)}\n`);
+    arr.push(`${chalk.bold(`> ${name}:`)}\n`);
     arr.push('\n');
-    arr.push(padding(linterOutput));
+    arr.push(padding(content));
     arr.push('\n');
   });
 

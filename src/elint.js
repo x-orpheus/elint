@@ -23,10 +23,18 @@ function elint(files) {
     eslint(...fileList.eslint),
     stylelint(...fileList.stylelint)
   ]).then(([eslintOutput, stylelintOutput]) => {
-    report({
-      eslint: eslintOutput.stdout,
-      stylelint: stylelintOutput.stdout
-    });
+    const outputs = [
+      {
+        name: 'eslint',
+        content: eslintOutput.stdout
+      },
+      {
+        name: 'stylelint',
+        content: stylelintOutput.stdout
+      }
+    ];
+
+    report(outputs);
   }).catch(error => {
     console.error(error);
   });
