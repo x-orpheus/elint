@@ -1,10 +1,9 @@
 'use strict';
 
-const exec = require('./lib/exec');
 const walker = require('./utils/walker');
 const report = require('./utils/report');
-const eslintLinter = require.resolve('./works/eslint.js');
-const stylelintLinter = require.resolve('./works/stylelint.js');
+const eslint = require('./works/eslint');
+const stylelint = require('./works/stylelint');
 
 /**
  * 主函数
@@ -21,8 +20,8 @@ function elint(files) {
   }
 
   Promise.all([
-    exec(eslintLinter, ...fileList.eslint),
-    exec(stylelintLinter, ...fileList.stylelint)
+    eslint(...fileList.eslint),
+    stylelint(...fileList.stylelint)
   ]).then(([eslintOutput, stylelintOutput]) => {
     report({
       eslint: eslintOutput.stdout,
