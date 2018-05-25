@@ -10,7 +10,7 @@ const eslintLinter = require.resolve('./eslint.js');
  * @returns {Promise} promise
  */
 function eslint(...argus) {
-  return exec(eslintLinter, ...argus);
+  return exec('node')(eslintLinter, ...argus);
 }
 
 module.exports = eslint;

@@ -10,7 +10,7 @@ const stylelintLinter = require.resolve('./stylelint.js');
  * @returns {Promise} promise
  */
 function stylelint(...argus) {
-  return exec(stylelintLinter, ...argus);
+  return exec('node')(stylelintLinter, ...argus);
 }
 
 module.exports = stylelint;
