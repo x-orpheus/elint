@@ -45,7 +45,9 @@ describe('Write package json 测试', function () {
       const content = fs.readFileSync(pkgPath);
       const pkgData = JSON.parse(content);
 
-      if (pkgData['elint-preset-test'] === '*') {
+      console.log(pkgData);
+
+      if (pkgData.devDependencies['elint-preset-test'] === '*') {
         done();
       }
     });

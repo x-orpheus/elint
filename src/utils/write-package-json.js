@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs-extra');
 const lodash = require('lodash');
 const writeJsonFile = require('write-json-file');
+const sort = require('./sort-object');
 const { baseDir } = require('../env');
 
 /**
@@ -31,7 +32,22 @@ function writePackageJson(devDependencies) {
     return Promise.resolve();
   }
 
-  return writeJsonFile(pkgPath, devDependencies, {
+  let content;
+
+  try {
+    content = JSON.parse(fs.readFileSync(pkgPath));
+  } catch (error) {
+    debug('parse package.json error');
+    return Promise.resolve();
+  }
+
+  content.devDependencies = sort(Object.assign(
+    {},
+    content.devDependencies || {},
+    devDependencies
+  ));
+
+  return writeJsonFile(pkgPath, content, {
     detectIndent: true
   });
 }
