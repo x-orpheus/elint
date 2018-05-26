@@ -55,6 +55,7 @@
     "lodash": "^4.17.10",
     "md5": "^2.2.1",
     "npmi": "^4.0.0",
+    "semver-utils": "^1.1.2",
     "stylelint": "^9.2.0",
     "supports-color": "^4",
     "write-json-file": "^2.3.0"
