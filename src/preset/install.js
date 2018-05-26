@@ -1,11 +1,16 @@
 'use strict';
 
 const debug = require('debug')('elint:preset:install');
+const os = require('os');
+const fs = require('fs-extra');
+const path = require('path');
+const co = require('co');
+const npmInstall = require('../lib/npm-install');
 const log = require('../utils/log');
-const parse = require('../utils/parse-package-name');
+const { parse } = require('../utils/package-name');
+const packageVersion = require('../utils/package-version');
+const writePkg = require('../utils/write-package-json');
 const { registryAlias } = require('../config');
-const normalize = require('./normalize');
-const download = require('./download');
 const link = require('./link');
 
 /**
@@ -27,26 +32,27 @@ function getRegistryUrl(registry) {
 /**
  * 安装 preset
  *
- * @param {string} name preset name
+ * @param {string} presetName preset name
  * @param {InstallOptions} options install options
  * @returns {void}
  */
-function install(name, options) {
-  debug(`install package name: ${name}`);
+function install(presetName, options) {
+  debug(`install package name: ${presetName}`);
   debug('install options: %o', options);
 
-  const presetNameObj = parse(name);
+  const { name, version, scope } = parse(presetName);
 
-  debug('preset name object: %o', presetNameObj);
+  debug('preset name object: %o', {
+    name,
+    version,
+    scope
+  });
 
-  if (!presetNameObj) {
+  if (!name) {
     log.error('请输入正确的 presetName.');
     process.exit(1);
   }
 
-  const presetName = presetNameObj.name;
-  const version = presetNameObj.version;
-  const scope = presetNameObj.scope;
   const registryUrl = getRegistryUrl(options.registry);
   const keep = options.keep;
 
@@ -56,23 +62,59 @@ function install(name, options) {
     process.exit(1);
   }
 
-  const normalizedPresetName = normalize(presetName, scope);
+  // 临时安装目录
+  const tmpdir = path.join(os.tmpdir(), `elint_tmp_${Date.now()}`);
+  const presetModulePath = path.join(tmpdir, `lib/node_modules/${name}`);
+  const presetPkgPath = path.join(presetModulePath, 'package.json');
 
-  debug(`normalized preset name: ${normalizedPresetName}`);
+  debug(`tmpdir: ${tmpdir}`);
+  debug(`preset module path: ${presetModulePath}`);
+  debug(`preset package.json path: ${presetPkgPath}`);
 
-  download(normalizedPresetName, version, registryUrl)
-    .then(({ presetModuleName, presetModulePath }) => {
-      debug(`preset module: ${presetModuleName}`);
-      debug(`preset module path: ${presetModulePath}`);
+  fs.ensureDirSync(tmpdir);
 
-      setTimeout(() => {
-        link(presetModulePath, keep);
-      }, 10);
-    })
-    .catch(error => {
-      log.error(error.message);
-      process.exit(1);
+  co(function* () {
+    /**
+     * step1: 安装 preset
+     */
+    yield npmInstall(name, {
+      prefix: tmpdir
     });
+
+    /**
+     * step2: mv config file
+     */
+    link(presetModulePath, keep);
+
+    // eslint-disable-next-line global-require
+    const dependencies = require(presetPkgPath).dependencies;
+    if (!dependencies) {
+      // 无需执行 step3, step4
+      return;
+    }
+
+    /**
+     * step3: 修改 package.json
+     *
+     * 将 preset 的 dependencies 写入项目 package.json 的 devDependencies
+     */
+    writePkg(dependencies);
+
+    /**
+     * step4: 安装 preset 的 dependencies
+     */
+    const packages = Object.entries(dependencies)
+      .map(([name, range]) => {
+        return `${name}@${packageVersion(range)}`;
+      });
+
+    yield npmInstall(packages, {
+      saveDev: true
+    });
+  }).catch(error => {
+    log.error(error.message);
+    process.exit(1);
+  });
 }
 
 module.exports = install;
