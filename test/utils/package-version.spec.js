@@ -14,6 +14,7 @@ describe('Package version 测试', function () {
   });
 
   it('常规测试', function () {
+    packageVersion('1.1.1').should.be.equal('1.1.1');
     packageVersion('~1.1.1').should.be.equal('1.1.1');
     packageVersion('^1.1.1').should.be.equal('1.1.1');
     packageVersion('1.1.1-beta.1').should.be.equal('1.1.1-beta.1');
