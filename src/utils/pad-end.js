@@ -6,6 +6,7 @@
  * @param {number} targetLength padding length
  * @returns {string} string
  */
+/* istanbul ignore next */
 function polyfill(targetLength) {
   const length = this.length;
 
@@ -31,6 +32,7 @@ function padEnd(string, targetLength) {
 
   const fn = typeof String.prototype.padEnd === 'function'
     ? String.prototype.padEnd
+    /* istanbul ignore next */
     : polyfill;
 
   return fn.call(string, targetLength);

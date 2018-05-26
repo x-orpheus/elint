@@ -38,6 +38,16 @@ describe('Write package json 测试', function () {
     });
   });
 
+  it('package.json 格式异常', function (done) {
+    fs.appendFileSync(pkgPath, 'asdfasdf');
+
+    Promise.all([
+      write({ 'elint-preset-test': '*' })
+    ]).then(() => {
+      done();
+    });
+  });
+
   it('正常测试', function (done) {
     Promise.all([
       write({ 'elint-preset-test': '*' })
