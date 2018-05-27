@@ -85,6 +85,8 @@ function install(presetName, options) {
      * step1: 安装 preset
      */
     const installName = stringify({ scope, name, version });
+    console.log(`install "${installName}"...`);
+
     yield npmInstall(installName, {
       prefix: tmpdir
     });
@@ -106,11 +108,13 @@ function install(presetName, options) {
      *
      * 将 preset 的 dependencies 写入项目 package.json 的 devDependencies
      */
+    console.log('save dependencies to package.json');
     writePkg(dependencies);
 
     /**
      * step4: 安装 preset 的 dependencies
      */
+    console.log('install dependencies...');
     const packages = Object.entries(dependencies)
       .map(([name, range]) => {
         return `${name}@${packageVersion(range)}`;

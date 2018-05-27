@@ -58,11 +58,13 @@ function updateConfigFiles(filePath, keep) {
     debug('file exists, file different, move.');
     debug(`file old name: ${oldFilePath}`);
     fs.moveSync(destFilePath, oldFilePath, { overwrite: true });
-    console.log(`mv "${destFilePath}" -> "${oldFilePath}"`);
+    console.log(`  move: from "${destFilePath}"`);
+    console.log(`          to "${oldFilePath}"`);
   }
 
   fs.copySync(filePath, destFilePath);
-  console.log(`cp "${filePath}" -> "${destFilePath}"`);
+  console.log(`  copy: from "${filePath}"`);
+  console.log(`          to "${destFilePath}"`);
 }
 
 module.exports = updateConfigFiles;

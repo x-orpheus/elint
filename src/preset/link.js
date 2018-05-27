@@ -14,7 +14,6 @@ const updateConfigFiles = require('./update-config-files');
 function link(presetModulePath, keep) {
   debug(`input ${presetModulePath}`);
 
-  console.log();
   console.log('update config file:');
 
   findConfigFiles(presetModulePath)
