@@ -1,6 +1,6 @@
 'use strict';
 
-const { parse, normalize } = require('../../src/utils/package-name');
+const { parse, stringify, normalize } = require('../../src/utils/package-name');
 
 const mocha = require('mocha');
 const chai = require('chai');
@@ -67,6 +67,36 @@ describe('Package name 测试', function () {
         name: 'elint-preset-name',
         version: '1.1.1-bate'
       });
+    });
+  });
+
+  describe('stringify 测试', function () {
+    it('name', function () {
+      stringify({
+        name: 'test'
+      }).should.equal('test');
+    });
+
+    it('name + scope', function () {
+      stringify({
+        name: 'test',
+        scope: 'scope'
+      }).should.equal('@scope/test');
+    });
+
+    it('name + version', function () {
+      stringify({
+        name: 'test',
+        version: '1.2.3'
+      }).should.equal('test@1.2.3');
+    });
+
+    it('name + scope + version', function () {
+      stringify({
+        name: 'test',
+        scope: 'scope',
+        version: '1.2.3'
+      }).should.equal('@scope/test@1.2.3');
     });
   });
 

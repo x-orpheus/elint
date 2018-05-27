@@ -54,6 +54,27 @@ function parse(packageName) {
 }
 
 /**
+ * stringify
+ *
+ * @param {ParsedPackageName} parsedPackageName 解析过的 package name 对象
+ * @returns {string} package name
+ */
+function stringify(parsedPackageName) {
+  const { scope, version } = parsedPackageName;
+  let name = parsedPackageName.name;
+
+  if (scope) {
+    name = `@${scope}/${name}`;
+  }
+
+  if (version) {
+    name = `${name}@${version}`;
+  }
+
+  return name;
+}
+
+/**
  * 标准化 presetName
  *
  * @param {string} [presetName] preset name
@@ -67,5 +88,6 @@ function normalize(presetName) {
 
 module.exports = {
   parse,
+  stringify,
   normalize
 };
