@@ -114,6 +114,9 @@ function install(presetName, options) {
   }).catch(error => {
     log.error(error.message);
     process.exit(1);
+  }).then(() => {
+    // 无论成功与否，清理临时目录
+    fs.removeSync(tmpdir);
   });
 }
 

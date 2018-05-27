@@ -17,6 +17,8 @@
   },
   "keywords": [
     "eslint",
+    "eslintplugin",
+    "eslintconfig",
     "stylelint",
     "commitlint",
     "standard",
