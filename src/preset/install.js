@@ -7,7 +7,7 @@ const path = require('path');
 const co = require('co');
 const npmInstall = require('../lib/npm-install');
 const log = require('../utils/log');
-const { parse } = require('../utils/package-name');
+const { parse, stringify } = require('../utils/package-name');
 const packageVersion = require('../utils/package-version');
 const writePkg = require('../utils/write-package-json');
 const { registryAlias } = require('../config');
@@ -40,12 +40,15 @@ function install(presetName, options) {
   debug(`install package name: ${presetName}`);
   debug('install options: %o', options);
 
+  /**
+   * 解析 package name
+   */
   const { name, version, scope } = parse(presetName);
 
   debug('preset name object: %o', {
+    scope,
     name,
-    version,
-    scope
+    version
   });
 
   if (!name) {
@@ -53,6 +56,9 @@ function install(presetName, options) {
     process.exit(1);
   }
 
+  /**
+   * 处理 & 校验 install options
+   */
   const registryUrl = getRegistryUrl(options.registry);
   const keep = options.keep;
 
@@ -64,7 +70,8 @@ function install(presetName, options) {
 
   // 临时安装目录
   const tmpdir = path.join(os.tmpdir(), `elint_tmp_${Date.now()}`);
-  const presetModulePath = path.join(tmpdir, `lib/node_modules/${name}`);
+  const prestPackageName = stringify({ scope, name });
+  const presetModulePath = path.join(tmpdir, `lib/node_modules/${prestPackageName}`);
   const presetPkgPath = path.join(presetModulePath, 'package.json');
 
   debug(`tmpdir: ${tmpdir}`);
@@ -77,7 +84,8 @@ function install(presetName, options) {
     /**
      * step1: 安装 preset
      */
-    yield npmInstall(name, {
+    const installName = stringify({ scope, name, version });
+    yield npmInstall(installName, {
       prefix: tmpdir
     });
 
