@@ -15,4 +15,4 @@ fs.ensureDirSync(destDirPath);
 fs.copySync(scriptPath, destScriptPath);
 
 // 添加执行权限
-fs.chmodSync(destScriptPath, 755);
+fs.chmodSync(destScriptPath, 0o755);
