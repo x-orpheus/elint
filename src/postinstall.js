@@ -12,7 +12,7 @@ const destScriptPath = path.join(destDirPath, 'postinstall');
 fs.ensureDirSync(destDirPath);
 
 // 部署 scripts
-fs.copyFileSync(scriptPath, destScriptPath);
+fs.copySync(scriptPath, destScriptPath);
 
 // 添加执行权限
 fs.chmodSync(destScriptPath, 755);
