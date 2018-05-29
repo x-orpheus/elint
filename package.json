@@ -9,7 +9,8 @@
   "scripts": {
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "eslint --format codeframe \"bin/**/*.js\" \"src/**/*.js\" \"test/**/*.js\"",
-    "test:unit": "nyc --reporter=html --reporter=text mocha \"test/**/*.spec.js\" && nyc report --reporter=text-lcov | coveralls"
+    "test:unit": "nyc --reporter=html --reporter=text mocha \"test/**/*.spec.js\" && nyc report --reporter=text-lcov | coveralls",
+    "postinstall": "node ./src/postinstall.js"
   },
   "repository": {
     "type": "git",
