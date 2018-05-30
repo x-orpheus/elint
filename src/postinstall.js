@@ -3,7 +3,7 @@
 const path = require('path');
 const fs = require('fs-extra');
 
-const cwd = process.cwd();
+const cwd = process.env.INIT_CWD;
 const scriptPath = path.join(__dirname, '../scripts/postinstall');
 const destDirPath = path.join(cwd, 'node_modules/.hooks');
 const destScriptPath = path.join(destDirPath, 'postinstall');
