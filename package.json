@@ -1,6 +1,6 @@
 {
   "name": "elint",
-  "version": "1.2.0-beta.4",
+  "version": "1.2.0-beta.8",
   "description": "A easy way to lint your code.",
   "main": "src/index.js",
   "bin": {
@@ -45,6 +45,7 @@
     "chalk": "^2.4.1",
     "co": "^4.6.0",
     "commander": "^2.15.1",
+    "debug": "^3.1.0",
     "diff": "^3.5.0",
     "eslint": "^4.19.1",
     "execa": "^0.10.0",
@@ -66,7 +67,6 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "coveralls": "^3.0.1",
-    "debug": "^3.1.0",
     "deep-equal-in-any-order": "^1.0.10",
     "mocha": "^5.1.1",
     "nyc": "^11.8.0",

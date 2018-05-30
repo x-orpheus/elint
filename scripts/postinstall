@@ -6,6 +6,6 @@ const { install } = require('elint');
 const packageName = process.env.npm_package_name;
 const packageNameRegexp = /^(@.+\/)?elint-preset-.+/;
 
-if (packageName && packageNameRegexp.test(packageNameRegexp)) {
+if (packageName && packageNameRegexp.test(packageName)) {
   install(packageName);
 }
