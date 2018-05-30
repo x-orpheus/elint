@@ -2,6 +2,10 @@
 
 'use strict';
 
+if (process.env.npm_package_name === 'elint') {
+  return;
+}
+
 const { install } = require('elint');
 const packageName = process.env.npm_package_name;
 
