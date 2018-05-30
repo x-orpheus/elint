@@ -3,8 +3,10 @@
 const path = require('path');
 const fs = require('fs-extra');
 const cwd = process.env.INIT_CWD;
+const npmPackageName = process.env.npm_package_name;
 
-if (!cwd) {
+// elint 开发过程中不执行
+if (!cwd || npmPackageName === 'elint') {
   return;
 }
 

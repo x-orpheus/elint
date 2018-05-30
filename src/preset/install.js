@@ -36,7 +36,7 @@ function getRegistryUrl(registry) {
  * @param {InstallOptions} options install options
  * @returns {void}
  */
-function install(presetName, options) {
+function install(presetName, options = {}) {
   debug(`install package name: ${presetName}`);
   debug('install options: %o', options);
 

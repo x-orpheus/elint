@@ -2,14 +2,12 @@
 
 const path = require('path');
 
-let origin = process.cwd;
+let origin = process.env.INIT_CWD;
 
 module.exports = function mock() {
-  process.cwd = () => {
-    return path.join(__dirname, 'test-project');
-  };
+  process.env.INIT_CWD = path.join(__dirname, 'test-project');
 
   return () => {
-    process.cwd = origin;
+    process.env.INIT_CWD = origin;
   };
 };

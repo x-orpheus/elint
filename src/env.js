@@ -6,7 +6,7 @@ const path = require('path');
 /**
  * 项目根目录
  */
-const baseDir = process.cwd();
+const baseDir = process.env.INIT_CWD || process.cwd();
 
 /**
  * 项目的 node_modules 目录
