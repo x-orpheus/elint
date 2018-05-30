@@ -23,6 +23,7 @@ describe('try-require 测试', function () {
 
   it('模块存在', function () {
     const result1 = [
+      '@scope/elint-preset-scope',
       'elint-preset-node',
       'elint-preset-normal'
     ];
@@ -31,7 +32,7 @@ describe('try-require 测试', function () {
       'elint-preset-node'
     ];
 
-    tryRequire(/^elint\-preset/).should.be.deep.equal(result1);
+    tryRequire(/elint\-preset/).should.be.deep.equal(result1);
     tryRequire(/elint/).should.be.deep.equal(result1);
     tryRequire(/node/).should.be.deep.equal(result2);
   });

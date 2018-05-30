@@ -1,8 +1,39 @@
 'use strict';
 
 const debug = require('debug')('elint:utils:try-require');
+const path = require('path');
 const fs = require('fs');
 const { nodeModulesDir } = require('../env');
+
+/**
+ * 获取全部目录下的模块
+ *
+ * @param {string} dir 目录
+ * @param {string} [scope] scope
+ * @returns {Array<string>} modules
+ */
+function getModulesByDir(dir, scope = '') {
+  const results = [];
+  const modules = fs.readdirSync(dir);
+
+  if (!modules.length) {
+    return results;
+  }
+
+  modules.forEach(module => {
+    if (module.startsWith('.')) {
+      return;
+    } else if (module.startsWith('@')) {
+      const subDir = path.join(nodeModulesDir, module);
+      const subModules = getModulesByDir(subDir, module);
+      Array.prototype.push.call(results, ...subModules);
+    } else {
+      results.push(scope ? `${scope}/${module}` : module);
+    }
+  });
+
+  return results;
+}
 
 /**
  * 尝试获取已安装的模块，返回模块名
@@ -10,7 +41,7 @@ const { nodeModulesDir } = require('../env');
  * @param {RegExp} regexp 正则，描述要 require 的 mudule
  * @returns {string[]} 所有匹配的模块名
  */
-module.exports = function tryRequire(regexp) {
+function tryRequire(regexp) {
   const results = [];
 
   debug(`arguments.regexp: ${regexp || 'undefined'}`);
@@ -20,11 +51,12 @@ module.exports = function tryRequire(regexp) {
     return results;
   }
 
-  const moduleList = fs
-    .readdirSync(nodeModulesDir)
+  const moduleList = getModulesByDir(nodeModulesDir)
     .filter(m => regexp.test(m));
 
   debug(`matched modules: ${moduleList.join(', ')}`);
 
   return moduleList;
-};
+}
+
+module.exports = tryRequire;

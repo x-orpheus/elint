@@ -150,6 +150,9 @@ describe('Walker 测试', function () {
           getPath('node_modules/elint-preset-normal/index.js'),
           getPath('node_modules/elint-preset-normal/.eslintrc.js'),
           getPath('node_modules/elint-preset-normal/.stylelintrc.js'),
+          getPath('node_modules/@scope/elint-preset-scope/index.js'),
+          getPath('node_modules/@scope/elint-preset-scope/.eslintrc.js'),
+          getPath('node_modules/@scope/elint-preset-scope/.stylelintrc.js'),
           getPath('bower_components/a.js')
         ]
       };
