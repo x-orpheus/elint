@@ -32,7 +32,10 @@ function runHooks(action) {
     process.exit(1);
   }
 
-  exec('node')(pragram, action)
+  /**
+   * 第三个参数给是 huskyDir，给空，让 husky 自己判断
+   */
+  exec('node')(pragram, action, '')
     .then(({ stdout }) => {
       const logFn = stdout.includes('done') ? log.success : log.info;
       const message = stdout.replace(/husky > /g, '').split('\n');
