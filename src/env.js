@@ -2,11 +2,12 @@
 
 const debug = require('debug')('elint:env');
 const path = require('path');
+const isNpm = require('is-npm');
 
 /**
  * 项目根目录
  */
-const baseDir = process.env.INIT_CWD || process.cwd();
+const baseDir = isNpm ? process.env.INIT_CWD : process.cwd();
 
 /**
  * 项目的 node_modules 目录

@@ -5,13 +5,29 @@ const os = require('os');
 const fs = require('fs-extra');
 const path = require('path');
 const co = require('co');
+const isNpm = require('is-npm');
 const npmInstall = require('../lib/npm-install');
 const log = require('../utils/log');
 const { parse, stringify } = require('../utils/package-name');
 const packageVersion = require('../utils/package-version');
 const writePkg = require('../utils/write-package-json');
+const tryRequire = require('../utils/try-require');
 const { registryAlias } = require('../config');
+const { nodeModulesDir } = require('../env');
 const link = require('./link');
+
+/**
+ * @typedef {object} ParsedPresetName
+ * @property {string} name package name
+ * @property {string} scope package scope
+ * @property {string} version package version
+ */
+
+/**
+ * @typedef {Object} InstallOptions
+ * @property {string} registry npm registry url & alias
+ * @property {boolean} keep 是否保留原配置
+ */
 
 /**
  * 取 install 使用的 registry
@@ -24,49 +40,74 @@ function getRegistryUrl(registry) {
 }
 
 /**
- * @typedef {Object} InstallOptions
- * @property {string} registry npm registry url & alias
- * @property {boolean} keep 是否保留原配置
+ * 解析 options
+ *
+ * @param {InstallOptions} options install options
+ * @returns {InstallOptions} parsed install options
  */
+function parsedOptions(options = {}) {
+  options.keep = options.keep || process.env.npm_config_keep || '';
+
+  const registry = options.registry = getRegistryUrl(
+    options.registry || process.env.npm_config_registry || ''
+  );
+
+  // registryUrl 存在但是不合法
+  if (registry && !/^https?:\/\//.test(registry)) {
+    log.error('registry must be a full url with http(s)://');
+    process.exit(1);
+  }
+
+  return options;
+}
 
 /**
- * 安装 preset
+ * 解析 preset name
  *
  * @param {string} presetName preset name
- * @param {InstallOptions} options install options
- * @returns {void}
+ * @returns {ParsedPresetName} parsed preset name
  */
-function install(presetName, options = {}) {
-  debug(`install package name: ${presetName}`);
-  debug('install options: %o', options);
+function parsedPresetName(presetName) {
+  const parsedPresetName = parse(presetName);
 
-  /**
-   * 解析 package name
-   */
-  const { name, version, scope } = parse(presetName);
+  debug('parsed presetName object: %o', parsedPresetName);
 
-  debug('preset name object: %o', {
-    scope,
-    name,
-    version
-  });
-
-  if (!name) {
+  if (!parsedPresetName || !parsedPresetName.name) {
     log.error('请输入正确的 presetName.');
     process.exit(1);
   }
 
-  /**
-   * 处理 & 校验 install options
-   */
-  const registryUrl = getRegistryUrl(options.registry);
-  const keep = options.keep;
+  return parsedPresetName;
+}
 
-  // registryUrl 存在但是不合法
-  if (registryUrl && !/^https?:\/\//.test(registryUrl)) {
-    log.error('registry must be a full url with http(s)://');
-    process.exit(1);
+/**
+ * script install preset
+ *
+ * @returns {void}
+ */
+function installFromScript() {
+  const presetName = tryRequire(/elint-preset-/)[0];
+  const { keep } = parsedOptions();
+
+  if (!presetName) {
+    return;
   }
+
+  const presetModulePath = path.join(nodeModulesDir, presetName);
+
+  link(presetModulePath, keep);
+}
+
+/**
+ * cli install preset
+ *
+ * @param {string} presetName preset name
+ * @param {InstallOptions} [options] install options
+ * @returns {void}
+ */
+function installFromCli(presetName, options = {}) {
+  const { name, scope, version } = parsedPresetName(presetName);
+  const { registry, keep } = parsedOptions(options);
 
   // 临时安装目录
   const tmpdir = path.join(os.tmpdir(), `elint_tmp_${Date.now()}`);
@@ -88,7 +129,8 @@ function install(presetName, options = {}) {
     console.log(`install "${installName}"...`);
 
     yield npmInstall(installName, {
-      prefix: tmpdir
+      prefix: tmpdir,
+      registry
     });
 
     /**
@@ -123,13 +165,15 @@ function install(presetName, options = {}) {
     yield npmInstall(packages, {
       saveDev: true
     });
+
+    // 清理临时目录
+    fs.removeSync(tmpdir);
   }).catch(error => {
     log.error(error.message);
     process.exit(1);
-  }).then(() => {
-    // 无论成功与否，清理临时目录
-    fs.removeSync(tmpdir);
   });
 }
 
-module.exports = install;
+module.exports = isNpm
+  ? installFromScript
+  : installFromCli;

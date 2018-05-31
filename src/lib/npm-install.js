@@ -7,6 +7,7 @@ const parse = require('../utils/parse-npm-option');
 /**
  * @typedef InstallOptions
  * @property {string} prefix 安装路径
+ * @property {string} registry npm 仓库
  * @property {boolean} saveDev --save-dev
  */
 
