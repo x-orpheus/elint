@@ -32,7 +32,7 @@ function runHooks(action) {
     process.exit(1);
   }
 
-  exec(pragram, action)
+  exec('node')(pragram, action)
     .then(({ stdout }) => {
       const logFn = stdout.includes('done') ? log.success : log.info;
       const message = stdout.replace(/husky > /g, '').split('\n');
