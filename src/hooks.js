@@ -5,6 +5,7 @@ const path = require('path');
 const exec = require('./lib/exec');
 const log = require('./utils/log');
 const pragram = require.resolve('husky/lib/installer/bin');
+const huskyDir = path.join(pragram, '../../..');
 
 // 支持的 actions
 const supportActions = [
@@ -21,6 +22,7 @@ const supportActions = [
 function runHooks(action) {
   debug(`input action: ${action}`);
   debug(`husky pragram path: ${pragram}`);
+  debug(`husky dir: ${huskyDir}`);
 
   if (!action) {
     log.error('请输入 action, 例如：elint hooks install');
@@ -32,10 +34,8 @@ function runHooks(action) {
     process.exit(1);
   }
 
-  /**
-   * 第三个参数给是 huskyDir，给空，让 husky 自己判断
-   */
-  exec('node')(pragram, action, '')
+  // huskyDir 必须指定
+  exec('node')(pragram, action, huskyDir)
     .then(({ stdout }) => {
       const logFn = stdout.includes('done') ? log.success : log.info;
       const message = stdout.replace(/husky > /g, '').split('\n');
