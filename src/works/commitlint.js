@@ -39,7 +39,10 @@ function commitlint() {
     const report = yield lint(message[0], rules, options);
     const formatted = format(report);
 
+    console.log();
     console.log(formatted.join('\n'));
+    console.log();
+
     process.exit(report.errors.length ? 1 : 0);
   }).catch(error => {
     log.error(error.message);
