@@ -1,16 +1,17 @@
 'use strict';
 
-const path = require('path');
-const fs = require('fs-extra');
-const tryRequire = require('./utils/try-require');
-const { nodeModulesDir } = require('./env');
-const { install } = require('./index');
 const pwd = process.env.PWD;
 
 // 开发过程中不执行
 if (!pwd.includes('node_modules')) {
   return;
 }
+
+const path = require('path');
+const fs = require('fs-extra');
+const tryRequire = require('./utils/try-require');
+const { nodeModulesDir } = require('./env');
+const { install } = require('./index');
 
 const scriptPath = path.join(__dirname, '../scripts/postinstall');
 const destDirPath = path.join(nodeModulesDir, '.hooks');
