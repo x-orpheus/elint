@@ -1,6 +1,7 @@
 'use strict';
 
 const chalk = require('chalk');
+const figures = require('figures');
 
 /**
  * 按行（每行）缩进指定宽度
@@ -31,23 +32,32 @@ function reduceEmptyLine(string) {
  * @property {string} content 段落内容
  */
 
+const passedMessage = chalk.green(`${figures.tick} Passed`);
+
 /**
  * report
  *
  * @param {Output[]} outputs 要输出到命令行的内容
  * @returns {void}
  */
-function report(outputs) {
+function report(results) {
   const arr = [];
 
-  outputs.forEach(output => {
-    const name = output.name;
-    const content = output.output;
+  results.forEach(result => {
+    const name = result.name;
+    const output = result.output;
+    const success = result.success;
 
     arr.push('\n');
     arr.push(`${chalk.bold(`> ${name}:`)}\n`);
     arr.push('\n');
-    arr.push(padding(content));
+
+    if (success && !output.trim()) {
+      arr.push(padding(passedMessage));
+    } else {
+      arr.push(padding(output));
+    }
+
     arr.push('\n');
   });
 
