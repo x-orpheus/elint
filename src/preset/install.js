@@ -83,17 +83,19 @@ function parsedPresetName(presetName) {
 /**
  * script install preset
  *
+ * @param {string} presetName preset name
  * @returns {void}
  */
-function installFromScript() {
-  const presetName = tryRequire(/elint-preset-/)[0];
-  const { keep } = parsedOptions();
+function installFromScript(presetName) {
+  const name = presetName || tryRequire(/elint-preset-/)[0];
 
-  if (!presetName) {
+  if (!name) {
+    debug('can not fount preset, return');
     return;
   }
 
-  const presetModulePath = path.join(nodeModulesDir, presetName);
+  const { keep } = parsedOptions();
+  const presetModulePath = path.join(nodeModulesDir, name);
 
   link(presetModulePath, keep);
 }
@@ -173,6 +175,8 @@ function installFromCli(presetName, options = {}) {
     process.exit(1);
   });
 }
+
+debug(`is npm script: ${isNpm}`);
 
 module.exports = isNpm
   ? installFromScript

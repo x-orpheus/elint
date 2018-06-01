@@ -9,7 +9,6 @@ if (!pwd.includes('node_modules')) {
 
 const path = require('path');
 const fs = require('fs-extra');
-const tryRequire = require('./utils/try-require');
 const { nodeModulesDir } = require('./env');
 const { install } = require('./index');
 
@@ -27,10 +26,4 @@ fs.copySync(scriptPath, destScriptPath);
 fs.chmodSync(destScriptPath, 0o755);
 
 // 安装完成执行一次 install
-const presetName = tryRequire(/elint-preset-/)[0];
-
-if (!presetName) {
-  return;
-}
-
-install(presetName);
+install();
