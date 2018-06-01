@@ -42,7 +42,7 @@ function report(outputs) {
 
   outputs.forEach(output => {
     const name = output.name;
-    const content = output.content;
+    const content = output.output;
 
     arr.push('\n');
     arr.push(`${chalk.bold(`> ${name}:`)}\n`);

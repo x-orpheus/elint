@@ -22,21 +22,19 @@ function elint(files) {
   Promise.all([
     eslint(...fileList.eslint),
     stylelint(...fileList.stylelint)
-  ]).then(([eslintOutput, stylelintOutput]) => {
-    const outputs = [
-      {
-        name: 'eslint',
-        content: eslintOutput.stdout
-      },
-      {
-        name: 'stylelint',
-        content: stylelintOutput.stdout
-      }
-    ];
+  ]).then(([eslintResult, stylelintResult]) => {
+    const eslintOutput = JSON.parse(eslintResult.stdout);
+    const stylelintOutput = JSON.parse(stylelintResult.stdout);
+    const exitCode = eslintOutput.success && stylelintOutput.success
+      ? 0
+      : 1;
 
-    report(outputs);
-  }).catch(error => {
-    console.error(error);
+    report([
+      eslintOutput,
+      stylelintOutput
+    ]);
+
+    process.exit(exitCode);
   });
 }
 

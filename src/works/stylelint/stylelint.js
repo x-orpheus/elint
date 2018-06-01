@@ -3,13 +3,24 @@
 const stylelint = require('stylelint');
 const files = process.argv.slice(2);
 
+const result = {
+  name: 'stylelint',
+  output: '',
+  success: true
+};
+
 stylelint.lint({
   files,
   formatter: 'string'
 }).then(data => {
-  process.stdout.write(data.output);
-  process.exit();
+  result.success = !data.errored;
+  result.output = data.output;
+  return result;
 }).catch(error => {
-  process.stderr.write(error);
-  process.exit(1);
+  result.success = false;
+  result.output = error.message;
+  return result;
+}).then(data => {
+  process.stdout.write(JSON.stringify(data));
+  process.exit();
 });
