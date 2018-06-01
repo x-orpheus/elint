@@ -27,9 +27,10 @@ function reduceEmptyLine(string) {
 }
 
 /**
- * @typedef Output
+ * @typedef Result
  * @property {string} name 段落名
- * @property {string} content 段落内容
+ * @property {string} output 段落内容
+ * @property {boolean} success 是否成功
  */
 
 const passedMessage = chalk.green(`${figures.tick} Passed`);
@@ -37,7 +38,7 @@ const passedMessage = chalk.green(`${figures.tick} Passed`);
 /**
  * report
  *
- * @param {Output[]} outputs 要输出到命令行的内容
+ * @param {Result[]} results 要输出到命令行的内容
  * @returns {void}
  */
 function report(results) {
