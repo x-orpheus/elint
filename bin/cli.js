@@ -34,7 +34,7 @@ program
 program
   .command('lint [type] [files...]')
   .alias('l')
-  .description('run lint, type: eslint, stylelint, commitlint...')
+  .description('run lint, type: es, style, commit')
   .action((type, files, options) => {
     debug('run lint...');
 
@@ -42,14 +42,14 @@ program
       return;
     }
 
-    if (type === 'commitlint') {
+    if (type === 'commit') {
       commitlint();
       return;
     }
 
     let parsedFiles, parsedType;
 
-    if (['stylelint', 'eslint'].includes(type)) {
+    if (['es', 'style'].includes(type)) {
       parsedFiles = files;
       parsedType = type;
     } else {
