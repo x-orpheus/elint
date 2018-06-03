@@ -21,8 +21,8 @@ describe('Walker 测试', function () {
   describe('Walker 功能测试', function () {
     it('空测试', function () {
       const result = {
-        stylelint: [],
-        eslint: []
+        style: [],
+        es: []
       };
 
       walker().should.be.deep.equalInAnyOrder(result);
@@ -31,8 +31,8 @@ describe('Walker 测试', function () {
 
     it('单条 glob', function () {
       const result = {
-        stylelint: [],
-        eslint: [getPath('src/a.js')]
+        style: [],
+        es: [getPath('src/a.js')]
       };
 
       walker('src/*.js').should.be.deep.equalInAnyOrder(result);
@@ -40,8 +40,8 @@ describe('Walker 测试', function () {
 
     it('单条 glob, 匹配空', function () {
       const result = {
-        stylelint: [],
-        eslint: []
+        style: [],
+        es: []
       };
 
       walker('src/*.ts').should.be.deep.equalInAnyOrder(result);
@@ -49,8 +49,8 @@ describe('Walker 测试', function () {
 
     it('单条 glob, deep', function () {
       const result = {
-        stylelint: [],
-        eslint: [
+        style: [],
+        es: [
           getPath('src/a.js'),
           getPath('src/lib/b.js')
         ]
@@ -61,10 +61,10 @@ describe('Walker 测试', function () {
 
     it('单条 glob, deep', function () {
       const result = {
-        stylelint: [
+        style: [
           getPath('src/a.css')
         ],
-        eslint: [
+        es: [
           getPath('src/a.js'),
           getPath('src/lib/b.js')
         ]
@@ -75,10 +75,10 @@ describe('Walker 测试', function () {
 
     it('多条 glob', function () {
       const result = {
-        stylelint: [
+        style: [
           getPath('src/a.css')
         ],
-        eslint: [
+        es: [
           getPath('src/a.js')
         ]
       };
@@ -88,8 +88,8 @@ describe('Walker 测试', function () {
 
     it('多条 glob, 匹配空', function () {
       const result = {
-        stylelint: [],
-        eslint: []
+        style: [],
+        es: []
       };
 
       walker(['src/**/*.ts', 'dist/**/*.ts']).should.be.deep.equalInAnyOrder(result);
@@ -97,10 +97,10 @@ describe('Walker 测试', function () {
 
     it('多条 glob, deep', function () {
       const result = {
-        stylelint: [
+        style: [
           getPath('src/a.css')
         ],
-        eslint: [
+        es: [
           getPath('src/a.js'),
           getPath('src/lib/b.js')
         ]
@@ -126,8 +126,8 @@ describe('Walker 测试', function () {
 
     it('文件不存在，使用默认忽略规则', function () {
       const result = {
-        stylelint: [],
-        eslint: [
+        style: [],
+        es: [
           getPath('src/a.js'),
           getPath('src/lib/b.js'),
           getPath('app/c.js')
@@ -139,8 +139,8 @@ describe('Walker 测试', function () {
 
     it('文件存在，为空，没有任何忽略规则', function () {
       const result = {
-        stylelint: [],
-        eslint: [
+        style: [],
+        es: [
           getPath('app/c.js'),
           getPath('src/a.js'),
           getPath('src/lib/b.js'),
@@ -164,8 +164,8 @@ describe('Walker 测试', function () {
 
     it('单条忽略测试', function () {
       const result = {
-        stylelint: [],
-        eslint: [
+        style: [],
+        es: [
           getPath('app/c.js'),
           getPath('src/a.js'),
           getPath('src/lib/b.js'),
@@ -180,8 +180,8 @@ describe('Walker 测试', function () {
 
     it('多条忽略测试', function () {
       const result = {
-        stylelint: [],
-        eslint: [
+        style: [],
+        es: [
           getPath('app/c.js'),
           getPath('bower_components/a.js')
         ]
@@ -194,8 +194,8 @@ describe('Walker 测试', function () {
 
     it('注释测试', function () {
       const result = {
-        stylelint: [],
-        eslint: [
+        style: [],
+        es: [
           getPath('app/c.js'),
           getPath('bower_components/a.js')
         ]

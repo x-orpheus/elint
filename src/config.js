@@ -3,7 +3,7 @@
 /**
  * 支持的 js 文件后缀
  */
-const jsSuffix = [
+const esSuffix = [
   '.js',
   '.jsx'
 ];
@@ -22,8 +22,8 @@ const cssSuffix = [
  * 支持的 linter
  */
 const linterSuffix = {
-  eslint: jsSuffix,
-  stylelint: cssSuffix
+  es: esSuffix,
+  style: cssSuffix
 };
 
 /**
@@ -67,8 +67,6 @@ const registryAlias = {
 module.exports = {
   linterSuffix,
   linterConfigFile,
-  jsSuffix,
-  cssSuffix,
   defaultIgnore,
   registryAlias
 };

@@ -9,32 +9,44 @@ const stylelint = require('./works/stylelint');
  * 主函数
  *
  * @param {string[]} files 待执行 lint 的文件
+ * @param {string} [type] lint type
  * @returns {void}
  */
-function elint(files) {
+function elint(files, type) {
   const fileList = walker(files);
 
   // 没有匹配到任何文件，直接退出
-  if (!fileList.eslint.length && !fileList.stylelint.length) {
+  if (!fileList.es.length && !fileList.style.length) {
     process.exit();
   }
 
-  Promise.all([
-    eslint(...fileList.eslint),
-    stylelint(...fileList.stylelint)
-  ]).then(([eslintResult, stylelintResult]) => {
-    const eslintOutput = JSON.parse(eslintResult.stdout);
-    const stylelintOutput = JSON.parse(stylelintResult.stdout);
-    const exitCode = eslintOutput.success && stylelintOutput.success
-      ? 0
-      : 1;
+  const linters = {
+    es: eslint,
+    style: stylelint
+  };
 
-    report([
-      eslintOutput,
-      stylelintOutput
-    ]);
+  let works = [];
+  if (type) {
+    works.push(linters[type](...fileList[type]));
+  } else {
+    Object.entries(linters).forEach(([linterType, linter]) => {
+      works.push(linter(...fileList[linterType]));
+    });
+  }
 
-    process.exit(exitCode);
+  Promise.all(works).then(results => {
+    const outputs = [];
+    let success = true;
+
+    results.forEach(result => {
+      const output = JSON.parse(result.stdout);
+      outputs.push(output);
+      success = success && output.success;
+    });
+
+    report(outputs);
+
+    process.exit(success ? 0 : 1);
   });
 }
 
