@@ -1,5 +1,7 @@
 'use strict';
 
+const setBlocking = require('set-blocking');
+
 const result = {
   name: 'eslint',
   output: '',
@@ -27,5 +29,6 @@ if (report.errorCount) {
   result.output = formatter(report.results);
 }
 
+setBlocking(true);
 process.stdout.write(JSON.stringify(result));
 process.exit();

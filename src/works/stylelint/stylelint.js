@@ -1,6 +1,7 @@
 'use strict';
 
 const stylelint = require('stylelint');
+const setBlocking = require('set-blocking');
 const files = process.argv.slice(2);
 
 const result = {
@@ -21,6 +22,7 @@ stylelint.lint({
   result.output = error.message;
   return result;
 }).then(data => {
+  setBlocking(true);
   process.stdout.write(JSON.stringify(data));
   process.exit();
 });
