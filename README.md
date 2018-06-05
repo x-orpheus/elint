@@ -14,13 +14,14 @@
   - [2.2. preset](#22-preset)
   - [2.3. 内部细节](#23-内部细节)
 - [3. 命令](#3-命令)
-  - [3.1. lint 命令](#31-lint-命令)
-  - [3.2. hooks 命令](#32-hooks-命令)
-  - [3.3. version 命令](#33-version-命令)
-  - [3.4. install 命令](#34-install-命令)
+  - [3.1. lint](#31-lint)
+  - [3.2. hooks](#32-hooks)
+  - [3.3. version](#33-version)
+  - [3.4. install](#34-install)
 - [4. 常见问题](#4-常见问题)
   - [4.1. cnpm, yarn](#41-cnpm-yarn)
   - [4.2. 为什么不建议全局安装](#42-为什么不建议全局安装)
+- [5. 参考](#5-参考)
 
 <!-- /TOC -->
 
@@ -110,7 +111,7 @@ elint-preset-<name>
 
 因为我们不推荐全局安装，除了在 npm scripts 和 `.huskyrc.js` 中使用时，下面的 `elint` 均代指 `./node_modules/.bin/elint`：
 
-### 3.1. lint 命令
+### 3.1. lint
 
 `lint` 命令用来执行代码校验和 git commit message 校验:
 
@@ -130,7 +131,7 @@ $ elint lint style "**/*.js"
 $ elint lint commit
 ```
 
-### 3.2. hooks 命令
+### 3.2. hooks
 
 `hooks` 命令用来安装 & 卸载 git hooks，一般不会用到
 
@@ -139,7 +140,7 @@ $ elint hooks install
 $ elint hooks uninstall
 ```
 
-### 3.3. version 命令
+### 3.3. version
 
 输出版本信息
 
@@ -157,7 +158,7 @@ $ elint -v
     husky      : 1.0.0-rc.8
 ```
 
-### 3.4. install 命令
+### 3.4. install
 
 前面讲到的 preset 安装，都是直接执行 `npm install`。其实除了这种方式，还可以直接使用 `elint install` 命令安装：
 
@@ -175,6 +176,8 @@ $ elint install test
 
 除了上面列举的区别外，`elint isntall` 无视 cnpm，yarn 的限制，如果你十分依赖 cnpm，yarn 时，可以考虑使用 `elint install` 来安装，但要留意保持 preset 的最新。
 
+没有主推这种方式的原因在于，elint 的设计初衷就是统一团队规范，规范一旦制定，需要严格执行。`npm install` 会自动更新并覆盖项目根目录的配置文件，一定程度上避免了随意修改带来的不统一。另外一点就是不推荐全局安装 elint，所以 elint 命令需要用 `./node_modules/.bin/elint` 执行，略显麻烦。
+
 ## 4. 常见问题
 
 ### 4.1. cnpm, yarn
@@ -191,9 +194,19 @@ $ alias mynpm='npm --registry=http://registry.npm.example.com \
 
 ### 4.2. 为什么不建议全局安装
 
-elint 强依赖 stylelint, eslint 等工具。而对于 eslint:
+elint 强依赖 stylelint, eslint 等工具。而对于 eslint，其文档中写到:
 
 > Any plugins or shareable configs that you use must also be installed globally to work with a globally-installed ESLint.
+
+全局安装 lint 工具和所有的 plugin，项目数量较多时容易引起混乱，且可能对 ci、部署等带来麻烦
+
+## 5. 参考
+
+- eslint: [Github](https://github.com/eslint/eslint) | [文档](http://eslint.org)
+- stylelint: [Github](https://github.com/stylelint/stylelint) | [文档](https://stylelint.io)
+- commitlint: [Github](https://github.com/marionebl/commitlint) | [文档](http://marionebl.github.io/commitlint/#/)
+- eslint: [Github](https://github.com/typicode/husky)
+- git hooks: [文档](https://git-scm.com/docs/githooks)
 
 [npm-image]: https://img.shields.io/npm/v/elint.svg?style=flat-square
 [npm-url]: https://www.npmjs.com/package/elint
