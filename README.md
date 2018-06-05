@@ -21,6 +21,8 @@
 - [4. 常见问题](#4-常见问题)
   - [4.1. cnpm, yarn](#41-cnpm-yarn)
   - [4.2. 为什么不建议全局安装](#42-为什么不建议全局安装)
+  - [4.3. 安装完成后没有配置文件](#43-安装完成后没有配置文件)
+  - [4.4. git hooks 不执行或报错](#44-git-hooks-不执行或报错)
 - [5. 参考](#5-参考)
 
 <!-- /TOC -->
@@ -200,12 +202,28 @@ elint 强依赖 stylelint, eslint 等工具。而对于 eslint，其文档中写
 
 全局安装 lint 工具和所有的 plugin，项目数量较多时容易引起混乱，且可能对 ci、部署等带来麻烦
 
+### 4.3. 安装完成后没有配置文件
+
+可能是 npm 的 [bug](https://github.com/npm/npm-lifecycle/commit/67adc2dc63d7066d8abbc4017e333247577433e6) 引起的，如果你的 npm 版本在 5.4.0 ～ 6.1.0 之间：
+
+- npm v5.6 以上的，重装 npm，哪怕还是装原来的版本，依赖也会升级上去
+- npm v5.4 ~ v5.6 的，升级 npm
+
+### 4.4. git hooks 不执行或报错
+
+如果 git hooks 不执行或者报错，尝试下面的方法:
+
+- 项目处于 git 管理的前提下，执行 `npm install` 安装依赖
+- 如果你在新建项目，先执行 `npm install`，然后执行 `git init` 的话，手动注册 git hooks（上文的 hooks 命令）
+- 检查 `.git/hooks` 目录，是否存在非 `.sample` 结尾的文件，如果不存在，手动注册 git hooks
+- 还是有问题？报 bug
+
 ## 5. 参考
 
 - eslint: [Github](https://github.com/eslint/eslint) | [文档](http://eslint.org)
 - stylelint: [Github](https://github.com/stylelint/stylelint) | [文档](https://stylelint.io)
 - commitlint: [Github](https://github.com/marionebl/commitlint) | [文档](http://marionebl.github.io/commitlint/#/)
-- eslint: [Github](https://github.com/typicode/husky)
+- husky: [Github](https://github.com/typicode/husky)
 - git hooks: [文档](https://git-scm.com/docs/githooks)
 
 [npm-image]: https://img.shields.io/npm/v/elint.svg?style=flat-square
