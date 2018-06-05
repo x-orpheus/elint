@@ -6,6 +6,8 @@ const isNpm = require('is-npm');
 
 /**
  * 获取通过 npm script 执行时的项目根路径
+ *
+ * @returns {string} cwd
  */
 function getInitCwd() {
   return process.env.INIT_CWD
