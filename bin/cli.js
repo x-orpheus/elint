@@ -65,8 +65,8 @@ program
 program
   .command('install [presetName]')
   .alias('i')
-  .option('-r, --registry <url>')
-  .option('-k, --keep')
+  .option('-r, --registry <url>', 'Specify npm registry')
+  .option('-k, --keep', 'If there is an old configuration file, keep it from being override')
   .description('install or update preset')
   .action((preset, options) => {
     debug('run install...');
@@ -121,8 +121,23 @@ program.on('--help', function () {
   console.log('');
   console.log('  Examples:');
   console.log('');
-  console.log('    lint file1.js and file2.css：');
-  console.log('    $ elint lint "file1.js" "file2.css"');
+  console.log('    output help information');
+  console.log('    $ elint install --help');
+  console.log('');
+  console.log('    lint all js and css');
+  console.log('    $ elint lint "**/*.js" "**/*.css"');
+  console.log('');
+  console.log('    run eslint');
+  console.log('    $ elint lint es "**/*.js"');
+  console.log('');
+  console.log('    run commitlint');
+  console.log('    $ elint lint commit');
+  console.log('');
+  console.log('    install git hooks');
+  console.log('    $ elint hooks install');
+  console.log('');
+  console.log('    install elint-preset-test');
+  console.log('    $ elint install test --registry=<npm registry>');
   console.log('');
 });
 
