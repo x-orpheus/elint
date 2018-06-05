@@ -18,6 +18,7 @@
   - [3.2. hooks](#32-hooks)
   - [3.3. version](#33-version)
   - [3.4. install](#34-install)
+  - [3.5. diff](#35-diff)
 - [4. 常见问题](#4-常见问题)
   - [4.1. cnpm, yarn](#41-cnpm-yarn)
   - [4.2. 为什么不建议全局安装](#42-为什么不建议全局安装)
@@ -119,6 +120,14 @@ elint-preset-<name>
 `lint` 命令用来执行代码校验和 git commit message 校验:
 
 ```shell
+elint lint [type] [files...]
+```
+
+如果不指定 type，默认执行 eslint 和 stylelint
+
+例子：
+
+```shell
 # 校验 js 和 scss
 $ elint lint "**/*.js" "**/*.scss"
 
@@ -137,6 +146,14 @@ $ elint lint commit
 ### 3.2. hooks
 
 `hooks` 命令用来安装 & 卸载 git hooks，一般不会用到
+
+```shell
+elint hooks [action]
+```
+
+支持的 action：install、uninstall
+
+例子：
 
 ```shell
 $ elint hooks install
@@ -166,8 +183,21 @@ $ elint -v
 前面讲到的 preset 安装，都是直接执行 `npm install`。其实除了这种方式，还可以直接使用 `elint install` 命令安装：
 
 ```shell
+elint install [presetName] [options]
+```
+
+- `presetName`: 可以忽略 `elint-preset-` 前缀
+- `options.registry`: 制定 npm 仓库地址
+- `options.keep`: 不覆盖旧的配置文件（如果有差异的话），很少用
+
+例子：
+
+```shell
 # 安装 elint-preset-test
 $ elint install test
+
+# 从 cnpm 安装 elint-preset-test
+$ elint install test --registry=https://registry.npm.taobao.org/
 ```
 
 这两种安装方式的最大区别就是，你是否将 preset 视为项目的依赖：
@@ -180,6 +210,30 @@ $ elint install test
 除了上面列举的区别外，`elint isntall` 无视 cnpm，yarn 的限制，如果你十分依赖 cnpm，yarn 时，可以考虑使用 `elint install` 来安装，但要留意保持 preset 的最新。
 
 没有主推这种方式的原因在于，elint 的设计初衷就是统一团队规范，规范一旦制定，需要严格执行。`npm install` 会自动更新并覆盖项目根目录的配置文件，一定程度上避免了随意修改带来的不统一。另外一点就是不推荐全局安装 elint，所以 elint 命令需要用 `./node_modules/.bin/elint` 执行，略显麻烦。
+
+### 3.5. diff
+
+万一你使用了 `elint install`，万一你加了 `keep`，万一你没有趁手的 diff 工具，可以尝试：
+
+```shell
+$ elint diff
+```
+
+输出类似：
+
+```diff
+-------------------------------------------------
+diff .eslintrc.js .eslintrc.old.js
+-------------------------------------------------
+  2 |   'extends': [
+  3 |     'plugin:react/recommended'
+  4 |   ],
+  5 |   'rules': {
+-   |     'no-console': 0
++ 6 |     'no-console': 2
+  7 |   }
+  8 | };
+```
 
 ## 4. 常见问题
 
