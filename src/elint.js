@@ -1,6 +1,6 @@
 'use strict';
 
-const walker = require('./utils/walker');
+const walker = require('./walker');
 const report = require('./utils/report');
 const eslint = require('./works/eslint');
 const stylelint = require('./works/stylelint');

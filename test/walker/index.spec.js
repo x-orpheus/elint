@@ -3,13 +3,15 @@
 const fs = require('fs');
 const path = require('path');
 const unmock = require('../mock')();
-const walker = require('../../src/utils/walker');
+const walker = require('../../src/walker');
 const { baseDir } = require('../../src/env');
 
 const mocha = require('mocha');
 const deepEqualInAnyOrder = require('deep-equal-in-any-order');
+const chaiAsPromised = require('chai-as-promised');
 const chai = require('chai');
 chai.use(deepEqualInAnyOrder);
+chai.use(chaiAsPromised);
 const should = chai.should();
 
 const getPath = p => path.join(baseDir, p);
@@ -25,8 +27,10 @@ describe('Walker 测试', function () {
         es: []
       };
 
-      walker().should.be.deep.equalInAnyOrder(result);
-      walker([]).should.be.deep.equalInAnyOrder(result);
+      return Promise.all([
+        walker().should.eventually.deep.equalInAnyOrder(result),
+        walker([]).should.eventually.deep.equalInAnyOrder(result)
+      ]);
     });
 
     it('单条 glob', function () {
@@ -35,7 +39,7 @@ describe('Walker 测试', function () {
         es: [getPath('src/a.js')]
       };
 
-      walker('src/*.js').should.be.deep.equalInAnyOrder(result);
+      return walker('src/*.js').should.eventually.deep.equalInAnyOrder(result);
     });
 
     it('单条 glob, 匹配空', function () {
@@ -44,7 +48,7 @@ describe('Walker 测试', function () {
         es: []
       };
 
-      walker('src/*.ts').should.be.deep.equalInAnyOrder(result);
+      return walker('src/*.ts').should.eventually.deep.equalInAnyOrder(result);
     });
 
     it('单条 glob, deep', function () {
@@ -56,7 +60,7 @@ describe('Walker 测试', function () {
         ]
       };
 
-      walker('src/**/*.js').should.be.deep.equalInAnyOrder(result);
+      return walker('src/**/*.js').should.eventually.deep.equalInAnyOrder(result);
     });
 
     it('单条 glob, deep', function () {
@@ -70,7 +74,7 @@ describe('Walker 测试', function () {
         ]
       };
 
-      walker('src/**/*').should.be.deep.equalInAnyOrder(result);
+      return walker('src/**/*').should.eventually.deep.equalInAnyOrder(result);
     });
 
     it('多条 glob', function () {
@@ -83,7 +87,7 @@ describe('Walker 测试', function () {
         ]
       };
 
-      walker(['src/*.js', 'src/*.css']).should.be.deep.equalInAnyOrder(result);
+      return walker(['src/*.js', 'src/*.css']).should.eventually.deep.equalInAnyOrder(result);
     });
 
     it('多条 glob, 匹配空', function () {
@@ -92,7 +96,7 @@ describe('Walker 测试', function () {
         es: []
       };
 
-      walker(['src/**/*.ts', 'dist/**/*.ts']).should.be.deep.equalInAnyOrder(result);
+      return walker(['src/**/*.ts', 'dist/**/*.ts']).should.eventually.deep.equalInAnyOrder(result);
     });
 
     it('多条 glob, deep', function () {
@@ -106,7 +110,7 @@ describe('Walker 测试', function () {
         ]
       };
 
-      walker(['src/**/*.js', 'src/**/*.css']).should.be.deep.equalInAnyOrder(result);
+      return walker(['src/**/*.js', 'src/**/*.css']).should.eventually.deep.equalInAnyOrder(result);
     });
   });
 
@@ -134,7 +138,7 @@ describe('Walker 测试', function () {
         ]
       };
 
-      walker('**/*.js').should.be.deep.equalInAnyOrder(result);
+      return walker('**/*.js').should.eventually.deep.equalInAnyOrder(result);
     });
 
     it('文件存在，为空，没有任何忽略规则', function () {
@@ -159,7 +163,7 @@ describe('Walker 测试', function () {
 
       createIgnoreFile('');
 
-      walker('**/*.js').should.be.deep.equalInAnyOrder(result);
+      return walker('**/*.js').should.eventually.deep.equalInAnyOrder(result);
     });
 
     it('单条忽略测试', function () {
@@ -175,7 +179,7 @@ describe('Walker 测试', function () {
 
       createIgnoreFile('**/node_modules/**');
 
-      walker('**/*.js').should.be.deep.equalInAnyOrder(result);
+      return walker('**/*.js').should.eventually.deep.equalInAnyOrder(result);
     });
 
     it('多条忽略测试', function () {
@@ -189,7 +193,7 @@ describe('Walker 测试', function () {
 
       createIgnoreFile('**/node_modules/**\n**/src/**');
 
-      walker('**/*.js').should.be.deep.equalInAnyOrder(result);
+      return walker('**/*.js').should.eventually.deep.equalInAnyOrder(result);
     });
 
     it('注释测试', function () {
@@ -203,7 +207,7 @@ describe('Walker 测试', function () {
 
       createIgnoreFile('**/node_modules/**\n**/src/**\n#**/app/**');
 
-      walker('**/*.js').should.be.deep.equalInAnyOrder(result);
+      return walker('**/*.js').should.eventually.deep.equalInAnyOrder(result);
     });
   });
 });
