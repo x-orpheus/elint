@@ -35,8 +35,8 @@ function getIgnore() {
 
 /**
  * @typedef FileTree
- * @property {string[]} eslint 要提供给 eslint 的文件数组
- * @property {string[]} stylelint 要提供给 stylelint 的文件数组
+ * @property {string[]} es 要提供给 eslint 的文件数组
+ * @property {string[]} style 要提供给 stylelint 的文件数组
  */
 
 /**
