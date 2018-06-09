@@ -17,7 +17,7 @@ describe('Write package json 测试', function () {
 
   beforeEach(() => fs.writeFileSync(pkgPath, pkgContent));
   afterEach(() => fs.removeSync(pkgPath));
-  after(() => unmock);
+  after(unmock);
 
   it('空测试', function (done) {
     Promise.all([

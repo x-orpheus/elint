@@ -17,7 +17,7 @@ const fileList = fs.readdirSync(baseDir);
 
 describe('UpdateConfigFile 测试', function () {
 
-  after(() => unmock);
+  after(unmock);
 
   // 清理 updateConfigFile 搞出来的文件
   afterEach(() => {

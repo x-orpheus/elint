@@ -10,7 +10,7 @@ const should = chai.should();
 
 describe('try-require 测试', function () {
 
-  after(() => unmock);
+  after(unmock);
 
   it('边界条件', function () {
     tryRequire().should.be.deep.equal([]);

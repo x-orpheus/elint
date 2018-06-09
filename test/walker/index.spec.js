@@ -18,7 +18,7 @@ const getPath = p => path.join(baseDir, p);
 
 describe('Walker 测试', function () {
 
-  after(() => unmock);
+  after(unmock);
 
   describe('Walker 功能测试', function () {
     it('空测试', function () {
