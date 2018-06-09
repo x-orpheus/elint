@@ -1,8 +1,12 @@
 'use strict';
 
+/**
+ * 本次测试不修改文件，使用同一个测试项目
+ */
+
 const fs = require('fs');
 const path = require('path');
-const unmock = require('../mock')();
+const unmock = require('../mock/env')();
 const walker = require('../../src/walker');
 const { getBaseDir } = require('../../src/env');
 

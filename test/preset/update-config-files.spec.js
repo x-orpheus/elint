@@ -1,8 +1,12 @@
 'use strict';
 
+/**
+ * 本次测试有前后依赖关系，使用同一个测试项目
+ */
+
 const fs = require('fs-extra');
 const path = require('path');
-const unmock = require('../mock')();
+const unmock = require('../mock/env')();
 const updateConfigFiles = require('../../src/preset/update-config-files');
 const { getBaseDir } = require('../../src/env');
 

@@ -1,8 +1,12 @@
 'use strict';
 
+/**
+ * 本次测试只修改一次文件，使用同一个测试项目
+ */
+
 const path = require('path');
 const fs = require('fs-extra');
-const unmock = require('../mock')();
+const unmock = require('../mock/env')();
 const write = require('../../src/utils/write-package-json');
 const { getBaseDir } = require('../../src/env');
 
