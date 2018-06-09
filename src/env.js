@@ -16,18 +16,29 @@ function getInitCwd() {
 
 /**
  * 项目根目录
+ *
+ * @returns {string} base dir
  */
-const baseDir = isNpm ? getInitCwd() : process.cwd();
+const getBaseDir = () => {
+  const baseDir = isNpm ? getInitCwd() : process.cwd();
+
+  debug(`base dir: ${baseDir}`);
+  return baseDir;
+};
 
 /**
  * 项目的 node_modules 目录
+ *
+ * @returns {string} node_modules dir
  */
-const nodeModulesDir = path.join(baseDir, 'node_modules');
+const getNodeModulesDir = () => {
+  const nodeModulesDir = path.join(getBaseDir(), 'node_modules');
 
-debug(`base dir: ${baseDir}`);
-debug(`node_modules dir: ${nodeModulesDir}`);
+  debug(`node_modules dir: ${nodeModulesDir}`);
+  return nodeModulesDir;
+};
 
 module.exports = {
-  baseDir,
-  nodeModulesDir
+  getBaseDir,
+  getNodeModulesDir
 };

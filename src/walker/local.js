@@ -5,8 +5,9 @@ const fs = require('fs');
 const path = require('path');
 const globby = require('globby');
 const ignore = require('ignore');
-const { baseDir } = require('../env');
 const { defaultIgnore } = require('../config');
+const { getBaseDir } = require('../env');
+const baseDir = getBaseDir();
 
 /**
  * 获取 ignore 规则

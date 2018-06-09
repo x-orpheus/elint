@@ -4,12 +4,13 @@ const path = require('path');
 const fs = require('fs-extra');
 const unmock = require('../mock')();
 const write = require('../../src/utils/write-package-json');
-const { baseDir } = require('../../src/env');
+const { getBaseDir } = require('../../src/env');
 
 const mocha = require('mocha');
 const chai = require('chai');
 const should = chai.should();
 
+const baseDir = getBaseDir();
 const pkgPath = path.join(baseDir, 'package.json');
 const pkgContent = JSON.stringify({ name: 'package-name' }, null, '  ');
 

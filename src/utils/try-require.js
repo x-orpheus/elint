@@ -3,7 +3,8 @@
 const debug = require('debug')('elint:utils:try-require');
 const path = require('path');
 const fs = require('fs');
-const { nodeModulesDir } = require('../env');
+const { getNodeModulesDir } = require('../env');
+const nodeModulesDir = getNodeModulesDir();
 
 /**
  * 获取全部目录下的模块

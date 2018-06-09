@@ -6,7 +6,8 @@ const fs = require('fs-extra');
 const path = require('path');
 const { format, load, lint, read } = require('@commitlint/core');
 const log = require('../utils/log');
-const { baseDir } = require('../env');
+const { getBaseDir } = require('../env');
+const baseDir = getBaseDir();
 
 /**
  * run commitlint

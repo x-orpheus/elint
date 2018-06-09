@@ -4,13 +4,15 @@ const fs = require('fs-extra');
 const path = require('path');
 const unmock = require('../mock')();
 const updateConfigFiles = require('../../src/preset/update-config-files');
-const { baseDir } = require('../../src/env');
+const { getBaseDir } = require('../../src/env');
 
 const mocha = require('mocha');
 const deepEqualInAnyOrder = require('deep-equal-in-any-order');
 const chai = require('chai');
 chai.use(deepEqualInAnyOrder);
 const should = chai.should();
+
+const baseDir = getBaseDir();
 
 // 目录下的原始文件
 const fileList = fs.readdirSync(baseDir);

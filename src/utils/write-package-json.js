@@ -6,7 +6,8 @@ const fs = require('fs-extra');
 const lodash = require('lodash');
 const writeJsonFile = require('write-json-file');
 const sort = require('./sort-object');
-const { baseDir } = require('../env');
+const { getBaseDir } = require('../env');
+const baseDir = getBaseDir();
 
 /**
  * 将 devDependencies 写入 package.json

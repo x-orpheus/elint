@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const unmock = require('../mock')();
 const walker = require('../../src/walker');
-const { baseDir } = require('../../src/env');
+const { getBaseDir } = require('../../src/env');
 
 const mocha = require('mocha');
 const deepEqualInAnyOrder = require('deep-equal-in-any-order');
@@ -13,6 +13,8 @@ const chai = require('chai');
 chai.use(deepEqualInAnyOrder);
 chai.use(chaiAsPromised);
 const should = chai.should();
+
+const baseDir = getBaseDir();
 
 const getPath = p => path.join(baseDir, p);
 

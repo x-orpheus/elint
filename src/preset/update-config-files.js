@@ -4,7 +4,8 @@ const debug = require('debug')('elint:preset:updateConfigFile');
 const fs = require('fs-extra');
 const path = require('path');
 const md5 = require('md5');
-const { baseDir } = require('../env');
+const { getBaseDir } = require('../env');
+const baseDir = getBaseDir();
 
 /**
  * 判断两个文件是否一致

@@ -4,7 +4,8 @@ const debug = require('debug')('elint:walker:stage');
 const path = require('path');
 const minimatch = require('minimatch');
 const sgf = require('staged-git-files');
-const { baseDir } = require('../env');
+const { getBaseDir } = require('../env');
+const baseDir = getBaseDir();
 
 /**
  * 执行 minimatch
