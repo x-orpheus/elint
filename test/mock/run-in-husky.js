@@ -5,14 +5,14 @@ const path = require('path');
 const execa = require('execa');
 const { getBaseDir } = require('../../src/env');
 const execaPath = require.resolve('execa');
-const isGitHooksPath = require.resolve('../../src/utils/is-git-hooks.js');
 
 /**
  * 模拟 husky 环境执行 is-git-hooks 测试
  *
+ * @param {string} tmpl 待执行的文件字符串
  * @returns {Promise} promise
  */
-function run() {
+function run(tmpl) {
   const baseDir = getBaseDir();
 
   // 文件路径
@@ -20,12 +20,7 @@ function run() {
   const huskyFilePath = path.join(baseDir, 'node_modules/husky/index.js');
 
   // 创建文件
-  fs.outputFileSync(execFilePath, `
-    const isGitHooks = require('${isGitHooksPath}');
-    isGitHooks().then(result => {
-      process.stdout.write(JSON.stringify(result));
-    });
-  `);
+  fs.outputFileSync(execFilePath, tmpl);
 
   // 创建 husky 环境并添加执行权限
   fs.outputFileSync(huskyFilePath, `

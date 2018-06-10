@@ -3,8 +3,8 @@
 const mock = require('../mock/env');
 const { getBaseDir } = require('../../src/env');
 const runInHusky = require('../mock/run-in-husky');
-const isGitHooks = require('../../src/utils/is-git-hooks');
-const isGitHooksPath = require.resolve('../../src/utils/is-git-hooks.js');
+const walker = require('../../src/walker');
+const walkerPath = require.resolve('../../src/walker');
 
 const mocha = require('mocha');
 const chaiAsPromised = require('chai-as-promised');
@@ -14,7 +14,7 @@ chai.use(chaiAsPromised);
 
 let unmock;
 
-describe('is-git-hooks 测试', function () {
+describe('Walker 测试', function () {
 
   beforeEach(() => {
     unmock = mock();
@@ -24,19 +24,23 @@ describe('is-git-hooks 测试', function () {
     unmock();
   });
 
-  it('非 husky 环境', function () {
-    return isGitHooks().should.eventually.equal(false);
+  it('普通环境', function () {
+    return walker(['*.txt']).should.eventually.deep.equal({
+      es: [],
+      style: []
+    });
   });
 
   it('husky 环境', function () {
     const tmpl = `
-      const isGitHooks = require('${isGitHooksPath}');
-      isGitHooks().then(result => {
+      const walker = require('${walkerPath}');
+      walker(['*.txt']).then(result => {
         process.stdout.write(JSON.stringify(result));
       });
     `;
+    const result = '"{\\"es\\":[],\\"style\\":[]}"';
 
-    return runInHusky(tmpl).should.eventually.equal('"true"');
+    return runInHusky(tmpl).should.eventually.equal(result);
   });
 
 });
