@@ -30,10 +30,12 @@ function match(filename, patterns) {
 function stageFiles(patterns) {
   const baseDir = getBaseDir();
 
+  sgf.cwd = baseDir;
+
   return new Promise(resolve => {
     sgf((err, result) => {
       if (err) {
-        debug('sgf error: %o', err);
+        debug('staged-git-files error: %o', err);
         return resolve([]);
       }
 

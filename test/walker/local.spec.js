@@ -18,7 +18,7 @@ let baseDir;
 let getPath;
 let unmock;
 
-describe('Walker 测试', function () {
+describe('Walker local 测试', function () {
 
   beforeEach(() => {
     unmock = mock();
