@@ -1,6 +1,6 @@
 'use strict';
 
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const mock = require('../mock/env');
 const gitInit = require('../mock/git-init');
@@ -34,7 +34,7 @@ describe('Walker stage 测试', function () {
   });
 
   it('目录不存在', function () {
-    unmock();
+    fs.removeSync(baseDir);
     return stageFiles(['**/*.js']).should.eventually.deep.equal([]);
   });
 

@@ -1,6 +1,7 @@
 'use strict';
 
 const debug = require('debug')('elint:walker:stage');
+const fs = require('fs-extra');
 const path = require('path');
 const minimatch = require('minimatch');
 const sgf = require('staged-git-files');
@@ -29,6 +30,11 @@ function match(filename, patterns) {
  */
 function stageFiles(patterns) {
   const baseDir = getBaseDir();
+
+  // 如果 baseDir 根本不存在 sgf 会抛出异常
+  if (!fs.existsSync(baseDir)) {
+    return Promise.resolve([]);
+  }
 
   sgf.cwd = baseDir;
 
