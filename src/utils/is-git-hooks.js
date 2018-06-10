@@ -12,15 +12,16 @@ function isGitHooks() {
 
   return find('pid', ppid)
     .then(function (list) {
-      const cwd = list && list[0].cwd;
+      const cmd = list && list[0].cmd;
 
-      if (!cwd) {
+      if (!cmd) {
+        /* istanbul ignore next */
         return false;
       }
 
-      return cwd.startsWith('node node_modules/husky');
+      return cmd.includes('node_modules/husky');
     })
-    .catch(function (err) {
+    .catch(function (err) { /* istanbul ignore next */
       return false;
     });
 }
