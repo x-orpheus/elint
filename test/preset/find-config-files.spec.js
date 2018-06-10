@@ -1,17 +1,24 @@
 'use strict';
 
-/**
- * 不会修改文件，直接使用项目中的 test-project 测试
- */
-
 const path = require('path');
+const mock = require('../mock/env');
 const findConfigFiles = require('../../src/preset/find-config-files');
 
 const mocha = require('mocha');
 const chai = require('chai');
 const should = chai.should();
 
+let unmock;
+
 describe('FindConfigFile 测试', function () {
+
+  beforeEach(() => {
+    unmock = mock();
+  });
+
+  afterEach(() => {
+    unmock();
+  });
 
   it('目录不存在', function () {
     findConfigFiles('/a/b/c/d').should.be.deep.equal([]);

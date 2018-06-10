@@ -1,20 +1,24 @@
 'use strict';
 
-/**
- * 本次测试不修改文件，使用同一个测试项目
- */
-
 const path = require('path');
-const unmock = require('../mock/env')();
+const mock = require('../mock/env');
 const tryRequire = require('../../src/utils/try-require');
 
 const mocha = require('mocha');
 const chai = require('chai');
 const should = chai.should();
 
+let unmock;
+
 describe('try-require 测试', function () {
 
-  after(unmock);
+  beforeEach(() => {
+    unmock = mock();
+  });
+
+  afterEach(() => {
+    unmock();
+  });
 
   it('边界条件', function () {
     tryRequire().should.be.deep.equal([]);

@@ -1,12 +1,8 @@
 'use strict';
 
-/**
- * 本次测试只修改一次文件，使用同一个测试项目
- */
-
 const path = require('path');
 const fs = require('fs-extra');
-const unmock = require('../mock/env')();
+const mock = require('../mock/env');
 const write = require('../../src/utils/write-package-json');
 const { getBaseDir } = require('../../src/env');
 
@@ -14,15 +10,24 @@ const mocha = require('mocha');
 const chai = require('chai');
 const should = chai.should();
 
-const baseDir = getBaseDir();
-const pkgPath = path.join(baseDir, 'package.json');
-const pkgContent = JSON.stringify({ name: 'package-name' }, null, '  ');
+let baseDir;
+let pkgPath;
+let pkgContent;
+let unmock;
 
 describe('Write package json 测试', function () {
 
-  beforeEach(() => fs.writeFileSync(pkgPath, pkgContent));
-  afterEach(() => fs.removeSync(pkgPath));
-  after(unmock);
+  beforeEach(() => {
+    unmock = mock();
+    baseDir = getBaseDir();
+    pkgPath = path.join(baseDir, 'package.json');
+    pkgContent = JSON.stringify({ name: 'package-name' }, null, '  ');
+    fs.writeFileSync(pkgPath, pkgContent);
+  });
+
+  afterEach(() => {
+    unmock();
+  });
 
   it('空测试', function (done) {
     Promise.all([

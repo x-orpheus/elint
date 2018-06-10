@@ -8,7 +8,6 @@ const chalk = require('chalk');
 const leftPad = require('left-pad');
 const findConfigFiles = require('./find-config-files');
 const { getBaseDir } = require('../env');
-const baseDir = getBaseDir();
 
 /**
  * @typedef {Object} ConfigFilesObj
@@ -22,6 +21,7 @@ const baseDir = getBaseDir();
  * @returns {Array<ConfigFilesObj>} 配置文件对象
  */
 function getConfigFiles() {
+  const baseDir = getBaseDir();
   const configFiles = findConfigFiles(baseDir);
   const result = [];
 

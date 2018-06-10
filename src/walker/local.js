@@ -7,7 +7,6 @@ const globby = require('globby');
 const ignore = require('ignore');
 const { defaultIgnore } = require('../config');
 const { getBaseDir } = require('../env');
-const baseDir = getBaseDir();
 
 /**
  * 获取 ignore 规则
@@ -15,6 +14,7 @@ const baseDir = getBaseDir();
  * @returns {Array<string>} ignore rules
  */
 function getIgnore() {
+  const baseDir = getBaseDir();
   const ignoreFilePath = path.join(baseDir, '.elintignore');
 
   // .elintignore 不存在，使用默认忽略规则
@@ -43,6 +43,7 @@ const aaaaaa = 1;
  * @returns {Array<string>} file list
  */
 function walker(patterns) {
+  const baseDir = getBaseDir();
   const ignoreRules = getIgnore();
   debug('ignore rules: %j', ignoreRules);
 

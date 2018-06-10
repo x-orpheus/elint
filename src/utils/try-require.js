@@ -4,7 +4,6 @@ const debug = require('debug')('elint:utils:try-require');
 const path = require('path');
 const fs = require('fs');
 const { getNodeModulesDir } = require('../env');
-const nodeModulesDir = getNodeModulesDir();
 
 /**
  * 获取全部目录下的模块
@@ -14,6 +13,7 @@ const nodeModulesDir = getNodeModulesDir();
  * @returns {Array<string>} modules
  */
 function getModulesByDir(dir, scope = '') {
+  const nodeModulesDir = getNodeModulesDir();
   const results = [];
   const modules = fs.readdirSync(dir);
 
@@ -43,6 +43,7 @@ function getModulesByDir(dir, scope = '') {
  * @returns {string[]} 所有匹配的模块名
  */
 function tryRequire(regexp) {
+  const nodeModulesDir = getNodeModulesDir();
   const results = [];
 
   debug(`arguments.regexp: ${regexp || 'undefined'}`);

@@ -1,12 +1,8 @@
 'use strict';
 
-/**
- * 本次测试不修改文件，使用同一个测试项目
- */
-
 const fs = require('fs');
 const path = require('path');
-const unmock = require('../mock/env')();
+const mock = require('../mock/env');
 const walker = require('../../src/walker');
 const { getBaseDir } = require('../../src/env');
 
@@ -18,13 +14,21 @@ chai.use(deepEqualInAnyOrder);
 chai.use(chaiAsPromised);
 const should = chai.should();
 
-const baseDir = getBaseDir();
-
-const getPath = p => path.join(baseDir, p);
+let baseDir;
+let getPath;
+let unmock;
 
 describe('Walker 测试', function () {
 
-  after(unmock);
+  beforeEach(() => {
+    unmock = mock();
+    baseDir = getBaseDir();
+    getPath = p => path.join(baseDir, p);
+  });
+
+  afterEach(() => {
+    unmock();
+  });
 
   describe('Walker 功能测试', function () {
     it('空测试', function () {
@@ -121,13 +125,10 @@ describe('Walker 测试', function () {
   });
 
   describe('Ignore 功能测试', function () {
+    let ignoreFilePath;
 
-    const ignoreFilePath = path.join(baseDir, '.elintignore');
-
-    afterEach(() => {
-      if (fs.existsSync(ignoreFilePath)) {
-        fs.unlinkSync(ignoreFilePath);
-      }
+    beforeEach(() => {
+      ignoreFilePath = path.join(baseDir, '.elintignore');
     });
 
     const createIgnoreFile = content => {

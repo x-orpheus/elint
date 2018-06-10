@@ -7,7 +7,6 @@ const lodash = require('lodash');
 const writeJsonFile = require('write-json-file');
 const sort = require('./sort-object');
 const { getBaseDir } = require('../env');
-const baseDir = getBaseDir();
 
 /**
  * 将 devDependencies 写入 package.json
@@ -24,6 +23,7 @@ function writePackageJson(devDependencies) {
     return Promise.resolve();
   }
 
+  const baseDir = getBaseDir();
   const pkgPath = path.join(baseDir, 'package.json');
 
   debug(`package.json: ${pkgPath}`);

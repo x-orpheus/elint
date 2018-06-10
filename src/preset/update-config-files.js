@@ -5,7 +5,6 @@ const fs = require('fs-extra');
 const path = require('path');
 const md5 = require('md5');
 const { getBaseDir } = require('../env');
-const baseDir = getBaseDir();
 
 /**
  * 判断两个文件是否一致
@@ -38,6 +37,7 @@ function updateConfigFiles(filePath, keep) {
     return;
   }
 
+  const baseDir = getBaseDir();
   const fileParsedObj = path.parse(filePath);
   const fileName = `${fileParsedObj.name}${fileParsedObj.ext}`;
   const destFilePath = path.join(baseDir, fileName);

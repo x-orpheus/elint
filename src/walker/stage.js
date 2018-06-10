@@ -5,7 +5,6 @@ const path = require('path');
 const minimatch = require('minimatch');
 const sgf = require('staged-git-files');
 const { getBaseDir } = require('../env');
-const baseDir = getBaseDir();
 
 /**
  * 执行 minimatch
@@ -29,6 +28,8 @@ function match(filename, patterns) {
  * @returns {Promise<object>} fileTree
  */
 function stageFiles(patterns) {
+  const baseDir = getBaseDir();
+
   return new Promise(resolve => {
     sgf((err, result) => {
       if (err) {

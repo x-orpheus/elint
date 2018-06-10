@@ -4,7 +4,7 @@ const os = require('os');
 const path = require('path');
 const fs = require('fs-extra');
 
-let origin = process.env.INIT_CWD;
+const origin = process.env.INIT_CWD;
 
 module.exports = function mock() {
   /**

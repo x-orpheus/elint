@@ -7,7 +7,6 @@ const path = require('path');
 const { format, load, lint, read } = require('@commitlint/core');
 const log = require('../utils/log');
 const { getBaseDir } = require('../env');
-const baseDir = getBaseDir();
 
 /**
  * run commitlint
@@ -15,6 +14,8 @@ const baseDir = getBaseDir();
  * @returns {void}
  */
 function commitlint() {
+  const baseDir = getBaseDir();
+
   co(function* () {
     const readOptions = {
       cwd: baseDir,

@@ -1,12 +1,8 @@
 'use strict';
 
-/**
- * 本次测试有前后依赖关系，使用同一个测试项目
- */
-
 const fs = require('fs-extra');
 const path = require('path');
-const unmock = require('../mock/env')();
+const mock = require('../mock/env');
 const updateConfigFiles = require('../../src/preset/update-config-files');
 const { getBaseDir } = require('../../src/env');
 
@@ -16,26 +12,20 @@ const chai = require('chai');
 chai.use(deepEqualInAnyOrder);
 const should = chai.should();
 
-const baseDir = getBaseDir();
-
-// 目录下的原始文件
-const fileList = fs.readdirSync(baseDir);
+let fileList; // 目录下的原始文件
+let baseDir;
+let unmock;
 
 describe('UpdateConfigFile 测试', function () {
 
-  after(unmock);
+  beforeEach(() => {
+    unmock = mock();
+    baseDir = getBaseDir();
+    fileList = fs.readdirSync(baseDir);
+  });
 
-  // 清理 updateConfigFile 搞出来的文件
   afterEach(() => {
-    const newFileList = fs.readdirSync(baseDir);
-
-    newFileList.forEach(fileName => {
-      if (fileList.includes(fileName)) {
-        return;
-      }
-
-      fs.removeSync(path.join(baseDir, fileName));
-    });
+    unmock();
   });
 
   it('空测试', function () {
