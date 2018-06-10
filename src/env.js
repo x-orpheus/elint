@@ -9,9 +9,14 @@ const isNpm = require('is-npm');
  *
  * @returns {string} cwd
  */
+/* istanbul ignore next */
 function getInitCwd() {
-  return process.env.INIT_CWD
-    || process.env.PWD.split('/node_modules/')[0];
+  if (process.env.INIT_CWD) {
+    return process.env.INIT_CWD;
+  }
+
+  // 兼容 npm v3
+  return process.env.PWD.split('/node_modules/')[0];
 }
 
 /**
@@ -20,6 +25,7 @@ function getInitCwd() {
  * @returns {string} base dir
  */
 const getBaseDir = () => {
+  /* istanbul ignore next */
   const baseDir = isNpm ? getInitCwd() : process.cwd();
 
   debug(`base dir: ${baseDir}`);

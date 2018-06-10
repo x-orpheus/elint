@@ -10,18 +10,19 @@ const find = require('find-process');
 function isGitHooks() {
   const ppid = process.ppid;
 
+  // 暂时未发现 cmd 不存在和 reject 的情况
   return find('pid', ppid)
     .then(function (list) {
       const cmd = list && list[0].cmd;
 
+      /* istanbul ignore next */
       if (!cmd) {
-        /* istanbul ignore next */
         return false;
       }
 
       return cmd.includes('node_modules/husky');
     })
-    .catch(function (err) { /* istanbul ignore next */
+    .catch(/* istanbul ignore next */ function (err) {
       return false;
     });
 }
