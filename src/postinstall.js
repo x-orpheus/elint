@@ -9,9 +9,10 @@ if (!pwd.includes('node_modules')) {
 
 const path = require('path');
 const fs = require('fs-extra');
-const { nodeModulesDir } = require('./env');
+const { getNodeModulesDir } = require('./env');
 const { install } = require('./index');
 
+const nodeModulesDir = getNodeModulesDir();
 const scriptPath = path.join(__dirname, '../scripts/postinstall');
 const destDirPath = path.join(nodeModulesDir, '.hooks');
 const destScriptPath = path.join(destDirPath, 'postinstall');

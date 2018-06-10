@@ -3,7 +3,7 @@
 const debug = require('debug')('elint:preset:install-scripts');
 const path = require('path');
 const tryRequire = require('../utils/try-require');
-const { nodeModulesDir } = require('../env');
+const { getNodeModulesDir } = require('../env');
 const link = require('./link');
 
 /**
@@ -22,6 +22,7 @@ function install(presetName) {
     return;
   }
 
+  const nodeModulesDir = getNodeModulesDir();
   const keep = process.env.npm_config_keep || '';
   const presetModulePath = path.join(nodeModulesDir, name);
 
