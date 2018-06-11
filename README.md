@@ -9,10 +9,12 @@
 <!-- TOC -->
 
 - [1. 安装](#1-安装)
-- [2. 使用指南](#2-使用指南)
+- [2. 简介](#2-简介)
   - [2.1. elint](#21-elint)
   - [2.2. preset](#22-preset)
   - [2.3. 内部细节](#23-内部细节)
+    - [2.3.1. 安装 & 初始化过程](#231-安装--初始化过程)
+    - [2.3.2. 执行过程](#232-执行过程)
 - [3. 命令](#3-命令)
   - [3.1. lint](#31-lint)
   - [3.2. hooks](#32-hooks)
@@ -25,6 +27,7 @@
   - [4.3. 安装完成后没有配置文件](#43-安装完成后没有配置文件)
   - [4.4. git hooks 不执行或报错](#44-git-hooks-不执行或报错)
   - [4.5. 配置文件是不是可以 git ignore](#45-配置文件是不是可以-git-ignore)
+  - [4.6. 可以安装多个 preset 吗](#46-可以安装多个-preset-吗)
 - [5. 参考](#5-参考)
 
 <!-- /TOC -->
@@ -47,7 +50,7 @@ npm install elint-preset-<name> --save-dev
 
 > 强烈**不建议**全局安装
 
-## 2. 使用指南
+## 2. 简介
 
 ### 2.1. elint
 
@@ -117,11 +120,17 @@ elint-preset-<name>
 
 ### 3.1. lint
 
-`lint` 命令用来执行代码校验和 git commit message 校验:
+`lint` 命令用来执行代码校验和 git commit message 校验。当 lint 运行在 git hooks 中时，文件的范围限定在 **git 暂存区**，也就是你将要提交的文件
 
 ```shell
 elint lint [type] [files...]
 ```
+
+type 可选的值：
+
+- es: 执行 eslint
+- style: 执行 stylelint
+- commit: 执行 commitlint
 
 如果不指定 type，默认执行 eslint 和 stylelint
 
@@ -143,6 +152,10 @@ $ elint lint style "**/*.js"
 $ elint lint commit
 ```
 
+> **注意**
+>
+> 当你在 Terminal（或者 npm scripts） 中写下 `elint lint **/*.js` 的时候，glob 会被 Terminal 解析，然后输入给 elint。glob 语法规则的差异可能会导致文件匹配的差异。所以建议，glob 使用引号包裹，放在输入到 elint 之前被意外解析。
+
 ### 3.2. hooks
 
 `hooks` 命令用来安装 & 卸载 git hooks，一般不会用到
@@ -151,7 +164,10 @@ $ elint lint commit
 elint hooks [action]
 ```
 
-支持的 action：install、uninstall
+支持的 action：
+
+- install: 安装
+- uninstall: 卸载
 
 例子：
 
@@ -187,7 +203,7 @@ elint install [presetName] [options]
 ```
 
 - `presetName`: 可以忽略 `elint-preset-` 前缀
-- `options.registry`: 制定 npm 仓库地址
+- `options.registry`: 制定 npm 仓库地址（内置两个 alias：npm，cnpm）
 - `options.keep`: 不覆盖旧的配置文件（如果有差异的话），很少用
 
 例子：
@@ -198,6 +214,9 @@ $ elint install test
 
 # 从 cnpm 安装 elint-preset-test
 $ elint install test --registry=https://registry.npm.taobao.org/
+
+# 从 cnpm 安装 elint-preset-test, 使用 alias
+$ elint install test --registry=cnpm
 ```
 
 这两种安装方式的最大区别就是，你是否将 preset 视为项目的依赖：
@@ -283,6 +302,10 @@ elint 强依赖 stylelint, eslint 等工具。而对于 eslint，其文档中写
 总之，只要执行 `npm install` 安装依赖，配置文件就会自动添加到项目里；只要你能保证需要用到配置文件的时候它存在（例如你在 webpack 里用了 eslint-loader），就可以忽略它。
 
 再次强调，elint 的设计原则是保证团队规范的严格执行，如果你觉得规则有问题，那么应该提出并推动修改 preset
+
+### 4.6. 可以安装多个 preset 吗
+
+不可以。每次安装，如果两个 preset 存在相同的配置文件，后安装会覆盖之前的。如果 package.json 中的依赖包含多个 preset，先后顺序由 npm 决定。
 
 ## 5. 参考
 
