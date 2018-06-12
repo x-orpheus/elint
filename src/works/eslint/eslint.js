@@ -1,7 +1,5 @@
 'use strict';
 
-const setBlocking = require('set-blocking');
-
 const result = {
   name: 'eslint',
   output: '',
@@ -17,6 +15,8 @@ process.on('uncaughtException', error => {
 });
 
 const eslint = require('eslint');
+const setBlocking = require('../../utils/set-blocking');
+
 const CLIEngine = eslint.CLIEngine;
 const files = process.argv.slice(2);
 

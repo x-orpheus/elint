@@ -1,7 +1,7 @@
 'use strict';
 
 const stylelint = require('stylelint');
-const setBlocking = require('set-blocking');
+const setBlocking = require('../../utils/set-blocking');
 const files = process.argv.slice(2);
 
 const result = {
