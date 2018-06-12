@@ -103,7 +103,7 @@ cd test-project
 npm install elint --save-dev
 ```
 
-> 如果你使用 yarn，cnpm（包括你团队内部基于 cnpm 建立的私有仓库） 等包管理工具，请参考“内部细节”和“常见问题”章节，我们的示例中统一使用 npm
+> 如果你使用 yarn，cnpm（包括你团队内部基于 cnpm 建立的私有仓库） 等包管理工具，请参考"[内部细节]((#4-细节--原理))"和"[常见问题](#51-cnpm-yarn)"章节，我们的示例中统一使用 npm
 
 > 强烈**不建议**全局安装（具体原因，请阅读[常见问题](#52-为什么不建议全局安装)）
 
@@ -458,7 +458,7 @@ $ elint diff
 
 安装（并初始化）完成后，可以根据你的项目的实际情况，添加 npm scripts，例如 test 时执行 `elint lint '**/*.js' '**/*.less'`
 
-无论你是先安装 elint，还是先安装 preset，亦或者同时安装，elint 都能准确的感知到 preset 的存在，并完成所有初始化操作。这项功能主要借助于 [npm hook scripts](https://docs.npmjs.com/misc/scripts#hook-scripts)，这也是当你使用 cnpm 时需要格外注意的原因（具体见下面的常见问题）。
+无论你是先安装 elint，还是先安装 preset，亦或者同时安装，elint 都能准确的感知到 preset 的存在，并完成所有初始化操作。这项功能主要借助于 [npm hook scripts](https://docs.npmjs.com/misc/scripts#hook-scripts)，这也是当你使用 cnpm 时需要格外注意的原因（解决办法参考下面的[常见问题](#51-cnpm-yarn)）。
 
 ### 4.2. 执行过程
 
