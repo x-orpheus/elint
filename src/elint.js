@@ -1,6 +1,7 @@
 'use strict';
 
 const co = require('co');
+const _ = require('lodash');
 const walker = require('./walker');
 const report = require('./utils/report');
 const eslint = require('./works/eslint');
@@ -31,7 +32,8 @@ function elint(files, type) {
     if (type) {
       works.push(linters[type](...fileList[type]));
     } else {
-      Object.entries(linters).forEach(([linterType, linter]) => {
+      // 兼容 node v6
+      _.toPairs(linters).forEach(([linterType, linter]) => {
         works.push(linter(...fileList[linterType]));
       });
     }

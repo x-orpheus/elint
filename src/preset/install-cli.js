@@ -5,6 +5,7 @@ const os = require('os');
 const fs = require('fs-extra');
 const path = require('path');
 const co = require('co');
+const _ = require('lodash');
 const npmInstall = require('../lib/npm-install');
 const log = require('../utils/log');
 const { parse, stringify } = require('../utils/package-name');
@@ -116,7 +117,9 @@ function install(presetName, options = {}) {
      * step4: 安装 preset 的 dependencies
      */
     console.log('install dependencies...');
-    const packages = Object.entries(dependencies)
+
+    // 兼容 node v6
+    const packages = _.toPairs(dependencies)
       .map(([name, range]) => {
         return `${name}@${packageVersion(range)}`;
       });
