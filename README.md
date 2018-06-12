@@ -47,19 +47,19 @@
 
 ## 1. 核心概念
 
-在使用 elint 之前，你需要先了解几个核心概念
+在使用 elint 之前，需要先了解几个核心概念。
 
 ### 1.1. ELint
 
-elint 是一个代码校验工具，基于 eslint、stylelint、commitlint 等封装而成。elint 本身不包含任何校验规则，校验规则通过 preset 定义。elint 的主要功能包括：
+elint 是一款代码校验工具，基于 eslint、stylelint、commitlint 等工具封装而成。elint 本身不包含任何校验规则，校验规则通过 preset 定义。elint 的主要功能包括：
 
-- 支持对 js，css 的校验 (eslint, stylelint)
-- 支持对 git commit message 的校验 (husky, commitlint)
-- **编写**定制化、场景化的 preset，preset 包含所有验证规则，**保证团队内部校验规则的一致性和可复用**
+- 支持对 js，css 的校验 (eslint, stylelint)。
+- 支持对 git commit message 的校验 (husky, commitlint)。
+- **编写**定制化、场景化的 preset，preset 包含所有验证规则，**保证团队内部校验规则的一致性和可复用**。
 
 ### 1.2. Preset
 
-preset 简单来说就是一个 npm package，可以理解为”规则集“。
+简单来说，preset 就是一个 npm package，可以理解为”规则集“。
 
 只有 elint 是不够的，因为它不知道具体的校验规则，而 preset 就是用来定义规则的。preset 大概长这样：
 
@@ -76,24 +76,24 @@ elint-preset-<name>
 
 要求：
 
-1. linter 的配置文件名必须是 `.commitlintrc.js`, `.eslintrc.js`, `.stylelintrc.js`
-2. 对于 eslint 和 stylelint，支持使用 `.eslintignore`, `.stylelintignore` 定义忽略规则
-3. git hooks (使用 husky) 的配置文件名必须是 `.huskyrc.js`
-4. 所有配置文件必须放在 preset 的根目录
-5. npm package name 必须以 `elint-preset-` 开头，如： `elint-preset-<name>` 或 `@team/elint-preset-<name>`
-6. 依赖的 linter plugin（例如 eslint-plugin-react），必须明确定义在 `package.json` 的 `dependencies` 中
+1. npm package name 必须以 `elint-preset-` 开头，如： `elint-preset-<name>` 或 `@team/elint-preset-<name>`。
+2. linter 的配置文件名必须是 `.commitlintrc.js`, `.eslintrc.js`, `.stylelintrc.js`。
+3. 对于 eslint 和 stylelint，支持使用 `.eslintignore`, `.stylelintignore` 定义需要忽略校验的文件和文件夹。
+4. git hooks (使用 husky) 的配置文件名必须是 `.huskyrc.js`。
+5. 所有配置文件必须放在 preset 的根目录。
+6. 依赖的 linter plugin（例如 eslint-plugin-react），必须明确定义在 `package.json` 的 `dependencies` 中。
 
-满足以上要求的 npm package 就是一个合法的 elint preset
+满足以上要求的 npm package 就是一个合法的 elint preset。
 
-> 一般来说，不建议把 `.eslintignore` 和 `.stylelintignore` 添加到 preset 中，忽略规则应该是和项目强相关的，但是 preset 是通用的（除非你的 preset 限定在一个很小的范围内使用，各个项目的目录结构都是一致的）
+> 一般来说，不建议把 `.eslintignore` 和 `.stylelintignore` 添加到 preset 中，因为 preset 应该对所有项目都是适用的（除非你的 preset 限定在一个很小的范围内使用，各个项目的目录结构都是一致的，此时可以使用它们来定义需要忽略校验的文件和文件夹）。
 
 ## 2. 使用指南
 
-下面我们一起从零开始，一步一步的看看如何将 elint 集成到项目中
+下面我们一起从零开始，一步一步的看看如何将 elint 集成到项目中。
 
 ### 2.1. 安装 elint
 
-首先要安装 elint
+首先要安装 elint：
 
 ```shell
 # 假设项目是 test-project
@@ -103,17 +103,17 @@ cd test-project
 npm install elint --save-dev
 ```
 
-> 如果你使用 yarn，cnpm（包括你团队内部基于 cnpm 建立的私有仓库） 等包管理工具，请参考"[内部细节]((#4-细节--原理))"和"[常见问题](#51-cnpm-yarn)"章节，我们的示例中统一使用 npm
+> 如果你使用 yarn，cnpm（包括基于 cnpm 创建的私有仓库） 等包管理工具，请参考"[内部细节]((#4-细节--原理))"和"[常见问题](#51-cnpm-yarn)"章节，我们的示例中统一使用 npm。
 
-> 强烈**不建议**全局安装（具体原因，请阅读[常见问题](#52-为什么不建议全局安装)）
+> 强烈**不建议**全局安装（具体原因，请阅读[常见问题](#52-为什么不建议全局安装)）。
 
 ### 2.2. 编写 preset
 
-安装完 elint 后，我们需要安装 preset，因为所有的校验规则（rules）都是定义在 preset 中的。一般来说，一个团队应该有一套编码规范，根据编码规范编写好 preset 后，团队中的各个项目直接安装使用即可，不必为每个项目都新建一个 preset
+安装完 elint 后，我们需要安装 preset，因为所有的校验规则（rules）都定义在 preset 中。一般来说，一个团队应该有一套编码规范，根据编码规范编写好 preset 后，团队中的各个项目直接安装使用即可，不必为每个项目都新建一个 preset。
 
-> 在一个团队里，可能一个 preset 并不能适应全部场景，那么我们可以根据不同的场景定义多个 preset。例如 `@team/elint-preset-h5`, `@team/elint-preset-node` 等。要覆盖所有项目，并不需要多少 preset
+> 在一个团队里，可能一个 preset 并不能适应全部场景，那么我们可以根据不同的场景定义多个 preset。例如 `@team/elint-preset-h5`, `@team/elint-preset-node` 等。要覆盖所有项目，并不需要多少 preset。
 
-这里我们假设团队还没有任何的 preset，一起看下如何新建它：
+这里我们假设团队还没有任何 preset，一起看下如何新建它：
 
 #### 2.2.1. 新建一个 npm package
 
@@ -131,15 +131,15 @@ npm init -y
 
 #### 2.2.2. 添加 eslint 配置文件（可选）
 
-> 这步是可选的，如果你需要校验 js 文件，可以直接跳过（下同）
+> 这步是可选的，如果你不需要校验 js 文件，可以直接跳过（下同）
 
-首先新建配置文件，名称必须是 `.eslintrc.js`, 参考上文的 [preset 约定](#12-preset)
+首先新建配置文件，名称必须是 `.eslintrc.js`, 参考上文的 [preset 约定](#12-preset)：
 
 ```shell
 touch .eslintrc.js
 ```
 
-`.eslintrc.js` 写入如下内容
+`.eslintrc.js` 写入如下内容：
 
 ```js
 module.exports = {
@@ -154,27 +154,27 @@ module.exports = {
 };
 ```
 
-因为使用了 plugin `eslint-plugin-react`，所以必须使用 npm 安装，且保存到 `package.json` 的 `dependencies` 中（无论是从语义方面考虑，还是上文关于 preset 的约定，都应该保存到 `dependencies` 中）
+因为使用了 plugin `eslint-plugin-react`，所以必须使用 npm 安装，且保存到 `package.json` 的 `dependencies` 中（无论是从语义方面考虑，还是上文关于 preset 的约定，都应该保存到 `dependencies` 中）：
 
 ```shell
 npm install eslint-plugin-react --save
 ```
 
-> 因为我们是使用 elint 执行校验，而 elint 已经集成了 eslint，stylelint 等，所以这里不需要再安装了，只需安装额外的 plugin
+> 因为我们使用 elint 执行校验，而 elint 已经集成了 eslint，stylelint 等工具，所以这里不需要再安装了，只需安装额外的 plugin。
 
 #### 2.2.3. 添加 stylelint 配置文件（可选）
 
-此处省略，和 eslint 一样的做法
+此处省略，和 eslint 一样的做法。
 
 #### 2.2.4. 添加 commitlint 配置文件（可选）
 
-新建配置文件 `.commitlintrc.js`:
+新建配置文件 `.commitlintrc.js`：
 
 ```shell
 touch .commitlintrc.js
 ```
 
-`.commitlintrc.js` 写入如下内容
+`.commitlintrc.js` 写入如下内容：
 
 ```js
 module.exports = {
@@ -192,7 +192,7 @@ module.exports = {
 
 #### 2.2.5. 添加 git hooks（可选）
 
-新建配置文件 `.huskyrc.js`:
+新建配置文件 `.huskyrc.js`：
 
 ```shell
 touch .huskyrc.js
@@ -212,11 +212,11 @@ module.exports = {
 }
 ```
 
-> 这里配置 git hooks 执行 `npm run precommit`，所以你可以在项目中自由定义要执行的操作（下面会详细解释）
+> 这里配置 git hooks 执行 `npm run precommit`，所以你可以在项目中自由定义要执行的操作（下面会详细解释）。
 
 #### 2.2.6. 发布 npm package
 
-此时项目的目录结构应该是:
+此时项目的目录结构应该是：
 
 ```shell
 elint-preset-test
@@ -235,10 +235,11 @@ elint-preset-test
 ```shell
 npm publish
 ```
+> 这里需要再简单地说明一下如何发布，用户连 npm 的帐号和密码都没输入过，肯定执行失败
 
 ### 2.3. 安装 preset
 
-刚刚我们已经编写并发布了 preset，现在安装到项目中就好了
+刚刚我们已经编写并发布了 preset，现在安装到项目中就好了：
 
 ```shell
 cd test-project
@@ -247,9 +248,9 @@ cd test-project
 npm install elint-preset-test --save-dev
 ```
 
-安装完成后，你会发现刚才定义在 preset 中的各种配置文件（`.eslintrc.js` 等），都拷贝到了项目的根目录，这是为了兼容各种 IDE 和 build 工具（如 webpack），elint 与他们是可以共存的
+安装完成后，你会发现刚才定义在 preset 中的各种配置文件（`.eslintrc.js` 等），都拷贝到了项目的根目录，这是为了兼容各种 IDE 和 build 工具（如 webpack），elint 与他们是可以共存的。
 
-> 如果你安装完成后，项目根目录中没有出现配置文件，请参考[常见问题](#53-安装完成后没有配置文件)中的解决办法
+> 如果你安装完成后，项目根目录中没有出现配置文件，请参考[常见问题](#53-安装完成后没有配置文件)中的解决办法。
 
 ### 2.4. 定义 npm scripts
 
@@ -296,9 +297,9 @@ npm install elint-preset-test --save-dev
 
 按照上面的写法，commit 之前会执行校验代码和 commit message。至此，elint 已经成功添加到项目中，执行 `npm test` 会校验代码，在 commit 前会校验代码和 commit message
 
-> 万一（虽然不建议）你在 commit 之前什么都不想执行，为了不报错，也要写 `exit 0`
+> 万一（虽然不建议）你在 commit 之前什么都不想执行，为了不报错，也要写 `exit 0`。
 
-> 当 lint 运行在 git hooks 中时，文件的范围限定在 **git 暂存区**，也就是你将要提交的文件（详见 [ELint CLI](#31-lint)）
+> 当 lint 运行在 git hooks 中时，文件的范围限定在 **git 暂存区**，也就是你将要提交的文件（详见 [ELint CLI](#31-lint)）。
 
 ## 3. ELint CLI
 
@@ -344,7 +345,7 @@ $ elint lint commit
 
 ### 3.2. hooks
 
-`hooks` 命令用来安装 & 卸载 git hooks（一般不会用到）
+`hooks` 命令用来安装 & 卸载 git hooks（一般不会用到）：
 
 ```shell
 elint hooks [action]
@@ -449,16 +450,16 @@ $ elint diff
 
 ### 4.1. 安装 & 初始化过程
 
-如果你编写好了用于自己团队的 preset，并且按照前面介绍的安装方式安装完成，你会发现，elint 将所有的配置文件从 preset 复制到了项目的根目录，这么做的目的是为了兼容在 IDE、build 工具中使用 lint。所以使用 elint 的同时，你仍然可以按照原来的方式，配置你的 IDE，webpack 等，他们与 elint 完全不冲突
+如果你编写好了用于自己团队的 preset，并且按照前面介绍的安装方式安装完成，你会发现，elint 将所有的配置文件从 preset 复制到了项目的根目录，这么做的目的是为了兼容在 IDE、build 工具中使用 lint。所以使用 elint 的同时，你仍然可以按照原来的方式，配置你的 IDE，webpack 等，他们与 elint 完全不冲突。
 
 具体的 preset 初始化过程（install 后自动执行），分为如下两步：
 
-1. 将配置文件 (`.eslintrc.js` 等) 复制到项目的根目录
-2. 安装 preset 的 `dependencies`，并保存到项目的 `devDependencies` 中
+1. 将配置文件 (`.eslintrc.js` 等) 复制到项目的根目录。
+2. 安装 preset 的 `dependencies`，并保存到项目的 `devDependencies` 中。
 
 安装（并初始化）完成后，可以根据你的项目的实际情况，添加 npm scripts，例如 test 时执行 `elint lint '**/*.js' '**/*.less'`
 
-无论你是先安装 elint，还是先安装 preset，亦或者同时安装，elint 都能准确的感知到 preset 的存在，并完成所有初始化操作。这项功能主要借助于 [npm hook scripts](https://docs.npmjs.com/misc/scripts#hook-scripts)，这也是当你使用 cnpm 时需要格外注意的原因（解决办法参考下面的[常见问题](#51-cnpm-yarn)）。
+无论是先安装 elint，还是先安装 preset，亦或者同时安装，elint 都能准确的感知到 preset 的存在，并完成所有初始化操作。这项功能主要借助于 [npm hook scripts](https://docs.npmjs.com/misc/scripts#hook-scripts)，这也是当你使用 cnpm 时需要格外注意的原因（解决办法参考下面的[常见问题](#51-cnpm-yarn)）。
 
 ### 4.2. 执行过程
 
@@ -466,9 +467,9 @@ $ elint diff
 
 对 git commit 信息的 lint，主要借助于 husky 和 commitlint。安装过程中，会自动添加 git hooks，当 hooks 触发时，执行配置在 `.huskyrc.js` 中的相应命令，就这么简单。
 
-> 执行 commit lint 时，git hook 可以选择 `commit-msg`
+> 执行 commit lint 时，git hook 可以选择 `commit-msg`。
 
-> 因为 git hooks 的注册是在 npm install 后自动执行的，所以，如果万一你的项目还未 git init，hooks 注册必然是失败的。解决办法是在 git init 之后，手动执行 `./node_modules/.bin/elint hooks install`
+> 因为 git hooks 的注册是在 npm install 后自动执行的，所以，如果万一你的项目还未 git init，hooks 注册必然是失败的。解决办法是在 git init 之后，手动执行 `./node_modules/.bin/elint hooks install`。
 
 ## 5. 常见问题
 
@@ -494,7 +495,7 @@ $ alias mynpm='npm --registry=http://registry.npm.example.com \
 
 关于 yarn，很可惜，目前不支持
 
-> 上面的 `alias` 命令只是临时修改，终端关闭即实现，永久添加请修改 `.bashrc` 或 `.zshrc`
+> 上面的 `alias` 命令只是临时修改，终端关闭即实现，永久添加请修改 `.bashrc` 或 `.zshrc`。
 
 ### 5.2. 为什么不建议全局安装
 
@@ -508,24 +509,24 @@ elint 强依赖 stylelint, eslint 等工具。而对于 eslint，其文档中写
 
 可能是 npm 的 [bug](https://github.com/npm/npm-lifecycle/commit/67adc2dc63d7066d8abbc4017e333247577433e6) 引起的，如果你的 npm 版本在 5.4.0 ～ 6.1.0 之间：
 
-- npm v5.6 以上的，重装 npm，哪怕还是装原来的版本，依赖也会升级上去
-- npm v5.4 ~ v5.6 的，升级 npm
+- npm v5.6 以上的，重装 npm，哪怕还是装原来的版本，依赖也会升级上去。
+- npm v5.4 ~ v5.6 的，升级 npm。
 
 ### 5.4. git hooks 不执行或报错
 
 如果 git hooks 不执行或者报错，尝试下面的方法:
 
-- 项目处于 git 管理的前提下，执行 `npm install` 安装依赖
-- 如果你在新建项目，先执行 `npm install`，然后执行 `git init` 的话，手动注册 git hooks（上文的 hooks 命令）
-- 检查 `.git/hooks` 目录，是否存在非 `.sample` 结尾的文件，如果不存在，手动注册 git hooks
-- 还是有问题？报 bug
+- 项目处于 git 管理的前提下，执行 `npm install` 安装依赖。
+- 如果你在新建项目，先执行 `npm install`，然后执行 `git init` 的话，手动注册 git hooks（上文的 hooks 命令）。
+- 检查 `.git/hooks` 目录，是否存在非 `.sample` 结尾的文件，如果不存在，手动注册 git hooks。
+- 还是有问题？报 bug。
 
 ### 5.5. 配置文件是不是可以 git ignore
 
 如果你能想到这个问题，那么说明你真的理解了 elint 的运作方式。忽略配置文件，防止意外被修改，所有团队成员使用 preset 定义的配置，听起来非常不错。那么从 preset 复制到项目中的各种配置文件，是否可以添加到 `.gitignore` 呢？这要看你的使用场景：
 
-- 如果代码提交到 git 仓库，执行 ci 的过程中会安装依赖
-- 如果部署项目时，build 过程中不再执行 lint，或者先安装依赖，然后再执行 build
+- 如果代码提交到 git 仓库，执行 ci 的过程中会安装依赖。
+- 如果部署项目时，build 过程中不再执行 lint，或者先安装依赖，然后再执行 build。
 
 总之，只要执行 `npm install` 安装依赖，配置文件就会自动添加到项目里；只要你能保证需要用到配置文件的时候它存在（例如你在 webpack 里用了 eslint-loader），就可以忽略它。
 
@@ -537,8 +538,8 @@ elint 强依赖 stylelint, eslint 等工具。而对于 eslint，其文档中写
 
 ### 5.7. 某些文件没有被校验到
 
-1. 检查你的 glob 写法是否有问题
-2. 可能是 glob 被传入 elint 之前就被意外解析了，参考 [lint 命令](#31-lint)
+1. 检查你的 glob 写法是否有问题。
+2. 可能是 glob 被传入 elint 之前就被意外解析了，参考 [lint 命令](#31-lint)。
 
 ## 6. 参考
 
