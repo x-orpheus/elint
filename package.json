@@ -45,6 +45,9 @@
     "url": "https://github.com/keenwon/elint/issues"
   },
   "homepage": "https://github.com/keenwon/elint#readme",
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "dependencies": {
     "@commitlint/core": "^7.0.0",
     "chalk": "^2.4.1",
