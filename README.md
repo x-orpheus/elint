@@ -68,8 +68,8 @@ elint-preset-<name>
 ├── .eslintrc.js        # 定义 eslint 规则，用于 js 的校验
 ├── .huskyrc.js         # 定义 git hooks, 可在 commit 前执行 commitlint 等操作
 ├── node_modules
-├── package.json        # 你懂的
-├── package-lock.json   # 你懂的
+├── package.json
+├── package-lock.json
 └── .stylelintrc.js     # 定义 stylelint 的规则，用于 css 的校验
 ```
 
@@ -83,6 +83,8 @@ elint-preset-<name>
 6. 依赖的 linter plugin（例如 eslint-plugin-react），必须明确定义在 `package.json` 的 `dependencies` 中
 
 满足以上要求的 npm package 就是一个合法的 elint preset
+
+> 一般来说，不建议把 `.eslintignore` 和 `.stylelintignore` 添加到 preset 中，忽略规则应该是和项目强相关的，但是 preset 是通用的（除非你的 preset 限定在一个很小的范围内使用，各个项目的目录结构都是一致的）
 
 ## 2. 使用指南
 
@@ -305,7 +307,7 @@ npm install elint-preset-test --save-dev
 
 ### 3.1. lint
 
-`lint` 命令用来执行代码校验和 git commit message 校验。当 lint 运行在 git hooks 中时，文件的范围限定在 **git 暂存区**，也就是你将要提交的文件
+`lint` 命令用来执行代码校验和 git commit message 校验。当 lint 运行在 git hooks 中时，文件的搜索范围限定在 **git 暂存区**，也就是只从你将要 commit 的文件中，找到需要校验的文件，执行校验。
 
 ```shell
 elint lint [type] [files...]
@@ -339,11 +341,11 @@ $ elint lint commit
 
 > **注意**
 >
-> 当你在 Terminal（或者 npm scripts） 中写下 `elint lint **/*.js` 的时候，glob 会被 Terminal 解析，然后输入给 elint。glob 语法规则的差异可能会导致文件匹配的差异。所以建议，glob 使用引号包裹，放在输入到 elint 之前被意外解析。
+> 当你在 Terminal（或者 npm scripts） 中写下 `elint lint **/*.js` 的时候，glob 会被 Terminal 解析，然后输入给 elint。glob 语法规则的差异可能会导致文件匹配的差异。所以建议，glob 使用引号包裹，防止输入到 elint 之前被意外解析。
 
 ### 3.2. hooks
 
-`hooks` 命令用来安装 & 卸载 git hooks，一般不会用到
+`hooks` 命令用来安装 & 卸载 git hooks（一般不会用到）
 
 ```shell
 elint hooks [action]
@@ -387,9 +389,12 @@ $ elint -v
 elint install [presetName] [options]
 ```
 
-- `presetName`: 可以忽略 `elint-preset-` 前缀
-- `options.registry`: 制定 npm 仓库地址（内置两个 alias：npm，cnpm）
-- `options.keep`: 不覆盖旧的配置文件（如果有差异的话），很少用
+`presetName` 可以忽略 `elint-preset-` 前缀。
+
+支持的 options:
+
+- `registry`: 制定 npm 仓库地址（内置两个 alias：npm，cnpm）
+- `keep`: 不覆盖旧的配置文件（文件完全一样肯定是不会覆盖的，keep 选项只在有文件有差异时生效）
 
 例子：
 
@@ -404,16 +409,16 @@ $ elint install test --registry=https://registry.npm.taobao.org/
 $ elint install test --registry=cnpm
 ```
 
-这两种安装方式的最大区别就是，你是否将 preset 视为项目的依赖：
+这两种安装方式的最大区别就是："否将 preset 视为项目的依赖"：
 
 |安装方式|区别|
 |:--|:--|
-|`npm install`|把 preset 当成依赖，执行 `npm install` 时，都可能被更新|
+|`npm install`|把 preset 当成依赖，执行 `npm install` 时，项目根目录的配置文件都可能被更新|
 |`elint install`|把 preset 当成配置源，更新时需要再次执行 `elint install`|
 
 除了上面列举的区别外，`elint isntall` 无视 cnpm，yarn 的限制，如果你十分依赖 cnpm，yarn 时，可以考虑使用 `elint install` 来安装，但要留意保持 preset 的最新。
 
-没有主推这种方式的原因在于，elint 的设计初衷就是统一团队规范，规范一旦制定，需要严格执行。`npm install` 会自动更新并覆盖项目根目录的配置文件，一定程度上避免了随意修改带来的不统一。另外一点就是不推荐全局安装 elint，所以 elint 命令需要用 `./node_modules/.bin/elint` 执行，略显麻烦。
+没有主推这种方式的原因在于，**elint 的设计初衷就是统一团队规范，规范一旦制定，需要严格执行**。`npm install` 会自动更新并覆盖项目根目录的配置文件，一定程度上避免了随意修改配置文件带来的（不同项目之间）校验规则不统一。另外一点就是由于不推荐全局安装 elint，所以 elint 命令需要用 `./node_modules/.bin/elint` 执行，略显麻烦。
 
 ### 3.5. diff
 
@@ -426,9 +431,9 @@ $ elint diff
 输出类似：
 
 ```diff
--------------------------------------------------
-diff .eslintrc.js .eslintrc.old.js
--------------------------------------------------
+ -------------------------------------------------
+ diff .eslintrc.js .eslintrc.old.js
+ -------------------------------------------------
   2 |   'extends': [
   3 |     'plugin:react/recommended'
   4 |   ],
@@ -441,7 +446,7 @@ diff .eslintrc.js .eslintrc.old.js
 
 ## 4. 细节 & 原理
 
-作为一个项目的维护者，当你将 elint 集成到你的项目中时，了解一些细节会非常有帮助
+作为一个项目的维护者，当你将 elint 集成到你的项目中时，了解一些细节会非常有帮助。
 
 ### 4.1. 安装 & 初始化过程
 
@@ -454,23 +459,33 @@ diff .eslintrc.js .eslintrc.old.js
 
 安装（并初始化）完成后，可以根据你的项目的实际情况，添加 npm scripts，例如 test 时执行 `elint lint '**/*.js' '**/*.less'`
 
-无论你是先安装 elint，还是先安装 preset，亦或者同时安装，elint 都能准确的感知到 preset 的存在，并完成所有初始化操作。这项功能主要借助于 [npm hook scripts](https://docs.npmjs.com/misc/scripts#hook-scripts)，这也是当你使用 cnpm 等是需要格外注意的原因（具体见下面的常见问题）。
+无论你是先安装 elint，还是先安装 preset，亦或者同时安装，elint 都能准确的感知到 preset 的存在，并完成所有初始化操作。这项功能主要借助于 [npm hook scripts](https://docs.npmjs.com/misc/scripts#hook-scripts)，这也是当你使用 cnpm 时需要格外注意的原因（具体见下面的常见问题）。
 
 ### 4.2. 执行过程
 
-执行过程比较简单，对代码的 lint 的过程可以概括为一句话：“elint 根据你的输入收集文件，交由 eslint、stylelint 执行，并且将结果输出至命令行展示”
+执行过程比较简单，对代码的 lint 的过程可以概括为一句话：“elint 根据你输入的 glob，收集并整理文件，交由 eslint、stylelint 执行，然后将结果输出至命令行展示”。
 
-对 git commit 信息的 lint，主要借助于 husky 和 commitlint。安装过程中，会添加 git hooks，当 hooks 触发时，执行配置在 `.huskyrc.js` 中的相应命令，就这么简单。
+对 git commit 信息的 lint，主要借助于 husky 和 commitlint。安装过程中，会自动添加 git hooks，当 hooks 触发时，执行配置在 `.huskyrc.js` 中的相应命令，就这么简单。
 
 > 执行 commit lint 时，git hook 可以选择 `commit-msg`
 
-> 因为 git hooks 的注册是在 npm install 后自动执行的，所以，如果万一你的项目还未 git init，hooks 注册必然是失败的。解决办法是在 git init 之后，手动执行 `./node_modules/.bin/elint hooks install` 注册
+> 因为 git hooks 的注册是在 npm install 后自动执行的，所以，如果万一你的项目还未 git init，hooks 注册必然是失败的。解决办法是在 git init 之后，手动执行 `./node_modules/.bin/elint hooks install`
 
 ## 5. 常见问题
 
 ### 5.1. cnpm, yarn
 
-使用 cnpm 的目的无外乎两点：解决网络问题和私有仓库。但问题是 cnpm 的私有实现不支持给 elint 带来极大便利的 [npm hook scripts](https://docs.npmjs.com/misc/scripts#hook-scripts)。所以我们只能放弃 `cnpm` 命令，只使用它的仓库:
+使用 cnpm 的目的无外乎两点：解决网络问题、私有仓库。但问题是 cnpm 的私有实现不支持给 elint 带来极大便利的 [npm hook scripts](https://docs.npmjs.com/misc/scripts#hook-scripts)。所以我们只能放弃 `cnpm` 命令，仅使用它的仓库。
+
+如果你只是单纯想从 cnpm 的仓库安装 npm package，提高安装速度。可以删除 `cnpm`，然后定义 alias:
+
+```shell
+$ alias cnpm='npm --registry=https://registry.npm.taobao.org/ \
+  --registryweb=https://npm.taobao.org/ \
+  --userconfig=$HOME/.cnpmrc'
+```
+
+如果你需要使用私有仓库，同样可以删除 `cnpm`，然后定义自己的命令:
 
 ```shell
 $ alias mynpm='npm --registry=http://registry.npm.example.com \
@@ -478,7 +493,9 @@ $ alias mynpm='npm --registry=http://registry.npm.example.com \
   --userconfig=$HOME/.mynpmrc'
 ```
 
-关于 yarn，暂时不支持
+关于 yarn，很可惜，目前不支持
+
+> 上面的 `alias` 命令只是临时修改，终端关闭即实现，永久添加请修改 `.bashrc` 或 `.zshrc`
 
 ### 5.2. 为什么不建议全局安装
 
@@ -486,7 +503,7 @@ elint 强依赖 stylelint, eslint 等工具。而对于 eslint，其文档中写
 
 > Any plugins or shareable configs that you use must also be installed globally to work with a globally-installed ESLint.
 
-全局安装 lint 工具和所有的 plugin，项目数量较多时容易引起混乱，且可能对 ci、部署等带来麻烦
+全局安装 lint 工具和所有的 plugin，项目数量较多时容易引起混乱，且可能对 ci、部署等带来麻烦。
 
 ### 5.3. 安装完成后没有配置文件
 
