@@ -5,4 +5,4 @@ node_modules/
 !test/unit/test-project/node_modules/
 coverage/
 .nyc_output/
-elint*.tgz
+**/*.tgz

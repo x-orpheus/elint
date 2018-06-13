@@ -7,9 +7,10 @@
     "elint": "./bin/cli.js"
   },
   "scripts": {
-    "test": "npm run test:lint && npm run test:unit",
+    "test": "npm run test:lint && npm run test:system && npm run test:unit",
     "test:lint": "eslint --format codeframe \"bin/**/*.js\" \"src/**/*.js\" \"test/**/*.js\" \"scripts/**/\"",
-    "test:unit": "nyc --reporter=html --reporter=text mocha \"test/**/*.spec.js\" && nyc report --reporter=text-lcov | coveralls",
+    "test:system": "mocha test/system/test.spec.js",
+    "test:unit": "nyc --reporter=html --reporter=text mocha \"test/unit/**/*.spec.js\" && nyc report --reporter=text-lcov | coveralls",
     "postinstall": "node ./src/postinstall.js"
   },
   "repository": {

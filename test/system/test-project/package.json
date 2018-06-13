@@ -1,0 +1,21 @@
+{
+  "name": "test-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint-without-fix": "elint lint 'src/**/*'",
+    "lint-fix": "elint lint 'src/**/*' --fix",
+    "lint-es-without-fix": "elint lint es 'src/**/*'",
+    "lint-es-fix": "elint lint es 'src/**/*' --fix",
+    "lint-style-without-fix": "elint lint style 'src/**/*'",
+    "lint-style-fix": "elint lint style 'src/**/*' --fix",
+    "version": "elint -v",
+    "diff": "elint diff",
+    "hooks-install": "elint hooks install",
+    "hooks-uninstall": "elint hooks uninstall"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
