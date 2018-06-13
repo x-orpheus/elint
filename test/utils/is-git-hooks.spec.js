@@ -29,6 +29,9 @@ describe('is-git-hooks 测试', function () {
   });
 
   it('husky 环境', function () {
+    // 模拟 husky 环境比较耗时，防止超时
+    this.timeout(5000);
+
     const tmpl = `
       const isGitHooks = require('${isGitHooksPath}');
       isGitHooks().then(result => {
