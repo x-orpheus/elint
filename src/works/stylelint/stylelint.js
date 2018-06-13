@@ -11,6 +11,8 @@ try {
   // do nothing
 }
 
+const fix = !!options.fix;
+
 const result = {
   name: 'stylelint',
   output: '',
@@ -19,7 +21,8 @@ const result = {
 
 stylelint.lint({
   files,
-  formatter: 'string'
+  formatter: 'string',
+  fix
 }).then(data => {
   result.success = !data.errored;
   result.output = data.output;
