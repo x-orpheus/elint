@@ -4,8 +4,8 @@ const co = require('co');
 const _ = require('lodash');
 const walker = require('./walker');
 const report = require('./utils/report');
-const eslint = require('./works/eslint');
-const stylelint = require('./works/stylelint');
+const eslint = require('./workers/eslint');
+const stylelint = require('./workers/stylelint');
 
 /**
  * @typedef ELintOptions
@@ -36,18 +36,18 @@ function elint(files, options) {
 
     const { type } = options;
     const argus = JSON.stringify(options);
-    let works = [];
+    let workers = [];
 
     if (type) {
-      works.push(linters[type](argus, ...fileList[type]));
+      workers.push(linters[type](argus, ...fileList[type]));
     } else {
       // 兼容 node v6
       _.toPairs(linters).forEach(([linterType, linter]) => {
-        works.push(linter(argus, ...fileList[linterType]));
+        workers.push(linter(argus, ...fileList[linterType]));
       });
     }
 
-    Promise.all(works).then(results => {
+    Promise.all(workers).then(results => {
       const outputs = [];
       let success = true;
 

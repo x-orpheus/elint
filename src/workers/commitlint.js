@@ -1,6 +1,6 @@
 'use strict';
 
-const debug = require('debug')('elint:works:commitlint');
+const debug = require('debug')('elint:workers:commitlint');
 const co = require('co');
 const fs = require('fs-extra');
 const path = require('path');
