@@ -3,8 +3,8 @@
 const fs = require('fs');
 const path = require('path');
 const mock = require('../mock/env');
-const walker = require('../../src/walker');
-const { getBaseDir } = require('../../src/env');
+const walker = require('../../../src/walker');
+const { getBaseDir } = require('../../../src/env');
 
 const mocha = require('mocha');
 const deepEqualInAnyOrder = require('deep-equal-in-any-order');

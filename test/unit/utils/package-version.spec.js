@@ -1,6 +1,6 @@
 'use strict';
 
-const packageVersion = require('../../src/utils/package-version');
+const packageVersion = require('../../../src/utils/package-version');
 
 const mocha = require('mocha');
 const chai = require('chai');

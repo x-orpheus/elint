@@ -1,6 +1,6 @@
 'use strict';
 
-const sort = require('../../src/utils/sort-object');
+const sort = require('../../../src/utils/sort-object');
 
 const mocha = require('mocha');
 const chai = require('chai');

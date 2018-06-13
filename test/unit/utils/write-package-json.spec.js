@@ -3,8 +3,8 @@
 const path = require('path');
 const fs = require('fs-extra');
 const mock = require('../mock/env');
-const write = require('../../src/utils/write-package-json');
-const { getBaseDir } = require('../../src/env');
+const write = require('../../../src/utils/write-package-json');
+const { getBaseDir } = require('../../../src/env');
 
 const mocha = require('mocha');
 const chai = require('chai');

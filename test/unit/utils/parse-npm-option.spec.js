@@ -1,6 +1,6 @@
 'use strict';
 
-const parse = require('../../src/utils/parse-npm-option');
+const parse = require('../../../src/utils/parse-npm-option');
 
 const mocha = require('mocha');
 const chai = require('chai');

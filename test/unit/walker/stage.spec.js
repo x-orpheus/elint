@@ -4,8 +4,8 @@ const fs = require('fs-extra');
 const path = require('path');
 const mock = require('../mock/env');
 const gitInit = require('../mock/git-init');
-const stageFiles = require('../../src/walker/stage');
-const { getBaseDir } = require('../../src/env');
+const stageFiles = require('../../../src/walker/stage');
+const { getBaseDir } = require('../../../src/env');
 
 const mocha = require('mocha');
 const deepEqualInAnyOrder = require('deep-equal-in-any-order');

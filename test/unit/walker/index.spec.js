@@ -1,10 +1,10 @@
 'use strict';
 
 const mock = require('../mock/env');
-const { getBaseDir } = require('../../src/env');
+const { getBaseDir } = require('../../../src/env');
 const runInHusky = require('../mock/run-in-husky');
-const walker = require('../../src/walker');
-const walkerPath = require.resolve('../../src/walker');
+const walker = require('../../../src/walker');
+const walkerPath = require.resolve('../../../src/walker');
 
 const mocha = require('mocha');
 const chaiAsPromised = require('chai-as-promised');

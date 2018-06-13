@@ -1,6 +1,6 @@
 'use strict';
 
-const padEnd = require('../../src/utils/pad-end');
+const padEnd = require('../../../src/utils/pad-end');
 
 const mocha = require('mocha');
 const chai = require('chai');

@@ -3,8 +3,8 @@
 const path = require('path');
 const fs = require('fs-extra');
 const mock = require('../mock/env');
-const tryRequire = require('../../src/utils/try-require');
-const { getBaseDir } = require('../../src/env');
+const tryRequire = require('../../../src/utils/try-require');
+const { getBaseDir } = require('../../../src/env');
 
 const mocha = require('mocha');
 const chai = require('chai');

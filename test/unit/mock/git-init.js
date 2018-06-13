@@ -2,7 +2,7 @@
 
 const co = require('co');
 const execa = require('execa');
-const { getBaseDir } = require('../../src/env');
+const { getBaseDir } = require('../../../src/env');
 
 function gitInit() {
   const options = {

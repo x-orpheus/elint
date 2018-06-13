@@ -1,6 +1,6 @@
 'use strict';
 
-const { parse, stringify, normalize } = require('../../src/utils/package-name');
+const { parse, stringify, normalize } = require('../../../src/utils/package-name');
 
 const mocha = require('mocha');
 const chai = require('chai');

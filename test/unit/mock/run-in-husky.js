@@ -3,7 +3,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const execa = require('execa');
-const { getBaseDir } = require('../../src/env');
+const { getBaseDir } = require('../../../src/env');
 const execaPath = require.resolve('execa');
 
 /**
