@@ -48,24 +48,27 @@ function updateConfigFiles(filePath, keep) {
 
   debug(`file dest path: ${destFilePath}`);
 
+  // 获取输出时使用的相对路径
+  const getRelativePath = p => path.relative(baseDir, p);
+
   // 旧文件存在，rename
   if (keep === true && fs.existsSync(destFilePath)) {
     if (isSameFile(filePath, destFilePath)) {
       debug('file exists, file same, ignore');
-      console.log(`"${destFilePath}" is up to date`);
+      console.log(`  "${getRelativePath(destFilePath)}" is up to date`);
       return;
     }
 
     debug('file exists, file different, move.');
     debug(`file old name: ${oldFilePath}`);
     fs.moveSync(destFilePath, oldFilePath, { overwrite: true });
-    console.log(`  move: from "${destFilePath}"`);
-    console.log(`          to "${oldFilePath}"`);
+    console.log(`  move: from "${getRelativePath(destFilePath)}"`);
+    console.log(`          to "${getRelativePath(oldFilePath)}"`);
   }
 
   fs.copySync(filePath, destFilePath);
-  console.log(`  copy: from "${filePath}"`);
-  console.log(`          to "${destFilePath}"`);
+  console.log(`  copy: from "${getRelativePath(filePath)}"`);
+  console.log(`          to "${getRelativePath(destFilePath)}"`);
 }
 
 module.exports = updateConfigFiles;

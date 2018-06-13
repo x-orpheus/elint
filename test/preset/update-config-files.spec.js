@@ -39,11 +39,11 @@ describe('UpdateConfigFile 测试', function () {
   });
 
   it('新文件', function () {
-    const fileName = '.stylelintrc.js';
+    const fileName = '.eslintrc.js';
     const result = [].concat(...fileList, fileName);
     const filePath = path.join(
-      __dirname,
-      '../test-project/node_modules/elint-preset-node',
+      baseDir,
+      'node_modules/elint-preset-node',
       fileName
     );
 
@@ -55,8 +55,8 @@ describe('UpdateConfigFile 测试', function () {
     const fileName = '.stylelintrc.js';
     const result = [].concat(...fileList, fileName);
     const filePath = path.join(
-      __dirname,
-      '../test-project/node_modules/elint-preset-node',
+      baseDir,
+      'node_modules/elint-preset-node',
       fileName
     );
 
@@ -68,11 +68,11 @@ describe('UpdateConfigFile 测试', function () {
   });
 
   it('文件已经存在, keep = true, files same', function () {
-    const fileName = '.stylelintrc.js';
+    const fileName = '.eslintrc.js';
     const result = [].concat(...fileList, fileName);
     const filePath = path.join(
-      __dirname,
-      '../test-project/node_modules/elint-preset-node',
+      baseDir,
+      'node_modules/elint-preset-normal',
       fileName
     );
 
@@ -88,8 +88,8 @@ describe('UpdateConfigFile 测试', function () {
     const oldFileName = '.stylelintrc.old.js';
     const result = [].concat(...fileList, fileName, oldFileName);
     const filePath = path.join(
-      __dirname,
-      '../test-project/node_modules/elint-preset-node',
+      baseDir,
+      'node_modules/elint-preset-normal',
       fileName
     );
     const destFilePath = path.join(baseDir, fileName);
