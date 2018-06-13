@@ -35,6 +35,7 @@ program
   .command('lint [type] [files...]')
   .alias('l')
   .description('run lint, type: es, style, commit')
+  .option('-f, --fix', 'Automatically fix problems')
   .action((type, files, options) => {
     debug('run lint...');
 
@@ -56,7 +57,12 @@ program
       parsedFiles = [type, ...files];
     }
 
-    elint(parsedFiles, parsedType);
+    const elintOptions = {
+      type: parsedType,
+      fix: options.fix
+    };
+
+    elint(parsedFiles, elintOptions);
   });
 
 /**

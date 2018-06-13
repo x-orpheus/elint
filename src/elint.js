@@ -8,13 +8,19 @@ const eslint = require('./works/eslint');
 const stylelint = require('./works/stylelint');
 
 /**
+ * @typedef ELintOptions
+ * @property {stirng} type lint 类型
+ * @property {boolean} fix 是否自动修复问题
+ */
+
+/**
  * 主函数
  *
  * @param {string[]} files 待执行 lint 的文件
- * @param {string} [type] lint type
+ * @param {ELintOptions} options options
  * @returns {void}
  */
-function elint(files, type) {
+function elint(files, options) {
   co(function* () {
     const fileList = yield walker(files);
 
@@ -28,13 +34,16 @@ function elint(files, type) {
       style: stylelint
     };
 
+    const { type } = options;
+    const argus = JSON.stringify(options);
     let works = [];
+
     if (type) {
-      works.push(linters[type](...fileList[type]));
+      works.push(linters[type](argus, ...fileList[type]));
     } else {
       // 兼容 node v6
       _.toPairs(linters).forEach(([linterType, linter]) => {
-        works.push(linter(...fileList[linterType]));
+        works.push(linter(argus, ...fileList[linterType]));
       });
     }
 

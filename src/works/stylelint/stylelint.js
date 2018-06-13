@@ -2,7 +2,14 @@
 
 const stylelint = require('stylelint');
 const setBlocking = require('../../utils/set-blocking');
-const files = process.argv.slice(2);
+const files = process.argv.slice(3);
+let options = {};
+
+try {
+  options = JSON.parse(process.argv[2]);
+} catch(error) {
+  // do nothing
+}
 
 const result = {
   name: 'stylelint',
