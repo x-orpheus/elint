@@ -2,7 +2,9 @@
 
 exports.elint = require('./elint');
 
-exports.install = require('./preset/install');
+exports.installFromCli = require('./preset/install-cli');
+
+exports.installFromScripts = require('./preset/install-scripts');
 
 exports.diff = require('./preset/diff');
 

@@ -9,7 +9,7 @@
 const debug = require('debug')('elint:cli');
 const program = require('commander');
 const { description } = require('../package.json');
-const { elint, install, diff, commitlint, runHooks, version } = require('../src');
+const { elint, installFromCli, diff, commitlint, runHooks, version } = require('../src');
 const log = require('../src/utils/log');
 
 debug('process.argv: %o', process.argv);
@@ -76,7 +76,7 @@ program
   .description('install or update preset')
   .action((preset, options) => {
     debug('run install...');
-    install(preset, {
+    installFromCli(preset, {
       registry: options.registry,
       keep: options.keep
     });

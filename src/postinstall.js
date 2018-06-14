@@ -10,7 +10,7 @@ if (!pwd.includes('node_modules')) {
 const path = require('path');
 const fs = require('fs-extra');
 const { getNodeModulesDir } = require('./env');
-const { install } = require('./index');
+const { installFromScripts } = require('./index');
 
 const nodeModulesDir = getNodeModulesDir();
 const scriptPath = path.join(__dirname, '../scripts/postinstall');
@@ -27,4 +27,4 @@ fs.copySync(scriptPath, destScriptPath);
 fs.chmodSync(destScriptPath, 0o755);
 
 // 安装完成执行一次 install
-install();
+installFromScripts();

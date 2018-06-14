@@ -8,10 +8,10 @@ process.on('uncaughtException', (err) => {
   process.exit(0);
 });
 
-const { install } = require('elint');
+const { installFromScripts } = require('elint');
 const packageName = process.env.npm_package_name;
 const packageNameRegexp = /^(@.+\/)?elint-preset-.+/;
 
 if (packageName && packageNameRegexp.test(packageName)) {
-  install(packageName);
+  installFromScripts(packageName);
 }
