@@ -11,7 +11,6 @@ const chai = require('chai');
 chai.should();
 
 function run(command, cwd) {
-  const env = Object.assign({}, process.env);
   const strs = command.match(/(?:[^\s"]+|"[^"]*")+/g);
   const program = strs[0];
   const argus = strs.slice(1).map(s => {
@@ -22,18 +21,10 @@ function run(command, cwd) {
     return s;
   });
 
-  // husky 等在 ci 环境下不执行，影响功能测试
-  delete env.CI;
-  delete env.TRAVIS;
-  delete env.CONTINUOUS_INTEGRATION;
-
-  console.log(env);
-
   console.log(`run: ${program} ${argus.join(' ')}, in ${cwd}`);
   execa.sync(program, argus, {
     stdio: 'inherit',
-    cwd,
-    env
+    cwd
   });
 }
 
@@ -75,88 +66,88 @@ describe('系统测试', function () {
     fs.removeSync(tempDir);
   });
 
-  // describe('安装', function () {
-  //   let elintrcPath;
-  //   let stylelintrcPath;
+  describe('安装', function () {
+    let elintrcPath;
+    let stylelintrcPath;
 
-  //   beforeEach(() => {
-  //     elintrcPath = path.join(tempDir, '.eslintrc.js');
-  //     stylelintrcPath = path.join(tempDir, '.stylelintrc.js');
-  //   });
+    beforeEach(() => {
+      elintrcPath = path.join(tempDir, '.eslintrc.js');
+      stylelintrcPath = path.join(tempDir, '.stylelintrc.js');
+    });
 
-  //   it('先安装 elint，再安装 preset', function () {
-  //     run(`npm install ${elintPkgPath}`, tempDir);
-  //     run(`npm install ${presetPkgPath}`, tempDir);
+    it('先安装 elint，再安装 preset', function () {
+      run(`npm install ${elintPkgPath}`, tempDir);
+      run(`npm install ${presetPkgPath}`, tempDir);
 
-  //     fs.existsSync(elintPath).should.be.equal(true);
-  //     fs.existsSync(stylelintrcPath).should.be.equal(true);
-  //   });
+      fs.existsSync(elintPath).should.be.equal(true);
+      fs.existsSync(stylelintrcPath).should.be.equal(true);
+    });
 
-  //   it('先安装 preset，再安装 elint', function () {
-  //     run(`npm install ${presetPkgPath}`, tempDir);
-  //     run(`npm install ${elintPkgPath}`, tempDir);
+    it('先安装 preset，再安装 elint', function () {
+      run(`npm install ${presetPkgPath}`, tempDir);
+      run(`npm install ${elintPkgPath}`, tempDir);
 
-  //     fs.existsSync(elintPath).should.be.equal(true);
-  //     fs.existsSync(stylelintrcPath).should.be.equal(true);
-  //   });
+      fs.existsSync(elintPath).should.be.equal(true);
+      fs.existsSync(stylelintrcPath).should.be.equal(true);
+    });
 
-  //   it('同时安装', function () {
-  //     run(`npm install ${presetPkgPath} ${elintPkgPath}`, tempDir);
+    it('同时安装', function () {
+      run(`npm install ${presetPkgPath} ${elintPkgPath}`, tempDir);
 
-  //     fs.existsSync(elintPath).should.be.equal(true);
-  //     fs.existsSync(stylelintrcPath).should.be.equal(true);
-  //   });
-  // });
+      fs.existsSync(elintPath).should.be.equal(true);
+      fs.existsSync(stylelintrcPath).should.be.equal(true);
+    });
+  });
 
-  // describe('功能测试', function () {
-  //   beforeEach(() => {
-  //     run(`npm install ${presetPkgPath} ${elintPkgPath}`, tempDir);
-  //   });
+  describe('功能测试', function () {
+    beforeEach(() => {
+      run(`npm install ${presetPkgPath} ${elintPkgPath}`, tempDir);
+    });
 
-  //   it('lint', function () {
-  //     (function () {
-  //       run('npm run lint-without-fix', tempDir);
-  //     }).should.throw();
-  //   });
+    it('lint', function () {
+      (function () {
+        run('npm run lint-without-fix', tempDir);
+      }).should.throw();
+    });
 
-  //   it('lint --fix', function () {
-  //     run('npm run lint-fix', tempDir);
-  //   });
+    it('lint --fix', function () {
+      run('npm run lint-fix', tempDir);
+    });
 
-  //   it('lint es', function () {
-  //     (function () {
-  //       run('npm run lint-es-without-fix', tempDir);
-  //     }).should.throw();
-  //   });
+    it('lint es', function () {
+      (function () {
+        run('npm run lint-es-without-fix', tempDir);
+      }).should.throw();
+    });
 
-  //   it('lint es --fix', function () {
-  //     run('npm run lint-es-fix', tempDir);
-  //   });
+    it('lint es --fix', function () {
+      run('npm run lint-es-fix', tempDir);
+    });
 
-  //   it('lint style', function () {
-  //     (function () {
-  //       run('npm run lint-style-without-fix', tempDir);
-  //     }).should.throw();
-  //   });
+    it('lint style', function () {
+      (function () {
+        run('npm run lint-style-without-fix', tempDir);
+      }).should.throw();
+    });
 
-  //   it('lint style --fix', function () {
-  //     run('npm run lint-style-fix', tempDir);
-  //   });
+    it('lint style --fix', function () {
+      run('npm run lint-style-fix', tempDir);
+    });
 
-  //   it('version', function () {
-  //     run('npm run version', tempDir);
-  //   });
+    it('version', function () {
+      run('npm run version', tempDir);
+    });
 
-  //   it('diff', function () {
-  //     const elintrcPath = path.join(tempDir, '.eslintrc.js');
-  //     const elintrcOldPath = path.join(tempDir, '.eslintrc.old.js');
+    it('diff', function () {
+      const elintrcPath = path.join(tempDir, '.eslintrc.js');
+      const elintrcOldPath = path.join(tempDir, '.eslintrc.old.js');
 
-  //     fs.copyFileSync(elintrcPath, elintrcOldPath);
-  //     fs.appendFileSync(elintrcOldPath, 'console.log(1)');
+      fs.copyFileSync(elintrcPath, elintrcOldPath);
+      fs.appendFileSync(elintrcOldPath, 'console.log(1)');
 
-  //     run('npm run diff', tempDir);
-  //   });
-  // });
+      run('npm run diff', tempDir);
+    });
+  });
 
   describe('git 相关测试', function () {
     let hooksPath;
