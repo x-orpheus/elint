@@ -105,6 +105,14 @@ describe('系统测试', function () {
       fs.existsSync(elintPath).should.be.equal(true);
       fs.existsSync(stylelintrcPath).should.be.equal(true);
     });
+
+    it('先安装 elint，然后使用 elint 安装 preset', function () {
+      run(`npm install ${elintPkgPath}`, tempDir);
+      run('node ./node_modules/.bin/elint install test', tempDir);
+
+      fs.existsSync(elintPath).should.be.equal(true);
+      fs.existsSync(stylelintrcPath).should.be.equal(true);
+    });
   });
 
   describe('功能测试', function () {
