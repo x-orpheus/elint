@@ -9,4 +9,5 @@ os:
   - linux
   - osx
 before_install:
+  - npm ci
   - node test/system/npm-check.js
