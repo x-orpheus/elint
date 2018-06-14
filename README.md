@@ -41,6 +41,7 @@
   - [5.5. 配置文件是不是可以 git ignore](#55-配置文件是不是可以-git-ignore)
   - [5.6. 是否可以安装多个 preset](#56-是否可以安装多个-preset)
   - [5.7. 某些文件没有被校验到](#57-某些文件没有被校验到)
+  - [5.8. 为什么添加了 fix 选项还是有问题输出](#58-为什么添加了-fix-选项还是有问题输出)
 - [6. 参考](#6-参考)
 
 <!-- /TOC -->
@@ -315,7 +316,7 @@ npm install elint-preset-test --save-dev
 `lint` 命令用来执行代码校验和 git commit message 校验。当 lint 运行在 git hooks 中时，文件的搜索范围限定在 **git 暂存区**，也就是只从你将要 commit 的文件中，找到需要校验的文件，执行校验。
 
 ```shell
-elint lint [type] [files...]
+elint lint [options] [type] [files...]
 ```
 
 type 可选的值：
@@ -326,11 +327,20 @@ type 可选的值：
 
 如果不指定 type，默认执行 eslint 和 stylelint
 
+options 可选的值：
+
+- fix: 自动修复
+
+当添加 `--fix` 或者 `-f` 时，会尝试自动修复问题，无法自动修复的问题依旧会输出出来。
+
 例子：
 
 ```shell
 # 校验 js 和 scss
 $ elint lint "**/*.js" "**/*.scss"
+
+# 校验 js 和 scss，执行自动修复
+$ elint lint "**/*.js" "**/*.scss" --fix
 
 # 校验 js
 $ elint lint "**/*.js"
@@ -545,6 +555,10 @@ elint 强依赖 stylelint, eslint 等工具。而对于 eslint，其文档中写
 
 1. 检查你的 glob 写法是否有问题。
 2. 可能是 glob 被传入 elint 之前就被意外解析了，参考 [lint 命令](#31-lint)。
+
+### 5.8. 为什么添加了 fix 选项还是有问题输出
+
+并不是所有规则都支持自动修复，具体可以查看 [eslint rules](https://eslint.org/docs/rules/) 和 [stylelint rules](https://stylelint.io/user-guide/rules/)，可以自动修复的规则都有标识。
 
 ## 6. 参考
 
