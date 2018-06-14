@@ -36,6 +36,9 @@ function commitlint() {
       load()
     ]);
 
+    debug('git commit message: %o', message);
+    debug('commitlint config: %o', config);
+
     const rules = config.rules;
     const options = config.parserPreset ? { parserOpts: config.parserPreset.parserOpts } : {};
     const report = yield lint(message[0], rules, options);
