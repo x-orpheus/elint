@@ -43,7 +43,7 @@ run('npm pack', presetPath);
 /**
  * 测试前执行 npm check
  */
-require('./npm-check')
+require('./npm-check');
 
 // 系统测试
 describe('系统测试', function () {
