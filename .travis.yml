@@ -8,3 +8,7 @@ node_js:
 os:
   - linux
   - osx
+env:
+  - CI=false
+  - TRAVIS=false
+  - CONTINUOUS_INTEGRATION=false
