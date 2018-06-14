@@ -175,6 +175,11 @@ describe('系统测试', function () {
     });
 
     it('lint commit(error)', function () {
+      /**
+       * 这里需要手动安装一次，因为 husky 的 postinstall 检查是 ci 环境，不执行安装
+       * 手动安装的时候，已经有了配置文件，配置文件 skipCI = false
+       */
+      run('npm run hooks-install', tempDir);
       run('git add package.json', tempDir);
 
       (function () {
@@ -183,6 +188,11 @@ describe('系统测试', function () {
     });
 
     it('lint commit(success)', function () {
+      /**
+       * 这里需要手动安装一次，因为 husky 的 postinstall 检查是 ci 环境，不执行安装
+       * 手动安装的时候，已经有了配置文件，配置文件 skipCI = false
+       */
+      run('npm run hooks-install', tempDir);
       run('git add package.json', tempDir);
       run('git commit -m "build: hello"', tempDir);
     });
