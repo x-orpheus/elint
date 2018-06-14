@@ -11,9 +11,19 @@ const chai = require('chai');
 chai.should();
 
 function run(command, cwd) {
-  const argus = command.split(' ');
+  const strs = command.match(/(?:[^\s"]+|"[^"]*")+/g);
+  const program = strs[0];
+  const argus = strs.slice(1).map(s => {
+    if (/^".+"$/.test(s)) {
+      return s.slice(1, -1);
+    }
 
-  execa.sync(argus[0], argus.slice(1), {
+    return s;
+  });
+
+  console.log(`run: ${program} ${argus.join(' ')}, in ${cwd}`);
+
+  execa.sync(program, argus, {
     stdio: 'inherit',
     cwd
   });
@@ -39,12 +49,17 @@ describe('系统测试', function () {
   // 临时目录
   let tempDir;
 
-  // 创建测试项目
   beforeEach(() => {
     tempDir = path.join(os.tmpdir(), `elint_test_system_${Date.now()}`);
     const testProjectDir = path.join(__dirname, 'test-project');
 
+    // 创建测试项目
     fs.copySync(testProjectDir, tempDir);
+
+    /**
+     * moch env.js baseDir
+     */
+    process.env.INIT_CWD = tempDir;
   });
 
   // 清理
@@ -145,33 +160,32 @@ describe('系统测试', function () {
     });
 
     it('hooks install && uninstall', function () {
+      let hooks;
+
       run('npm run hooks-uninstall', tempDir);
 
-      fs.readdirSync(hooksPath)
-        .filter(p => !p.includes('.sample'))
-        .length.should.be.equal(0);
+      // eslint-disable-next-line max-nested-callbacks
+      hooks = fs.readdirSync(hooksPath).filter(p => !p.includes('.sample'));
+      hooks.length.should.be.equal(0);
 
       run('npm run hooks-install', tempDir);
 
-      fs.readdirSync(hooksPath)
-        .filter(p => !p.includes('.sample'))
-        .length.should.be.above(0);
+      // eslint-disable-next-line max-nested-callbacks
+      hooks = fs.readdirSync(hooksPath).filter(p => !p.includes('.sample'));
+      hooks.length.should.be.above(0);
     });
 
     it('lint commit(error)', function () {
-      run('git add .', tempDir);
+      run('git add package.json', tempDir);
 
       (function () {
-        run('git commit -m "hello world"', tempDir);
+        run('git commit -m "hello"', tempDir);
       }).should.throw();
     });
 
     it('lint commit(success)', function () {
-      run('git add .', tempDir);
-
-      (function () {
-        run('git commit -m "test: commit"', tempDir);
-      }).should.throw();
+      run('git add package.json', tempDir);
+      run('git commit -m "build: hello"', tempDir);
     });
   });
 });
