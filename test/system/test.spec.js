@@ -47,6 +47,9 @@ require('./npm-check');
 
 // 系统测试
 describe('系统测试', function () {
+  // ci 有时不太稳定，添加 try
+  this.retries(2);
+
   // timeout 5min
   this.timeout(5 * 60 * 1000);
 
