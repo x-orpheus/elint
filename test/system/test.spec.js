@@ -25,6 +25,7 @@ function run(command, cwd) {
   // husky 等在 ci 环境下不执行，影响功能测试
   delete env.CI;
   delete env.TRAVIS;
+  delete env.CONTINUOUS_INTEGRATION;
 
   console.log(`run: ${program} ${argus.join(' ')}, in ${cwd}`);
   execa.sync(program, argus, {
