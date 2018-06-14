@@ -27,6 +27,8 @@ function run(command, cwd) {
   delete env.TRAVIS;
   delete env.CONTINUOUS_INTEGRATION;
 
+  console.log(env);
+
   console.log(`run: ${program} ${argus.join(' ')}, in ${cwd}`);
   execa.sync(program, argus, {
     stdio: 'inherit',
