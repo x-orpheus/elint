@@ -154,7 +154,7 @@ describe('系统测试', function () {
       run('npm run version', tempDir);
     });
 
-    it('diff', function () {
+    it('diff 存在差异文件', function () {
       const elintrcPath = path.join(tempDir, '.eslintrc.js');
       const elintrcOldPath = path.join(tempDir, '.eslintrc.old.js');
 
@@ -162,6 +162,14 @@ describe('系统测试', function () {
       fs.appendFileSync(elintrcOldPath, 'console.log(1)');
 
       run('npm run diff', tempDir);
+    });
+
+    it('diff 不存在差异文件', function () {
+      run('npm run diff', tempDir);
+    });
+
+    it('直接执行 elint，显示 help', function () {
+      run('./node_modules/.bin/elint', tempDir);
     });
   });
 
