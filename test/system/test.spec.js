@@ -142,7 +142,7 @@ describe('系统测试', function () {
       const elintrcPath = path.join(tempDir, '.eslintrc.js');
       const elintrcOldPath = path.join(tempDir, '.eslintrc.old.js');
 
-      fs.copyFileSync(elintrcPath, elintrcOldPath);
+      fs.copySync(elintrcPath, elintrcOldPath);
       fs.appendFileSync(elintrcOldPath, 'console.log(1)');
 
       run('npm run diff', tempDir);
