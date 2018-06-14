@@ -40,6 +40,11 @@ run('npm pack', elintPath);
 // preset 打包
 run('npm pack', presetPath);
 
+/**
+ * 测试前执行 npm check
+ */
+require('./npm-check')
+
 // 系统测试
 describe('系统测试', function () {
   // timeout 5min

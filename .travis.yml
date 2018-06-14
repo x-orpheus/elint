@@ -8,6 +8,3 @@ node_js:
 os:
   - linux
   - osx
-before_install:
-  - npm install
-  - node test/system/npm-check.js
