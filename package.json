@@ -82,6 +82,6 @@
     "deep-equal-in-any-order": "^1.0.10",
     "mocha": "^5.1.1",
     "nyc": "^12.0.2",
-    "sinon": "^5.1.1"
+    "sinon": "^6.0.0"
   }
 }
