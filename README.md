@@ -1,6 +1,10 @@
 # ELint
 
-[![NPM version][npm-image]][npm-url] [![License][license-image]][license-url] [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url]
+[![NPM version][npm-image]][npm-url]
+[![License][license-image]][license-url]
+[![Build Status][travis-image]][travis-url]
+[![Build status][appveyor-image]][appveyor-url]
+[![Coverage Status][coveralls-image]][coveralls-url]
 
 专为团队设计的 lint 工具
 
@@ -575,5 +579,7 @@ elint 强依赖 stylelint, eslint 等工具。而对于 eslint，其文档中写
 [license-url]: https://github.com/keenwon/eazydict/blob/master/LICENSE
 [travis-image]: https://img.shields.io/travis/keenwon/elint.svg?style=flat-square
 [travis-url]: https://travis-ci.org/keenwon/elint
+[appveyor-image]: https://ci.appveyor.com/api/projects/status/8ji6bpeea0aiwp0i/branch/master?svg=true
+[appveyor-url]: https://ci.appveyor.com/project/keenwon/elint
 [coveralls-image]: https://img.shields.io/coveralls/keenwon/elint.svg?style=flat-square
 [coveralls-url]: https://coveralls.io/github/keenwon/elint?branch=master
