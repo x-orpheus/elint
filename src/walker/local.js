@@ -34,8 +34,6 @@ function getIgnore() {
   return fileContent.split(/\r?\n/);
 }
 
-const aaaaaa = 1;
-
 /**
  * 本地文件遍历
  *
