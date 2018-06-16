@@ -2,6 +2,7 @@
 .idea/
 .vscode/
 node_modules/
+npm-debug.log
 !test/unit/test-project/node_modules/
 coverage/
 .nyc_output/
