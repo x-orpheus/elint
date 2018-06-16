@@ -47,15 +47,15 @@ function walker(patterns) {
 
   const ignoreFilter = ignore().add(ignoreRules).createFilter();
 
-  return globby
-    .sync(patterns, {
-      cwd: baseDir,
-      gitignore: true,
-      dot: true,
-      onlyFiles: true,
-      absolute: true
-    })
-    .filter(ignoreFilter);
+  return globby(patterns, {
+    cwd: baseDir,
+    gitignore: true,
+    dot: true,
+    onlyFiles: true,
+    absolute: true
+  }).then(list => {
+    return list.filter(ignoreFilter);
+  });
 }
 
 module.exports = walker;
