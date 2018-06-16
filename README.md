@@ -559,6 +559,15 @@ elint 强依赖 stylelint, eslint 等工具。而对于 eslint，其文档中写
 
 1. 检查你的 glob 写法是否有问题。
 2. 可能是 glob 被传入 elint 之前就被意外解析了，参考 [lint 命令](#31-lint)。
+3. windows 7 + git bash 下测试时发现，npm scripts 里，glob 必须使用双引号包裹
+
+```json
+{
+  "scripts": {
+    "test:lint": "elint lint \"src/**/*.js\""
+  }
+}
+```
 
 ### 5.8. 为什么添加了 fix 选项还是有问题输出
 
