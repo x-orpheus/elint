@@ -24,7 +24,13 @@ describe('Walker stage 测试', function () {
   beforeEach(() => {
     unmock = mock();
     baseDir = getBaseDir();
-    getPath = p => path.join(baseDir, p);
+    getPath = p => {
+      /**
+       * https://github.com/mrmlnc/fast-glob/blob/master/src/utils/path.ts#L24
+       * 针对 window 系统特殊处理
+       */
+      return path.join(baseDir, p).replace(/\\/g, '/');
+    };
   });
 
   afterEach(() => {

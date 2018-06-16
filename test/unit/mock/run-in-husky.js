@@ -19,16 +19,18 @@ function run(tmpl) {
   const execFilePath = path.join(baseDir, 'file.js');
   const huskyFilePath = path.join(baseDir, 'node_modules/husky/index.js');
 
-  // 创建文件
-  fs.outputFileSync(execFilePath, tmpl);
-
-  // 创建 husky 环境并添加执行权限
-  fs.outputFileSync(huskyFilePath, `
+  const huskyFileContent = `
     const execa = require('${execaPath}');
     execa('node', ['${execFilePath}']).then(result => {
       process.stdout.write(JSON.stringify(result.stdout));
     });
-  `);
+  `;
+
+  // 创建文件
+  fs.outputFileSync(execFilePath, tmpl.replace('/\\/g', '\\\\'));
+
+  // 创建 husky 环境并添加执行权限
+  fs.outputFileSync(huskyFilePath, huskyFileContent.replace('/\\/g', '\\\\'));
   fs.chmodSync(huskyFilePath, 0o755);
 
   return execa('node', [huskyFilePath])

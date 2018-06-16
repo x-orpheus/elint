@@ -1,6 +1,7 @@
 'use strict';
 
 const debug = require('debug')('elint:utils:is-git-hooks');
+const path = require('path');
 const co = require('co');
 const find = require('find-process');
 
@@ -45,7 +46,7 @@ function isGitHooks() {
         return false;
       }
 
-      return cmd.includes('node_modules/husky');
+      return cmd.includes(`node_modules${path.sep}husky`);
     });
   }).catch(/* istanbul ignore next */ function (err) {
     debug('error: %o', err);
