@@ -30,9 +30,9 @@ function padEnd(string, targetLength) {
     return string;
   }
 
+  /* istanbul ignore next */
   const fn = typeof String.prototype.padEnd === 'function'
     ? String.prototype.padEnd
-    /* istanbul ignore next */
     : polyfill;
 
   return fn.call(string, targetLength);

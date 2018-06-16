@@ -16,10 +16,12 @@ function getInitCwd() {
     return process.env.INIT_CWD;
   }
 
-  debug(`process.env.PWD: ${process.env.PWD}`);
+  const cwd = process.cwd();
+
+  debug(`process.cwd(): ${cwd}`);
 
   // 兼容 npm v3
-  return process.env.PWD.split('/node_modules/')[0];
+  return cwd.split('/node_modules/')[0];
 }
 
 /**

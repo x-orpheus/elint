@@ -1,9 +1,9 @@
 'use strict';
 
-const pwd = process.env.PWD;
+const cwd = process.cwd();
 
 // 开发过程中不执行
-if (!pwd.includes('node_modules')) {
+if (!cwd.includes('node_modules')) {
   return;
 }
 
