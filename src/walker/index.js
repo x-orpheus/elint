@@ -34,7 +34,7 @@ function walker(patterns) {
     if (isGit) {
       fileList = yield stage(patterns);
     } else {
-      fileList = local(patterns);
+      fileList = yield local(patterns);
     }
 
     fillFileTree(fileTree, fileList);
