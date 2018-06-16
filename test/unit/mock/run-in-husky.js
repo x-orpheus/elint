@@ -27,10 +27,10 @@ function run(tmpl) {
   `;
 
   // 创建文件
-  fs.outputFileSync(execFilePath, tmpl.replace('/\\/g', '\\\\'));
+  fs.outputFileSync(execFilePath, tmpl.replace(/\\/g, '\\\\'));
 
   // 创建 husky 环境并添加执行权限
-  fs.outputFileSync(huskyFilePath, huskyFileContent.replace('/\\/g', '\\\\'));
+  fs.outputFileSync(huskyFilePath, huskyFileContent.replace(/\\/g, '\\\\'));
   fs.chmodSync(huskyFilePath, 0o755);
 
   return execa('node', [huskyFilePath])
