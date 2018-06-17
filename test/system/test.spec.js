@@ -178,6 +178,8 @@ describe('系统测试', function () {
 
     beforeEach(() => {
       run('git init', tempDir);
+      run('git config user.name "zhang san"', tempDir);
+      run('git config user.email "zhangsan@gmail.com"', tempDir);
       run(`npm install ${presetPkgPath} ${elintPkgPath}`, tempDir);
       hooksPath = path.join(tempDir, '.git/hooks');
     });
