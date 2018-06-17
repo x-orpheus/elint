@@ -12,7 +12,7 @@ chai.should();
 
 function run(command, cwd) {
   const strs = command.match(/(?:[^\s"]+|"[^"]*")+/g);
-  const program = strs[0];
+  let program = strs[0];
   const argus = strs.slice(1).map(s => {
     if (/^".+"$/.test(s)) {
       return s.slice(1, -1);
@@ -20,6 +20,11 @@ function run(command, cwd) {
 
     return s;
   });
+
+  if (process.platform === 'win32' && program === 'node') {
+    program = 'cmd';
+    argus.unshift('/d /s /c');
+  }
 
   console.log(`run: ${program} ${argus.join(' ')}, in ${cwd}`);
   execa.sync(program, argus, {
@@ -108,7 +113,7 @@ describe('系统测试', function () {
 
     it('先安装 elint，然后使用 elint 安装 preset', function () {
       run(`npm install ${elintPkgPath}`, tempDir);
-      run('node ./node_modules/.bin/elint install test', tempDir);
+      run(`node node_modules${path.sep}.bin${path.sep}elint install test`, tempDir);
 
       fs.existsSync(elintPath).should.be.equal(true);
       fs.existsSync(stylelintrcPath).should.be.equal(true);
@@ -169,7 +174,7 @@ describe('系统测试', function () {
     });
 
     it('直接执行 elint，显示 help', function () {
-      run('./node_modules/.bin/elint', tempDir);
+      run(`node node_modules${path.sep}.bin${path.sep}elint`, tempDir);
     });
   });
 
