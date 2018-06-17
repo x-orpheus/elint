@@ -23,6 +23,14 @@ fs.ensureDirSync(destDirPath);
 // 部署 scripts
 fs.copySync(scriptPath, destScriptPath);
 
+// 兼容 windows
+if (process.platform === 'win32') {
+  const cmdScriptPath = path.join(__dirname, '../scripts/postinstall.cmd');
+  const destCmdScriptPath = path.join(destDirPath, 'postinstall.cmd');
+
+  fs.copySync(cmdScriptPath, destCmdScriptPath);
+}
+
 // 添加执行权限
 fs.chmodSync(destScriptPath, 0o755);
 
