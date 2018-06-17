@@ -72,7 +72,9 @@ function install(presetName, options = {}) {
   // 临时安装目录
   const tmpdir = path.join(os.tmpdir(), `elint_tmp_${Date.now()}`);
   const prestPackageName = stringify({ scope, name });
-  const presetModulePath = path.join(tmpdir, `lib/node_modules/${prestPackageName}`);
+  const presetModulePath = process.platform === 'win32'
+    ? path.join(tmpdir, `node_modules/${prestPackageName}`)
+    : path.join(tmpdir, `lib/node_modules/${prestPackageName}`);
   const presetPkgPath = path.join(presetModulePath, 'package.json');
 
   debug(`tmpdir: ${tmpdir}`);
