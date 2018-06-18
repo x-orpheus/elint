@@ -73,7 +73,7 @@
     "minimatch": "^3.0.4",
     "semver-utils": "^1.1.2",
     "staged-git-files": "^1.1.1",
-    "stylelint": "^9.2.0",
+    "stylelint": "^9.3.0",
     "supports-color": "^4",
     "write-json-file": "^2.3.0"
   },
