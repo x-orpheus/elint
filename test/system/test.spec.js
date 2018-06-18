@@ -135,6 +135,10 @@ describe('系统测试', function () {
       run('npm run lint-fix', tempDir);
     });
 
+    it('lint --no-ignore', function () {
+      run('npm run lint-no-ignore', tempDir);
+    });
+
     it('lint es', function () {
       (function () {
         run('npm run lint-es-without-fix', tempDir);
