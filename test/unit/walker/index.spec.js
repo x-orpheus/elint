@@ -24,6 +24,13 @@ describe('Walker 测试', function () {
     unmock();
   });
 
+  it('空测试', function () {
+    return walker().should.eventually.deep.equal({
+      es: [],
+      style: []
+    });
+  });
+
   it('普通环境', function () {
     return walker(['*.txt']).should.eventually.deep.equal({
       es: [],
