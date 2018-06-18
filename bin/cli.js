@@ -58,9 +58,15 @@ program
       parsedFiles = [type, ...files];
     }
 
-    const elintOptions = Object.assign({}, options, {
-      type: parsedType
-    });
+    /**
+     * 坑：commander options 存在循环引用
+     * 手动合并
+     */
+    const elintOptions = {
+      type: parsedType,
+      fix: options.fix,
+      noIgnore: options.noIgnore
+    };
 
     elint(parsedFiles, elintOptions);
   });
