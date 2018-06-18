@@ -11,10 +11,12 @@ const stage = require('./stage');
  * 文件遍历
  *
  * @param {Array<string>} patterns 匹配模式
+ * @param {object} options 配置
  * @returns {Promise<object>} file tree
  */
-function walker(patterns) {
+function walker(patterns, options) {
   debug(`input glob patterns: ${patterns}`);
+  debug(`input options: ${options}`);
 
   const fileTree = getFileTree();
 
@@ -34,7 +36,7 @@ function walker(patterns) {
     if (isGit) {
       fileList = yield stage(patterns);
     } else {
-      fileList = yield local(patterns);
+      fileList = yield local(patterns, options);
     }
 
     fillFileTree(fileTree, fileList);

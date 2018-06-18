@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const mock = require('../mock/env');
-const walker = require('../../../src/walker');
+const walker = require('../../../src/walker/local');
 const { getBaseDir } = require('../../../src/env');
 
 const mocha = require('mocha');
@@ -38,93 +38,62 @@ describe('Walker local 测试', function () {
 
   describe('Walker 功能测试', function () {
     it('空测试', function () {
-      const result = {
-        style: [],
-        es: []
-      };
-
       return Promise.all([
-        walker().should.eventually.deep.equalInAnyOrder(result),
-        walker([]).should.eventually.deep.equalInAnyOrder(result)
+        walker().should.eventually.deep.equalInAnyOrder([]),
+        walker([]).should.eventually.deep.equalInAnyOrder([])
       ]);
     });
 
     it('单条 glob', function () {
-      const result = {
-        style: [],
-        es: [getPath('src/a.js')]
-      };
+      const result = [
+        getPath('src/a.js')
+      ];
 
       return walker('src/*.js').should.eventually.deep.equalInAnyOrder(result);
     });
 
     it('单条 glob, 匹配空', function () {
-      const result = {
-        style: [],
-        es: []
-      };
-
-      return walker('src/*.ts').should.eventually.deep.equalInAnyOrder(result);
+      return walker('src/*.ts').should.eventually.deep.equalInAnyOrder([]);
     });
 
     it('单条 glob, deep', function () {
-      const result = {
-        style: [],
-        es: [
-          getPath('src/a.js'),
-          getPath('src/lib/b.js')
-        ]
-      };
+      const result = [
+        getPath('src/a.js'),
+        getPath('src/lib/b.js')
+      ];
 
       return walker('src/**/*.js').should.eventually.deep.equalInAnyOrder(result);
     });
 
     it('单条 glob, deep', function () {
-      const result = {
-        style: [
-          getPath('src/a.css')
-        ],
-        es: [
-          getPath('src/a.js'),
-          getPath('src/lib/b.js')
-        ]
-      };
+      const result = [
+        getPath('src/a.css'),
+        getPath('src/a.js'),
+        getPath('src/lib/b.js')
+      ];
 
       return walker('src/**/*').should.eventually.deep.equalInAnyOrder(result);
     });
 
     it('多条 glob', function () {
-      const result = {
-        style: [
-          getPath('src/a.css')
-        ],
-        es: [
-          getPath('src/a.js')
-        ]
-      };
+      const result = [
+        getPath('src/a.css'),
+        getPath('src/a.js')
+      ];
 
       return walker(['src/*.js', 'src/*.css']).should.eventually.deep.equalInAnyOrder(result);
     });
 
     it('多条 glob, 匹配空', function () {
-      const result = {
-        style: [],
-        es: []
-      };
-
-      return walker(['src/**/*.ts', 'dist/**/*.ts']).should.eventually.deep.equalInAnyOrder(result);
+      return walker(['src/**/*.ts', 'dist/**/*.ts']).should.eventually.deep.equalInAnyOrder([]);
     });
 
     it('多条 glob, deep', function () {
-      const result = {
-        style: [
-          getPath('src/a.css')
-        ],
-        es: [
-          getPath('src/a.js'),
-          getPath('src/lib/b.js')
-        ]
-      };
+      const result = [
+        getPath('src/a.css'),
+        getPath('src/a.js'),
+        getPath('src/lib/b.js')
+      ];
 
       return walker(['src/**/*.js', 'src/**/*.css']).should.eventually.deep.equalInAnyOrder(result);
     });
@@ -142,53 +111,66 @@ describe('Walker local 测试', function () {
     };
 
     it('文件不存在，使用默认忽略规则', function () {
-      const result = {
-        style: [],
-        es: [
-          getPath('src/a.js'),
-          getPath('src/lib/b.js'),
-          getPath('app/c.js')
-        ]
-      };
+      const result = [
+        getPath('src/a.js'),
+        getPath('src/lib/b.js'),
+        getPath('app/c.js')
+      ];
 
       return walker('**/*.js').should.eventually.deep.equalInAnyOrder(result);
     });
 
     it('文件存在，为空，没有任何忽略规则', function () {
-      const result = {
-        style: [],
-        es: [
-          getPath('app/c.js'),
-          getPath('src/a.js'),
-          getPath('src/lib/b.js'),
-          getPath('node_modules/elint-preset-node/index.js'),
-          getPath('node_modules/elint-preset-node/.eslintrc.js'),
-          getPath('node_modules/elint-preset-node/.stylelintrc.js'),
-          getPath('node_modules/elint-preset-normal/index.js'),
-          getPath('node_modules/elint-preset-normal/.eslintrc.js'),
-          getPath('node_modules/elint-preset-normal/.stylelintrc.js'),
-          getPath('node_modules/@scope/elint-preset-scope/index.js'),
-          getPath('node_modules/@scope/elint-preset-scope/.eslintrc.js'),
-          getPath('node_modules/@scope/elint-preset-scope/.stylelintrc.js'),
-          getPath('bower_components/a.js')
-        ]
-      };
+      const result = [
+        getPath('app/c.js'),
+        getPath('src/a.js'),
+        getPath('src/lib/b.js'),
+        getPath('node_modules/elint-preset-node/index.js'),
+        getPath('node_modules/elint-preset-node/.eslintrc.js'),
+        getPath('node_modules/elint-preset-node/.stylelintrc.js'),
+        getPath('node_modules/elint-preset-normal/index.js'),
+        getPath('node_modules/elint-preset-normal/.eslintrc.js'),
+        getPath('node_modules/elint-preset-normal/.stylelintrc.js'),
+        getPath('node_modules/@scope/elint-preset-scope/index.js'),
+        getPath('node_modules/@scope/elint-preset-scope/.eslintrc.js'),
+        getPath('node_modules/@scope/elint-preset-scope/.stylelintrc.js'),
+        getPath('bower_components/a.js')
+      ];
 
       createIgnoreFile('');
 
       return walker('**/*.js').should.eventually.deep.equalInAnyOrder(result);
     });
 
+    it('文件存在，不为空，--no-ignore', function () {
+      const result = [
+        getPath('app/c.js'),
+        getPath('src/a.js'),
+        getPath('src/lib/b.js'),
+        getPath('node_modules/elint-preset-node/index.js'),
+        getPath('node_modules/elint-preset-node/.eslintrc.js'),
+        getPath('node_modules/elint-preset-node/.stylelintrc.js'),
+        getPath('node_modules/elint-preset-normal/index.js'),
+        getPath('node_modules/elint-preset-normal/.eslintrc.js'),
+        getPath('node_modules/elint-preset-normal/.stylelintrc.js'),
+        getPath('node_modules/@scope/elint-preset-scope/index.js'),
+        getPath('node_modules/@scope/elint-preset-scope/.eslintrc.js'),
+        getPath('node_modules/@scope/elint-preset-scope/.stylelintrc.js'),
+        getPath('bower_components/a.js')
+      ];
+
+      createIgnoreFile('**/node_modules/**');
+
+      return walker('**/*.js', { noIgnore: true }).should.eventually.deep.equalInAnyOrder(result);
+    });
+
     it('单条忽略测试', function () {
-      const result = {
-        style: [],
-        es: [
-          getPath('app/c.js'),
-          getPath('src/a.js'),
-          getPath('src/lib/b.js'),
-          getPath('bower_components/a.js')
-        ]
-      };
+      const result = [
+        getPath('app/c.js'),
+        getPath('src/a.js'),
+        getPath('src/lib/b.js'),
+        getPath('bower_components/a.js')
+      ];
 
       createIgnoreFile('**/node_modules/**');
 
@@ -196,13 +178,10 @@ describe('Walker local 测试', function () {
     });
 
     it('多条忽略测试', function () {
-      const result = {
-        style: [],
-        es: [
-          getPath('app/c.js'),
-          getPath('bower_components/a.js')
-        ]
-      };
+      const result = [
+        getPath('app/c.js'),
+        getPath('bower_components/a.js')
+      ];
 
       createIgnoreFile('**/node_modules/**\n**/src/**');
 
@@ -210,13 +189,10 @@ describe('Walker local 测试', function () {
     });
 
     it('注释测试', function () {
-      const result = {
-        style: [],
-        es: [
-          getPath('app/c.js'),
-          getPath('bower_components/a.js')
-        ]
-      };
+      const result = [
+        getPath('app/c.js'),
+        getPath('bower_components/a.js')
+      ];
 
       createIgnoreFile('**/node_modules/**\n**/src/**\n#**/app/**');
 

@@ -3,6 +3,7 @@
 const debug = require('debug')('elint:walker:local');
 const fs = require('fs');
 const path = require('path');
+const co = require('co');
 const globby = require('globby');
 const ignore = require('ignore');
 const { defaultIgnore } = require('../config');
@@ -37,24 +38,35 @@ function getIgnore() {
 /**
  * 本地文件遍历
  *
- * @param {Array<string>} patterns 匹配模式
+ * @param {Array<string>} [patterns] 匹配模式
+ * @param {object} [options] 配置
  * @returns {Array<string>} file list
  */
-function walker(patterns) {
+function walker(patterns = [], options = {}) {
   const baseDir = getBaseDir();
-  const ignoreRules = getIgnore();
-  debug('ignore rules: %j', ignoreRules);
+  const noIgnore = typeof options.noIgnore === 'boolean'
+    ? options.noIgnore
+    : false; // 默认不禁用 ignore 规则
 
-  const ignoreFilter = ignore().add(ignoreRules).createFilter();
+  return co(function* () {
+    let fileList = yield globby(patterns, {
+      cwd: baseDir,
+      gitignore: !noIgnore,
+      dot: true,
+      onlyFiles: true,
+      absolute: true
+    });
 
-  return globby(patterns, {
-    cwd: baseDir,
-    gitignore: true,
-    dot: true,
-    onlyFiles: true,
-    absolute: true
-  }).then(list => {
-    return list.filter(ignoreFilter);
+    if (!noIgnore) {
+      const ignoreRules = getIgnore();
+      const ignoreFilter = ignore().add(ignoreRules).createFilter();
+
+      debug('ignore rules: %j', ignoreRules);
+
+      fileList = fileList.filter(ignoreFilter);
+    }
+
+    return fileList;
   });
 }
 

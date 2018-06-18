@@ -36,6 +36,7 @@ program
   .alias('l')
   .description('run lint, type: es, style, commit')
   .option('-f, --fix', 'Automatically fix problems')
+  .option('--no-ignore', 'Disable elint ignore patterns')
   .action((type, files, options) => {
     debug('run lint...');
 
@@ -57,10 +58,9 @@ program
       parsedFiles = [type, ...files];
     }
 
-    const elintOptions = {
-      type: parsedType,
-      fix: options.fix
-    };
+    const elintOptions = Object.assign({}, options, {
+      type: parsedType
+    });
 
     elint(parsedFiles, elintOptions);
   });

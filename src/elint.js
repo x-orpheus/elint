@@ -22,7 +22,7 @@ const stylelint = require('./workers/stylelint');
  */
 function elint(files, options) {
   co(function* () {
-    const fileList = yield walker(files);
+    const fileList = yield walker(files, options);
 
     // 没有匹配到任何文件，直接退出
     if (!fileList.es.length && !fileList.style.length) {
