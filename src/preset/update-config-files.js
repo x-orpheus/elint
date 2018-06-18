@@ -49,7 +49,13 @@ function updateConfigFiles(filePath, keep) {
   debug(`file dest path: ${destFilePath}`);
 
   // 获取输出时使用的相对路径
-  const getRelativePath = p => path.relative(baseDir, p);
+  const getRelativePath = p => {
+    if (p.startsWith(baseDir)) {
+      return path.relative(baseDir, p);
+    }
+
+    return p;
+  };
 
   // 旧文件存在，rename
   if (keep === true && fs.existsSync(destFilePath)) {
