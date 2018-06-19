@@ -136,7 +136,9 @@ describe('系统测试', function () {
     });
 
     it('lint --no-ignore', function () {
-      run('npm run lint-no-ignore', tempDir);
+      (function () {
+        run('npm run lint-no-ignore', tempDir);
+      }).should.throw();
     });
 
     it('lint es', function () {
