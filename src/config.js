@@ -30,13 +30,14 @@ const linterSuffix = {
  * 支持的配置文件
  */
 const linterConfigFile = [
+  // elint
+  '.elintignore',
+
   // eslint
   '.eslintrc.js',
-  '.eslintignore',
 
   // stylelint
   '.stylelintrc.js',
-  '.stylelintignore',
 
   // husky
   '.huskyrc.js',
