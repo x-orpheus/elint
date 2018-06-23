@@ -58,7 +58,7 @@
     "commander": "^2.15.1",
     "debug": "^3.1.0",
     "diff": "^3.5.0",
-    "eslint": "^4.19.1",
+    "eslint": "^5.0.0",
     "execa": "^0.10.0",
     "figures": "^2.0.0",
     "find-process": "^1.1.1",
