@@ -68,6 +68,7 @@ describe('Walker local 测试', function () {
     const result = [
       getPath('src/a.css'),
       getPath('src/a.js'),
+      getPath('src/index.html'),
       getPath('src/lib/b.js')
     ];
 

@@ -76,6 +76,23 @@ describe('Walker filetree 测试', function () {
       });
     });
 
+    it('未匹配到特定 linter 的文件', function () {
+      const fileTree = {
+        es: [],
+        style: []
+      };
+      const fileList = [
+        'index.js',
+        'index.css',
+        'index.html'
+      ];
+
+      return fillFileTree(fileTree, fileList).should.be.deep.equal({
+        es: ['index.js', 'index.html'],
+        style: ['index.css', 'index.html']
+      });
+    });
+
   });
 
 });
