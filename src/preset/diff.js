@@ -114,7 +114,7 @@ function diff() {
 
     output.push('-------------------------------------------------\n');
     // eslint-disable-next-line max-len
-    output.push(`diff ${chalk.green(result.newFileName)} ${chalk.red(result.oldFileName)}\n`);
+    output.push(`diff ${chalk.blue(result.newFileName)} ${chalk.blue(result.oldFileName)}\n`);
     output.push('-------------------------------------------------\n');
 
     result.hunks.forEach(hunk => {
