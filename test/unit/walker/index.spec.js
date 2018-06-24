@@ -26,11 +26,7 @@ describe('Walker 测试', function () {
     unmock = mock();
     baseDir = getBaseDir();
     getPath = p => {
-      /**
-       * https://github.com/mrmlnc/fast-glob/blob/master/src/utils/path.ts#L24
-       * 针对 window 系统特殊处理
-       */
-      return path.join(baseDir, p).replace(/\\/g, '/');
+      return path.join(baseDir, p);
     };
   });
 
