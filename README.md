@@ -46,6 +46,7 @@
   - [5.6. 是否可以安装多个 preset](#56-是否可以安装多个-preset)
   - [5.7. 某些文件没有被校验到](#57-某些文件没有被校验到)
   - [5.8. 为什么添加了 fix 选项还是有问题输出](#58-为什么添加了-fix-选项还是有问题输出)
+  - [5.9. 如何禁用颜色输出](#59-如何禁用颜色输出)
 - [6. 参考](#6-参考)
 
 <!-- /TOC -->
@@ -573,6 +574,14 @@ elint 强依赖 stylelint, eslint 等工具。而对于 eslint，其文档中写
 ### 5.8. 为什么添加了 fix 选项还是有问题输出
 
 并不是所有规则都支持自动修复，具体可以查看 [eslint rules](https://eslint.org/docs/rules/) 和 [stylelint rules](https://stylelint.io/user-guide/rules/)，可以自动修复的规则都有标识。
+
+### 5.9. 如何禁用颜色输出
+
+设置环境变量 `FORCE_COLOR` 为 `0` 即可，例如：
+
+```shell
+$ FORCE_COLOR=0 elint lint "src/**/*.js"
+```
 
 ## 6. 参考
 
