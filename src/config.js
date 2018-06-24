@@ -31,7 +31,7 @@ const linterSuffix = {
  */
 const linterConfigFile = [
   // elint
-  '.elintignore',
+  '.elintrc.js',
 
   // eslint
   '.eslintrc.js',
