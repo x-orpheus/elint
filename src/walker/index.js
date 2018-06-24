@@ -1,13 +1,11 @@
 'use strict';
 
 const debug = require('debug')('elint:walker');
-const fs = require('fs-extra');
-const path = require('path');
 const co = require('co');
 const ignore = require('ignore');
 const isGitHooks = require('../utils/is-git-hooks');
+const getConfigFile = require('../utils/get-config-file');
 const { defaultIgnore } = require('../config');
-const { getBaseDir } = require('../env');
 const { getFileTree, fillFileTree } = require('./filetree');
 const local = require('./local');
 const stage = require('./stage');
@@ -18,24 +16,29 @@ const stage = require('./stage');
  * @returns {Array<string>} ignore rules
  */
 function getIgnore() {
-  const baseDir = getBaseDir();
-  const ignoreFilePath = path.join(baseDir, '.elintignore');
+  const configFile = getConfigFile();
 
-  // .elintignore 不存在，使用默认忽略规则
-  if (!fs.existsSync(ignoreFilePath)) {
-    debug(`${ignoreFilePath} was not found, use default.`);
+  /**
+   * 使用默认忽略规则：
+   * 1、配置文件不存在
+   * 2、配置文件存在，但是为空
+   * 3、配置文件存在，不为空，但是没有 ignore 属性
+   *
+   * 也就是只要没有明确指定 ignore，都是用默认规则
+   */
+  if (!configFile || (configFile && !configFile.config)
+    || (configFile && configFile.config && !configFile.config.ignore)) {
+    debug('use default ignore rule.');
     return defaultIgnore;
   }
 
-  const fileContent = fs.readFileSync(ignoreFilePath, 'utf-8');
+  const ignoreRules = configFile.config.ignore;
 
-  // .elintignore 存在，但是为空，等同于没有忽略规则
-  if (!fileContent || !fileContent.trim()) {
-    debug('.elintignore is empty.');
+  if (!Array.isArray(ignoreRules)) {
     return [];
   }
 
-  return fileContent.split(/\r?\n/);
+  return ignoreRules;
 }
 
 /**
@@ -47,7 +50,7 @@ function getIgnore() {
  */
 function walker(patterns, options = {}) {
   debug(`input glob patterns: ${patterns}`);
-  debug(`input options: ${options}`);
+  debug('input options: %o', options);
 
   const fileTree = getFileTree();
   const noIgnore = typeof options.noIgnore === 'boolean'
