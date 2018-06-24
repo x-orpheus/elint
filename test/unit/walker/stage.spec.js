@@ -17,20 +17,17 @@ const should = chai.should();
 
 let unmock;
 let baseDir;
-let getPath;
 
 describe('Walker stage 测试', function () {
 
   beforeEach(() => {
     unmock = mock();
     baseDir = getBaseDir();
-    getPath = p => path.join(baseDir, p);
   });
 
   afterEach(() => {
     unmock();
     baseDir = null;
-    getPath = null;
   });
 
   it('目录不存在', function () {
@@ -44,8 +41,8 @@ describe('Walker stage 测试', function () {
 
   it('可以匹配到文件', function () {
     const result = [
-      getPath('src/a.js'),
-      getPath('src/lib/b.js')
+      'src/a.js',
+      'src/lib/b.js'
     ];
 
     return gitInit()

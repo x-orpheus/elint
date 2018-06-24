@@ -14,7 +14,6 @@ chai.use(chaiAsPromised);
 const should = chai.should();
 
 let baseDir;
-let getPath;
 let unmock;
 
 describe('Walker local 测试', function () {
@@ -22,13 +21,6 @@ describe('Walker local 测试', function () {
   beforeEach(() => {
     unmock = mock();
     baseDir = getBaseDir();
-    getPath = p => {
-      /**
-       * https://github.com/mrmlnc/fast-glob/blob/master/src/utils/path.ts#L24
-       * 针对 window 系统特殊处理
-       */
-      return path.join(baseDir, p).replace(/\\/g, '/');
-    };
   });
 
   afterEach(() => {
@@ -45,7 +37,7 @@ describe('Walker local 测试', function () {
 
   it('单条 glob', function () {
     const result = [
-      getPath('src/a.js')
+      'src/a.js'
     ];
 
     return walker('src/*.js').should.eventually.deep.equalInAnyOrder(result);
@@ -57,8 +49,8 @@ describe('Walker local 测试', function () {
 
   it('单条 glob, deep', function () {
     const result = [
-      getPath('src/a.js'),
-      getPath('src/lib/b.js')
+      'src/a.js',
+      'src/lib/b.js'
     ];
 
     return walker('src/**/*.js').should.eventually.deep.equalInAnyOrder(result);
@@ -66,10 +58,10 @@ describe('Walker local 测试', function () {
 
   it('单条 glob, deep', function () {
     const result = [
-      getPath('src/a.css'),
-      getPath('src/a.js'),
-      getPath('src/index.html'),
-      getPath('src/lib/b.js')
+      'src/a.css',
+      'src/a.js',
+      'src/index.html',
+      'src/lib/b.js'
     ];
 
     return walker('src/**/*').should.eventually.deep.equalInAnyOrder(result);
@@ -77,8 +69,8 @@ describe('Walker local 测试', function () {
 
   it('多条 glob', function () {
     const result = [
-      getPath('src/a.css'),
-      getPath('src/a.js')
+      'src/a.css',
+      'src/a.js'
     ];
 
     return walker(['src/*.js', 'src/*.css']).should.eventually.deep.equalInAnyOrder(result);
@@ -90,9 +82,9 @@ describe('Walker local 测试', function () {
 
   it('多条 glob, deep', function () {
     const result = [
-      getPath('src/a.css'),
-      getPath('src/a.js'),
-      getPath('src/lib/b.js')
+      'src/a.css',
+      'src/a.js',
+      'src/lib/b.js'
     ];
 
     return walker(['src/**/*.js', 'src/**/*.css']).should.eventually.deep.equalInAnyOrder(result);
