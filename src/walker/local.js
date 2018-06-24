@@ -18,7 +18,7 @@ function walker(patterns = []) {
     gitignore: true,
     dot: true,
     onlyFiles: true,
-    absolute: true
+    absolute: false
   });
 }
 

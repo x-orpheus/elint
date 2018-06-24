@@ -47,7 +47,7 @@ function stageFiles(patterns) {
 
       const fileList = result
         .filter(item => match(item.filename, patterns))
-        .map(item => path.join(baseDir, item.filename));
+        .map(item => item.filename);
 
       resolve(fileList);
     });

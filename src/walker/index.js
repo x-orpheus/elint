@@ -40,9 +40,7 @@ function getIgnore() {
     return [];
   }
 
-  // 转化为绝对路径
-  const baseDir = getBaseDir();
-  return ignoreRules.map(p => path.join(baseDir, p));
+  return ignoreRules;
 }
 
 /**
@@ -88,6 +86,12 @@ function walker(patterns, options = {}) {
 
       fileList = fileList.filter(ignoreFilter);
     }
+
+    // 转为绝对路径
+    const baseDir = getBaseDir();
+    fileList = fileList.map(p => {
+      return path.join(baseDir, p);
+    });
 
     fillFileTree(fileTree, fileList);
 
