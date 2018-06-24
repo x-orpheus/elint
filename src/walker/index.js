@@ -2,9 +2,11 @@
 
 const debug = require('debug')('elint:walker');
 const co = require('co');
+const path = require('path');
 const ignore = require('ignore');
 const isGitHooks = require('../utils/is-git-hooks');
 const getConfigFile = require('../utils/get-config-file');
+const { getBaseDir } = require('../env');
 const { defaultIgnore } = require('../config');
 const { getFileTree, fillFileTree } = require('./filetree');
 const local = require('./local');
@@ -38,7 +40,9 @@ function getIgnore() {
     return [];
   }
 
-  return ignoreRules;
+  // 转化为绝对路径
+  const baseDir = getBaseDir();
+  return ignoreRules.map(p => path.join(baseDir, p));
 }
 
 /**
