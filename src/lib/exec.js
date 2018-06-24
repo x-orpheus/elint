@@ -6,9 +6,9 @@ const execa = require('execa');
 const exec = pargram => (...argus) => {
   debug(`run: ${pargram} ${argus.join(' ')}`);
 
-  const env = Object.assign({}, process.env, {
-    FORCE_COLOR: true
-  });
+  const env = Object.assign({}, {
+    FORCE_COLOR: 1
+  }, process.env);
 
   return execa(pargram, [...argus], {
     env
