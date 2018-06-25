@@ -53,7 +53,9 @@ require('./npm-check');
 // 系统测试
 describe('系统测试', function () {
   // ci 有时不太稳定，添加 try
-  this.retries(2);
+  if (process.env.CI) {
+    this.retries(2);
+  }
 
   // timeout 5min
   this.timeout(5 * 60 * 1000);
@@ -81,42 +83,59 @@ describe('系统测试', function () {
 
   describe('安装', function () {
     let elintrcPath;
+    let elintignorePath;
     let stylelintrcPath;
+    let stylelintignorePath;
+    let huskyrcPath;
+    let commitlintrcPath;
 
     beforeEach(() => {
       elintrcPath = path.join(tempDir, '.eslintrc.js');
+      elintignorePath = path.join(tempDir, '.eslintignore');
       stylelintrcPath = path.join(tempDir, '.stylelintrc.js');
+      stylelintignorePath = path.join(tempDir, '.stylelintignore');
+      huskyrcPath = path.join(tempDir, '.huskyrc.js');
+      commitlintrcPath = path.join(tempDir, '.commitlintrc.js');
     });
+
+    function expect() {
+      fs.existsSync(elintrcPath).should.be.equal(true);
+      fs.existsSync(elintignorePath).should.be.equal(true);
+      fs.existsSync(stylelintrcPath).should.be.equal(true);
+      fs.existsSync(stylelintignorePath).should.be.equal(true);
+      fs.existsSync(huskyrcPath).should.be.equal(true);
+      fs.existsSync(commitlintrcPath).should.be.equal(true);
+    }
 
     it('先安装 elint，再安装 preset', function () {
       run(`npm install ${elintPkgPath}`, tempDir);
       run(`npm install ${presetPkgPath}`, tempDir);
 
-      fs.existsSync(elintrcPath).should.be.equal(true);
-      fs.existsSync(stylelintrcPath).should.be.equal(true);
+      expect();
     });
 
     it('先安装 preset，再安装 elint', function () {
       run(`npm install ${presetPkgPath}`, tempDir);
       run(`npm install ${elintPkgPath}`, tempDir);
 
-      fs.existsSync(elintrcPath).should.be.equal(true);
-      fs.existsSync(stylelintrcPath).should.be.equal(true);
+      expect();
     });
 
     it('同时安装', function () {
       run(`npm install ${presetPkgPath} ${elintPkgPath}`, tempDir);
 
-      fs.existsSync(elintrcPath).should.be.equal(true);
-      fs.existsSync(stylelintrcPath).should.be.equal(true);
+      expect();
     });
 
     it('先安装 elint，然后使用 elint 安装 preset', function () {
+      // 这里使用 npm 上的包进行测试
       run(`npm install ${elintPkgPath}`, tempDir);
       run(`node node_modules${path.sep}.bin${path.sep}elint install test`, tempDir);
 
       fs.existsSync(elintrcPath).should.be.equal(true);
       fs.existsSync(stylelintrcPath).should.be.equal(true);
+      fs.existsSync(huskyrcPath).should.be.equal(true);
+      fs.existsSync(commitlintrcPath).should.be.equal(true);
     });
   });
 
