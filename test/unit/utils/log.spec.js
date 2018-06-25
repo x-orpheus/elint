@@ -7,7 +7,7 @@ const { error, success, info, warn } = require('../../../src/utils/log');
 const sinon = require('sinon');
 const mocha = require('mocha');
 const chai = require('chai');
-const should = chai.should();
+chai.should();
 
 describe('log 测试', function () {
   describe('error 方法测试', function () {

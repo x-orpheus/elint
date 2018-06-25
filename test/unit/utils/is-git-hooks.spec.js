@@ -1,7 +1,6 @@
 'use strict';
 
 const mock = require('../mock/env');
-const { getBaseDir } = require('../../../src/env');
 const runInHusky = require('../mock/run-in-husky');
 const isGitHooks = require('../../../src/utils/is-git-hooks');
 const isGitHooksPath = require.resolve('../../../src/utils/is-git-hooks.js');
@@ -9,7 +8,7 @@ const isGitHooksPath = require.resolve('../../../src/utils/is-git-hooks.js');
 const mocha = require('mocha');
 const chaiAsPromised = require('chai-as-promised');
 const chai = require('chai');
-const should = chai.should();
+chai.should();
 chai.use(chaiAsPromised);
 
 let unmock;

@@ -1,7 +1,6 @@
 'use strict';
 
 const fs = require('fs-extra');
-const path = require('path');
 const mock = require('../mock/env');
 const gitInit = require('../mock/git-init');
 const stageFiles = require('../../../src/walker/stage');
@@ -13,7 +12,7 @@ const chaiAsPromised = require('chai-as-promised');
 const chai = require('chai');
 chai.use(deepEqualInAnyOrder);
 chai.use(chaiAsPromised);
-const should = chai.should();
+chai.should();
 
 let unmock;
 let baseDir;

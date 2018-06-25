@@ -2,7 +2,6 @@
 
 const debug = require('debug')('elint:walker:stage');
 const fs = require('fs-extra');
-const path = require('path');
 const minimatch = require('minimatch');
 const sgf = require('staged-git-files');
 const { getBaseDir } = require('../env');

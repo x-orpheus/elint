@@ -8,7 +8,7 @@ const { getBaseDir } = require('../../../src/env');
 
 const mocha = require('mocha');
 const chai = require('chai');
-const should = chai.should();
+chai.should();
 
 let baseDir;
 let pkgPath;

@@ -1,6 +1,5 @@
 'use strict';
 
-const mock = require('../mock/env');
 const {
   getFileTree,
   fillFileTree

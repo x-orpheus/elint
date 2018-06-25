@@ -6,7 +6,7 @@ const findConfigFiles = require('../../../src/preset/find-config-files');
 
 const mocha = require('mocha');
 const chai = require('chai');
-const should = chai.should();
+chai.should();
 
 let unmock;
 

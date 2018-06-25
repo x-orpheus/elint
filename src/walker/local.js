@@ -1,6 +1,5 @@
 'use strict';
 
-const debug = require('debug')('elint:walker:local');
 const globby = require('globby');
 const { getBaseDir } = require('../env');
 

@@ -10,7 +10,7 @@ const mocha = require('mocha');
 const deepEqualInAnyOrder = require('deep-equal-in-any-order');
 const chai = require('chai');
 chai.use(deepEqualInAnyOrder);
-const should = chai.should();
+chai.should();
 
 let fileList; // 目录下的原始文件
 let baseDir;

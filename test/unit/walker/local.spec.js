@@ -1,9 +1,7 @@
 'use strict';
 
-const path = require('path');
 const mock = require('../mock/env');
 const walker = require('../../../src/walker/local');
-const { getBaseDir } = require('../../../src/env');
 
 const mocha = require('mocha');
 const deepEqualInAnyOrder = require('deep-equal-in-any-order');
@@ -11,16 +9,14 @@ const chaiAsPromised = require('chai-as-promised');
 const chai = require('chai');
 chai.use(deepEqualInAnyOrder);
 chai.use(chaiAsPromised);
-const should = chai.should();
-
-let baseDir;
-let unmock;
+chai.should();
 
 describe('Walker local 测试', function () {
 
+  let unmock;
+
   beforeEach(() => {
     unmock = mock();
-    baseDir = getBaseDir();
   });
 
   afterEach(() => {

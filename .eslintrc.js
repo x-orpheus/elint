@@ -8,6 +8,15 @@ module.exports = {
     'mocha': true
   },
   'rules': {
+    'no-unused-vars': [
+      2,
+      {
+        'vars': 'all',
+        'args': 'none',
+        'ignoreRestSiblings': true,
+        'varsIgnorePattern': 'mocha'
+      }
+    ],
     'comma-dangle': 2,
     'semi': ['error', 'always'],
     'no-console': 0,
@@ -24,9 +33,9 @@ module.exports = {
     'no-extra-boolean-cast': 2,
     'no-extra-parens': [
       2,
-      "all",
+      'all',
       {
-        "nestedBinaryExpressions": false
+        'nestedBinaryExpressions': false
       }
     ],
     'no-extra-semi': 2,

@@ -92,7 +92,7 @@ describe('系统测试', function () {
       run(`npm install ${elintPkgPath}`, tempDir);
       run(`npm install ${presetPkgPath}`, tempDir);
 
-      fs.existsSync(elintPath).should.be.equal(true);
+      fs.existsSync(elintrcPath).should.be.equal(true);
       fs.existsSync(stylelintrcPath).should.be.equal(true);
     });
 
@@ -100,14 +100,14 @@ describe('系统测试', function () {
       run(`npm install ${presetPkgPath}`, tempDir);
       run(`npm install ${elintPkgPath}`, tempDir);
 
-      fs.existsSync(elintPath).should.be.equal(true);
+      fs.existsSync(elintrcPath).should.be.equal(true);
       fs.existsSync(stylelintrcPath).should.be.equal(true);
     });
 
     it('同时安装', function () {
       run(`npm install ${presetPkgPath} ${elintPkgPath}`, tempDir);
 
-      fs.existsSync(elintPath).should.be.equal(true);
+      fs.existsSync(elintrcPath).should.be.equal(true);
       fs.existsSync(stylelintrcPath).should.be.equal(true);
     });
 
@@ -115,7 +115,7 @@ describe('系统测试', function () {
       run(`npm install ${elintPkgPath}`, tempDir);
       run(`node node_modules${path.sep}.bin${path.sep}elint install test`, tempDir);
 
-      fs.existsSync(elintPath).should.be.equal(true);
+      fs.existsSync(elintrcPath).should.be.equal(true);
       fs.existsSync(stylelintrcPath).should.be.equal(true);
     });
   });

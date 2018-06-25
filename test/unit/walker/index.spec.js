@@ -12,7 +12,7 @@ const mocha = require('mocha');
 const deepEqualInAnyOrder = require('deep-equal-in-any-order');
 const chaiAsPromised = require('chai-as-promised');
 const chai = require('chai');
-const should = chai.should();
+chai.should();
 chai.use(deepEqualInAnyOrder);
 chai.use(chaiAsPromised);
 
