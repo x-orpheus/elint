@@ -166,6 +166,14 @@ describe('系统测试', function () {
       }).should.throw();
     });
 
+    it('lint es with ignore', function () {
+      // 忽略有问题的文件
+      const eslintignorePath = path.join(tempDir, '.eslintignore');
+      fs.appendFileSync(eslintignorePath, 'src/index.js');
+
+      run('npm run lint-es-without-fix', tempDir);
+    });
+
     it('lint es --fix', function () {
       run('npm run lint-es-fix', tempDir);
     });
@@ -174,6 +182,14 @@ describe('系统测试', function () {
       (function () {
         run('npm run lint-style-without-fix', tempDir);
       }).should.throw();
+    });
+
+    it('lint style with ignore', function () {
+      // 忽略有问题的文件
+      const stylelintignorePath = path.join(tempDir, '.stylelintignore');
+      fs.appendFileSync(stylelintignorePath, 'src/index.css');
+
+      run('npm run lint-style-without-fix', tempDir);
     });
 
     it('lint style --fix', function () {
