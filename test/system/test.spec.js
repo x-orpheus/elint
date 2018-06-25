@@ -165,15 +165,6 @@ describe('系统测试', function () {
       run('npm run version', tempDir);
     });
 
-    it('测试忽略文件', function () {
-      // 忽略掉不符合规则的 js 文件
-      const configFilePath = path.join(tempDir, '.elintrc.js');
-      const fileContent = 'module.exports={ignore: ["src/index.js"]}';
-      fs.appendFileSync(configFilePath, fileContent);
-
-      run('npm run lint-es-without-fix', tempDir);
-    });
-
     it('diff 存在差异文件', function () {
       const elintrcPath = path.join(tempDir, '.eslintrc.js');
       const elintrcOldPath = path.join(tempDir, '.eslintrc.old.js');
