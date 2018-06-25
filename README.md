@@ -337,6 +337,7 @@ type 可选的值：
 options 可选的值：
 
 - fix: 自动修复
+- no-gnore: 忽略 elint 遍历文件时的默认忽略规则
 
 当添加 `--fix` 或者 `-f` 时，会尝试自动修复问题，无法自动修复的问题依旧会输出出来。
 
@@ -570,6 +571,23 @@ elint 强依赖 stylelint, eslint 等工具。而对于 eslint，其文档中写
     "test:lint": "elint lint \"src/**/*.js\""
   }
 }
+```
+
+4. elint 在遍历文件时，会应用一些默认的忽略规则，如果你的文件刚好命中这些规则，可以使用 `--no-ignore` 选项。
+
+```js
+const defaultIgnore = [
+  '**/node_modules/**',
+  '**/bower_components/**',
+  '**/flow-typed/**',
+  '**/.nyc_output/**',
+  '**/coverage/**',
+  '**/.git',
+  '**/*.min.js',
+  '**/*.min.css'
+];
+
+// 除此之外还有 .gitignore 定义的忽略规则
 ```
 
 ### 5.8. 为什么添加了 fix 选项还是有问题输出
