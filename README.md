@@ -72,12 +72,13 @@ elint 是一款代码校验工具，基于 eslint、stylelint、commitlint 等�
 ```shell
 elint-preset-<name>
 ├── .commitlintrc.js    # 定义 commitlint 规则，用于 git commit message 的校验
-├── .elintignore        # 定义执行 eslint 和 stylelint 时，需要忽略的文件
+├── .eslintignore       # 定义 eslint 忽略规则
 ├── .eslintrc.js        # 定义 eslint 规则，用于 js 的校验
 ├── .huskyrc.js         # 定义 git hooks, 可在 commit 前执行 commitlint 等操作
 ├── node_modules
 ├── package.json
 ├── package-lock.json
+├── .stylelintignore    # 定义 stylelint 忽略规则
 └── .stylelintrc.js     # 定义 stylelint 的规则，用于 css 的校验
 ```
 
@@ -85,14 +86,14 @@ elint-preset-<name>
 
 1. npm package name 必须以 `elint-preset-` 开头，如： `elint-preset-<name>` 或 `@team/elint-preset-<name>`。
 2. linter 的配置文件名必须是 `.commitlintrc.js`, `.eslintrc.js`, `.stylelintrc.js`。
-3. 可以添加 `.elintignore` 文件，定义需要忽略校验的文件和文件夹，语法与 `.gitignore` 相同。
+3. 对于 eslint 和 stylelint，支持使用 `.eslintignore`, `.stylelintignore` 定义需要忽略校验的文件和文件夹。
 4. git hooks (使用 husky) 的配置文件名必须是 `.huskyrc.js`。
 5. 所有配置文件必须放在 preset 的根目录。
 6. 依赖的 linter plugin（例如 eslint-plugin-react），必须明确定义在 `package.json` 的 `dependencies` 中。
 
 满足以上要求的 npm package 就是一个合法的 elint preset。
 
-> 一般来说，不建议把 `.elintignore` 添加到 preset 中，因为 preset 应该对所有项目都是适用的（除非你的 preset 限定在一个很小的范围内使用，各个项目的目录结构都是一致的，此时可以使用它们来定义需要忽略校验的文件和文件夹）。
+> 一般来说，不建议把 `.elintignore`，`.stylelintignore` 添加到 preset 中，因为 preset 应该对所有项目都是适用的（除非你的 preset 限定在一个很小的范围内使用，各个项目的目录结构都是一致的，此时可以使用它们来定义需要忽略校验的文件和文件夹）。
 
 ## 2. 使用指南
 
@@ -592,13 +593,13 @@ $ FORCE_COLOR=0 elint lint "src/**/*.js"
 - git hooks: [文档](https://git-scm.com/docs/githooks)
 - glob primer: [文档](https://github.com/isaacs/node-glob#glob-primer)
 
-[npm-image]: https://img.shields.io/npm/v/elint.svg?style=flat-square
+[npm-image]: https://img.shields.io/npm/v/elint.svg
 [npm-url]: https://www.npmjs.com/package/elint
-[license-image]: https://img.shields.io/github/license/keenwon/eazydict.svg?style=flat-square
+[license-image]: https://img.shields.io/github/license/keenwon/eazydict.svg
 [license-url]: https://github.com/keenwon/eazydict/blob/master/LICENSE
-[travis-image]: https://img.shields.io/travis/keenwon/elint.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/keenwon/elint.svg
 [travis-url]: https://travis-ci.org/keenwon/elint
 [appveyor-image]: https://ci.appveyor.com/api/projects/status/8ji6bpeea0aiwp0i/branch/master?svg=true
 [appveyor-url]: https://ci.appveyor.com/project/keenwon/elint
-[coveralls-image]: https://img.shields.io/coveralls/keenwon/elint.svg?style=flat-square
+[coveralls-image]: https://img.shields.io/coveralls/keenwon/elint.svg
 [coveralls-url]: https://coveralls.io/github/keenwon/elint?branch=master
