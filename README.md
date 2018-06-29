@@ -3,6 +3,8 @@
 [![NPM version][npm-image]][npm-url]
 [![License][license-image]][license-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
+[![Dependencies Status][dependencies-image]][dependencies-url]
+[![Devdependencies Status][devdependencies-image]][devdependencies-url]
 
 |Linux|macOS|Windows|
 |:--:|:--:|:--:|
@@ -615,13 +617,17 @@ $ FORCE_COLOR=0 elint lint "src/**/*.js"
 
 [npm-image]: https://img.shields.io/npm/v/elint.svg
 [npm-url]: https://www.npmjs.com/package/elint
-[license-image]: https://img.shields.io/github/license/keenwon/eazydict.svg
-[license-url]: https://github.com/keenwon/eazydict/blob/master/LICENSE
+[license-image]: https://img.shields.io/github/license/keenwon/elint.svg
+[license-url]: https://github.com/keenwon/elint/blob/master/LICENSE
 [circleci-image]: https://circleci.com/gh/keenwon/elint.svg?style=svg
 [circleci-url]: https://circleci.com/gh/keenwon/elint
-[travis-image]: https://img.shields.io/travis/keenwon/elint.svg
+[travis-image]: https://api.travis-ci.org/keenwon/elint.svg?branch=master
 [travis-url]: https://travis-ci.org/keenwon/elint
 [appveyor-image]: https://ci.appveyor.com/api/projects/status/8ji6bpeea0aiwp0i/branch/master?svg=true
 [appveyor-url]: https://ci.appveyor.com/project/keenwon/elint
 [coveralls-image]: https://img.shields.io/coveralls/keenwon/elint.svg
 [coveralls-url]: https://coveralls.io/github/keenwon/elint?branch=master
+[dependencies-image]: https://david-dm.org/keenwon/elint.svg
+[dependencies-url]: https://david-dm.org/keenwon/elint
+[devdependencies-image]: https://david-dm.org/keenwon/elint/dev-status.svg
+[devdependencies-url]: https://david-dm.org/keenwon/elint?type=dev
