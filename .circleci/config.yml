@@ -10,32 +10,44 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
+      - run: apt install sudo
+      - run: sudo npm install npm -g
       - run: npm install
-      - run: sudo npm run test:circleci
+      - run: npm run test:circleci
+
   build_node_9:
     docker:
       - image: circleci/node:9
     working_directory: ~/repo
     steps:
       - checkout
+      - run: apt install sudo
+      - run: sudo npm install npm -g
       - run: npm install
-      - run: sudo npm run test:circleci
+      - run: npm run test:circleci
+
   build_node_8:
     docker:
       - image: circleci/node:8
     working_directory: ~/repo
     steps:
       - checkout
+      - run: apt install sudo
+      - run: sudo npm install npm -g
       - run: npm install
-      - run: sudo npm run test:circleci
+      - run: npm run test:circleci
+
   build_node_6:
     docker:
       - image: circleci/node:6
     working_directory: ~/repo
     steps:
       - checkout
+      - run: apt install sudo
+      - run: sudo npm install npm -g
       - run: npm install
-      - run: sudo npm run test:circleci
+      - run: npm run test:circleci
+
 workflows:
   version: 2
   run_test:
