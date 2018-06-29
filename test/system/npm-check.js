@@ -19,4 +19,4 @@ if (versions[0] !== '5' || !['4', '5', '6'].includes(versions[1])) {
 
 console.log('升级 npm');
 
-execa.sync('npm', ['install', 'npm', '-g']);
+execa.sync('sudo', ['npm', 'install', 'npm', '-g']);

@@ -10,7 +10,6 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: sudo npm install npm -g
       - run: npm install
       - run: npm run test:circleci
 
@@ -20,7 +19,6 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: sudo npm install npm -g
       - run: npm install
       - run: npm run test:circleci
 
@@ -30,7 +28,6 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: sudo npm install npm -g
       - run: npm install
       - run: npm run test:circleci
 
@@ -40,7 +37,6 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: sudo npm install npm -g
       - run: npm install
       - run: npm run test:circleci
 
