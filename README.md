@@ -1,20 +1,54 @@
-# ELint
+<h1 align="center">ELint</h1>
+<p align="center">专为团队设计的 lint 工具</p>
 
-[![NPM version][npm-image]][npm-url]
-[![License][license-image]][license-url]
-[![Build Status][travis-image]][travis-url]
-[![Build status][appveyor-image]][appveyor-url]
-[![Coverage Status][coveralls-image]][coveralls-url]
+<p align="center">
+  <a title="npm version" href="https://www.npmjs.com/package/elint">
+    <img src="https://img.shields.io/npm/v/elint.svg" />
+  </a>
+  <a title="license" href="https://github.com/keenwon/elint/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/keenwon/elint.svg" />
+  </a>
+  <a title="coveralls" href="https://coveralls.io/github/keenwon/elint?branch=master">
+    <img src="https://img.shields.io/coveralls/keenwon/elint.svg" />
+  </a>
+</p>
 
-专为团队设计的 lint 工具
+<table align="center">
+  <thead>
+    <th>Linux</th>
+    <th>macOS</th>
+    <th>Windows</th>
+  </thead>
+  <tbody>
+    <td>
+      <a title="Linux build status" href="https://circleci.com/gh/keenwon/elint">
+        <img src="https://circleci.com/gh/keenwon/elint.svg?style=svg" />
+      </a>
+    </td>
+    <td>
+      <a title="macOS build status" href="https://travis-ci.org/keenwon/elint">
+        <img src="https://img.shields.io/travis/keenwon/elint.svg" />
+      </a>
+    </td>
+    <td>
+      <a title="Windows build status" href="https://ci.appveyor.com/project/keenwon/elint">
+        <img src="https://ci.appveyor.com/api/projects/status/8ji6bpeea0aiwp0i/branch/master?svg=true" />
+      </a>
+    </td>
+  </tbody>
+</table>
+
+elint 是一款代码校验工具，基于 eslint、stylelint、commitlint 等工具封装而成。elint 本身不包含任何校验规则，校验规则通过 preset 定义。elint 的主要功能包括：
+
+- 支持对 js，css 的校验 (eslint, stylelint)。
+- 支持对 git commit message 的校验 (husky, commitlint)。
+- **编写**定制化、场景化的 preset，preset 包含所有验证规则，**保证团队内部校验规则的一致性和可复用**。
 
 **目录**：
 
 <!-- TOC -->
 
-- [1. 核心概念](#1-核心概念)
-  - [1.1. ELint](#11-elint)
-  - [1.2. Preset](#12-preset)
+- [1. Preset](#1-preset)
 - [2. 使用指南](#2-使用指南)
   - [2.1. 安装 elint](#21-安装-elint)
   - [2.2. 编写 preset](#22-编写-preset)
@@ -51,19 +85,9 @@
 
 <!-- /TOC -->
 
-## 1. 核心概念
+## 1. Preset
 
-在使用 elint 之前，需要先了解几个核心概念。
-
-### 1.1. ELint
-
-elint 是一款代码校验工具，基于 eslint、stylelint、commitlint 等工具封装而成。elint 本身不包含任何校验规则，校验规则通过 preset 定义。elint 的主要功能包括：
-
-- 支持对 js，css 的校验 (eslint, stylelint)。
-- 支持对 git commit message 的校验 (husky, commitlint)。
-- **编写**定制化、场景化的 preset，preset 包含所有验证规则，**保证团队内部校验规则的一致性和可复用**。
-
-### 1.2. Preset
+在使用 elint 之前，需要先了解一个核心概念：Preset。
 
 简单来说，preset 就是一个 npm package，可以理解为”规则集“。
 
@@ -610,14 +634,3 @@ $ FORCE_COLOR=0 elint lint "src/**/*.js"
 - husky: [Github](https://github.com/typicode/husky)
 - git hooks: [文档](https://git-scm.com/docs/githooks)
 - glob primer: [文档](https://github.com/isaacs/node-glob#glob-primer)
-
-[npm-image]: https://img.shields.io/npm/v/elint.svg
-[npm-url]: https://www.npmjs.com/package/elint
-[license-image]: https://img.shields.io/github/license/keenwon/eazydict.svg
-[license-url]: https://github.com/keenwon/eazydict/blob/master/LICENSE
-[travis-image]: https://img.shields.io/travis/keenwon/elint.svg
-[travis-url]: https://travis-ci.org/keenwon/elint
-[appveyor-image]: https://ci.appveyor.com/api/projects/status/8ji6bpeea0aiwp0i/branch/master?svg=true
-[appveyor-url]: https://ci.appveyor.com/project/keenwon/elint
-[coveralls-image]: https://img.shields.io/coveralls/keenwon/elint.svg
-[coveralls-url]: https://coveralls.io/github/keenwon/elint?branch=master
