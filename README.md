@@ -1,5 +1,6 @@
 # ELint
 
+[![Node engine][node-image]][node-url]
 [![NPM version][npm-image]][npm-url]
 [![License][license-image]][license-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
@@ -615,6 +616,8 @@ $ FORCE_COLOR=0 elint lint "src/**/*.js"
 - git hooks: [文档](https://git-scm.com/docs/githooks)
 - glob primer: [文档](https://github.com/isaacs/node-glob#glob-primer)
 
+[node-image]: https://img.shields.io/node/v/elint.svg
+[node-url]: https://nodejs.org
 [npm-image]: https://img.shields.io/npm/v/elint.svg
 [npm-url]: https://www.npmjs.com/package/elint
 [license-image]: https://img.shields.io/github/license/keenwon/elint.svg
