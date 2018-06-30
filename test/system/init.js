@@ -4,12 +4,18 @@
  * 执行一些准备工作
  */
 
+const os = require('os');
 const {
   run,
   npmCheck,
   elintPath,
   presetPath
 } = require('./utils');
+
+// 输出 CPU 和内存信息
+console.log('=== OS Info ===');
+console.log(`CPU: ${os.cpus().length}`);
+console.log(`Memory: ${Math.ceil(os.totalmem() / 1024 / 1024 / 1024)}G`)
 
 // 同步执行 elint 打包
 run('npm pack', elintPath, true);
