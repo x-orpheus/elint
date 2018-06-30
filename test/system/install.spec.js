@@ -4,10 +4,10 @@
  * 安装相关的测试
  */
 
-const { test, beforeEach, afterEach } = require('ava');
+const { test, beforeEach } = require('ava');
 const path = require('path');
 const fs = require('fs-extra');
-const { createTempProject, run, elintPkgPath, presetPkgPath } = require('./utils');
+const { createTmpProject, run, elintPkgPath, presetPkgPath } = require('./utils');
 
 function fileExists(context) {
   return Promise.all([
@@ -23,17 +23,17 @@ function fileExists(context) {
 }
 
 beforeEach(function* (t) {
-  const tempDir = yield createTempProject();
+  const tmpDir = yield createTmpProject();
 
-  const elintrcPath = path.join(tempDir, '.eslintrc.js');
-  const elintignorePath = path.join(tempDir, '.eslintignore');
-  const stylelintrcPath = path.join(tempDir, '.stylelintrc.js');
-  const stylelintignorePath = path.join(tempDir, '.stylelintignore');
-  const huskyrcPath = path.join(tempDir, '.huskyrc.js');
-  const commitlintrcPath = path.join(tempDir, '.commitlintrc.js');
+  const elintrcPath = path.join(tmpDir, '.eslintrc.js');
+  const elintignorePath = path.join(tmpDir, '.eslintignore');
+  const stylelintrcPath = path.join(tmpDir, '.stylelintrc.js');
+  const stylelintignorePath = path.join(tmpDir, '.stylelintignore');
+  const huskyrcPath = path.join(tmpDir, '.huskyrc.js');
+  const commitlintrcPath = path.join(tmpDir, '.commitlintrc.js');
 
   t.context = {
-    tempDir,
+    tmpDir,
     elintrcPath,
     elintignorePath,
     stylelintrcPath,
@@ -43,18 +43,11 @@ beforeEach(function* (t) {
   };
 });
 
-afterEach(t => {
-  const tempDir = t.context.tempDir;
-
-  // 清理
-  return fs.remove(tempDir);
-});
-
 test('先安装 elint，再安装 preset', function* (t) {
-  const tempDir = t.context.tempDir;
+  const tmpDir = t.context.tmpDir;
 
-  yield run(`npm install ${elintPkgPath}`, tempDir);
-  yield run(`npm install ${presetPkgPath}`, tempDir);
+  yield run(`npm install ${elintPkgPath}`, tmpDir);
+  yield run(`npm install ${presetPkgPath}`, tmpDir);
 
   return fileExists(t.context).then(result => {
     t.truthy(result);
@@ -62,10 +55,10 @@ test('先安装 elint，再安装 preset', function* (t) {
 });
 
 test('先安装 preset，再安装 elint', function* (t) {
-  const tempDir = t.context.tempDir;
+  const tmpDir = t.context.tmpDir;
 
-  yield run(`npm install ${presetPkgPath}`, tempDir);
-  yield run(`npm install ${elintPkgPath}`, tempDir);
+  yield run(`npm install ${presetPkgPath}`, tmpDir);
+  yield run(`npm install ${elintPkgPath}`, tmpDir);
 
   return fileExists(t.context).then(result => {
     t.truthy(result);
@@ -73,9 +66,9 @@ test('先安装 preset，再安装 elint', function* (t) {
 });
 
 test('同时安装', function* (t) {
-  const tempDir = t.context.tempDir;
+  const tmpDir = t.context.tmpDir;
 
-  yield run(`npm install ${presetPkgPath} ${elintPkgPath}`, tempDir);
+  yield run(`npm install ${presetPkgPath} ${elintPkgPath}`, tmpDir);
 
   return fileExists(t.context).then(result => {
     t.truthy(result);
@@ -84,7 +77,7 @@ test('同时安装', function* (t) {
 
 test('先安装 elint，然后使用 elint 安装 preset', function* (t) {
   const {
-    tempDir,
+    tmpDir,
     elintrcPath,
     stylelintrcPath,
     huskyrcPath,
@@ -92,8 +85,8 @@ test('先安装 elint，然后使用 elint 安装 preset', function* (t) {
   } = t.context;
 
   // 这里使用 npm 上的包进行测试
-  yield run(`npm install ${elintPkgPath}`, tempDir);
-  yield run(`node node_modules${path.sep}.bin${path.sep}elint install test`, tempDir);
+  yield run(`npm install ${elintPkgPath}`, tmpDir);
+  yield run(`node node_modules${path.sep}.bin${path.sep}elint install test`, tmpDir);
 
   t.truthy(fs.exists(elintrcPath));
   t.truthy(fs.exists(stylelintrcPath));

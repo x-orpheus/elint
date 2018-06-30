@@ -8,14 +8,15 @@ const os = require('os');
 const {
   run,
   npmCheck,
+  createCacheProject,
   elintPath,
   presetPath
 } = require('./utils');
 
 // 输出 CPU 和内存信息
 console.log('=== OS Info ===');
-console.log(`CPU: ${os.cpus().length}`);
-console.log(`Memory: ${Math.ceil(os.totalmem() / 1024 / 1024 / 1024)}G`)
+console.log(`CPU count: ${os.cpus().length}`);
+console.log(`Memory: ${Math.ceil(os.totalmem() / 1024 / 1024 / 1024)}G`);
 
 // 同步执行 elint 打包
 run('npm pack', elintPath, true);
@@ -27,3 +28,6 @@ run('npm pack', presetPath, true);
 if (process.env.CI) {
   npmCheck();
 }
+
+// 创建缓存项目
+createCacheProject();

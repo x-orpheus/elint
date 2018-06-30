@@ -6,15 +6,51 @@ const fs = require('fs-extra');
 const execa = require('execa');
 const { version } = require('../../package.json');
 
-// 创建测试项目
-function createTempProject() {
+const cacheDir = path.join(os.tmpdir(), 'elint_test_system', 'cache');
+const testProjectDir = path.join(__dirname, 'test-project');
+// elint
+const elintPath = path.join(__dirname, '../../');
+const elintPkgPath = path.join(elintPath, `elint-${version}.tgz`);
+// preset
+const presetPath = path.join(__dirname, 'test-preset');
+const presetPkgPath = path.join(presetPath, 'elint-preset-system-test-1.0.0.tgz');
+
+function getTmpDir() {
   const testNo = Math.random().toString().substr(2);
-  const tempDir = path.join(os.tmpdir(), `elint_test_system_${testNo}`);
-  const testProjectDir = path.join(__dirname, 'test-project');
+  const tmpDir = path.join(os.tmpdir(), 'elint_test_system', testNo);
+
+  return tmpDir;
+}
+
+// 创建空的测试项目：主要用于"安装"测试
+function createTmpProject() {
+  const tmpDir = getTmpDir();
 
   // 创建测试项目
-  return fs.copy(testProjectDir, tempDir).then(() => {
-    return tempDir;
+  return fs.copy(testProjectDir, tmpDir).then(() => {
+    return tmpDir;
+  });
+}
+
+// 创建缓存项目：方便后面重复使用
+function createCacheProject() {
+  if (fs.existsSync(cacheDir)) {
+    fs.emptyDirSync(cacheDir);
+  }
+
+  // 创建缓存项目
+  fs.copySync(testProjectDir, cacheDir);
+
+  // 安装依赖
+  run(`npm install ${presetPkgPath} ${elintPkgPath}`, cacheDir, true);
+}
+
+// 从缓存创建测试项目：依赖已经安装好，主要用于"功能"测试
+function createTmpProjectFromCache() {
+  const tmpDir = getTmpDir();
+
+  return fs.copy(cacheDir, tmpDir).then(() => {
+    return tmpDir;
   });
 }
 
@@ -67,15 +103,10 @@ function npmCheck() {
   }
 }
 
-// 一些固定不变的路径
-const elintPath = path.join(__dirname, '../../');
-const elintPkgPath = path.join(elintPath, `elint-${version}.tgz`);
-
-const presetPath = path.join(__dirname, 'test-preset');
-const presetPkgPath = path.join(presetPath, 'elint-preset-system-test-1.0.0.tgz');
-
 module.exports = {
-  createTempProject,
+  createTmpProject,
+  createCacheProject,
+  createTmpProjectFromCache,
   run,
   npmCheck,
   elintPath,
