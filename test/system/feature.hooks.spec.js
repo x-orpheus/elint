@@ -1,13 +1,14 @@
 'use strict';
 
 /**
- * git 相关测试
+ * hooks 相关测试
  */
 
 const { test, beforeEach } = require('ava');
 const path = require('path');
 const fs = require('fs-extra');
-const { createTmpProjectFromCache, run } = require('./utils');
+const createTmpProjectFromCache = require('./utils/create-tmp-project-from-cache');
+const run = require('./utils/run');
 
 beforeEach(function* (t) {
   const tmpDir = yield createTmpProjectFromCache();

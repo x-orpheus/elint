@@ -5,18 +5,16 @@
  */
 
 const os = require('os');
-const {
-  run,
-  npmCheck,
-  createCacheProject,
-  elintPath,
-  presetPath
-} = require('./utils');
+const run = require('./run');
+const npmCheck = require('./npm-check');
+const createCacheProject = require('./create-cache-project');
+const { elintPath, presetPath } = require('./variable');
 
 // 输出 CPU 和内存信息
 console.log('=== OS Info ===');
 console.log(`CPU count: ${os.cpus().length}`);
 console.log(`Memory: ${Math.ceil(os.totalmem() / 1024 / 1024 / 1024)}G`);
+console.log();
 
 // 同步执行 elint 打包
 run('npm pack', elintPath, true);

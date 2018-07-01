@@ -7,7 +7,9 @@
 const { test, beforeEach } = require('ava');
 const path = require('path');
 const fs = require('fs-extra');
-const { createTmpProject, run, elintPkgPath, presetPkgPath } = require('./utils');
+const createTmpProject = require('./utils/create-tmp-project');
+const run = require('./utils/run');
+const { elintPkgPath, presetPkgPath } = require('./utils/variable');
 
 function fileExists(context) {
   return Promise.all([
