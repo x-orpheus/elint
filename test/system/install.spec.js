@@ -24,6 +24,23 @@ function fileExists(context) {
   });
 }
 
+function checkDep(tmpDir) {
+  const pkgPath = path.join(tmpDir, 'package.json');
+  // eslint-disable-next-line global-require
+  const pkg = require(pkgPath);
+  const deps = Object.keys(pkg.devDependencies);
+
+  // elint-preset-standard devDependencies
+  return [
+    'eslint-config-standard',
+    'eslint-plugin-import',
+    'eslint-plugin-node',
+    'eslint-plugin-promise',
+    'eslint-plugin-standard',
+    'stylelint-config-standard'
+  ].every(item => deps.includes(item));
+}
+
 beforeEach(function* (t) {
   const tmpDir = yield createTmpProject();
 
@@ -91,6 +108,8 @@ test('先安装 elint，然后使用 elint 安装 preset', function* (t) {
 
   t.truthy(fs.exists(elintrcPath));
   t.truthy(fs.exists(stylelintrcPath));
+
+  t.truthy(checkDep(tmpDir));
 });
 
 test('先安装 elint，然后使用 elint 安装 preset，指定 registry', function* (t) {
@@ -110,4 +129,6 @@ test('先安装 elint，然后使用 elint 安装 preset，指定 registry', fun
 
   t.truthy(fs.exists(elintrcPath));
   t.truthy(fs.exists(stylelintrcPath));
+
+  t.truthy(checkDep(tmpDir));
 });
