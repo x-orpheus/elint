@@ -618,7 +618,7 @@ $ FORCE_COLOR=0 elint lint "src/**/*.js"
 
 [node-image]: https://img.shields.io/node/v/elint.svg
 [node-url]: https://nodejs.org
-[npm-image]: https://img.shields.io/npm/v/elint.svg
+[npm-image]: https://img.shields.io/github/package-json/v/keenwon/elint.svg
 [npm-url]: https://www.npmjs.com/package/elint
 [license-image]: https://img.shields.io/github/license/keenwon/elint.svg
 [license-url]: https://github.com/keenwon/elint/blob/master/LICENSE
@@ -628,7 +628,7 @@ $ FORCE_COLOR=0 elint lint "src/**/*.js"
 [travis-url]: https://travis-ci.org/keenwon/elint
 [appveyor-image]: https://ci.appveyor.com/api/projects/status/8ji6bpeea0aiwp0i/branch/master?svg=true
 [appveyor-url]: https://ci.appveyor.com/project/keenwon/elint
-[coveralls-image]: https://img.shields.io/coveralls/keenwon/elint.svg
+[coveralls-image]: https://coveralls.io/repos/github/keenwon/elint/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/keenwon/elint?branch=master
 [dependencies-image]: https://david-dm.org/keenwon/elint.svg
 [dependencies-url]: https://david-dm.org/keenwon/elint
