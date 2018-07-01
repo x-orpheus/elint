@@ -81,17 +81,33 @@ test('先安装 elint，然后使用 elint 安装 preset', function* (t) {
   const {
     tmpDir,
     elintrcPath,
-    stylelintrcPath,
-    huskyrcPath,
-    commitlintrcPath
+    stylelintrcPath
   } = t.context;
 
-  // 这里使用 npm 上的包进行测试
   yield run(`npm install ${elintPkgPath}`, tmpDir);
-  yield run(`node node_modules${path.sep}.bin${path.sep}elint install test`, tmpDir);
+
+  // 这里使用 npm 上的包进行测试：elint-preset-standard
+  yield run(`node node_modules${path.sep}.bin${path.sep}elint install standard`, tmpDir);
 
   t.truthy(fs.exists(elintrcPath));
   t.truthy(fs.exists(stylelintrcPath));
-  t.truthy(fs.exists(huskyrcPath));
-  t.truthy(fs.exists(commitlintrcPath));
+});
+
+test('先安装 elint，然后使用 elint 安装 preset，指定 registry', function* (t) {
+  const {
+    tmpDir,
+    elintrcPath,
+    stylelintrcPath
+  } = t.context;
+
+  const alias = process.env.CI ? 'skimdb' : 'taobao';
+
+  yield run(`npm install ${elintPkgPath}`, tmpDir);
+
+  // 这里使用 npm 上的包进行测试：elint-preset-standard
+  // eslint-disable-next-line max-len
+  yield run(`node node_modules${path.sep}.bin${path.sep}elint install standard --registry ${alias}`, tmpDir);
+
+  t.truthy(fs.exists(elintrcPath));
+  t.truthy(fs.exists(stylelintrcPath));
 });
