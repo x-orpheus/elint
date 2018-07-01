@@ -30,7 +30,7 @@ test('lint --fix', function* (t) {
 test('lint --no-ignore', function* (t) {
   const tmpDir = t.context.tmpDir;
 
-  yield t.throws(run('npm run lint-no-ignore', tmpDir));
+  yield t.notThrows(run('npm run lint-no-ignore', tmpDir));
 });
 
 test('lint es', function* (t) {

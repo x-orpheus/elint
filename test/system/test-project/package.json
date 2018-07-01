@@ -6,7 +6,7 @@
   "scripts": {
     "lint-without-fix": "elint lint \"src/**/*\"",
     "lint-fix": "elint lint \"src/**/*\" --fix",
-    "lint-no-ignore": "elint lint \"src/**/*\" --no-ignore",
+    "lint-no-ignore": "elint lint \"src/standard.js\" --no-ignore",
     "lint-es-without-fix": "elint lint es \"src/**/*\"",
     "lint-es-fix": "elint lint es \"src/**/*\" --fix",
     "lint-style-without-fix": "elint lint style \"src/**/*\"",
