@@ -421,7 +421,13 @@ elint install [presetName] [options]
 
 支持的 options:
 
-- `registry`: 制定 npm 仓库地址（内置两个 alias：npm，cnpm）
+- `registry`: 指定 npm 仓库地址，可以输入 url 或者 alias。支持如下的 alias：
+  - npm: [https://registry.npmjs.org/](https://registry.npmjs.org/)
+  - cnpm: [http://r.cnpmjs.org/](http://r.cnpmjs.org/)
+  - taobao: [https://registry.npm.taobao.org/](https://registry.npm.taobao.org/)
+  - nj: [https://registry.nodejitsu.com/](https://registry.nodejitsu.com/)
+  - rednpm: [http://registry.mirror.cqupt.edu.cn](http://registry.mirror.cqupt.edu.cn)
+  - skimdb: [https://skimdb.npmjs.com/registry](https://skimdb.npmjs.com/registry)
 - `keep`: 不覆盖旧的配置文件（文件完全一样肯定是不会覆盖的，keep 选项只在有文件有差异时生效）
 
 例子：

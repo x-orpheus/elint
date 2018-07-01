@@ -60,8 +60,12 @@ const defaultIgnore = [
 ];
 
 const registryAlias = {
-  'npm': 'http://registry.npmjs.org/',
-  'cnpm': 'http://registry.npm.taobao.org/'
+  npm: 'https://registry.npmjs.org/',
+  cnpm: 'http://r.cnpmjs.org/',
+  taobao: 'https://registry.npm.taobao.org/',
+  nj: 'https://registry.nodejitsu.com/',
+  rednpm: 'http://registry.mirror.cqupt.edu.cn',
+  skimdb: 'https://skimdb.npmjs.com/registry'
 };
 
 module.exports = {
