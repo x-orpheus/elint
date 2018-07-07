@@ -100,6 +100,8 @@ elint-preset-<name>
 
 > 一般来说，不建议把 `.elintignore`，`.stylelintignore` 添加到 preset 中，因为 preset 应该对所有项目都是适用的（除非你的 preset 限定在一个很小的范围内使用，各个项目的目录结构都是一致的，此时可以使用它们来定义需要忽略校验的文件和文件夹）。
 
+> 在 `package.json` 中添加关键字 `elint-preset` 会方便大家找到。[这里](https://npms.io/search?q=keywords%3Aelint-preset)可以查找现有的 preset。
+
 ## 2. 使用指南
 
 开始使用 elint 之前，请先检查下你使用 node 和 npm 版本。运行 elint 需要：
@@ -253,7 +255,7 @@ elint-preset-test
 ```shell
 npm publish
 ```
-> 这里需要再简单地说明一下如何发布，用户连 npm 的帐号和密码都没输入过，肯定执行失败
+> 如果希望更多人发现你的 preset，可以添加关键字 `elint-preset`，[点击此处](https://npms.io/search?q=keywords%3Aelint-preset)可以查看现有可用的 preset。
 
 ### 2.3. 安装 preset
 
@@ -624,7 +626,7 @@ $ FORCE_COLOR=0 elint lint "src/**/*.js"
 
 [node-image]: https://img.shields.io/node/v/elint.svg
 [node-url]: https://nodejs.org
-[npm-image]: https://img.shields.io/github/package-json/v/keenwon/elint.svg
+[npm-image]: https://badge.fury.io/js/elint.svg
 [npm-url]: https://www.npmjs.com/package/elint
 [license-image]: https://img.shields.io/github/license/keenwon/elint.svg
 [license-url]: https://github.com/keenwon/elint/blob/master/LICENSE
