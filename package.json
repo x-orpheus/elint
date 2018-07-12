@@ -14,6 +14,7 @@
     "test:system": "node test/system/utils/init.js && ava \"test/system/**/*.spec.js\" && node test/system/utils/clean.js",
     "test:unit": "mocha \"test/unit/**/*.spec.js\"",
     "test:unit:coverage": "nyc --reporter=html --reporter=text npm run test:unit && nyc report --reporter=text-lcov | coveralls",
+    "preinstall": "node ./src/preinstall.js",
     "postinstall": "node ./src/postinstall.js"
   },
   "repository": {
