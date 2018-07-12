@@ -24,6 +24,9 @@ describe('is-git-hooks 测试', function () {
   });
 
   it('非 husky 环境', function () {
+    // appveyor 总是超时，延长
+    this.timeout(5000);
+
     return isGitHooks().should.eventually.equal(false);
   });
 
