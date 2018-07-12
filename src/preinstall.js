@@ -2,6 +2,11 @@
 
 const exec = require('child_process').exec;
 
+// CI 环境不执行
+if (process.env.CI) {
+  process.exit(0);
+}
+
 exec('npm -v', function (err, stdout, stderr) {
   if (err || stderr) {
     console.error(err || stderr);
