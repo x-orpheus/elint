@@ -9,6 +9,7 @@
  */
 function setBlocking(blocking) {
   [process.stdout, process.stderr].forEach(stream => {
+    /* istanbul ignore else */
     if (stream._handle && typeof stream._handle.setBlocking === 'function') {
       stream._handle.setBlocking(blocking);
     }
