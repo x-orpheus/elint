@@ -40,7 +40,7 @@ describe('set-blocking 测试', function () {
       setBlocking(true);
       process.stdout.write(buffer);
       process.exit(0);
-    `);
+    `.replace(/\\/g, '\\\\'));
 
     return execa('node', [filePath])
       .then(result => {
