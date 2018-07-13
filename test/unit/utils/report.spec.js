@@ -1,6 +1,6 @@
 'use strict'
 
-const chalk = require('chalk');
+const chalk = require('chalk')
 const figures = require('figures')
 const report = require('../../../src/utils/report')
 
@@ -17,7 +17,7 @@ describe('Report 测试', function () {
       }
     ]
 
-    const except = [];
+    const except = []
 
     except.push('\n')
     except.push(`${chalk.bold(`> name:`)}\n`)
@@ -39,7 +39,7 @@ describe('Report 测试', function () {
       }
     ]
 
-    const except = [];
+    const except = []
 
     except.push('\n')
     except.push(`${chalk.bold(`> name:`)}\n`)
@@ -61,7 +61,7 @@ describe('Report 测试', function () {
       }
     ]
 
-    const except = [];
+    const except = []
 
     except.push('\n')
     except.push(`${chalk.bold(`> name:`)}\n`)
@@ -88,7 +88,7 @@ describe('Report 测试', function () {
       }
     ]
 
-    const except = [];
+    const except = []
 
     except.push('\n')
     except.push(`${chalk.bold(`> name1:`)}\n`)
@@ -116,7 +116,7 @@ describe('Report 测试', function () {
       }
     ]
 
-    const except = [];
+    const except = []
 
     except.push('\n')
     except.push(`${chalk.bold(`> name:`)}\n`)

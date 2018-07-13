@@ -7,8 +7,6 @@ module.exports = {
     'mocha': true
   },
   'rules': {
-    // 分号？？？？？
-    // 'semi': ['error', 'always'],
-    // 'semi-spacing': ['error', { 'before': false, 'after': true }]
+    'valid-jsdoc': 2
   }
 }

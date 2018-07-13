@@ -39,7 +39,7 @@ const passedMessage = chalk.green(`${figures.tick} Passed`)
  * report
  *
  * @param {Result[]} results 要输出到命令行的内容
- * @returns {string}
+ * @returns {string} output
  */
 function report (results) {
   const arr = []
