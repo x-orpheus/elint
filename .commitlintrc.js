@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   'rules': {
@@ -27,4 +27,4 @@ module.exports = {
       ]
     ]
   }
-};
+}
