@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-const debug = require('debug')('elint:utils:is-git-hooks');
-const path = require('path');
-const co = require('co');
-const find = require('find-process');
+const debug = require('debug')('elint:utils:is-git-hooks')
+const path = require('path')
+const co = require('co')
+const find = require('find-process')
 
 /**
  * 获取 ppid
@@ -12,17 +12,17 @@ const find = require('find-process');
  * @returns {Promise<number>} ppid
  */
 /* istanbul ignore next */
-function getPPID() {
-  const ppid = process.ppid;
+function getPPID () {
+  const ppid = process.ppid
 
   if (typeof ppid === 'number') {
-    return Promise.resolve(ppid);
+    return Promise.resolve(ppid)
   }
 
   return find('pid', process.pid)
     .then(list => {
-      return list && list[0] && list[0].ppid;
-    });
+      return list && list[0] && list[0].ppid
+    })
 }
 
 /**
@@ -30,28 +30,28 @@ function getPPID() {
  *
  * @returns {Promise<boolean>} 是否是 git hooks 环境
  */
-function isGitHooks() {
-  return co(function* () {
-    const ppid = yield getPPID();
+function isGitHooks () {
+  return co(function * () {
+    const ppid = yield getPPID()
 
-    debug(`ppid: ${ppid}`);
+    debug(`ppid: ${ppid}`)
 
     return find('pid', ppid).then(list => {
-      debug('process list: %o', list);
+      debug('process list: %o', list)
 
-      const cmd = list && list[0] && list[0].cmd;
+      const cmd = list && list[0] && list[0].cmd
 
       /* istanbul ignore next */
       if (!cmd) {
-        return false;
+        return false
       }
 
-      return cmd.includes(`node_modules${path.sep}husky`);
-    });
+      return cmd.includes(`node_modules${path.sep}husky`)
+    })
   }).catch(/* istanbul ignore next */ function (err) {
-    debug('error: %o', err);
-    return false;
-  });
+    debug('error: %o', err)
+    return false
+  })
 }
 
-module.exports = isGitHooks;
+module.exports = isGitHooks

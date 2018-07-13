@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * 支持的 js 文件后缀
@@ -6,7 +6,7 @@
 const esSuffix = [
   '.js',
   '.jsx'
-];
+]
 
 /**
  * 支持的 css 文件后缀
@@ -16,7 +16,7 @@ const cssSuffix = [
   '.scss',
   '.sass',
   '.less'
-];
+]
 
 /**
  * 支持的 linter
@@ -24,7 +24,7 @@ const cssSuffix = [
 const linterSuffix = {
   es: esSuffix,
   style: cssSuffix
-};
+}
 
 /**
  * 支持的配置文件
@@ -43,7 +43,7 @@ const linterConfigFile = [
 
   // commitlint
   '.commitlintrc.js'
-];
+]
 
 /**
  * 默认忽略
@@ -57,7 +57,7 @@ const defaultIgnore = [
   '**/.git',
   '**/*.min.js',
   '**/*.min.css'
-];
+]
 
 const registryAlias = {
   npm: 'https://registry.npmjs.org/',
@@ -66,11 +66,11 @@ const registryAlias = {
   nj: 'https://registry.nodejitsu.com/',
   rednpm: 'http://registry.mirror.cqupt.edu.cn',
   skimdb: 'https://skimdb.npmjs.com/registry'
-};
+}
 
 module.exports = {
   linterSuffix,
   linterConfigFile,
   defaultIgnore,
   registryAlias
-};
+}

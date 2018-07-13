@@ -1,8 +1,8 @@
-'use strict';
+'use strict'
 
-const debug = require('debug')('elint:env');
-const path = require('path');
-const isNpm = require('is-npm');
+const debug = require('debug')('elint:env')
+const path = require('path')
+const isNpm = require('is-npm')
 
 /**
  * 获取通过 npm script 执行时的项目根路径
@@ -10,18 +10,18 @@ const isNpm = require('is-npm');
  * @returns {string} cwd
  */
 /* istanbul ignore next */
-function getInitCwd() {
+function getInitCwd () {
   if (process.env.INIT_CWD) {
-    debug(`process.env.INIT_CWD: ${process.env.INIT_CWD}`);
-    return process.env.INIT_CWD;
+    debug(`process.env.INIT_CWD: ${process.env.INIT_CWD}`)
+    return process.env.INIT_CWD
   }
 
-  const cwd = process.cwd();
+  const cwd = process.cwd()
 
-  debug(`process.cwd(): ${cwd}`);
+  debug(`process.cwd(): ${cwd}`)
 
   // 兼容 npm v3
-  return cwd.split('/node_modules/')[0];
+  return cwd.split('/node_modules/')[0]
 }
 
 /**
@@ -31,13 +31,13 @@ function getInitCwd() {
  */
 const getBaseDir = () => {
   /* istanbul ignore next */
-  const baseDir = isNpm ? getInitCwd() : process.cwd();
+  const baseDir = isNpm ? getInitCwd() : process.cwd()
 
-  debug(`isNpm: ${isNpm}`);
-  debug(`base dir: ${baseDir}`);
+  debug(`isNpm: ${isNpm}`)
+  debug(`base dir: ${baseDir}`)
 
-  return baseDir;
-};
+  return baseDir
+}
 
 /**
  * 项目的 node_modules 目录
@@ -45,13 +45,13 @@ const getBaseDir = () => {
  * @returns {string} node_modules dir
  */
 const getNodeModulesDir = () => {
-  const nodeModulesDir = path.join(getBaseDir(), 'node_modules');
+  const nodeModulesDir = path.join(getBaseDir(), 'node_modules')
 
-  debug(`node_modules dir: ${nodeModulesDir}`);
-  return nodeModulesDir;
-};
+  debug(`node_modules dir: ${nodeModulesDir}`)
+  return nodeModulesDir
+}
 
 module.exports = {
   getBaseDir,
   getNodeModulesDir
-};
+}

@@ -1,69 +1,66 @@
-'use strict';
+'use strict'
 
-const path = require('path');
-const mock = require('../mock/env');
-const { getBaseDir } = require('../../../src/env');
-const runInHusky = require('../mock/run-in-husky');
-const walker = require('../../../src/walker');
-const walkerPath = require.resolve('../../../src/walker');
+const path = require('path')
+const mock = require('../mock/env')
+const { getBaseDir } = require('../../../src/env')
+const runInHusky = require('../mock/run-in-husky')
+const walker = require('../../../src/walker')
+const walkerPath = require.resolve('../../../src/walker')
 
-const mocha = require('mocha');
-const deepEqualInAnyOrder = require('deep-equal-in-any-order');
-const chaiAsPromised = require('chai-as-promised');
-const chai = require('chai');
-chai.should();
-chai.use(deepEqualInAnyOrder);
-chai.use(chaiAsPromised);
+const deepEqualInAnyOrder = require('deep-equal-in-any-order')
+const chaiAsPromised = require('chai-as-promised')
+const chai = require('chai')
+chai.should()
+chai.use(deepEqualInAnyOrder)
+chai.use(chaiAsPromised)
 
 describe('Walker 测试', function () {
-
-  let unmock;
-  let baseDir;
-  let getPath;
+  let unmock
+  let baseDir
+  let getPath
 
   beforeEach(() => {
-    unmock = mock();
-    baseDir = getBaseDir();
+    unmock = mock()
+    baseDir = getBaseDir()
     getPath = p => {
-      return path.join(baseDir, p);
-    };
-  });
+      return path.join(baseDir, p)
+    }
+  })
 
   afterEach(() => {
-    unmock();
-  });
+    unmock()
+  })
 
   describe('功能测试', function () {
     it('空测试', function () {
       return walker().should.eventually.deep.equal({
         es: [],
         style: []
-      });
-    });
+      })
+    })
 
     it('普通环境', function () {
       return walker(['*.txt']).should.eventually.deep.equal({
         es: [],
         style: []
-      });
-    });
-
+      })
+    })
 
     it('husky 环境', function () {
       // 模拟 husky 环境比较耗时，防止超时
-      this.timeout(5000);
+      this.timeout(5000)
 
       const tmpl = `
         const walker = require('${walkerPath}');
         walker(['*.txt']).then(result => {
           process.stdout.write(JSON.stringify(result));
         });
-      `;
-      const result = '"{\\"es\\":[],\\"style\\":[]}"';
+      `
+      const result = '"{\\"es\\":[],\\"style\\":[]}"'
 
-      return runInHusky(tmpl).should.eventually.equal(result);
-    });
-  });
+      return runInHusky(tmpl).should.eventually.equal(result)
+    })
+  })
 
   describe('Ignore 功能测试', function () {
     it('开启忽略规则', function () {
@@ -74,10 +71,10 @@ describe('Walker 测试', function () {
           getPath('src/lib/b.js')
         ],
         style: []
-      };
+      }
 
-      return walker('**/*.js').should.eventually.deep.equalInAnyOrder(result);
-    });
+      return walker('**/*.js').should.eventually.deep.equalInAnyOrder(result)
+    })
 
     it('关闭忽略规则', function () {
       const result = {
@@ -97,10 +94,9 @@ describe('Walker 测试', function () {
           getPath('bower_components/a.js')
         ],
         style: []
-      };
+      }
 
-      return walker('**/*.js', { noIgnore: true }).should.eventually.deep.equalInAnyOrder(result);
-    });
-  });
-
-});
+      return walker('**/*.js', { noIgnore: true }).should.eventually.deep.equalInAnyOrder(result)
+    })
+  })
+})

@@ -1,20 +1,20 @@
-'use strict';
+'use strict'
 
-const lodash = require('lodash');
+const lodash = require('lodash')
 
-function sort(obj) {
+function sort (obj) {
   if (!lodash.isPlainObject(obj)) {
-    return obj;
+    return obj
   }
 
-  const sortedObj = {};
-  const keys = Object.keys(obj).sort();
+  const sortedObj = {}
+  const keys = Object.keys(obj).sort()
 
   keys.forEach(key => {
-    sortedObj[key] = obj[key];
-  });
+    sortedObj[key] = obj[key]
+  })
 
-  return sortedObj;
+  return sortedObj
 }
 
-module.exports = sort;
+module.exports = sort

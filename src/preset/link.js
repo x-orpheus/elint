@@ -1,8 +1,8 @@
-'use strict';
+'use strict'
 
-const debug = require('debug')('elint:preset:link');
-const findConfigFiles = require('./find-config-files');
-const updateConfigFiles = require('./update-config-files');
+const debug = require('debug')('elint:preset:link')
+const findConfigFiles = require('./find-config-files')
+const updateConfigFiles = require('./update-config-files')
 
 /**
  * 把各种 lint 的配置文件，移动到根目录
@@ -11,15 +11,15 @@ const updateConfigFiles = require('./update-config-files');
  * @param {boolen} keep 是否保留旧配置文件
  * @returns {void}
  */
-function link(presetModulePath, keep) {
-  debug(`input ${presetModulePath}`);
+function link (presetModulePath, keep) {
+  debug(`input ${presetModulePath}`)
 
-  console.log('update config file:');
+  console.log('update config file:')
 
   findConfigFiles(presetModulePath)
     .forEach(configFilePath => {
-      updateConfigFiles(configFilePath, keep);
-    });
+      updateConfigFiles(configFilePath, keep)
+    })
 }
 
-module.exports = link;
+module.exports = link

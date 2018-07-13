@@ -1,25 +1,25 @@
-'use strict';
+'use strict'
 
-const fs = require('fs-extra');
-const run = require('./run');
+const fs = require('fs-extra')
+const run = require('./run')
 const {
   cacheDir,
   testProjectDir,
   presetPkgPath,
   elintPkgPath
-} = require('./variable');
+} = require('./variable')
 
 // 创建缓存项目：方便后面重复使用
-function createCacheProject() {
+function createCacheProject () {
   if (fs.existsSync(cacheDir)) {
-    fs.emptyDirSync(cacheDir);
+    fs.emptyDirSync(cacheDir)
   }
 
   // 创建缓存项目
-  fs.copySync(testProjectDir, cacheDir);
+  fs.copySync(testProjectDir, cacheDir)
 
   // 安装依赖
-  run(`npm install ${presetPkgPath} ${elintPkgPath}`, cacheDir, true);
+  run(`npm install ${presetPkgPath} ${elintPkgPath}`, cacheDir, true)
 }
 
-module.exports = createCacheProject;
+module.exports = createCacheProject

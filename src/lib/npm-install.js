@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-const debug = require('debug')('elint:lib:npmInstall');
-const _ = require('lodash');
-const exec = require('./exec');
-const parse = require('../utils/parse-npm-option');
+const debug = require('debug')('elint:lib:npmInstall')
+const _ = require('lodash')
+const exec = require('./exec')
+const parse = require('../utils/parse-npm-option')
 
 /**
  * @typedef InstallOptions
@@ -19,36 +19,36 @@ const parse = require('../utils/parse-npm-option');
  * @param {InstallOptions} options install options
  * @returns {Promise} promise
  */
-function npmInstall(names, options) {
-  const parsedNames = Array.isArray(names) ? names : [names];
-  const parsedOptions = [];
+function npmInstall (names, options) {
+  const parsedNames = Array.isArray(names) ? names : [names]
+  const parsedOptions = []
 
   // 兼容 node v6
   _.toPairs(options).forEach(([option, value]) => {
     if (value === false) {
-      return;
+      return
     }
 
-    parsedOptions.push(parse(option));
+    parsedOptions.push(parse(option))
 
     if (typeof value === 'string') {
-      parsedOptions.push(value);
+      parsedOptions.push(value)
     }
-  });
+  })
 
   if (options.prefix) {
-    parsedOptions.unshift('--global');
+    parsedOptions.unshift('--global')
   }
 
   const argus = [
     'install',
     ...parsedNames,
     ...parsedOptions
-  ];
+  ]
 
-  debug(`run "npm ${argus.join(' ')}"`);
+  debug(`run "npm ${argus.join(' ')}"`)
 
-  return exec('npm')(...argus);
+  return exec('npm')(...argus)
 }
 
-module.exports = npmInstall;
+module.exports = npmInstall

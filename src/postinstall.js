@@ -1,17 +1,17 @@
-'use strict';
+'use strict'
 
-const cwd = process.cwd();
-const path = require('path');
-const fs = require('fs-extra');
-const semver = require('semver');
-const { error } = require('./utils/log');
-const { getNodeModulesDir } = require('./env');
-const { installFromScripts } = require('./index');
+const cwd = process.cwd()
+const path = require('path')
+const fs = require('fs-extra')
+const semver = require('semver')
+const { error } = require('./utils/log')
+const { getNodeModulesDir } = require('./env')
+const { installFromScripts } = require('./index')
 
-const nodeModulesDir = getNodeModulesDir();
-const scriptPath = path.join(__dirname, '../scripts/postinstall');
-const destDirPath = path.join(nodeModulesDir, '.hooks');
-const destScriptPath = path.join(destDirPath, 'postinstall');
+const nodeModulesDir = getNodeModulesDir()
+const scriptPath = path.join(__dirname, '../scripts/postinstall')
+const destDirPath = path.join(nodeModulesDir, '.hooks')
+const destScriptPath = path.join(destDirPath, 'postinstall')
 
 /**
  * 检查 npm 版本
@@ -23,30 +23,30 @@ const destScriptPath = path.join(destDirPath, 'postinstall');
  *
  * @returns {void}
  */
-function checkNpm() {
+function checkNpm () {
   if (process.env.CI) {
-    return;
+    return
   }
 
-  const prefix = process.env.npm_config_prefix;
+  const prefix = process.env.npm_config_prefix
   const lifecyclePkgPath = process.platform === 'win32'
     ? path.join(prefix, 'node_modules/npm/node_modules/npm-lifecycle/package.json')
-    : path.join(prefix, 'lib/node_modules/npm/node_modules/npm-lifecycle/package.json');
+    : path.join(prefix, 'lib/node_modules/npm/node_modules/npm-lifecycle/package.json')
 
   if (!fs.existsSync(lifecyclePkgPath)) {
-    return;
+    return
   }
 
   // eslint-disable-next-line global-require
-  const version = require(lifecyclePkgPath).version;
+  const version = require(lifecyclePkgPath).version
 
   if (semver.lt(version, '2.0.2')) {
     error(
       'elint 在当前的 npm 版本下无法正常运行，请升级 npm 后再安装',
       '更多信息请访问：http://dwz.cn/8bkKLP'
-    );
+    )
 
-    process.exit(1);
+    process.exit(1)
   }
 }
 
@@ -55,33 +55,33 @@ function checkNpm() {
  *
  * @returns {void}
  */
-function installHooks() {
+function installHooks () {
   // 开发过程中不执行
   if (!cwd.includes('node_modules')) {
-    return;
+    return
   }
 
   // 确保目录存在
-  fs.ensureDirSync(destDirPath);
+  fs.ensureDirSync(destDirPath)
 
   // 部署 scripts
-  fs.copySync(scriptPath, destScriptPath);
+  fs.copySync(scriptPath, destScriptPath)
 
   // 兼容 windows
   if (process.platform === 'win32') {
-    const cmdScriptPath = path.join(__dirname, '../scripts/postinstall.cmd');
-    const destCmdScriptPath = path.join(destDirPath, 'postinstall.cmd');
+    const cmdScriptPath = path.join(__dirname, '../scripts/postinstall.cmd')
+    const destCmdScriptPath = path.join(destDirPath, 'postinstall.cmd')
 
-    fs.copySync(cmdScriptPath, destCmdScriptPath);
+    fs.copySync(cmdScriptPath, destCmdScriptPath)
   }
 
   // 添加执行权限
-  fs.chmodSync(destScriptPath, 0o755);
+  fs.chmodSync(destScriptPath, 0o755)
 }
 
-checkNpm();
+checkNpm()
 
-installHooks();
+installHooks()
 
 // 安装完成执行一次 install
-installFromScripts();
+installFromScripts()

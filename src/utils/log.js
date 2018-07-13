@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
-const chalk = require('chalk');
-const figures = require('figures');
+const chalk = require('chalk')
+const figures = require('figures')
 
 /**
  * @typedef ColorFnAndIcon
@@ -15,29 +15,29 @@ const figures = require('figures');
  * @param {string} type 日志类型
  * @returns {ColorFnAndIcon} colorFn and icon
  */
-function getColorFnAndIconByType(type) {
-  let colorFn, icon;
+function getColorFnAndIconByType (type) {
+  let colorFn, icon
 
   switch (type) {
     case 'error':
-      colorFn = chalk.red;
-      icon = figures.cross;
-      break;
+      colorFn = chalk.red
+      icon = figures.cross
+      break
     case 'warn':
-      colorFn = chalk.yellow;
-      icon = figures.warning;
-      break;
+      colorFn = chalk.yellow
+      icon = figures.warning
+      break
     case 'success':
-      colorFn = chalk.green;
-      icon = figures.tick;
-      break;
+      colorFn = chalk.green
+      icon = figures.tick
+      break
     default:
-      colorFn = chalk.blue;
-      icon = figures.info;
-      break;
+      colorFn = chalk.blue
+      icon = figures.info
+      break
   }
 
-  return { colorFn, icon };
+  return { colorFn, icon }
 }
 
 /**
@@ -46,28 +46,28 @@ function getColorFnAndIconByType(type) {
  * @param {string} type 日志类型
  * @returns {function} log function
  */
-function log(type) {
+function log (type) {
   return (...message) => {
     if (!message.length) {
-      return;
+      return
     }
 
-    const { colorFn, icon } = getColorFnAndIconByType(type);
-    const output = [''];
+    const { colorFn, icon } = getColorFnAndIconByType(type)
+    const output = ['']
 
     message.forEach((item, index) => {
       if (index === 0) {
-        output.push(`  ${icon} ${item}`);
-        return;
+        output.push(`  ${icon} ${item}`)
+        return
       }
 
-      output.push(`    ${item}`);
-    });
+      output.push(`    ${item}`)
+    })
 
-    output.push('');
+    output.push('')
 
-    console.log(colorFn(output.join('\n')));
-  };
+    console.log(colorFn(output.join('\n')))
+  }
 }
 
 module.exports = {
@@ -75,4 +75,4 @@ module.exports = {
   warn: log('warn'),
   success: log('success'),
   info: log()
-};
+}

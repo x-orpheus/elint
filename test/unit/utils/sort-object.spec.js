@@ -1,16 +1,15 @@
-'use strict';
+'use strict'
 
-const sort = require('../../../src/utils/sort-object');
+const sort = require('../../../src/utils/sort-object')
 
-const mocha = require('mocha');
-const chai = require('chai');
-const should = chai.should();
+const chai = require('chai')
+const should = chai.should()
 
 describe('Sort Object 测试', function () {
   it('空测试', function () {
-    should.not.exist(sort());
-    sort('').should.be.equal('');
-  });
+    should.not.exist(sort())
+    sort('').should.be.equal('')
+  })
 
   it('sort', function () {
     const object = {
@@ -20,7 +19,7 @@ describe('Sort Object 测试', function () {
       'chalk': '*',
       'write-json-file': '*',
       '@commitlint/core': '*'
-    };
+    }
 
     const result = {
       '@commitlint/core': '*',
@@ -29,8 +28,8 @@ describe('Sort Object 测试', function () {
       'ignore': '*',
       'is-valid-glob': '*',
       'write-json-file': '*'
-    };
+    }
 
-    sort(object).should.be.deep.equal(result);
-  });
-});
+    sort(object).should.be.deep.equal(result)
+  })
+})

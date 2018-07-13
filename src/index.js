@@ -1,15 +1,15 @@
-'use strict';
+'use strict'
 
-exports.elint = require('./elint');
+exports.elint = require('./elint')
 
-exports.installFromCli = require('./preset/install-cli');
+exports.installFromCli = require('./preset/install-cli')
 
-exports.installFromScripts = require('./preset/install-scripts');
+exports.installFromScripts = require('./preset/install-scripts')
 
-exports.diff = require('./preset/diff');
+exports.diff = require('./preset/diff')
 
-exports.commitlint = require('./workers/commitlint');
+exports.commitlint = require('./workers/commitlint')
 
-exports.runHooks = require('./hooks');
+exports.runHooks = require('./hooks')
 
-exports.version = require('./version');
+exports.version = require('./version')

@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 
-const debug = require('debug')('elint:walker:stage');
-const fs = require('fs-extra');
-const minimatch = require('minimatch');
-const sgf = require('staged-git-files');
-const { getBaseDir } = require('../env');
+const debug = require('debug')('elint:walker:stage')
+const fs = require('fs-extra')
+const minimatch = require('minimatch')
+const sgf = require('staged-git-files')
+const { getBaseDir } = require('../env')
 
 /**
  * 执行 minimatch
@@ -13,12 +13,12 @@ const { getBaseDir } = require('../env');
  * @param {Array<string>} patterns 匹配模式
  * @returns {boolean} 是否匹配
  */
-function match(filename, patterns) {
+function match (filename, patterns) {
   return patterns.some(pattern => {
     return minimatch(filename, pattern, {
       dot: true
-    });
-  });
+    })
+  })
 }
 
 /**
@@ -27,30 +27,30 @@ function match(filename, patterns) {
  * @param {Array<string>} patterns 要搜寻的 glob 数组
  * @returns {Promise<object>} fileTree
  */
-function stageFiles(patterns) {
-  const baseDir = getBaseDir();
+function stageFiles (patterns) {
+  const baseDir = getBaseDir()
 
   // 如果 baseDir 根本不存在 sgf 会抛出异常
   if (!fs.existsSync(baseDir)) {
-    return Promise.resolve([]);
+    return Promise.resolve([])
   }
 
-  sgf.cwd = baseDir;
+  sgf.cwd = baseDir
 
   return new Promise(resolve => {
     sgf((err, result) => {
       if (err) {
-        debug('staged-git-files error: %o', err);
-        return resolve([]);
+        debug('staged-git-files error: %o', err)
+        return resolve([])
       }
 
       const fileList = result
         .filter(item => match(item.filename, patterns))
-        .map(item => item.filename);
+        .map(item => item.filename)
 
-      resolve(fileList);
-    });
-  });
+      resolve(fileList)
+    })
+  })
 }
 
-module.exports = stageFiles;
+module.exports = stageFiles

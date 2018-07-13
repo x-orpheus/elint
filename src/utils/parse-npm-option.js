@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * 处理 npm option
@@ -7,16 +7,16 @@
  * @param {string} option option
  * @return {string} parsed option
  */
-function parseNpmOption(option) {
+function parseNpmOption (option) {
   if (!option || typeof option !== 'string') {
-    return option;
+    return option
   }
 
   const parsedOption = option.replace(/([A-Z])/g, (match, p) => {
-    return `-${p.toLowerCase()}`;
-  });
+    return `-${p.toLowerCase()}`
+  })
 
-  return `--${parsedOption}`;
+  return `--${parsedOption}`
 }
 
-module.exports = parseNpmOption;
+module.exports = parseNpmOption

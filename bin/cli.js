@@ -1,31 +1,31 @@
 #!/usr/bin/env node
 
-'use strict';
+'use strict'
 
 /**
  * cli
  */
 
-const debug = require('debug')('elint:cli');
-const program = require('commander');
-const { description } = require('../package.json');
-const { elint, installFromCli, diff, commitlint, runHooks, version } = require('../src');
-const log = require('../src/utils/log');
+const debug = require('debug')('elint:cli')
+const program = require('commander')
+const { description } = require('../package.json')
+const { elint, installFromCli, diff, commitlint, runHooks, version } = require('../src')
+const log = require('../src/utils/log')
 
-debug('process.argv: %o', process.argv);
+debug('process.argv: %o', process.argv)
 
 program
   .usage('[command] [options]')
-  .description(description);
+  .description(description)
 
 /**
  * 输出 version
  */
 program
   .option('-v, --version', 'output the version number', () => {
-    version();
-    process.exit();
-  });
+    version()
+    process.exit()
+  })
 
 /**
  * 执行 lint
@@ -38,24 +38,24 @@ program
   .option('-f, --fix', 'Automatically fix problems')
   .option('--no-ignore', 'Disable elint ignore patterns')
   .action((type, files, options) => {
-    debug('run lint...');
+    debug('run lint...')
 
     if (!type || !files) {
-      return;
+      return
     }
 
     if (type === 'commit') {
-      commitlint();
-      return;
+      commitlint()
+      return
     }
 
-    let parsedFiles, parsedType;
+    let parsedFiles, parsedType
 
     if (['es', 'style'].includes(type)) {
-      parsedFiles = files;
-      parsedType = type;
+      parsedFiles = files
+      parsedType = type
     } else {
-      parsedFiles = [type, ...files];
+      parsedFiles = [type, ...files]
     }
 
     /**
@@ -66,10 +66,10 @@ program
       type: parsedType,
       fix: options.fix,
       noIgnore: options.noIgnore
-    };
+    }
 
-    elint(parsedFiles, elintOptions);
-  });
+    elint(parsedFiles, elintOptions)
+  })
 
 /**
  * 安装 preset
@@ -81,12 +81,12 @@ program
   .option('-k, --keep', 'If there is an old configuration file, keep it from being override')
   .description('install or update preset')
   .action((preset, options) => {
-    debug('run install...');
+    debug('run install...')
     installFromCli(preset, {
       registry: options.registry,
       keep: options.keep
-    });
-  });
+    })
+  })
 
 /**
  * 对比 preset config
@@ -96,9 +96,9 @@ program
   .alias('d')
   .description('diff preset')
   .action(() => {
-    debug('run diff...');
-    diff();
-  });
+    debug('run diff...')
+    diff()
+  })
 
 /**
  * install & uninstall hooks
@@ -108,64 +108,64 @@ program
   .alias('h')
   .description('install & uninstall hooks')
   .action(action => {
-    debug(`run ${action} hooks...`);
-    runHooks(action);
-  });
+    debug(`run ${action} hooks...`)
+    runHooks(action)
+  })
 
 /**
  * 未知 command
  */
 program.on('command:*', function () {
-  const command = program.args.join(' ');
+  const command = program.args.join(' ')
   const message = [
     `Invalid command: ${command}`,
     'See --help for a list of available commands.'
-  ];
+  ]
 
-  log.error(...message);
-  process.exit(1);
-});
+  log.error(...message)
+  process.exit(1)
+})
 
 /**
  * 输出 help
  */
 program.on('--help', function () {
-  console.log('');
-  console.log('  Examples:');
-  console.log('');
-  console.log('    output help information');
-  console.log('    $ elint install --help');
-  console.log('');
-  console.log('    lint all js and css');
-  console.log('    $ elint lint "**/*.js" "**/*.css"');
-  console.log('');
-  console.log('    run eslint');
-  console.log('    $ elint lint es "**/*.js"');
-  console.log('');
-  console.log('    run commitlint');
-  console.log('    $ elint lint commit');
-  console.log('');
-  console.log('    install git hooks');
-  console.log('    $ elint hooks install');
-  console.log('');
-  console.log('    install elint-preset-test');
-  console.log('    $ elint install test --registry=<npm registry>');
-  console.log('');
-});
+  console.log('')
+  console.log('  Examples:')
+  console.log('')
+  console.log('    output help information')
+  console.log('    $ elint install --help')
+  console.log('')
+  console.log('    lint all js and css')
+  console.log('    $ elint lint "**/*.js" "**/*.css"')
+  console.log('')
+  console.log('    run eslint')
+  console.log('    $ elint lint es "**/*.js"')
+  console.log('')
+  console.log('    run commitlint')
+  console.log('    $ elint lint commit')
+  console.log('')
+  console.log('    install git hooks')
+  console.log('    $ elint hooks install')
+  console.log('')
+  console.log('    install elint-preset-test')
+  console.log('    $ elint install test --registry=<npm registry>')
+  console.log('')
+})
 
-program.parse(process.argv);
+program.parse(process.argv)
 
-function showHelp() {
+function showHelp () {
   // 没有输入任何参数
   if (process.argv.length === 2) {
-    return true;
+    return true
   }
 
-  let argus = process.argv.slice(2);
+  let argus = process.argv.slice(2)
 
-  return argus.every(item => item.startsWith('-'));
+  return argus.every(item => item.startsWith('-'))
 }
 
 if (showHelp()) {
-  program.help();
+  program.help()
 }

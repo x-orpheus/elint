@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
 /**
  * package name 正则，支持 scope，version
  */
-const packageNameRegexp = /^(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*(?:@.+)?$/;
+const packageNameRegexp = /^(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*(?:@.+)?$/
 
 /**
  * @typedef ParsedPackageName
@@ -18,39 +18,39 @@ const packageNameRegexp = /^(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~
  * @param {string} packageName 包名
  * @returns {ParsedPackageName} parsed obj
  */
-function parse(packageName) {
+function parse (packageName) {
   if (!packageName || !packageNameRegexp.test(packageName)) {
-    return null;
+    return null
   }
 
-  const slashIndex = packageName.indexOf('/');
-  const atLastIndex = packageName.lastIndexOf('@');
-  const hasScope = slashIndex !== -1;
-  const hasVersion = atLastIndex !== -1 && atLastIndex !== 0;
+  const slashIndex = packageName.indexOf('/')
+  const atLastIndex = packageName.lastIndexOf('@')
+  const hasScope = slashIndex !== -1
+  const hasVersion = atLastIndex !== -1 && atLastIndex !== 0
 
-  let scope = '';
-  let name = '';
-  let version = '';
+  let scope = ''
+  let name = ''
+  let version = ''
 
   if (hasScope && hasVersion) {
-    scope = packageName.slice(1, slashIndex);
-    name = packageName.slice(slashIndex + 1, atLastIndex);
-    version = packageName.slice(atLastIndex + 1);
+    scope = packageName.slice(1, slashIndex)
+    name = packageName.slice(slashIndex + 1, atLastIndex)
+    version = packageName.slice(atLastIndex + 1)
   } else if (hasScope) {
-    scope = packageName.slice(1, slashIndex);
-    name = packageName.slice(slashIndex + 1);
+    scope = packageName.slice(1, slashIndex)
+    name = packageName.slice(slashIndex + 1)
   } else if (hasVersion) {
-    name = packageName.slice(slashIndex + 1, atLastIndex);
-    version = packageName.slice(atLastIndex + 1);
+    name = packageName.slice(slashIndex + 1, atLastIndex)
+    version = packageName.slice(atLastIndex + 1)
   } else {
-    name = packageName;
+    name = packageName
   }
 
   return {
     name: normalize(name),
     scope,
     version
-  };
+  }
 }
 
 /**
@@ -59,19 +59,19 @@ function parse(packageName) {
  * @param {ParsedPackageName} parsedPackageName 解析过的 package name 对象
  * @returns {string} package name
  */
-function stringify(parsedPackageName) {
-  const { scope, version } = parsedPackageName;
-  let name = parsedPackageName.name;
+function stringify (parsedPackageName) {
+  const { scope, version } = parsedPackageName
+  let name = parsedPackageName.name
 
   if (scope) {
-    name = `@${scope}/${name}`;
+    name = `@${scope}/${name}`
   }
 
   if (version) {
-    name = `${name}@${version}`;
+    name = `${name}@${version}`
   }
 
-  return name;
+  return name
 }
 
 /**
@@ -80,14 +80,14 @@ function stringify(parsedPackageName) {
  * @param {string} [presetName] preset name
  * @returns {string} normalized presetName
  */
-function normalize(presetName) {
+function normalize (presetName) {
   return !presetName || presetName.startsWith('elint-preset')
     ? presetName
-    : `elint-preset-${presetName}`;
+    : `elint-preset-${presetName}`
 }
 
 module.exports = {
   parse,
   stringify,
   normalize
-};
+}
