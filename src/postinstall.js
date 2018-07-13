@@ -43,7 +43,7 @@ function checkNpm () {
   if (semver.lt(version, '2.0.2')) {
     error(
       'elint 在当前的 npm 版本下无法正常运行，请升级 npm 后再安装',
-      '更多信息请访问：http://dwz.cn/8bkKLP'
+      '更多信息请访问：http://t.cn/Rg7xvP0'
     )
 
     process.exit(1)
