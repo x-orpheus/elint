@@ -57,7 +57,7 @@ function elint (files, options) {
         success = success && output.success
       })
 
-      report(outputs)
+      console.log(report(outputs))
 
       process.exit(success ? 0 : 1)
     })
