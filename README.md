@@ -321,7 +321,7 @@ npm install elint-preset-test --save-dev
 
 ## 3. ELint CLI
 
-因为我们不推荐全局安装，除了在 npm scripts 和 `.huskyrc.js` 中使用，下面的 `elint` 均代指 `./node_modules/.bin/elint`：
+因为我们不推荐全局安装，除了在 npm scripts 和 `.huskyrc.js` 中使用，下面的 `elint` 均代指 `./node_modules/.bin/elint`（或者也可以使用 npm 5.2.0 起内置的 [npx](https://github.com/zkat/npx) 命令）：
 
 ### 3.1. lint
 
