@@ -622,11 +622,11 @@ $ FORCE_COLOR=0 elint lint "src/**/*.js"
 - git hooks: [文档](https://git-scm.com/docs/githooks)
 - glob primer: [文档](https://github.com/isaacs/node-glob#glob-primer)
 
-[node-image]: https://img.shields.io/node/v/elint.svg
+[node-image]: https://img.shields.io/node/v/elint.svg?maxAge=3600
 [node-url]: https://nodejs.org
 [npm-image]: https://badge.fury.io/js/elint.svg
 [npm-url]: https://www.npmjs.com/package/elint
-[license-image]: https://img.shields.io/github/license/keenwon/elint.svg
+[license-image]: https://img.shields.io/github/license/keenwon/elint.svg?maxAge=3600
 [license-url]: https://github.com/keenwon/elint/blob/master/LICENSE
 [circleci-image]: https://circleci.com/gh/keenwon/elint.svg?style=svg
 [circleci-url]: https://circleci.com/gh/keenwon/elint
