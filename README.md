@@ -341,8 +341,8 @@ type 可选的值：
 
 options 可选的值：
 
-- fix: 自动修复
-- no-gnore: 忽略 elint 遍历文件时的默认忽略规则
+- --fix: 自动修复
+- --no-ignore: 忽略 elint 遍历文件时的默认忽略规则
 
 当添加 `--fix` 或者 `-f` 时，会尝试自动修复问题，无法自动修复的问题依旧会输出出来。
 
@@ -421,14 +421,14 @@ elint install [presetName] [options]
 
 支持的 options:
 
-- `registry`: 指定 npm 仓库地址，可以输入 url 或者 alias。支持如下的 alias：
+- --registry: 指定 npm 仓库地址，可以输入 url 或者 alias。支持如下的 alias：
   - npm: [https://registry.npmjs.org/](https://registry.npmjs.org/)
   - cnpm: [http://r.cnpmjs.org/](http://r.cnpmjs.org/)
   - taobao: [https://registry.npm.taobao.org/](https://registry.npm.taobao.org/)
   - nj: [https://registry.nodejitsu.com/](https://registry.nodejitsu.com/)
   - rednpm: [http://registry.mirror.cqupt.edu.cn](http://registry.mirror.cqupt.edu.cn)
   - skimdb: [https://skimdb.npmjs.com/registry](https://skimdb.npmjs.com/registry)
-- `keep`: 不覆盖旧的配置文件（文件完全一样肯定是不会覆盖的，keep 选项只在有文件有差异时生效）
+- --keep: 不覆盖旧的配置文件（文件完全一样肯定是不会覆盖的，keep 选项只在有文件有差异时生效）
 
 例子：
 
