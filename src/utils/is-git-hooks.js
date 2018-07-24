@@ -5,6 +5,8 @@ const path = require('path')
 const co = require('co')
 const find = require('find-process')
 
+const huskyCmd = `node_modules${path.sep}husky`
+
 /**
  * 获取 ppid
  * node v7.x 居然不支持 process.ppid（v6.x 支持）
@@ -26,6 +28,32 @@ function getPPID () {
 }
 
 /**
+ * 根据 pid 判断是否由 husky 调用
+ *
+ * @param {string} ppid parent pid
+ * @returns {Promise<boolean>} 是否是 husky 调用
+ */
+function isRunByHusky (ppid) {
+  return find('pid', ppid).then(list => {
+    debug('process list: %o', list)
+
+    const cmd = list[0] && list[0].cmd
+    const pppid = list[0] && list[0].ppid
+
+    if (!cmd) {
+      return false
+    }
+
+    if (cmd.includes(huskyCmd)) {
+      return true
+    }
+
+    // 一直迭代到最顶
+    return isRunByHusky(pppid)
+  })
+}
+
+/**
  * 判断执行环境是否是 git hooks
  *
  * @returns {Promise<boolean>} 是否是 git hooks 环境
@@ -36,18 +64,7 @@ function isGitHooks () {
 
     debug(`ppid: ${ppid}`)
 
-    return find('pid', ppid).then(list => {
-      debug('process list: %o', list)
-
-      const cmd = list && list[0] && list[0].cmd
-
-      /* istanbul ignore next */
-      if (!cmd) {
-        return false
-      }
-
-      return cmd.includes(`node_modules${path.sep}husky`)
-    })
+    return isRunByHusky(ppid)
   }).catch(/* istanbul ignore next */ function (err) {
     debug('error: %o', err)
     return false
