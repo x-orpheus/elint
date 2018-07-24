@@ -450,7 +450,7 @@ $ elint install test --registry=cnpm
 |`npm install`|把 preset 当成依赖，执行 `npm install` 时，项目根目录的配置文件都可能被更新|
 |`elint install`|把 preset 当成配置源，更新时需要再次执行 `elint install`|
 
-除了上面列举的区别外，`elint isntall` 无视 cnpm，yarn 的限制，如果你十分依赖 cnpm，yarn 时，可以考虑使用 `elint install` 来安装，但要留意保持 preset 的最新。
+除了上面列举的区别外，`elint install` 无视 cnpm，yarn 的限制，如果你十分依赖 cnpm，yarn 时，可以考虑使用 `elint install` 来安装，但要留意保持 preset 的最新。
 
 没有主推这种方式的原因在于，**elint 的设计初衷就是统一团队规范，规范一旦制定，需要严格执行**。`npm install` 会自动更新并覆盖项目根目录的配置文件，一定程度上避免了随意修改配置文件带来的（不同项目之间）校验规则不统一。另外一点就是由于不推荐全局安装 elint，所以 elint 命令需要用 `./node_modules/.bin/elint` 执行，略显麻烦。
 
