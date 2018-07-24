@@ -4,6 +4,10 @@
  * 执行一些清理工作
  */
 
+if (process.env.CI) {
+  process.exit(0)
+}
+
 const os = require('os')
 const path = require('path')
 const fs = require('fs-extra')
