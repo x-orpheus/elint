@@ -61,3 +61,70 @@ test('lint commtest(success)', function * (t) {
 
   yield t.notThrows(run('git commit -m "build: hello"', tmpDir))
 })
+
+test('lint stage files', function * (t) {
+  const { tmpDir } = t.context
+
+  // 添加符合规范的文件
+  yield run('git add src/standard.css', tmpDir)
+
+  // 强行修改 .huskyrc.js，commit 前执行 lint style
+  const huskyFilePath = path.join(tmpDir, '.huskyrc.js')
+  const huskyFileContent = `
+    module.exports = {
+      'hooks': {
+        'commit-msg': 'elint lint style "src/**/*"'
+      }
+    }
+  `
+
+  yield fs.writeFile(huskyFilePath, huskyFileContent)
+
+  // 只校验 stage 文件，不报错
+  yield t.notThrows(run('git commit -m "build: hello"', tmpDir))
+})
+
+test('lint stage files(deep)', function * (t) {
+  const { tmpDir } = t.context
+
+  // 添加符合规范的文件
+  yield run('git add src/standard.css', tmpDir)
+
+  // 强行修改 .huskyrc.js，commit 前执行 npm run lint-style-without-fix
+  // 此时 elint 的父进程并非 husky，父进程的父进程才是，校验 is-git-hooks 方法是否正确
+  const huskyFilePath = path.join(tmpDir, '.huskyrc.js')
+  const huskyFileContent = `
+    module.exports = {
+      'hooks': {
+        'commit-msg': 'npm run lint-style-without-fix'
+      }
+    }
+  `
+
+  yield fs.writeFile(huskyFilePath, huskyFileContent)
+
+  // 只校验 stage 文件，不报错
+  yield t.notThrows(run('git commit -m "build: hello"', tmpDir))
+})
+
+test('lint stage files(error)', function * (t) {
+  const { tmpDir } = t.context
+
+  // 添加所有 src 目录下的文件
+  yield run('git add src', tmpDir)
+
+  // 强行修改 .huskyrc.js，commit 前执行 lint style
+  const huskyFilePath = path.join(tmpDir, '.huskyrc.js')
+  const huskyFileContent = `
+    module.exports = {
+      'hooks': {
+        'commit-msg': 'elint lint style "src/**/*"'
+      }
+    }
+  `
+
+  yield fs.writeFile(huskyFilePath, huskyFileContent)
+
+  // 报错
+  yield t.throws(run('git commit -m "build: hello"', tmpDir))
+})
