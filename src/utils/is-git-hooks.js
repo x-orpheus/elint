@@ -1,11 +1,10 @@
 'use strict'
 
 const debug = require('debug')('elint:utils:is-git-hooks')
-const path = require('path')
 const co = require('co')
 const find = require('find-process')
 
-const huskyCmd = `node_modules${path.sep}husky`
+const huskyCmdReg = /node_modules(\/|\\)husky/
 
 /**
  * 获取 ppid
@@ -44,7 +43,7 @@ function isRunByHusky (ppid) {
       return false
     }
 
-    if (cmd.includes(huskyCmd)) {
+    if (huskyCmdReg.test(cmd)) {
       return true
     }
 
