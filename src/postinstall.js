@@ -4,6 +4,7 @@ const cwd = process.cwd()
 const path = require('path')
 const fs = require('fs-extra')
 const semver = require('semver')
+const prefix = require('global-prefix')
 const { error } = require('./utils/log')
 const { getNodeModulesDir } = require('./env')
 const { installFromScripts } = require('./index')
@@ -28,7 +29,6 @@ function checkNpm () {
     return
   }
 
-  const prefix = process.env.npm_config_prefix
   const lifecyclePkgPath = process.platform === 'win32'
     ? path.join(prefix, 'node_modules/npm/node_modules/npm-lifecycle/package.json')
     : path.join(prefix, 'lib/node_modules/npm/node_modules/npm-lifecycle/package.json')
