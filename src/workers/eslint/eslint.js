@@ -40,8 +40,9 @@ if (fix) {
 
 if (report.errorCount) {
   result.success = false
-  result.output = formatter(report.results)
 }
+
+result.output = formatter(report.results)
 
 setBlocking(true)
 process.stdout.write(JSON.stringify(result))
