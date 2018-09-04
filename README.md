@@ -32,7 +32,7 @@
   - [2.3. 安装 preset](#23-安装-preset)
   - [2.4. 定义 npm scripts](#24-定义-npm-scripts)
     - [2.4.1. npm test](#241-npm-test)
-    - [2.4.2. npm precommit](#242-npm-precommit)
+    - [2.4.2. npm beforecommit](#242-npm-beforecommit)
 - [3. ELint CLI](#3-elint-cli)
   - [3.1. lint](#31-lint)
   - [3.2. hooks](#32-hooks)
@@ -224,15 +224,19 @@ touch .huskyrc.js
 module.exports = {
   'hooks': {
     /**
-     * precommit 可以在项目的 package.json 中自由定义
+     * beforecommit 可以在项目的 package.json 中自由定义
      * 例如可以执行代码校验和 commitlint，或者都执行
      */
-    'commit-msg': 'npm run precommit'
+    'commit-msg': 'npm run beforecommit'
   }
 }
 ```
 
-> 这里配置 git hooks 执行 `npm run precommit`，所以你可以在项目中自由定义要执行的操作（下面会详细解释）。
+> 这里配置 git hooks 执行 `npm run beforecommit`，所以你可以在项目中自由定义要执行的操作（下面会详细解释）。
+
+> **注意**：
+>
+> 可能你会觉得，命名为 `precommit` 比 `beforecommit` 更合适。没错，单纯从命名的角度讲，`precommit` 确实更好。但这会与 husky 的规则产生冲突。旧版本的 husky 支持在 package.json 的 scripts 中定义 git hooks。
 
 #### 2.2.6. 发布 npm package
 
@@ -298,14 +302,14 @@ npm install elint-preset-test --save-dev
 
 > 注意: glob 最好加上引号，详见 [ELint CLI](#31-lint)
 
-#### 2.4.2. npm precommit
+#### 2.4.2. npm beforecommit
 
-刚才编写 preset 的时候，定义了在 commit 前执行 `npm run precommit`，所以我们必须定义好 precommit，否则会**报错**：
+刚才编写 preset 的时候，定义了在 commit 前执行 `npm run beforecommit`，所以我们必须定义好 beforecommit，否则会**报错**：
 
 ```json
 {
   "scripts": {
-    "precommit": "npm run test:lint && elint lint commit",
+    "beforecommit": "npm run test:lint && elint lint commit",
     "test": "npm run test:lint && npm run test:other",
     "test:lint": "elint lint 'src/**/*.js' 'src/**/*.css'",
     "test:other": "..."
