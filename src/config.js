@@ -57,7 +57,11 @@ const defaultIgnore = [
   '**/coverage/**',
   '**/.git',
   '**/*.min.js',
-  '**/*.min.css'
+  '**/*.min.css',
+  '.eslintrc.js',
+  '.stylelintrc.js',
+  '.huskyrc.js',
+  '.commitlintrc.js'
 ]
 
 const registryAlias = {

@@ -79,6 +79,7 @@ describe('Walker 测试', function () {
     it('关闭忽略规则', function () {
       const result = {
         es: [
+          getPath('.huskyrc.js'),
           getPath('app/c.js'),
           getPath('src/a.js'),
           getPath('src/lib/b.js'),
