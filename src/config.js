@@ -5,7 +5,8 @@
  */
 const esSuffix = [
   '.js',
-  '.jsx'
+  '.jsx',
+  '.mjs'
 ]
 
 /**
