@@ -29,7 +29,7 @@ stylelint.lint({
   return result
 }).catch(error => {
   result.success = false
-  result.output = error.message
+  result.output = error.stack
   return result
 }).then(data => {
   setBlocking(true)

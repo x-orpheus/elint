@@ -7,7 +7,7 @@ const result = {
 }
 
 process.on('uncaughtException', error => {
-  result.output = error.message
+  result.output = error.stack
   result.success = false
 
   process.stdout.write(JSON.stringify(result))
