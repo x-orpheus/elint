@@ -37,7 +37,7 @@ function checkNpm () {
     return
   }
 
-  const pathSuffix = process.env.platform === 'win32'
+  const pathSuffix = process.platform === 'win32'
     ? '../node_modules/npm/node_modules/npm-lifecycle/package.json'
     : '../../node_modules/npm-lifecycle/package.json'
 
