@@ -1,6 +1,6 @@
 {
   "name": "elint",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "A easy way to lint your code.",
   "main": "src/index.js",
   "bin": {
