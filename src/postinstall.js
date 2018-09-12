@@ -4,6 +4,7 @@ const cwd = process.cwd()
 const path = require('path')
 const fs = require('fs-extra')
 const semver = require('semver')
+const which = require('which')
 const { error } = require('./utils/log')
 const { getNodeModulesDir } = require('./env')
 const { installFromScripts } = require('./index')
@@ -24,14 +25,23 @@ const destScriptPath = path.join(destDirPath, 'postinstall')
  * @returns {void}
  */
 function checkNpm () {
-  if (process.env.CI || !process.env.npm_execpath) {
+  if (process.env.CI) {
     return
   }
 
-  const lifecyclePkgPath = path.join(
-    process.env.npm_execpath,
-    '../node_modules/npm-lifecycle/package.json'
-  )
+  const npmPath = which.sync('npm', {
+    nothrow: true
+  })
+
+  if (!npmPath) {
+    return
+  }
+
+  const pathSuffix = process.env.platform === 'win32'
+    ? '../node_modules/npm/node_modules/npm-lifecycle/package.json'
+    : '../../node_modules/npm-lifecycle/package.json'
+
+  const lifecyclePkgPath = path.join(fs.realpathSync(npmPath), pathSuffix)
 
   if (!fs.existsSync(lifecyclePkgPath)) {
     return
