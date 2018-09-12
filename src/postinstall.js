@@ -4,7 +4,7 @@ const cwd = process.cwd()
 const path = require('path')
 const fs = require('fs-extra')
 const semver = require('semver')
-const prefix = require('global-prefix')
+const which = require('which')
 const { error } = require('./utils/log')
 const { getNodeModulesDir } = require('./env')
 const { installFromScripts } = require('./index')
@@ -29,9 +29,21 @@ function checkNpm () {
     return
   }
 
+  let npmPath
+
+  try {
+    npmPath = which.sync('npm')
+  } catch (e) {
+    // do nothing
+  }
+
+  if (!npmPath) {
+    return
+  }
+
   const lifecyclePkgPath = process.platform === 'win32'
-    ? path.join(prefix, 'node_modules/npm/node_modules/npm-lifecycle/package.json')
-    : path.join(prefix, 'lib/node_modules/npm/node_modules/npm-lifecycle/package.json')
+    ? path.join(npmPath, 'node_modules/npm/node_modules/npm-lifecycle/package.json')
+    : path.join(npmPath, 'lib/node_modules/npm/node_modules/npm-lifecycle/package.json')
 
   if (!fs.existsSync(lifecyclePkgPath)) {
     return
