@@ -5,7 +5,7 @@ const path = require('path')
 const fs = require('fs-extra')
 const semver = require('semver')
 const which = require('which')
-const { error } = require('./utils/log')
+const { error, success } = require('./utils/log')
 const { getNodeModulesDir } = require('./env')
 const { installFromScripts } = require('./index')
 
@@ -58,6 +58,11 @@ function checkNpm () {
 
     process.exit(1)
   }
+
+  success(
+    `npm-lifecycle version: ${version}`,
+    'check npm version: pass'
+  )
 }
 
 /**
