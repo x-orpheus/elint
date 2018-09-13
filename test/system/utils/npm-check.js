@@ -7,8 +7,11 @@ const semver = require('semver')
 function npmCheck () {
   const version = execa.sync('npm', ['-v']).stdout
 
+  /**
+   * 这里为了方便测试，检测比较粗暴，更具体的版本要求在 postinstall.js
+   */
   if (semver.satisfies(version, '<5.1.0 || >6.1.0')) {
-    return;
+    return
   }
 
   console.log()
