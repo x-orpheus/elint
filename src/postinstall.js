@@ -3,10 +3,8 @@
 const cwd = process.cwd()
 const path = require('path')
 const fs = require('fs-extra')
-const semver = require('semver')
-const which = require('which')
-const execa = require('execa')
 const { error, info } = require('./utils/log')
+const npmVersions = require('./utils/check-npm-version')
 const { getNodeModulesDir } = require('./env')
 const { installFromScripts } = require('./index')
 
@@ -14,34 +12,6 @@ const nodeModulesDir = getNodeModulesDir()
 const scriptPath = path.join(__dirname, '../scripts/postinstall')
 const destDirPath = path.join(nodeModulesDir, '.hooks')
 const destScriptPath = path.join(destDirPath, 'postinstall')
-
-/**
- * 获取 npm-lifecycle 版本
- *
- * @returns {string} npm-lifecycle version
- */
-function getNpmLifecycleVersion () {
-  const npmPath = which.sync('npm', {
-    nothrow: true
-  })
-
-  if (!npmPath) {
-    return ''
-  }
-
-  const pathSuffix = process.platform === 'win32'
-    ? '../node_modules/npm/node_modules/npm-lifecycle/package.json'
-    : '../../node_modules/npm-lifecycle/package.json'
-
-  const lifecyclePkgPath = path.join(fs.realpathSync(npmPath), pathSuffix)
-
-  if (!fs.existsSync(lifecyclePkgPath)) {
-    return ''
-  }
-
-  // eslint-disable-next-line global-require
-  return require(lifecyclePkgPath).version
-}
 
 /**
  * 检查 npm 版本
@@ -58,22 +28,10 @@ function checkNpm () {
    * CI 环境下不执行，不然单元测试会报错，系统测试前会单独检测并升级 npm
    */
   if (process.env.CI) {
-    return;
+    return
   }
 
-  const npmVersion = execa.sync('npm', ['-v']).stdout
-  const npmLifecycleVersion = getNpmLifecycleVersion()
-  let pass = true
-
-  /**
-   * 检测到 npm-lifecycle 的时候（新版本都有），要求 npm-lifecycle >= 2.0.2
-   * 检测不到 npm-lifecycle 的时候，要求 npm 不能在 5.1.0 ~ 6.1.0
-   */
-  if (npmLifecycleVersion) {
-    pass = semver.gte(npmLifecycleVersion, '2.0.2')
-  } else {
-    pass = semver.satisfies(npmVersion, '<5.1.0 || >6.1.0')
-  }
+  const { npmVersion, npmLifecycleVersion, pass } = npmVersions
 
   info(
     `npm version: ${npmVersion}`,
