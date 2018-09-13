@@ -54,6 +54,13 @@ function getNpmLifecycleVersion () {
  * @returns {void}
  */
 function checkNpm () {
+  /**
+   * CI 环境下不执行，不然单元测试会报错，系统测试前会单独检测并升级 npm
+   */
+  if (process.env.CI) {
+    return;
+  }
+
   const npmVersion = execa.sync('npm', ['-v']).stdout
   const npmLifecycleVersion = getNpmLifecycleVersion()
   let pass = true
