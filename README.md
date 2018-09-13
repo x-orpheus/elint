@@ -545,10 +545,9 @@ elint 强依赖 stylelint, eslint 等工具。而对于 eslint，其文档中写
 
 ### 5.3. 安装失败
 
-可能是 npm 的 [bug](https://github.com/npm/npm-lifecycle/pull/13) 引起的，如果你的 npm 版本在 5.4.0 ～ 6.1.0 之间：
+可能是 npm 的 [bug](https://github.com/npm/npm-lifecycle/pull/13) 引起的。如果你的 npm 版本在 5.1.0 ～ 6.1.0 之间，请升级至最新版本的 npm。
 
-- npm v5.6 以上的，重装 npm，哪怕还是装原来的版本，依赖也会升级上去。
-- npm v5.4 ~ v5.6 的，升级 npm。
+elint 安装过程中会检测 npm 版本，具体以检测结果为准。
 
 ### 5.4. git hooks 不执行或报错
 
