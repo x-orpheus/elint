@@ -53,6 +53,7 @@
   - [5.8. 为什么添加了 fix 选项还是有问题输出](#58-为什么添加了-fix-选项还是有问题输出)
   - [5.9. 如何禁用颜色输出](#59-如何禁用颜色输出)
   - [5.10. lint 执行失败，提示包缺失](#510-lint-执行失败提示包缺失)
+  - [5.11. fix 和 force-fix 的区别](#511-fix-和-force-fix-的区别)
 - [6. 参考](#6-参考)
 
 <!-- /TOC -->
@@ -346,7 +347,8 @@ type 可选的值：
 
 options 可选的值：
 
-- --fix: 自动修复
+- -f, --fix: 自动修复，git hooks 中无效，[为什么这么做？](#511-fix-和-force-fix-的区别)
+- -ff, --force-fix: 强制自动修复，git hooks 中依然有效
 - --no-ignore: 忽略 elint 遍历文件时的默认忽略规则
 
 当添加 `--fix` 或者 `-f` 时，会尝试自动修复问题，无法自动修复的问题依旧会输出出来。
@@ -632,6 +634,14 @@ Error: Cannot find module 'eslint-config-xxx'
 1. 删除 `node_modules` 和 `package-lock.json`。
 2. 查看 `package.json` 文件，使用 elint 时只需安装 elint 和 preset，清理掉遗留的 eslint 等依赖。
 3. 重新执行 `npm install`
+
+### 5.11. fix 和 force-fix 的区别
+
+`--fix` 非常好用，可以自动修改大量问题。但是，当在 git hooks 中使用时会有点小问题：git commit 时执行 fix，某些文件被修改，因此文件状态变为 modified，并且未被提交。此时不得不再次提交被 fix 过的文件，这通常与我们的预期不符。
+
+为了降低上述情景带来的意外影响，`--fix` 在 git hooks 模式下不生效，同时新增了任何时候都会生效的 `--force-fix`。
+
+建议使用 `--fix`，提交时如果代码有问题，直接报错打断，修复后再重新提交。
 
 ## 6. 参考
 
