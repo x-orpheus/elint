@@ -21,7 +21,7 @@ function getInitCwd () {
   debug(`process.cwd(): ${cwd}`)
 
   // 兼容 npm v3
-  return cwd.split('/node_modules/')[0]
+  return cwd.split(`${path.sep}node_modules${path.sep}`)[0]
 }
 
 /**

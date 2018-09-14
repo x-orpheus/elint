@@ -35,7 +35,7 @@ function checkNpm () {
 
   info(
     `npm version: ${npmVersion}`,
-    `npm-lifecycle version: ${npmLifecycleVersion}`
+    `npm-lifecycle version: ${npmLifecycleVersion || '-'}`
   )
 
   if (!pass) {
