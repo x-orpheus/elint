@@ -1,9 +1,11 @@
 'use strict'
 
+const debug = require('debug')('elint:main')
 const co = require('co')
 const _ = require('lodash')
 const walker = require('./walker')
 const report = require('./utils/report')
+const isGitHooks = require('./utils/is-git-hooks')
 const eslint = require('./workers/eslint')
 const stylelint = require('./workers/stylelint')
 
@@ -11,6 +13,7 @@ const stylelint = require('./workers/stylelint')
  * @typedef ELintOptions
  * @property {stirng} type lint 类型
  * @property {boolean} fix 是否自动修复问题
+ * @property {boolean} forceFix 是否强制自动修复问题
  */
 
 /**
@@ -29,10 +32,23 @@ function elint (files, options) {
       process.exit()
     }
 
+    // linters 对象，方便后续操作
     const linters = {
       es: eslint,
       style: stylelint
     }
+
+    // 处理 fix 和 forceFix
+    const isGit = yield isGitHooks()
+
+    if (isGit) {
+      options.fix = false
+    }
+    if (options.forceFix) {
+      options.fix = true
+    }
+
+    debug('parsed options: %o', options)
 
     const { type } = options
     const argus = JSON.stringify(options)

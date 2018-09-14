@@ -36,6 +36,7 @@ program
   .alias('l')
   .description('run lint, type: es, style, commit')
   .option('-f, --fix', 'Automatically fix problems')
+  .option('-ff, --force-fix', 'Automatically fix problems, even in git hooks')
   .option('--no-ignore', 'Disable elint ignore patterns')
   .action((type, files, options) => {
     debug('run lint...')
@@ -65,6 +66,7 @@ program
     const elintOptions = {
       type: parsedType,
       fix: options.fix,
+      forceFix: options.forceFix,
       noIgnore: options.noIgnore
     }
 
