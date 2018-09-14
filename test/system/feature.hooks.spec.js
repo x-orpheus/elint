@@ -31,6 +31,9 @@ beforeEach(function * (t) {
   }
 })
 
+/**
+ * install & uninstall git hooks
+ */
 test('hooks install && uninstall', function * (t) {
   const { tmpDir, hooksPath } = t.context
   let hooks
@@ -46,6 +49,9 @@ test('hooks install && uninstall', function * (t) {
   t.not(hooks.filter(p => !p.includes('.sample')).length, 0)
 })
 
+/**
+ * 不合法的 git commit message
+ */
 test('lint commtest(error)', function * (t) {
   const { tmpDir } = t.context
 
@@ -54,6 +60,9 @@ test('lint commtest(error)', function * (t) {
   yield t.throws(run('git commit -m "hello"', tmpDir))
 })
 
+/**
+ * 合法的 git commit message
+ */
 test('lint commtest(success)', function * (t) {
   const { tmpDir } = t.context
 
@@ -62,6 +71,9 @@ test('lint commtest(success)', function * (t) {
   yield t.notThrows(run('git commit -m "build: hello"', tmpDir))
 })
 
+/**
+ * 在 git hooks 中执行 lint，lint 的文件符合规范
+ */
 test('lint stage files', function * (t) {
   const { tmpDir } = t.context
 
@@ -84,6 +96,10 @@ test('lint stage files', function * (t) {
   yield t.notThrows(run('git commit -m "build: hello"', tmpDir))
 })
 
+/**
+ * 在 git hooks 中执行 npm script，npm script 中执行 lint
+ * lint 的文件符合规范
+ */
 test('lint stage files(deep)', function * (t) {
   const { tmpDir } = t.context
 
@@ -107,6 +123,9 @@ test('lint stage files(deep)', function * (t) {
   yield t.notThrows(run('git commit -m "build: hello"', tmpDir))
 })
 
+/**
+ * 在 git hooks 中执行 lint，lint 的文件不符合规范
+ */
 test('lint stage files(error)', function * (t) {
   const { tmpDir } = t.context
 
@@ -127,4 +146,48 @@ test('lint stage files(error)', function * (t) {
 
   // 报错
   yield t.throws(run('git commit -m "build: hello"', tmpDir))
+})
+
+test('lint stage files(fix)', function * (t) {
+  const { tmpDir } = t.context
+
+  // 添加所有 src 目录下的文件
+  yield run('git add src', tmpDir)
+
+  // 强行修改 .huskyrc.js，commit 前执行 lint style
+  const huskyFilePath = path.join(tmpDir, '.huskyrc.js')
+  const huskyFileContent = `
+    module.exports = {
+      'hooks': {
+        'commit-msg': 'elint lint style "src/**/*" --fix'
+      }
+    }
+  `
+
+  yield fs.writeFile(huskyFilePath, huskyFileContent)
+
+  // 报错，因为 fix 在 git hooks 中无效
+  yield t.throws(run('git commit -m "build: hello"', tmpDir))
+})
+
+test('lint stage files(force-fix)', function * (t) {
+  const { tmpDir } = t.context
+
+  // 添加所有 src 目录下的文件
+  yield run('git add src', tmpDir)
+
+  // 强行修改 .huskyrc.js，commit 前执行 lint style
+  const huskyFilePath = path.join(tmpDir, '.huskyrc.js')
+  const huskyFileContent = `
+    module.exports = {
+      'hooks': {
+        'commit-msg': 'elint lint style "src/**/*" --force-fix'
+      }
+    }
+  `
+
+  yield fs.writeFile(huskyFilePath, huskyFileContent)
+
+  // 不报错，force-fix
+  yield t.notThrows(run('git commit -m "build: hello"', tmpDir))
 })
