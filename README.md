@@ -550,6 +550,8 @@ elint 强依赖 stylelint, eslint 等工具。而对于 eslint，其文档中写
 
 elint 安装过程中会检测 npm 版本，具体以检测结果为准。
 
+> windows 升级 npm 请参考：[How can I update npm on Windows?](https://stackoverflow.com/questions/18412129/how-can-i-update-npm-on-windows)
+
 ### 5.4. git hooks 不执行或报错
 
 如果 git hooks 不执行或者报错，尝试下面的方法:
