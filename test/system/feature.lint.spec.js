@@ -27,6 +27,12 @@ test('lint --fix', function * (t) {
   yield t.notThrows(run('npm run lint-fix', tmpDir))
 })
 
+test('lint --force-fix', function * (t) {
+  const tmpDir = t.context.tmpDir
+
+  yield t.notThrows(run('npm run lint-force-fix', tmpDir))
+})
+
 test('lint --no-ignore', function * (t) {
   const tmpDir = t.context.tmpDir
 
@@ -55,6 +61,12 @@ test('lint es --fix', function * (t) {
   yield t.notThrows(run('npm run lint-es-fix', tmpDir))
 })
 
+test('lint es --force-fix', function * (t) {
+  const tmpDir = t.context.tmpDir
+
+  yield t.notThrows(run('npm run lint-es-force-fix', tmpDir))
+})
+
 test('lint style', function * (t) {
   const tmpDir = t.context.tmpDir
 
@@ -71,8 +83,14 @@ test('lint style with ignore', function * (t) {
   return t.notThrows(run('npm run lint-style-without-fix', tmpDir))
 })
 
-test('lint style --fix', function * (t) {
+test('lint style -f', function * (t) {
   const tmpDir = t.context.tmpDir
 
   yield t.notThrows(run('npm run lint-style-fix', tmpDir))
+})
+
+test('lint style -ff', function * (t) {
+  const tmpDir = t.context.tmpDir
+
+  yield t.notThrows(run('npm run lint-style-force-fix', tmpDir))
 })
