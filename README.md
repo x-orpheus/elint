@@ -52,6 +52,7 @@
   - [5.7. 某些文件没有被校验到](#57-某些文件没有被校验到)
   - [5.8. 为什么添加了 fix 选项还是有问题输出](#58-为什么添加了-fix-选项还是有问题输出)
   - [5.9. 如何禁用颜色输出](#59-如何禁用颜色输出)
+  - [5.10. lint 执行失败，提示包缺失](#510-lint-执行失败提示包缺失)
 - [6. 参考](#6-参考)
 
 <!-- /TOC -->
@@ -615,6 +616,20 @@ const defaultIgnore = [
 ```shell
 $ FORCE_COLOR=0 elint lint "src/**/*.js"
 ```
+
+### 5.10. lint 执行失败，提示包缺失
+
+如果遇到如下错误，特别在 CI 环境下。可能是 `package-lock.json` 引起的。
+
+```shell
+Error: Cannot find module 'eslint-config-xxx'
+```
+
+请按照如下步骤尝试修复：
+
+1. 删除 `node_modules` 和 `package-lock.json`。
+2. 查看 `package.json` 文件，使用 elint 时只需安装 elint 和 preset，清理掉遗留的 eslint 等依赖。
+3. 重新执行 `npm install`
 
 ## 6. 参考
 
