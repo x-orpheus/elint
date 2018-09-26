@@ -45,6 +45,7 @@ function stageFiles (patterns) {
       }
 
       const fileList = result
+        .filter(item => item.status !== 'Deleted') // 过滤已删除的文件
         .filter(item => match(item.filename, patterns))
         .map(item => item.filename)
 
