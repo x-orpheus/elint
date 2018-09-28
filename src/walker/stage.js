@@ -11,23 +11,41 @@ const { getBaseDir } = require('../env')
  *
  * @param {string} filename 文件名
  * @param {Array<string>} patterns 匹配模式
+ * @param {Array<string>} ignorePatterns 忽略模式
+ *
  * @returns {boolean} 是否匹配
  */
-function match (filename, patterns) {
-  return patterns.some(pattern => {
-    return minimatch(filename, pattern, {
-      dot: true
+function match (filename, patterns, ignorePatterns) {
+  function isMatch (ps) {
+    return ps.some(p => {
+      return minimatch(filename, p, {
+        dot: true
+      })
     })
-  })
+  }
+
+  let isIgnore = false
+
+  if (Array.isArray(ignorePatterns) && ignorePatterns.length) {
+    isIgnore = isMatch(ignorePatterns)
+  }
+
+  if (isIgnore) {
+    return false
+  }
+
+  return isMatch(patterns)
 }
 
 /**
  * Git 暂存文件遍历
  *
  * @param {Array<string>} patterns 要搜寻的 glob 数组
+ * @param {Array<string>} ignorePatterns 忽略的 glob 数组
+ *
  * @returns {Promise<object>} fileTree
  */
-function stageFiles (patterns) {
+function stageFiles (patterns, ignorePatterns) {
   const baseDir = getBaseDir()
 
   // 如果 baseDir 根本不存在 sgf 会抛出异常
@@ -46,7 +64,7 @@ function stageFiles (patterns) {
 
       const fileList = result
         .filter(item => item.status !== 'Deleted') // 过滤已删除的文件
-        .filter(item => match(item.filename, patterns))
+        .filter(item => match(item.filename, patterns, ignorePatterns))
         .map(item => item.filename)
 
       resolve(fileList)

@@ -3,7 +3,6 @@
 const debug = require('debug')('elint:walker')
 const co = require('co')
 const path = require('path')
-const ignore = require('ignore')
 const isGitHooks = require('../utils/is-git-hooks')
 const { getBaseDir } = require('../env')
 const { defaultIgnore } = require('../config')
@@ -40,17 +39,17 @@ function walker (patterns, options = {}) {
      * 根据运行环境执行不同的文件遍历策略
      */
     let fileList
-    if (isGit) {
-      fileList = yield stage(patterns)
-    } else {
-      fileList = yield local(patterns)
-    }
+    let ignorePatterns = []
 
     if (!noIgnore) {
       debug('ignore rules: %j', defaultIgnore)
+      ignorePatterns = defaultIgnore
+    }
 
-      const ignoreFilter = ignore().add(defaultIgnore).createFilter()
-      fileList = fileList.filter(ignoreFilter)
+    if (isGit) {
+      fileList = yield stage(patterns, ignorePatterns)
+    } else {
+      fileList = yield local(patterns, ignorePatterns)
     }
 
     // 转为绝对路径
