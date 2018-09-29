@@ -16,6 +16,7 @@ process.on('uncaughtException', error => {
 
 const CLIEngine = require('eslint').CLIEngine
 const setBlocking = require('../../utils/set-blocking')
+const customFormatter = require.resolve('./formatter.js')
 
 // 输入参数
 const files = process.argv.slice(3)
@@ -31,7 +32,7 @@ const fix = !!options.fix
 const engine = new CLIEngine({
   fix
 })
-const formatter = engine.getFormatter('stylish')
+const formatter = engine.getFormatter(customFormatter)
 const report = engine.executeOnFiles(files)
 
 if (fix) {
