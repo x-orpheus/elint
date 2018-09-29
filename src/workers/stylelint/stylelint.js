@@ -2,6 +2,7 @@
 
 const stylelint = require('stylelint')
 const setBlocking = require('../../utils/set-blocking')
+const customFormatter = require('./formatter')
 const files = process.argv.slice(3)
 let options = {}
 
@@ -21,7 +22,7 @@ const result = {
 
 stylelint.lint({
   files,
-  formatter: 'string',
+  formatter: customFormatter,
   fix
 }).then(data => {
   result.success = !data.errored
