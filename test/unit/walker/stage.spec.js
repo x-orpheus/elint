@@ -54,4 +54,29 @@ describe('Walker stage 测试', function () {
         return stageFiles(['*.txt']).should.eventually.deep.equalInAnyOrder([])
       })
   })
+
+  it('忽略测试', function () {
+    const result = [
+      'src/a.js'
+    ]
+
+    return gitInit()
+      .then(() => {
+        return stageFiles(['src/**/*.js'], ['src/lib/*'])
+          .should.eventually.deep.equalInAnyOrder(result)
+      })
+  })
+
+  it('忽略测试，规则为空', function () {
+    const result = [
+      'src/a.js',
+      'src/lib/b.js'
+    ]
+
+    return gitInit()
+      .then(() => {
+        return stageFiles(['src/**/*.js'], [])
+          .should.eventually.deep.equalInAnyOrder(result)
+      })
+  })
 })
