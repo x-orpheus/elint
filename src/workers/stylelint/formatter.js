@@ -2,6 +2,24 @@
 
 const stringFormatter = require('stylelint').formatters.string
 
+/**
+ * @typedef {Object} StylelintResultWarning
+ *
+ * @property {string} severity 错误级别
+ */
+
+/**
+ * @typedef {Object} StylelintResult
+ *
+ * @property {StylelintResultWarning[]} warnings 异常信息
+ */
+
+/**
+ * 自定义 stylelint formatter
+ *
+ * @param {StylelintResult[]} results lint result
+ * @returns {string} report
+ */
 function formatter (results) {
   const warnings = []
   const errors = []
