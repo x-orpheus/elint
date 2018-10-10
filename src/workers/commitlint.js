@@ -45,7 +45,7 @@ function commitlint () {
     const formatted = format(report)
 
     console.log()
-    console.log(formatted.join('\n'))
+    console.log(Array.isArray(formatted) ? formatted.join('\n') : formatted)
     console.log()
 
     process.exit(report.errors.length ? 1 : 0)
