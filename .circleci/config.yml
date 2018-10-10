@@ -48,3 +48,16 @@ workflows:
       - build_node_9
       - build_node_8
       - build_node_6
+  nightly:
+    triggers:
+      - schedule:
+        corn: "0 14 * * *"
+        filters:
+          branches:
+            only:
+              - master
+    jobs:
+      - build_node_10
+      - build_node_9
+      - build_node_8
+      - build_node_6
