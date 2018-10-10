@@ -51,11 +51,11 @@ workflows:
   nightly:
     triggers:
       - schedule:
-        corn: "0 14 * * *"
-        filters:
-          branches:
-            only:
-              - master
+          corn: "0 14 * * *"
+          filters:
+            branches:
+              only:
+                - master
     jobs:
       - build_node_10
       - build_node_9
