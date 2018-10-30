@@ -2,12 +2,21 @@
 
 const debug = require('debug')('elint:walker:stage')
 const fs = require('fs-extra')
-const minimatch = require('minimatch')
+const mm = require('micromatch')
 const sgf = require('staged-git-files')
 const { getBaseDir } = require('../env')
 
+const mmOptions = {
+  dot: true,
+  nobrace: false,
+  noglobstar: false,
+  noext: false,
+  nocase: false,
+  matchBase: false
+}
+
 /**
- * 执行 minimatch
+ * 执行 micromatch
  *
  * @param {string} filename 文件名
  * @param {Array<string>} patterns 匹配模式
@@ -18,9 +27,7 @@ const { getBaseDir } = require('../env')
 function match (filename, patterns, ignorePatterns) {
   function isMatch (ps) {
     return ps.some(p => {
-      return minimatch(filename, p, {
-        dot: true
-      })
+      return mm.isMatch(filename, p, mmOptions)
     })
   }
 
