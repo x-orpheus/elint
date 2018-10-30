@@ -42,7 +42,9 @@ function commitlint () {
     const rules = config.rules
     const options = config.parserPreset ? { parserOpts: config.parserPreset.parserOpts } : {}
     const report = yield lint(message[0], rules, options)
-    const formatted = format(report)
+    const formatted = format({
+      results: [report]
+    })
 
     console.log()
     console.log(Array.isArray(formatted) ? formatted.join('\n') : formatted)
