@@ -1,1 +1,1 @@
-node "%~dp0\postinstall"
+node.exe "%~dp0\postinstall"
