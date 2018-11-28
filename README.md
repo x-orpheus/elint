@@ -15,48 +15,7 @@
 
 **目录**：
 
-<!-- TOC -->
-
-- [1. 核心概念](#1-核心概念)
-  - [1.1. ELint](#11-elint)
-  - [1.2. Preset](#12-preset)
-- [2. 使用指南](#2-使用指南)
-  - [2.1. 安装 elint](#21-安装-elint)
-  - [2.2. 编写 preset](#22-编写-preset)
-    - [2.2.1. 新建一个 npm package](#221-新建一个-npm-package)
-    - [2.2.2. 添加 eslint 配置文件（可选）](#222-添加-eslint-配置文件可选)
-    - [2.2.3. 添加 stylelint 配置文件（可选）](#223-添加-stylelint-配置文件可选)
-    - [2.2.4. 添加 commitlint 配置文件（可选）](#224-添加-commitlint-配置文件可选)
-    - [2.2.5. 添加 git hooks（可选）](#225-添加-git-hooks可选)
-    - [2.2.6. 发布 npm package](#226-发布-npm-package)
-  - [2.3. 安装 preset](#23-安装-preset)
-  - [2.4. 定义 npm scripts](#24-定义-npm-scripts)
-    - [2.4.1. npm test](#241-npm-test)
-    - [2.4.2. npm beforecommit](#242-npm-beforecommit)
-- [3. ELint CLI](#3-elint-cli)
-  - [3.1. lint](#31-lint)
-  - [3.2. hooks](#32-hooks)
-  - [3.3. version](#33-version)
-  - [3.4. install](#34-install)
-  - [3.5. diff](#35-diff)
-- [4. 细节 & 原理](#4-细节--原理)
-  - [4.1. 安装 & 初始化过程](#41-安装--初始化过程)
-  - [4.2. 执行过程](#42-执行过程)
-- [5. 常见问题](#5-常见问题)
-  - [5.1. cnpm, yarn](#51-cnpm-yarn)
-  - [5.2. 为什么不建议全局安装](#52-为什么不建议全局安装)
-  - [5.3. 安装失败](#53-安装失败)
-  - [5.4. git hooks 不执行或报错](#54-git-hooks-不执行或报错)
-  - [5.5. 配置文件是不是可以 git ignore](#55-配置文件是不是可以-git-ignore)
-  - [5.6. 是否可以安装多个 preset](#56-是否可以安装多个-preset)
-  - [5.7. 某些文件没有被校验到](#57-某些文件没有被校验到)
-  - [5.8. 为什么添加了 fix 选项还是有问题输出](#58-为什么添加了-fix-选项还是有问题输出)
-  - [5.9. 如何禁用颜色输出](#59-如何禁用颜色输出)
-  - [5.10. lint 执行失败，提示包缺失](#510-lint-执行失败提示包缺失)
-  - [5.11. fix 和 force-fix 的区别](#511-fix-和-force-fix-的区别)
-- [6. 参考](#6-参考)
-
-<!-- /TOC -->
+<!-- TOC -->autoauto- [1. 核心概念](#1-核心概念)auto  - [1.1. ELint](#11-elint)auto  - [1.2. Preset](#12-preset)auto- [2. 使用指南](#2-使用指南)auto  - [2.1. 安装 elint](#21-安装-elint)auto  - [2.2. 编写 preset](#22-编写-preset)auto    - [2.2.1. 新建一个 npm package](#221-新建一个-npm-package)auto    - [2.2.2. 添加 eslint 配置文件（可选）](#222-添加-eslint-配置文件可选)auto    - [2.2.3. 添加 stylelint 配置文件（可选）](#223-添加-stylelint-配置文件可选)auto    - [2.2.4. 添加 commitlint 配置文件（可选）](#224-添加-commitlint-配置文件可选)auto    - [2.2.5. 添加 git hooks（可选）](#225-添加-git-hooks可选)auto    - [2.2.6. 发布 npm package](#226-发布-npm-package)auto  - [2.3. 安装 preset](#23-安装-preset)auto  - [2.4. 定义 npm scripts](#24-定义-npm-scripts)auto    - [2.4.1. npm test](#241-npm-test)auto    - [2.4.2. npm beforecommit](#242-npm-beforecommit)auto- [3. ELint CLI](#3-elint-cli)auto  - [3.1. lint](#31-lint)auto  - [3.2. hooks](#32-hooks)auto  - [3.3. version](#33-version)auto  - [3.4. install](#34-install)auto  - [3.5. diff](#35-diff)auto- [4. 细节 & 原理](#4-细节--原理)auto  - [4.1. 安装 & 初始化过程](#41-安装--初始化过程)auto  - [4.2. 执行过程](#42-执行过程)auto- [5. 常见问题](#5-常见问题)auto  - [5.1. cnpm, yarn](#51-cnpm-yarn)auto  - [5.2. 为什么不建议全局安装](#52-为什么不建议全局安装)auto  - [5.3. 安装失败](#53-安装失败)auto  - [5.4. git hooks 不执行或报错](#54-git-hooks-不执行或报错)auto  - [5.5. 配置文件是不是可以 git ignore](#55-配置文件是不是可以-git-ignore)auto  - [5.6. 是否可以安装多个 preset](#56-是否可以安装多个-preset)auto  - [5.7. 某些文件没有被校验到](#57-某些文件没有被校验到)auto  - [5.8. 为什么添加了 fix 选项还是有问题输出](#58-为什么添加了-fix-选项还是有问题输出)auto  - [5.9. 如何禁用颜色输出](#59-如何禁用颜色输出)auto  - [5.10. lint 执行失败，提示包缺失](#510-lint-执行失败提示包缺失)auto  - [5.11. fix 和 force-fix 的区别](#511-fix-和-force-fix-的区别)auto- [6. 参考](#6-参考)autoauto<!-- /TOC -->
 
 ## 1. 核心概念
 
@@ -100,9 +59,11 @@ elint-preset-<name>
 
 满足以上要求的 npm package 就是一个合法的 elint preset。
 
-> 一般来说，不建议把 `.elintignore`，`.stylelintignore` 添加到 preset 中，因为 preset 应该对所有项目都是适用的（除非你的 preset 限定在一个很小的范围内使用，各个项目的目录结构都是一致的，此时可以使用它们来定义需要忽略校验的文件和文件夹）。
+> 一般来说，不建议把 `.eslintignore`，`.stylelintignore` 添加到 preset 中，因为 preset 应该对所有项目都是适用的（除非你的 preset 限定在一个很小的范围内使用，各个项目的目录结构都是一致的，此时可以使用它们来定义需要忽略校验的文件和文件夹）。
 
 > 在 `package.json` 中添加关键字 `elint-preset` 会方便大家找到。[这里](https://npms.io/search?q=keywords%3Aelint-preset)可以查找现有的 preset。
+
+> eslint, stylelint, commitlint, husky 等配置文件的语法规则，请阅读[参考](#6-参考)一节提供的文档。
 
 ## 2. 使用指南
 
