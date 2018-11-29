@@ -4,6 +4,15 @@
 #
 version: 2
 jobs:
+  build_node_11:
+    docker:
+      - image: circleci/node:11
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run test:circleci
+
   build_node_10:
     docker:
       - image: circleci/node:10
