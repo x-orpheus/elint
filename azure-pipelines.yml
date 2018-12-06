@@ -27,7 +27,8 @@ steps:
     versionSpec: $(node_version)
   displayName: 'Install Node.js'
 
-- script: |
-    npm install
-    npm run test:system
-  displayName: 'npm install and test'
+- script: npm install
+  displayName: 'npm install'
+
+- script: npm run test:system
+  displayName: 'npm run test:system'
