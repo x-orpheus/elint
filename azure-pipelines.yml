@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 pool:
-  vmImage: 'Ubuntu 16.04'
+  vmImage: 'win1803'
 
 strategy:
   matrix:
@@ -29,5 +29,5 @@ steps:
 
 - script: |
     npm install
-    npm test
+    npm run test:system
   displayName: 'npm install and test'
