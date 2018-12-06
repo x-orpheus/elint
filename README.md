@@ -9,7 +9,7 @@
 
 |Linux|macOS|Windows|
 |:--:|:--:|:--:|
-|[![Linux build status][circleci-image]][circleci-url]|[![macOS build status][travis-image]][travis-url]|[![Windows build status][appveyor-image]][appveyor-url]|
+|[![Linux build status][circleci-image]][circleci-url]|[![macOS build status][travis-image]][travis-url]|[![Windows build status][azure-image]][azure-url]|
 
 专为团队设计的 lint 工具
 
@@ -664,8 +664,8 @@ Error: Cannot find module 'eslint-config-xxx'
 [circleci-url]: https://circleci.com/gh/keenwon/elint
 [travis-image]: https://api.travis-ci.org/keenwon/elint.svg?branch=master
 [travis-url]: https://travis-ci.org/keenwon/elint
-[appveyor-image]: https://ci.appveyor.com/api/projects/status/8ji6bpeea0aiwp0i/branch/master?svg=true
-[appveyor-url]: https://ci.appveyor.com/project/keenwon/elint
+[azure-image]: https://dev.azure.com/keenwon/github/_apis/build/status/elint?branchName=master
+[azure-url]: https://dev.azure.com/keenwon/github/_build
 [coveralls-image]: https://coveralls.io/repos/github/keenwon/elint/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/keenwon/elint?branch=master
 [dependencies-image]: https://david-dm.org/keenwon/elint.svg

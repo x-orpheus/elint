@@ -1,5 +1,7 @@
 # ELint System Test
 
+> appveyor 不支持定时任务，改用 azure
+
 elint 系统测试从 mocha 切换至 ava，目的在于提升效率，缩短测试用时。
 
 ## 执行流程

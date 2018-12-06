@@ -30,5 +30,5 @@ steps:
 - script: npm install
   displayName: 'npm install'
 
-- script: npm run test:system
-  displayName: 'npm run test:system'
+- script: npm run test:azure
+  displayName: 'npm run test:azure'
