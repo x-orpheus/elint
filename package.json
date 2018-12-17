@@ -11,7 +11,7 @@
     "test:circleci": "npm run test:lint && npm run test:unit && npm run test:system",
     "test:azure": "npm run test:lint && npm run test:unit && npm run test:system",
     "test:lint": "eslint --format codeframe \"bin/**/*.js\" \"src/**/*.js\" \"test/**/*.js\" \"scripts/postinstall\" --fix",
-    "test:system": "node test/system/utils/init.js && ava \"test/system/**/*.spec.js\" && node test/system/utils/clean.js",
+    "test:system": "node test/system/utils/init.js && ava \"test/system/**/*.spec.js\" --verbose && node test/system/utils/clean.js",
     "test:unit": "mocha \"test/unit/**/*.spec.js\" --timeout 15000",
     "test:unit:coverage": "nyc --reporter=html --reporter=text npm run test:unit && nyc report --reporter=text-lcov | coveralls",
     "postinstall": "node ./src/postinstall.js"
@@ -81,7 +81,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^7.1.2",
-    "ava": "^0.25.0",
+    "ava": "^1.0.1",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "coveralls": "^3.0.2",

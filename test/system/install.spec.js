@@ -4,7 +4,7 @@
  * 安装相关的测试
  */
 
-const { test, beforeEach } = require('ava')
+const test = require('ava')
 const path = require('path')
 const fs = require('fs-extra')
 const createTmpProject = require('./utils/create-tmp-project')
@@ -41,8 +41,8 @@ function checkDep (tmpDir) {
   ].every(item => deps.includes(item))
 }
 
-beforeEach(function * (t) {
-  const tmpDir = yield createTmpProject()
+test.beforeEach(async t => {
+  const tmpDir = await createTmpProject()
 
   const elintrcPath = path.join(tmpDir, '.eslintrc.js')
   const elintignorePath = path.join(tmpDir, '.eslintignore')
@@ -62,49 +62,49 @@ beforeEach(function * (t) {
   }
 })
 
-test('先安装 elint，再安装 preset', function * (t) {
+test('先安装 elint，再安装 preset', async t => {
   const tmpDir = t.context.tmpDir
 
-  yield run(`npm install ${elintPkgPath}`, tmpDir)
-  yield run(`npm install ${presetPkgPath}`, tmpDir)
+  await run(`npm install ${elintPkgPath}`, tmpDir)
+  await run(`npm install ${presetPkgPath}`, tmpDir)
 
   return fileExists(t.context).then(result => {
     t.truthy(result)
   })
 })
 
-test('先安装 preset，再安装 elint', function * (t) {
+test('先安装 preset，再安装 elint', async t => {
   const tmpDir = t.context.tmpDir
 
-  yield run(`npm install ${presetPkgPath}`, tmpDir)
-  yield run(`npm install ${elintPkgPath}`, tmpDir)
+  await run(`npm install ${presetPkgPath}`, tmpDir)
+  await run(`npm install ${elintPkgPath}`, tmpDir)
 
   return fileExists(t.context).then(result => {
     t.truthy(result)
   })
 })
 
-test('同时安装', function * (t) {
+test('同时安装', async t => {
   const tmpDir = t.context.tmpDir
 
-  yield run(`npm install ${presetPkgPath} ${elintPkgPath}`, tmpDir)
+  await run(`npm install ${presetPkgPath} ${elintPkgPath}`, tmpDir)
 
   return fileExists(t.context).then(result => {
     t.truthy(result)
   })
 })
 
-test('先安装 elint，然后使用 elint 安装 preset', function * (t) {
+test('先安装 elint，然后使用 elint 安装 preset', async t => {
   const {
     tmpDir,
     elintrcPath,
     stylelintrcPath
   } = t.context
 
-  yield run(`npm install ${elintPkgPath}`, tmpDir)
+  await run(`npm install ${elintPkgPath}`, tmpDir)
 
   // 这里使用 npm 上的包进行测试：elint-preset-standard
-  yield run(`node node_modules${path.sep}.bin${path.sep}elint install standard`, tmpDir)
+  await run(`node node_modules${path.sep}.bin${path.sep}elint install standard`, tmpDir)
 
   t.truthy(fs.exists(elintrcPath))
   t.truthy(fs.exists(stylelintrcPath))
@@ -112,7 +112,7 @@ test('先安装 elint，然后使用 elint 安装 preset', function * (t) {
   t.truthy(checkDep(tmpDir))
 })
 
-test('先安装 elint，然后使用 elint 安装 preset，指定 registry', function * (t) {
+test('先安装 elint，然后使用 elint 安装 preset，指定 registry', async t => {
   const {
     tmpDir,
     elintrcPath,
@@ -121,11 +121,11 @@ test('先安装 elint，然后使用 elint 安装 preset，指定 registry', fun
 
   const alias = process.env.CI ? 'skimdb' : 'taobao'
 
-  yield run(`npm install ${elintPkgPath}`, tmpDir)
+  await run(`npm install ${elintPkgPath}`, tmpDir)
 
   // 这里使用 npm 上的包进行测试：elint-preset-standard
   // eslint-disable-next-line max-len
-  yield run(`node node_modules${path.sep}.bin${path.sep}elint install standard --registry ${alias}`, tmpDir)
+  await run(`node node_modules${path.sep}.bin${path.sep}elint install standard --registry ${alias}`, tmpDir)
 
   t.truthy(fs.exists(elintrcPath))
   t.truthy(fs.exists(stylelintrcPath))
