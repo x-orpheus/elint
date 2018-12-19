@@ -7,6 +7,8 @@
     "lint-without-fix": "elint lint \"src/**/*\"",
     "lint-fix": "elint lint \"src/**/*\" --fix",
     "lint-force-fix": "elint lint \"src/**/*\" --force-fix",
+    "lint-only-es": "elint lint \"src/**/*.js\" --fix",
+    "lint-only-style": "elint lint \"src/**/*.css\" --fix",
     "lint-no-ignore": "elint lint \"src/standard.js\" --no-ignore",
     "lint-es-without-fix": "elint lint es \"src/**/*\"",
     "lint-es-fix": "elint lint es \"src/**/*\" --fix",

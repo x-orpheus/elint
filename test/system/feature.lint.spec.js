@@ -33,6 +33,26 @@ test('lint --force-fix', async t => {
   await t.notThrowsAsync(run('npm run lint-force-fix', tmpDir))
 })
 
+/**
+ * 执行 lint --fix，但是 glob 只有 js 文件
+ * 期望结果：不报错，仅显示 eslint pass
+ */
+test('lint only es', async t => {
+  const tmpDir = t.context.tmpDir
+
+  await t.notThrowsAsync(run('npm run lint-only-es', tmpDir))
+})
+
+/**
+ * 执行 lint --fix，但是 glob 只有 css 文件
+ * 期望结果：不报错，仅显示 stylelint pass
+ */
+test('lint only style', async t => {
+  const tmpDir = t.context.tmpDir
+
+  await t.notThrowsAsync(run('npm run lint-only-style', tmpDir))
+})
+
 test('lint --no-ignore', async t => {
   const tmpDir = t.context.tmpDir
 
