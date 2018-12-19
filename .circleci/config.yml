@@ -54,10 +54,25 @@ workflows:
   run_test:
     jobs:
       - build_node_11
+          filters:
+            tags:
+              only: /^v.*/
       - build_node_10
+          filters:
+            tags:
+              only: /^v.*/
       - build_node_9
+          filters:
+            tags:
+              only: /^v.*/
       - build_node_8
+          filters:
+            tags:
+              only: /^v.*/
       - build_node_6
+          filters:
+            tags:
+              only: /^v.*/
   nightly:
     triggers:
       - schedule:
