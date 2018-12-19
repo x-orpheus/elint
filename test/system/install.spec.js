@@ -106,8 +106,8 @@ test('先安装 elint，然后使用 elint 安装 preset', async t => {
   // 这里使用 npm 上的包进行测试：elint-preset-standard
   await run(`node node_modules${path.sep}.bin${path.sep}elint install standard`, tmpDir)
 
-  t.truthy(fs.exists(elintrcPath))
-  t.truthy(fs.exists(stylelintrcPath))
+  t.truthy(fs.existsSync(elintrcPath))
+  t.truthy(fs.existsSync(stylelintrcPath))
 
   t.truthy(checkDep(tmpDir))
 })
@@ -127,8 +127,8 @@ test('先安装 elint，然后使用 elint 安装 preset，指定 registry', asy
   // eslint-disable-next-line max-len
   await run(`node node_modules${path.sep}.bin${path.sep}elint install standard --registry ${alias}`, tmpDir)
 
-  t.truthy(fs.exists(elintrcPath))
-  t.truthy(fs.exists(stylelintrcPath))
+  t.truthy(fs.existsSync(elintrcPath))
+  t.truthy(fs.existsSync(stylelintrcPath))
 
   t.truthy(checkDep(tmpDir))
 })
