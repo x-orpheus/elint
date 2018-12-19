@@ -55,10 +55,18 @@ function elint (files, options) {
     let workers = []
 
     if (type) {
+      // 明确指定 type，例如 elint lint es "*.js"
       workers.push(linters[type](argus, ...fileList[type]))
     } else {
-      // 兼容 node v6
+      /**
+       * 没有明确指定 type，根据文件类型判断支持哪些 linter
+       * 使用 _.toPairs 兼容 node v6
+       */
       _.toPairs(linters).forEach(([linterType, linter]) => {
+        if (!fileList[linterType].length) {
+          return
+        }
+
         workers.push(linter(argus, ...fileList[linterType]))
       })
     }
