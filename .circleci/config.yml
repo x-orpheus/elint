@@ -11,7 +11,9 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: npm run test:circleci
+      - run: npm run test:lint
+      - run: npm run test:unit
+      - run: npm run test:system
 
   build_node_10:
     docker:
@@ -20,7 +22,9 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: npm run test:circleci
+      - run: npm run test:lint
+      - run: npm run test:unit
+      - run: npm run test:system
 
   build_node_9:
     docker:
@@ -29,7 +33,9 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: npm run test:circleci
+      - run: npm run test:lint
+      - run: npm run test:unit
+      - run: npm run test:system
 
   build_node_8:
     docker:
@@ -38,7 +44,9 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: npm run test:circleci
+      - run: npm run test:lint
+      - run: npm run test:unit
+      - run: npm run test:system
 
   build_node_7:
     docker:
@@ -47,7 +55,9 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: npm run test:circleci
+      - run: npm run test:lint
+      - run: npm run test:unit
+      - run: npm run test:system
 
   build_node_6:
     docker:
@@ -56,7 +66,9 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: npm run test:circleci
+      - run: npm run test:lint
+      - run: npm run test:unit
+      - run: npm run test:system
 
 workflows:
   version: 2
