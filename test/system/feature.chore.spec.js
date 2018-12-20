@@ -18,7 +18,7 @@ test.beforeEach(async t => {
 test('version', async t => {
   const tmpDir = t.context.tmpDir
 
-  await t.notThrowsAsync(run('npm run version', tmpDir))
+  await t.notThrowsAsync(run('npm run elint-version', tmpDir))
 })
 
 test('diff 存在差异文件', async t => {
@@ -30,17 +30,35 @@ test('diff 存在差异文件', async t => {
   await fs.copy(elintrcPath, elintrcOldPath)
   await fs.appendFile(elintrcOldPath, 'console.log(1)')
 
-  await t.notThrowsAsync(run('npm run diff', tmpDir))
+  await t.notThrowsAsync(run('npm run elint-diff', tmpDir))
 })
 
 test('diff 不存在差异文件', async t => {
   const tmpDir = t.context.tmpDir
 
-  await t.notThrowsAsync(run('npm run diff', tmpDir))
+  await t.notThrowsAsync(run('npm run elint-diff', tmpDir))
 })
 
 test('直接执行 elint，显示 help', async t => {
   const tmpDir = t.context.tmpDir
 
-  await t.notThrowsAsync(run(`node node_modules${path.sep}.bin${path.sep}elint`, tmpDir))
+  await t.notThrowsAsync(run(`npm run elint`, tmpDir))
+})
+
+test('elint --help', async t => {
+  const tmpDir = t.context.tmpDir
+
+  await t.notThrowsAsync(run(`npm run elint-help`, tmpDir))
+})
+
+test('elint 执行无效命令', async t => {
+  const tmpDir = t.context.tmpDir
+
+  await t.throwsAsync(run(`npm run elint-invalid-command`, tmpDir))
+})
+
+test('elint 执行无效选项', async t => {
+  const tmpDir = t.context.tmpDir
+
+  await t.throwsAsync(run(`npm run elint-invalid-option`, tmpDir))
 })

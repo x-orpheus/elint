@@ -16,10 +16,14 @@
     "lint-style-without-fix": "elint lint style \"src/**/*\"",
     "lint-style-fix": "elint lint style \"src/**/*\" -f",
     "lint-style-force-fix": "elint lint style \"src/**/*\" -ff",
-    "version": "elint -v",
-    "diff": "elint diff",
     "hooks-install": "elint hooks install",
-    "hooks-uninstall": "elint hooks uninstall"
+    "hooks-uninstall": "elint hooks uninstall",
+    "elint": "elint",
+    "elint-help": "elint --help",
+    "elint-version": "elint -v",
+    "elint-diff": "elint diff",
+    "elint-invalid-command": "elint xxxx",
+    "elint-invalid-optoin": "elint --xxxx"
   },
   "keywords": [],
   "author": "",
