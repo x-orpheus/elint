@@ -57,7 +57,7 @@ test('lint commtest(error)', async t => {
 
   await run('git add package.json', tmpDir)
 
-  await t.throwsAsync(run('git commit -m "hello"', tmpDir))
+  await t.throwsAsync(run('git commit -m "lint commtest(error)"', tmpDir))
 })
 
 /**
@@ -68,7 +68,7 @@ test('lint commtest(success)', async t => {
 
   await run('git add package.json', tmpDir)
 
-  await t.notThrowsAsync(run('git commit -m "build: hello"', tmpDir))
+  await t.notThrowsAsync(run('git commit -m "build: lint commtest(success)"', tmpDir))
 })
 
 /**
@@ -93,7 +93,7 @@ test('lint stage files', async t => {
   await fs.writeFile(huskyFilePath, huskyFileContent)
 
   // 只校验 stage 文件，不报错
-  await t.notThrowsAsync(run('git commit -m "build: hello"', tmpDir))
+  await t.notThrowsAsync(run('git commit -m "build: lint stage files"', tmpDir))
 })
 
 /**
@@ -120,7 +120,7 @@ test('lint stage files(deep)', async t => {
   await fs.writeFile(huskyFilePath, huskyFileContent)
 
   // 只校验 stage 文件，不报错
-  await t.notThrowsAsync(run('git commit -m "build: hello"', tmpDir))
+  await t.notThrowsAsync(run('git commit -m "build: lint stage files(deep)"', tmpDir))
 })
 
 /**
@@ -145,7 +145,7 @@ test('lint stage files(error)', async t => {
   await fs.writeFile(huskyFilePath, huskyFileContent)
 
   // 报错
-  await t.throwsAsync(run('git commit -m "build: hello"', tmpDir))
+  await t.throwsAsync(run('git commit -m "build: lint stage files(error)"', tmpDir))
 })
 
 test('lint stage files(fix)', async t => {
@@ -167,7 +167,7 @@ test('lint stage files(fix)', async t => {
   await fs.writeFile(huskyFilePath, huskyFileContent)
 
   // 报错，因为 fix 在 git hooks 中无效
-  await t.throwsAsync(run('git commit -m "build: hello"', tmpDir))
+  await t.throwsAsync(run('git commit -m "build: lint stage files(fix)"', tmpDir))
 })
 
 test('lint stage files(force-fix)', async t => {
@@ -189,5 +189,5 @@ test('lint stage files(force-fix)', async t => {
   await fs.writeFile(huskyFilePath, huskyFileContent)
 
   // 不报错，force-fix
-  await t.notThrowsAsync(run('git commit -m "build: hello"', tmpDir))
+  await t.notThrowsAsync(run('git commit -m "build: lint stage files(force-fix)"', tmpDir))
 })
