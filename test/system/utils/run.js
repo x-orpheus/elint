@@ -22,7 +22,8 @@ function run (command, cwd, sync = false) {
   }
 
   const env = Object.assign({}, process.env, {
-    INIT_CWD: cwd
+    INIT_CWD: cwd,
+    FORCE_COLOR: true
   })
 
   console.log(`run: ${program} ${argus.join(' ')}, in ${cwd}`)
