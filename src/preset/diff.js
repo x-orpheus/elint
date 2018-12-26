@@ -71,25 +71,17 @@ function fillLineNumber (hunk) {
   let index = hunk.newStart
   let line
   let lineNumberStr
-  let colorFn
 
   for (let i = 0, j = hunk.lines.length; i < j; i++) {
     line = hunk.lines[i]
 
     if (line.startsWith('-')) {
       lineNumberStr = leftPad('| ', span)
-      colorFn = chalk.red
-    } else if (line.startsWith('-')) {
-      lineNumberStr = leftPad(`${index++} | `, span)
-      colorFn = chalk.green
     } else {
       lineNumberStr = leftPad(`${index++} | `, span)
-      colorFn = n => n
     }
 
-    hunk.lines[i] = colorFn(line.slice(0, 1)) +
-      lineNumberStr +
-      colorFn(line.slice(1))
+    hunk.lines[i] = line.slice(0, 1) + lineNumberStr + line.slice(1)
   }
 
   return hunk
