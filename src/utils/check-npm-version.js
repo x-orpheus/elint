@@ -45,7 +45,7 @@ function getNpmLifecycleVersion () {
 
 const npmVersion = execa.sync('npm', ['-v']).stdout
 const npmLifecycleVersion = getNpmLifecycleVersion()
-let pass = true
+let pass
 
 /**
  * 检测到 npm-lifecycle 的时候（新版本都有），要求 npm-lifecycle >= 2.0.2
