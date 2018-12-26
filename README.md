@@ -665,7 +665,7 @@ Error: Cannot find module 'eslint-config-xxx'
 [travis-image]: https://api.travis-ci.org/keenwon/elint.svg?branch=master
 [travis-url]: https://travis-ci.org/keenwon/elint
 [azure-image]: https://dev.azure.com/keenwon/github/_apis/build/status/elint?branchName=master
-[azure-url]: https://dev.azure.com/keenwon/github/_build
+[azure-url]: https://dev.azure.com/keenwon/github/_build/latest?definitionId=1
 [coveralls-image]: https://coveralls.io/repos/github/keenwon/elint/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/keenwon/elint?branch=master
 [dependencies-image]: https://david-dm.org/keenwon/elint.svg
