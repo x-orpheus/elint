@@ -5,7 +5,8 @@
 [![License][license-image]][license-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
 [![Dependencies Status][dependencies-image]][dependencies-url]
-[![Devdependencies Status][devdependencies-image]][devdependencies-url]
+[![Lgtm Alerts][lgtm-alerts-image]][lgtm-alerts-url]
+[![Lgtm Grade][lgtm-grade-image]][lgtm-grade-url]
 
 |Linux|macOS|Windows|
 |:--:|:--:|:--:|
@@ -672,3 +673,7 @@ Error: Cannot find module 'eslint-config-xxx'
 [dependencies-url]: https://david-dm.org/keenwon/elint
 [devdependencies-image]: https://david-dm.org/keenwon/elint/dev-status.svg
 [devdependencies-url]: https://david-dm.org/keenwon/elint?type=dev
+[lgtm-alerts-image]: https://img.shields.io/lgtm/alerts/g/keenwon/elint.svg?logo=lgtm&logoWidth=18&maxAge=3600
+[lgtm-alerts-url]: https://lgtm.com/projects/g/keenwon/elint/alerts/
+[lgtm-grade-image]: https://img.shields.io/lgtm/grade/javascript/g/keenwon/elint.svg?logo=lgtm&logoWidth=18&maxAge=3600
+[lgtm-grade-url]: https://lgtm.com/projects/g/keenwon/elint/context:javascript
