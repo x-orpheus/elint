@@ -8,6 +8,7 @@ const report = require('./utils/report')
 const isGitHooks = require('./utils/is-git-hooks')
 const eslint = require('./workers/eslint')
 const stylelint = require('./workers/stylelint')
+const notifier = require('./notifier')
 
 /**
  * @typedef ELintOptions
@@ -82,6 +83,8 @@ function elint (files, options) {
       })
 
       console.log(report(outputs))
+
+      notifier.notify()
 
       process.exit(success ? 0 : 1)
     })
