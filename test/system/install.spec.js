@@ -65,8 +65,8 @@ test.beforeEach(async t => {
 test('先安装 elint，再安装 preset', async t => {
   const tmpDir = t.context.tmpDir
 
-  await run(`npm install ${elintPkgPath}`, tmpDir)
-  await run(`npm install ${presetPkgPath}`, tmpDir)
+  await run(`npm install --silent ${elintPkgPath}`, tmpDir)
+  await run(`npm install --silent ${presetPkgPath}`, tmpDir)
 
   return fileExists(t.context).then(result => {
     t.truthy(result)
@@ -76,8 +76,8 @@ test('先安装 elint，再安装 preset', async t => {
 test('先安装 preset，再安装 elint', async t => {
   const tmpDir = t.context.tmpDir
 
-  await run(`npm install ${presetPkgPath}`, tmpDir)
-  await run(`npm install ${elintPkgPath}`, tmpDir)
+  await run(`npm install --silent ${presetPkgPath}`, tmpDir)
+  await run(`npm install --silent ${elintPkgPath}`, tmpDir)
 
   return fileExists(t.context).then(result => {
     t.truthy(result)
@@ -87,7 +87,7 @@ test('先安装 preset，再安装 elint', async t => {
 test('同时安装', async t => {
   const tmpDir = t.context.tmpDir
 
-  await run(`npm install ${presetPkgPath} ${elintPkgPath}`, tmpDir)
+  await run(`npm install --silent ${presetPkgPath} ${elintPkgPath}`, tmpDir)
 
   return fileExists(t.context).then(result => {
     t.truthy(result)
@@ -101,7 +101,7 @@ test('先安装 elint，然后使用 elint 安装 preset', async t => {
     stylelintrcPath
   } = t.context
 
-  await run(`npm install ${elintPkgPath}`, tmpDir)
+  await run(`npm install --silent ${elintPkgPath}`, tmpDir)
 
   // 这里使用 npm 上的包进行测试：elint-preset-standard
   await run(`node node_modules${path.sep}.bin${path.sep}elint install standard`, tmpDir)
@@ -121,7 +121,7 @@ test('先安装 elint，然后使用 elint 安装 preset，指定 registry', asy
 
   const alias = process.env.CI ? 'skimdb' : 'taobao'
 
-  await run(`npm install ${elintPkgPath}`, tmpDir)
+  await run(`npm install --silent ${elintPkgPath}`, tmpDir)
 
   // 这里使用 npm 上的包进行测试：elint-preset-standard
   // eslint-disable-next-line max-len

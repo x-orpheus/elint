@@ -7,11 +7,12 @@ const report = require('./report')
 
 // 显示更新通知
 function notify () {
-  if (process.env.ELINT_DISABLE_UPDATE_NOTIFIER) {
+  debug('run checker')
+  debug(`ELINT_DISABLE_UPDATE_NOTIFIER: ${process.env.ELINT_DISABLE_UPDATE_NOTIFIER}`)
+
+  if (process.env.ELINT_DISABLE_UPDATE_NOTIFIER === 'true') {
     return Promise.resolve(null)
   }
-
-  debug('run checker')
 
   return checker().then(result => {
     if (!result || !result.name || !result.latest || !result.current) {

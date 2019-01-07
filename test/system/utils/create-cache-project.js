@@ -19,7 +19,7 @@ function createCacheProject () {
   fs.copySync(testProjectDir, cacheDir)
 
   // 安装依赖
-  run(`npm install ${presetPkgPath} ${elintPkgPath}`, cacheDir, true)
+  run(`npm install --silent ${presetPkgPath} ${elintPkgPath}`, cacheDir, true)
 }
 
 module.exports = createCacheProject

@@ -19,32 +19,25 @@ const { elintPkgPath } = require('./utils/variable')
 
 test.beforeEach(async t => {
   const tmpDir = await createTmpProject()
-
-  /**
-   * 设置 configstore 的目录
-   * https://github.com/yeoman/configstore
-   */
-  process.env.XDG_DATA_HOME = tmpDir
-
   t.context.tmpDir = tmpDir
 })
 
 test('安装 latest，没有更新提示', async t => {
   const tmpDir = t.context.tmpDir
 
-  await run(`npm install ${elintPkgPath}`, tmpDir)
-  await run(`npm install elint-preset-test@latest`, tmpDir, false, false)
+  await run(`npm install --silent ${elintPkgPath}`, tmpDir)
+  await run(`npm install --silent elint-preset-test@latest`, tmpDir)
 
   // 不显示更新提示
-  await t.notThrowsAsync(run('npm run lint-fix', tmpDir))
+  await t.notThrowsAsync(run('npm run lint-fix', tmpDir, false, false))
 })
 
-test('安装 1.2.0，有更新提示', async t => {
+test.only('安装 1.2.0，有更新提示', async t => {
   const tmpDir = t.context.tmpDir
 
-  await run(`npm install ${elintPkgPath}`, tmpDir)
-  await run(`npm install elint-preset-test@1.2.0`, tmpDir, false, false)
+  await run(`npm install --silent ${elintPkgPath}`, tmpDir)
+  await run(`npm install --silent elint-preset-test@1.2.0`, tmpDir)
 
-  // 不显示更新提示
-  await t.notThrowsAsync(run('npm run lint-fix', tmpDir))
+  // 显示更新提示
+  await t.notThrowsAsync(run('npm run lint-fix', tmpDir, false, false))
 })
