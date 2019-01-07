@@ -1,43 +1,28 @@
 'use strict'
 
 const debug = require('debug')('elint:notifier')
-const exec = require('../lib/exec')
 const conf = require('./config')
-const checker = require.resolve('./checker.js')
-
-let updateVersion
-
-function run () {
-  debug('run checker')
-
-  if (process.env.ELINT_DISABLE_UPDATE_NOTIFIER) {
-    return
-  }
-
-  exec('node')(checker)
-    .then(result => {
-      debug(`checker result: ${result}`)
-      updateVersion = result.stdout
-    })
-    .catch(error => {
-      debug('checker error: %o', error)
-    })
-}
+const checker = require('./checker')
+const report = require('./report')
 
 // 显示更新通知
 function notify () {
-  if (!updateVersion) {
-    return
+  if (process.env.ELINT_DISABLE_UPDATE_NOTIFIER) {
+    return Promise.resolve(null)
   }
 
-  debug('run notifier')
+  debug('run checker')
 
-  conf.notify()
+  return checker().then(result => {
+    if (!result || !result.name || !result.latest || !result.current) {
+      return null
+    }
 
-  console.log(`new version: ${updateVersion}`)
+    conf.update(result.name)
+
+    return report(result)
+  })
 }
-
-run()
 
 module.exports = {
   notify

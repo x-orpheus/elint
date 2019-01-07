@@ -8,7 +8,7 @@ function fetchRegistryInfo (registryUrl, presetName) {
 
   debug(`fetch: ${api}`)
 
-  return fetch(api)
+  return fetch(api, { method: 'GET', timeout: 3000 })
     .then(res => res.json())
     .then(data => {
       const lastVersion = data['dist-tags'].latest

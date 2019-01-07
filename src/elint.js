@@ -72,11 +72,17 @@ function elint (files, options) {
       })
     }
 
+    // 添加 notifier
+    workers.push(notifier.notify())
+
     Promise.all(workers).then(results => {
+      const notifierResult = results.pop()
+      const lintResults = results
+
       const outputs = []
       let success = true
 
-      results.forEach(result => {
+      lintResults.forEach(result => {
         const output = JSON.parse(result.stdout)
         outputs.push(output)
         success = success && output.success
@@ -84,7 +90,9 @@ function elint (files, options) {
 
       console.log(report(outputs))
 
-      notifier.notify()
+      if (notifierResult) {
+        console.log(notifierResult)
+      }
 
       process.exit(success ? 0 : 1)
     })
