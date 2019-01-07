@@ -24,7 +24,7 @@ function fileExists (context) {
   })
 }
 
-function checkDep (tmpDir) {
+function checkDepend (tmpDir) {
   const pkgPath = path.join(tmpDir, 'package.json')
   // eslint-disable-next-line global-require
   const pkg = require(pkgPath)
@@ -109,7 +109,7 @@ test('先安装 elint，然后使用 elint 安装 preset', async t => {
   t.truthy(fs.existsSync(elintrcPath))
   t.truthy(fs.existsSync(stylelintrcPath))
 
-  t.truthy(checkDep(tmpDir))
+  t.truthy(checkDepend(tmpDir))
 })
 
 test('先安装 elint，然后使用 elint 安装 preset，指定 registry', async t => {
@@ -130,5 +130,5 @@ test('先安装 elint，然后使用 elint 安装 preset，指定 registry', asy
   t.truthy(fs.existsSync(elintrcPath))
   t.truthy(fs.existsSync(stylelintrcPath))
 
-  t.truthy(checkDep(tmpDir))
+  t.truthy(checkDepend(tmpDir))
 })
