@@ -14,7 +14,7 @@ co(function * () {
 
   // 找不到本地安装的 preset
   if (!presetInfo) {
-    return null
+    process.exit(1)
   }
 
   const { registryUrl, name } = presetInfo
@@ -22,28 +22,30 @@ co(function * () {
 
   // 获取仓库数据失败
   if (!latestPresetInfo) {
-    return null
+    process.exit(1)
   }
 
   const latestPresetVersion = latestPresetInfo.version
-  const presetUpdateCheckInterval = latestPresetInfo.elint && typeof latestPresetInfo.elint.updateCheckInterval === 'number'
-    ? latestPresetInfo.elint.updateCheckInterval
-    : 0
+  const presetUpdateCheckInterval =
+    latestPresetInfo.elint && typeof latestPresetInfo.elint.updateCheckInterval === 'number'
+      ? latestPresetInfo.elint.updateCheckInterval
+      : 0
 
   // 禁用 & 未设置更新检查周期
   if (presetUpdateCheckInterval <= 0) {
-    return null
+    process.exit(1)
   }
 
   // latestPresetVersion <= presetInfo.version, 无需更新
   if (!semver.gt(latestPresetVersion, presetInfo.version)) {
-    return null
+    process.exit(1)
   }
 
   // 未到更新时间
   if (Date.now() - config.getLastNotifyTime() <= presetUpdateCheckInterval) {
-    return null
+    process.exit(1)
   }
 
-  return latestPresetVersion
+  process.stdout.write(latestPresetVersion)
+  process.exit(0)
 })
