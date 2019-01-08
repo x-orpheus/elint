@@ -3,6 +3,7 @@
 const debug = require('debug')('elint:notifier:getPresetInfo')
 const path = require('path')
 const url = require('url')
+const _ = require('lodash')
 const fs = require('fs-extra')
 const { getBaseDir } = require('../env')
 const tryRequire = require('../utils/try-require')
@@ -12,9 +13,16 @@ function getRegistryUrl (resolved) {
     return ''
   }
 
-  const resolvedUrl = new url.URL(resolved)
+  let resolvedUrl = ''
 
-  return `${resolvedUrl.protocol}//${resolvedUrl.host}`
+  try {
+    const urlObj = new url.URL(resolved)
+    resolvedUrl = `${urlObj.protocol}//${urlObj.host}`
+  } catch (error) {
+    debug('url parse error: %o', error)
+  }
+
+  return resolvedUrl
 }
 
 function getInfoFromPackageLock (presetName) {
@@ -30,7 +38,7 @@ function getInfoFromPackageLock (presetName) {
 
   debug(`package-lock.json path: ${lockPath}`)
 
-  const lockInfo = require(lockPath).dependencies[presetName]
+  const lockInfo = _.get(require(lockPath), `dependencies.${presetName}`)
 
   debug('lock info: %o', lockInfo)
 
@@ -83,7 +91,7 @@ function getPresetInfo () {
   debug('preset info: %o', presetInfo)
 
   // 数据不全
-  if (!presetInfo.name || !presetInfo.version || !presetInfo.registryUrl) {
+  if (!presetInfo || !presetInfo.name || !presetInfo.version || !presetInfo.registryUrl) {
     return null
   }
 
