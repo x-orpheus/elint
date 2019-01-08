@@ -2,10 +2,12 @@
 
 const debug = require('debug')('elint:notifier:checker')
 const co = require('co')
+const _ = require('lodash')
 const semver = require('semver')
 const getPresetInfo = require('./get-preset-info')
 const fetchRegistryInfo = require('./fetch-registry-info')
 const config = require('./config')
+const toMs = require('../utils/to-ms')
 
 /**
  * @typedef ReportInfo
@@ -39,26 +41,22 @@ function checker () {
     }
 
     const latestPresetVersion = latestPresetInfo.version
-    const presetUpdateCheckInterval =
-      latestPresetInfo.elint && typeof latestPresetInfo.elint.updateCheckInterval === 'number'
-        ? latestPresetInfo.elint.updateCheckInterval
-        : 0
-
-    // 禁用 & 未设置更新检查周期
-    if (presetUpdateCheckInterval <= 0) {
-      return null
-    }
 
     // latestPresetVersion <= presetInfo.version, 无需更新
     if (!semver.gt(latestPresetVersion, presetInfo.version)) {
       return null
     }
 
-    console.log(Date.now() - config.getLastNotifyTime(name))
-    console.log(presetUpdateCheckInterval)
+    const updateCheckInterval = _.get(latestPresetInfo, 'elint.updateCheckInterval') || 0
+    const updateCheckIntervalNum = toMs(updateCheckInterval)
+
+    // 禁用 & 未设置更新检查周期
+    if (updateCheckIntervalNum <= 0) {
+      return null
+    }
 
     // 未到更新时间
-    if (Date.now() - config.getLastNotifyTime(name) <= presetUpdateCheckInterval) {
+    if (Date.now() - config.getLastNotifyTime(name) <= updateCheckIntervalNum) {
       return null
     }
 
