@@ -8,6 +8,19 @@ const fs = require('fs-extra')
 const { getBaseDir } = require('../env')
 const tryRequire = require('../utils/try-require')
 
+/**
+ * @typedef PresetInfo
+ * @property {stirng} name preset 名称
+ * @property {stirng} version 版本
+ * @property {stirng} registryUrl 仓库地址
+ */
+
+/**
+ * 从 registry 中解析出仓库地址
+ *
+ * @param {string} resolved package.json 或 package-lock.json 中的 resolved 字段
+ * @returns {string} 解析后的 registry 地址
+ */
 function getRegistryUrl (resolved) {
   if (!resolved) {
     return ''
@@ -25,6 +38,12 @@ function getRegistryUrl (resolved) {
   return resolvedUrl
 }
 
+/**
+ * 从 package-lock.json 中获取 preset 信息
+ *
+ * @param {string} presetName preset name
+ * @returns {null|PresetInfo} 结果
+ */
 function getInfoFromPackageLock (presetName) {
   debug('get preset info from package-lock.json')
 
@@ -53,6 +72,12 @@ function getInfoFromPackageLock (presetName) {
   }
 }
 
+/**
+ * 从 node_modules 中获取 preset 信息
+ *
+ * @param {string} presetName preset name
+ * @returns {null|PresetInfo} 结果
+ */
 function getInfoFromNodeModules (presetName) {
   debug('get preset info from node_modules')
 
@@ -77,6 +102,12 @@ function getInfoFromNodeModules (presetName) {
   }
 }
 
+/**
+ * 获取 preset 信息
+ *
+ * @param {string} presetName preset name
+ * @returns {null|PresetInfo} 结果
+ */
 function getPresetInfo () {
   const presetName = tryRequire(/elint-preset-/)[0]
 

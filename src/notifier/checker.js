@@ -7,6 +7,18 @@ const getPresetInfo = require('./get-preset-info')
 const fetchRegistryInfo = require('./fetch-registry-info')
 const config = require('./config')
 
+/**
+ * @typedef ReportInfo
+ * @property {stirng} name preset 名称
+ * @property {stirng} current 当前版本
+ * @property {stirng} latest 最新版本
+ */
+
+/**
+ * 执行版本更新检测
+ *
+ * @returns {Promise<ReportInfo>|Promise<null>} 检测结果
+ */
 function checker () {
   return co(function * () {
     const presetInfo = getPresetInfo()

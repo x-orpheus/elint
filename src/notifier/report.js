@@ -3,6 +3,19 @@
 const chalk = require('chalk')
 const boxen = require('boxen')
 
+/**
+ * @typedef ReportInfo
+ * @property {stirng} name preset 名称
+ * @property {stirng} current 当前版本
+ * @property {stirng} latest 最新版本
+ */
+
+/**
+ * 生成 notifier 报告
+ *
+ * @param {ReportInfo} info 报告基础信息
+ * @returns {string} 用于输出的内容
+ */
 function report (info) {
   if (!info) {
     return null
