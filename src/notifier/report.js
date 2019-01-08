@@ -4,7 +4,15 @@ const chalk = require('chalk')
 const boxen = require('boxen')
 
 function report (info) {
+  if (!info) {
+    return null
+  }
+
   const { name, current, latest } = info
+
+  if (!name || !current || !latest) {
+    return null
+  }
 
   const messages = [
     `update available ${chalk.dim(current)} → ${chalk.green(latest)}`,
