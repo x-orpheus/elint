@@ -29,7 +29,8 @@
     - [2.2.3. 添加 stylelint 配置文件（可选）](#223-添加-stylelint-配置文件可选)
     - [2.2.4. 添加 commitlint 配置文件（可选）](#224-添加-commitlint-配置文件可选)
     - [2.2.5. 添加 git hooks（可选）](#225-添加-git-hooks可选)
-    - [2.2.6. 发布 npm package](#226-发布-npm-package)
+    - [2.2.6. 设置更新检测周期（可选）](#226-设置更新检测周期可选)
+    - [2.2.7. 发布 npm package](#227-发布-npm-package)
   - [2.3. 安装 preset](#23-安装-preset)
   - [2.4. 定义 npm scripts](#24-定义-npm-scripts)
     - [2.4.1. npm test](#241-npm-test)
@@ -243,7 +244,23 @@ module.exports = {
 >
 > 可能你会觉得，命名为 `precommit` 比 `beforecommit` 更合适。没错，单纯从命名的角度讲，`precommit` 确实更好。但这会与 husky 的规则产生冲突。旧版本的 husky 支持在 package.json 的 scripts 中定义 git hooks。
 
-#### 2.2.6. 发布 npm package
+#### 2.2.6. 设置更新检测周期（可选）
+
+从 1.10.0 版本开始，elint 支持更新检测功能，提示用户更新到新版本的 preset。
+
+要开启此功能，只需在 preset 的 package.json 文件中添加如下配置：
+
+```json
+{
+  "elint": {
+    "updateCheckInterval": "3d"
+  }
+}
+```
+
+上述配置会让 elint 每三天检测一次是否有新版本 preset。
+
+#### 2.2.7. 发布 npm package
 
 此时项目的目录结构应该是：
 
@@ -655,25 +672,25 @@ Error: Cannot find module 'eslint-config-xxx'
 - git hooks: [文档](https://git-scm.com/docs/githooks)
 - glob primer: [文档](https://github.com/isaacs/node-glob#glob-primer)
 
-[node-image]: https://img.shields.io/node/v/elint.svg?maxAge=3600
+[node-image]: https://img.shields.io/node/v/elint.svg?maxAge=3600&style=flat-square
 [node-url]: https://nodejs.org
-[npm-image]: https://badge.fury.io/js/elint.svg
+[npm-image]: https://img.shields.io/npm/v/elint.svg?maxAge=3600&style=flat-square
 [npm-url]: https://www.npmjs.com/package/elint
-[license-image]: https://img.shields.io/github/license/keenwon/elint.svg?maxAge=3600
+[license-image]: https://img.shields.io/github/license/keenwon/elint.svg?maxAge=3600&style=flat-square
 [license-url]: https://github.com/keenwon/elint/blob/master/LICENSE
-[circleci-image]: https://circleci.com/gh/keenwon/elint.svg?style=svg
+[circleci-image]: https://img.shields.io/circleci/project/github/keenwon/elint.svg?maxAge=3600&logo=circleci&style=flat-square
 [circleci-url]: https://circleci.com/gh/keenwon/elint
-[travis-image]: https://api.travis-ci.org/keenwon/elint.svg?branch=master
+[travis-image]: https://img.shields.io/travis/keenwon/elint.svg?maxAge=3600&logo=travis&style=flat-square
 [travis-url]: https://travis-ci.org/keenwon/elint
-[azure-image]: https://dev.azure.com/keenwon/github/_apis/build/status/elint?branchName=master
+[azure-image]: https://img.shields.io/azure-devops/build/keenwon/github/1.svg?maxAge=3600&logo=azure-devops&style=flat-square
 [azure-url]: https://dev.azure.com/keenwon/github/_build/latest?definitionId=1
-[coveralls-image]: https://coveralls.io/repos/github/keenwon/elint/badge.svg?branch=master
+[coveralls-image]: https://img.shields.io/coveralls/github/keenwon/elint.svg?maxAge=3600&style=flat-square
 [coveralls-url]: https://coveralls.io/github/keenwon/elint?branch=master
-[dependencies-image]: https://david-dm.org/keenwon/elint.svg
+[dependencies-image]: https://img.shields.io/david/keenwon/elint.svg?maxAge=3600&style=flat-square
 [dependencies-url]: https://david-dm.org/keenwon/elint
-[devdependencies-image]: https://david-dm.org/keenwon/elint/dev-status.svg
+[devdependencies-image]: https://img.shields.io/david/dev/keenwon/elint.svg?maxAge=3600&style=flat-square
 [devdependencies-url]: https://david-dm.org/keenwon/elint?type=dev
-[lgtm-alerts-image]: https://img.shields.io/lgtm/alerts/g/keenwon/elint.svg?logo=lgtm&logoWidth=18&maxAge=3600
+[lgtm-alerts-image]: https://img.shields.io/lgtm/alerts/g/keenwon/elint.svg?logo=lgtm&logoWidth=18&maxAge=3600&style=flat-square
 [lgtm-alerts-url]: https://lgtm.com/projects/g/keenwon/elint/alerts/
-[lgtm-grade-image]: https://img.shields.io/lgtm/grade/javascript/g/keenwon/elint.svg?logo=lgtm&logoWidth=18&maxAge=3600
+[lgtm-grade-image]: https://img.shields.io/lgtm/grade/javascript/g/keenwon/elint.svg?logo=lgtm&logoWidth=18&maxAge=3600&style=flat-square
 [lgtm-grade-url]: https://lgtm.com/projects/g/keenwon/elint/context:javascript
