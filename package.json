@@ -1,6 +1,6 @@
 {
   "name": "elint",
-  "version": "1.9.0",
+  "version": "1.10.0-alpha.1",
   "description": "A easy way to lint your code.",
   "main": "src/index.js",
   "bin": {
@@ -52,9 +52,11 @@
   },
   "dependencies": {
     "@commitlint/core": "^7.2.1",
+    "boxen": "^2.1.0",
     "chalk": "^2.4.1",
     "co": "^4.6.0",
     "commander": "^2.19.0",
+    "configstore": "^4.0.0",
     "debug": "^4.1.0",
     "diff": "^4.0.1",
     "eslint": "^5.10.0",
@@ -69,6 +71,8 @@
     "lodash": "^4.17.11",
     "md5": "^2.2.1",
     "micromatch": "^3.1.10",
+    "ms": "^2.1.1",
+    "node-fetch": "^2.3.0",
     "semver": "^5.6.0",
     "semver-utils": "^1.1.4",
     "staged-git-files": "^1.1.2",

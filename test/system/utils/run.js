@@ -3,7 +3,7 @@
 const execa = require('execa')
 
 // 执行命令
-function run (command, cwd, sync = false) {
+function run (command, cwd, sync = false, disableNotifier = true) {
   const strs = command.match(/(?:[^\s"]+|"[^"]*")+/g)
   const method = sync ? execa.sync : execa
 
@@ -23,7 +23,8 @@ function run (command, cwd, sync = false) {
 
   const env = Object.assign({}, process.env, {
     INIT_CWD: cwd,
-    FORCE_COLOR: true
+    FORCE_COLOR: true,
+    ELINT_DISABLE_UPDATE_NOTIFIER: disableNotifier
   })
 
   console.log(`run: ${program} ${argus.join(' ')}, in ${cwd}`)
