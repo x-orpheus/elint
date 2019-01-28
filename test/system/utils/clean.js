@@ -11,12 +11,28 @@ if (process.env.CI) {
 const os = require('os')
 const path = require('path')
 const fs = require('fs-extra')
+const globby = require('globby')
 
 const tmpDir = os.tmpdir()
 
-// 清理临时目录
+/**
+ * 清理临时目录
+ */
 const dir = path.join(tmpDir, 'elint_test_system')
 
 if (fs.existsSync(dir)) {
   fs.removeSync(dir)
 }
+
+/**
+ * 清理 npm pack 文件
+ */
+const packFiles = globby.sync('elint-*.tgz', {
+  cwd: process.cwd(),
+  onlyFiles: true,
+  absolute: true
+})
+
+packFiles.forEach(filePath => {
+  fs.removeSync(filePath)
+})
