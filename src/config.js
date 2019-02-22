@@ -1,11 +1,13 @@
 'use strict'
 
 /**
- * 支持的 js 文件后缀
+ * 支持的 js, ts 文件后缀
  */
 const esSuffix = [
   '.js',
   '.jsx',
+  '.ts',
+  '.tsx',
   '.mjs'
 ]
 
