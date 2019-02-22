@@ -56,6 +56,7 @@
   - [5.9. 如何禁用颜色输出](#59-如何禁用颜色输出)
   - [5.10. lint 执行失败，提示包缺失](#510-lint-执行失败提示包缺失)
   - [5.11. fix 和 force-fix 的区别](#511-fix-和-force-fix-的区别)
+  - [5.12. TypeScript](#512-typescript)
 - [6. 参考](#6-参考)
 
 <!-- /TOC -->
@@ -662,6 +663,10 @@ Error: Cannot find module 'eslint-config-xxx'
 为了降低上述情景带来的意外影响，`--fix` 在 git hooks 模式下不生效，同时新增了任何时候都会生效的 `--force-fix`。
 
 建议使用 `--fix`，提交时如果代码有问题，直接报错打断，修复后再重新提交。
+
+### 5.12. TypeScript
+
+elint 目前没有集成 tslint 的计划，typescript 用户建议使用 [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint)。
 
 ## 6. 参考
 
