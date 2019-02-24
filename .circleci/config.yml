@@ -10,7 +10,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: npm install
+      - run: npm ci
       - run: npm run test:lint
       - run: npm run test:unit
       - run: npm run test:system
@@ -21,7 +21,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: npm install
+      - run: npm ci
       - run: npm run test:lint
       - run: npm run test:unit
       - run: npm run test:system
@@ -43,7 +43,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: npm install
+      - run: npm ci
       - run: npm run test:lint
       - run: npm run test:unit
       - run: npm run test:system
