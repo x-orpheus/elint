@@ -2,7 +2,7 @@
 
 const debug = require('debug')('elint:env')
 const path = require('path')
-const isNpm = require('is-npm')
+const isNpm = require('./utils/is-npm')
 
 /**
  * 获取通过 npm script 执行时的项目根路径
