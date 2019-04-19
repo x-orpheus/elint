@@ -61,7 +61,7 @@
     "diff": "^4.0.1",
     "eslint": "^5.16.0",
     "execa": "^1.0.0",
-    "figures": "^2.0.0",
+    "figures": "^3.0.0",
     "find-process": "^1.4.1",
     "fs-extra": "^7.0.1",
     "globby": "^9.2.0",
