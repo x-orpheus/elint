@@ -71,7 +71,7 @@
     "md5": "^2.2.1",
     "micromatch": "^3.1.10",
     "ms": "^2.1.1",
-    "node-fetch": "^2.3.0",
+    "node-fetch": "^2.5.0",
     "semver": "^6.0.0",
     "semver-utils": "^1.1.4",
     "staged-git-files": "^1.1.2",
