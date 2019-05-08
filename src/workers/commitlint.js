@@ -4,9 +4,20 @@ const debug = require('debug')('elint:workers:commitlint')
 const co = require('co')
 const fs = require('fs-extra')
 const path = require('path')
-const { format, load, lint, read } = require('@commitlint/core')
+const {
+  format: commitlintFormat,
+  load: commitlintLoad,
+  lint: commitlintLint,
+  read: commitlintRead
+} = require('@commitlint/core')
 const log = require('../utils/log')
+const loadESModule = require('../utils/load-esmodule')
 const { getBaseDir } = require('../env')
+
+const format = loadESModule(commitlintFormat)
+const load = loadESModule(commitlintLoad)
+const lint = loadESModule(commitlintLint)
+const read = loadESModule(commitlintRead)
 
 /**
  * run commitlint
@@ -31,10 +42,7 @@ function commitlint () {
       throw new Error('无法读取 git commit 信息')
     }
 
-    const [message, config] = yield Promise.all([
-      read(readOptions),
-      load()
-    ])
+    const [message, config] = yield Promise.all([read(readOptions), load()])
 
     debug('git commit message: %o', message)
     debug('commitlint config: %o', config)
