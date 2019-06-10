@@ -119,7 +119,7 @@ test('先安装 elint，然后使用 elint 安装 preset，指定 registry', asy
     stylelintrcPath
   } = t.context
 
-  const alias = process.env.CI ? 'skimdb' : 'taobao'
+  const alias = process.env.CI ? 'yarn' : 'taobao'
 
   await run(`npm install --silent ${elintPkgPath}`, tmpDir)
 

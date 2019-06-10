@@ -72,7 +72,8 @@ const registryAlias = {
   taobao: 'https://registry.npm.taobao.org/',
   nj: 'https://registry.nodejitsu.com/',
   rednpm: 'http://registry.mirror.cqupt.edu.cn',
-  skimdb: 'https://skimdb.npmjs.com/registry'
+  skimdb: 'https://skimdb.npmjs.com/registry',
+  yarn: 'https://registry.yarnpkg.com/'
 }
 
 module.exports = {
