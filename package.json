@@ -11,7 +11,7 @@
     "test:lint": "eslint --format codeframe \"+(bin|src|test)/**/*.js\" \"scripts/postinstall\" --fix",
     "test:unit": "mocha \"test/unit/**/*.spec.js\" --timeout 15000",
     "test:unit:coverage": "nyc --reporter=html --reporter=text npm run test:unit && nyc report --reporter=text-lcov | coveralls",
-    "test:system": "node test/system/utils/init.js && ava \"test/system/**/*.spec.js\" --verbose --fail-fast && node test/system/utils/clean.js",
+    "test:system": "node test/system/utils/init.js && ava && node test/system/utils/clean.js",
     "postinstall": "node ./src/postinstall.js"
   },
   "repository": {
@@ -94,5 +94,12 @@
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
     "sinon": "^7.3.2"
+  },
+  "ava": {
+    "files": [
+      "test/system/**/*.spec.js"
+    ],
+    "failFast": true,
+    "verbose": true
   }
 }
