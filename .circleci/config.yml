@@ -4,6 +4,17 @@
 #
 version: 2
 jobs:
+  build_node_12:
+    docker:
+      - image: circleci/node:12
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: npm ci
+      - run: npm run test:lint
+      - run: npm run test:unit
+      - run: npm run test:system
+
   build_node_11:
     docker:
       - image: circleci/node:11
@@ -48,32 +59,14 @@ jobs:
       - run: npm run test:unit
       - run: npm run test:system
 
-  build_node_7:
-    docker:
-      - image: circleci/node:7
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: npm install
-      - run: npm run test:lint
-      - run: npm run test:unit
-      - run: npm run test:system
-
-  build_node_6:
-    docker:
-      - image: circleci/node:6
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: npm install
-      - run: npm run test:lint
-      - run: npm run test:unit
-      - run: npm run test:system
-
 workflows:
   version: 2
   run_test:
     jobs:
+      - build_node_12:
+          filters:
+            tags:
+              only: /^v.*/
       - build_node_11:
           filters:
             tags:
@@ -90,14 +83,6 @@ workflows:
           filters:
             tags:
               only: /^v.*/
-      - build_node_7:
-          filters:
-            tags:
-              only: /^v.*/
-      - build_node_6:
-          filters:
-            tags:
-              only: /^v.*/
   nightly:
     triggers:
       - schedule:
@@ -107,9 +92,8 @@ workflows:
               only:
                 - master
     jobs:
+      - build_node_12
       - build_node_11
       - build_node_10
       - build_node_9
       - build_node_8
-      - build_node_7
-      - build_node_6
