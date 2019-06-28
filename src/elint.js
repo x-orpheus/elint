@@ -2,7 +2,6 @@
 
 const debug = require('debug')('elint:main')
 const co = require('co')
-const _ = require('lodash')
 const walker = require('./walker')
 const report = require('./utils/report')
 const isGitHooks = require('./utils/is-git-hooks')
@@ -61,9 +60,8 @@ function elint (files, options) {
     } else {
       /**
        * 没有明确指定 type，根据文件类型判断支持哪些 linter
-       * 使用 _.toPairs 兼容 node v6
        */
-      _.toPairs(linters).forEach(([linterType, linter]) => {
+      Object.entries(linters).forEach(([linterType, linter]) => {
         if (!fileList[linterType].length) {
           return
         }
