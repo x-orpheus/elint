@@ -1,7 +1,6 @@
 'use strict'
 
 const debug = require('debug')('elint:walker')
-const co = require('co')
 const path = require('path')
 const isGitHooks = require('../utils/is-git-hooks')
 const { getBaseDir } = require('../env')
@@ -17,7 +16,7 @@ const stage = require('./stage')
  * @param {object} [options] 配置
  * @returns {Promise<object>} file tree
  */
-function walker (patterns, options = {}) {
+async function walker (patterns, options = {}) {
   debug(`input glob patterns: ${patterns}`)
   debug('input options: %o', options)
 
@@ -30,41 +29,39 @@ function walker (patterns, options = {}) {
     return Promise.resolve(fileTree)
   }
 
-  return co(function * () {
-    const isGit = yield isGitHooks()
+  const isGit = await isGitHooks()
 
-    debug(`run in git hooks: ${isGit}`)
+  debug(`run in git hooks: ${isGit}`)
 
-    /**
-     * 根据运行环境执行不同的文件遍历策略
-     */
-    let fileList
-    let ignorePatterns = []
+  /**
+   * 根据运行环境执行不同的文件遍历策略
+   */
+  let fileList
+  let ignorePatterns = []
 
-    if (!noIgnore) {
-      debug('ignore rules: %j', defaultIgnore)
-      ignorePatterns = defaultIgnore
-    }
+  if (!noIgnore) {
+    debug('ignore rules: %j', defaultIgnore)
+    ignorePatterns = defaultIgnore
+  }
 
-    if (isGit) {
-      fileList = yield stage(patterns, ignorePatterns)
-    } else {
-      fileList = yield local(patterns, ignorePatterns)
-    }
+  if (isGit) {
+    fileList = await stage(patterns, ignorePatterns)
+  } else {
+    fileList = await local(patterns, ignorePatterns)
+  }
 
-    // 转为绝对路径
-    const baseDir = getBaseDir()
-    fileList = fileList.map(p => {
-      return path.join(baseDir, p)
-    })
-
-    fillFileTree(fileTree, fileList)
-
-    debug('fileList: %o', fileList)
-    debug('fileTree: %o', fileTree)
-
-    return fileTree
+  // 转为绝对路径
+  const baseDir = getBaseDir()
+  fileList = fileList.map(p => {
+    return path.join(baseDir, p)
   })
+
+  fillFileTree(fileTree, fileList)
+
+  debug('fileList: %o', fileList)
+  debug('fileTree: %o', fileTree)
+
+  return fileTree
 }
 
 module.exports = walker

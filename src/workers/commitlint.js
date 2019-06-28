@@ -1,7 +1,6 @@
 'use strict'
 
 const debug = require('debug')('elint:workers:commitlint')
-const co = require('co')
 const fs = require('fs-extra')
 const path = require('path')
 const {
@@ -24,10 +23,10 @@ const read = loadESModule(commitlintRead)
  *
  * @returns {void}
  */
-function commitlint () {
+async function commitlint () {
   const baseDir = getBaseDir()
 
-  co(function * () {
+  try {
     const readOptions = {
       cwd: baseDir,
       edit: '.git/COMMIT_EDITMSG'
@@ -42,14 +41,14 @@ function commitlint () {
       throw new Error('无法读取 git commit 信息')
     }
 
-    const [message, config] = yield Promise.all([read(readOptions), load()])
+    const [message, config] = await Promise.all([read(readOptions), load()])
 
     debug('git commit message: %o', message)
     debug('commitlint config: %o', config)
 
     const rules = config.rules
     const options = config.parserPreset ? { parserOpts: config.parserPreset.parserOpts } : {}
-    const report = yield lint(message[0], rules, options)
+    const report = await lint(message[0], rules, options)
     const formatted = format({
       results: [report]
     })
@@ -59,10 +58,10 @@ function commitlint () {
     console.log()
 
     process.exit(report.errors.length ? 1 : 0)
-  }).catch(error => {
+  } catch (error) {
     log.error(error.message)
     process.exit(1)
-  })
+  }
 }
 
 module.exports = commitlint
