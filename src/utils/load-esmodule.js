@@ -1,7 +1,7 @@
-const { isFunction } = require('lodash')
+const _ = require('lodash')
 
 function loadESModule (moduleInstance) {
-  if (isFunction(moduleInstance.default)) {
+  if (_.isFunction(moduleInstance.default)) {
     return moduleInstance.default
   }
 
