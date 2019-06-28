@@ -15,17 +15,6 @@ jobs:
       - run: npm run test:unit
       - run: npm run test:system
 
-  build_node_11:
-    docker:
-      - image: circleci/node:11
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: npm ci
-      - run: npm run test:lint
-      - run: npm run test:unit
-      - run: npm run test:system
-
   build_node_10:
     docker:
       - image: circleci/node:10
@@ -33,17 +22,6 @@ jobs:
     steps:
       - checkout
       - run: npm ci
-      - run: npm run test:lint
-      - run: npm run test:unit
-      - run: npm run test:system
-
-  build_node_9:
-    docker:
-      - image: circleci/node:9
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: npm install
       - run: npm run test:lint
       - run: npm run test:unit
       - run: npm run test:system
@@ -67,15 +45,7 @@ workflows:
           filters:
             tags:
               only: /^v.*/
-      - build_node_11:
-          filters:
-            tags:
-              only: /^v.*/
       - build_node_10:
-          filters:
-            tags:
-              only: /^v.*/
-      - build_node_9:
           filters:
             tags:
               only: /^v.*/
@@ -93,7 +63,5 @@ workflows:
                 - master
     jobs:
       - build_node_12
-      - build_node_11
       - build_node_10
-      - build_node_9
       - build_node_8
