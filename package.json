@@ -59,7 +59,7 @@
     "configstore": "^4.0.0",
     "debug": "^4.1.1",
     "diff": "^4.0.1",
-    "eslint": "^5.16.0",
+    "eslint": "^6.0.1",
     "execa": "^1.0.0",
     "figures": "^2.0.0",
     "find-process": "^1.4.2",
