@@ -1,6 +1,5 @@
 'use strict'
 
-const _ = require('lodash')
 const { version: elintVersion } = require('../package.json')
 const { version: eslintVersion } = require('eslint/package.json')
 const { version: stylelintVersion } = require('stylelint/package.json')
@@ -37,8 +36,7 @@ function version () {
 
   const mainNameLength = Math.max(...Object.keys(main).map(k => k.length))
 
-  // 兼容 node v6
-  _.toPairs(main).forEach(([name, version]) => {
+  Object.entries(main).forEach(([name, version]) => {
     output.push(`  ${padEnd(name, mainNameLength)} : ${version}`)
   })
 
@@ -47,8 +45,7 @@ function version () {
 
   const depNameLength = Math.max(...Object.keys(dep).map(k => k.length))
 
-  // 兼容 node v6
-  _.toPairs(dep).forEach(([name, version]) => {
+  Object.entries(dep).forEach(([name, version]) => {
     output.push(`    ${padEnd(name, depNameLength)} : ${version}`)
   })
 

@@ -1,7 +1,6 @@
 'use strict'
 
 const debug = require('debug')('elint:lib:npmInstall')
-const _ = require('lodash')
 const exec = require('./exec')
 const parse = require('../utils/parse-npm-option')
 
@@ -23,8 +22,7 @@ function npmInstall (names, options) {
   const parsedNames = Array.isArray(names) ? names : [names]
   const parsedOptions = []
 
-  // 兼容 node v6
-  _.toPairs(options).forEach(([option, value]) => {
+  Object.entries(options).forEach(([option, value]) => {
     if (value === false) {
       return
     }

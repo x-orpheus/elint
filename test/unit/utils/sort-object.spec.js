@@ -14,18 +14,18 @@ describe('Sort Object 测试', function () {
   it('sort', function () {
     const object = {
       'is-valid-glob': '*',
-      'co': '*',
-      'ignore': '*',
-      'chalk': '*',
+      co: '*',
+      ignore: '*',
+      chalk: '*',
       'write-json-file': '*',
       '@commitlint/core': '*'
     }
 
     const result = {
       '@commitlint/core': '*',
-      'chalk': '*',
-      'co': '*',
-      'ignore': '*',
+      chalk: '*',
+      co: '*',
+      ignore: '*',
       'is-valid-glob': '*',
       'write-json-file': '*'
     }

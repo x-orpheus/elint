@@ -1,7 +1,6 @@
 'use strict'
 
 const debug = require('debug')('elint:notifier:checker')
-const co = require('co')
 const _ = require('lodash')
 const semver = require('semver')
 const getPresetInfo = require('./get-preset-info')
@@ -21,8 +20,8 @@ const toMs = require('../utils/to-ms')
  *
  * @returns {Promise<ReportInfo>|Promise<null>} 检测结果
  */
-function checker () {
-  return co(function * () {
+async function checker () {
+  try {
     const presetInfo = getPresetInfo()
 
     debug('preset info: %o', presetInfo)
@@ -33,7 +32,7 @@ function checker () {
     }
 
     const { registryUrl, name } = presetInfo
-    const latestPresetInfo = yield fetchRegistryInfo(registryUrl, name)
+    const latestPresetInfo = await fetchRegistryInfo(registryUrl, name)
 
     // 获取仓库数据失败
     if (!latestPresetInfo) {
@@ -65,10 +64,10 @@ function checker () {
       latest: latestPresetVersion,
       current: presetInfo.version
     }
-  }).catch(error => {
+  } catch (error) {
     debug('check error: %o', error)
     return null
-  })
+  }
 }
 
 module.exports = checker

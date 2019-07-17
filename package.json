@@ -1,6 +1,6 @@
 {
   "name": "elint",
-  "version": "1.11.1",
+  "version": "2.0.0-alpha.1",
   "description": "A easy way to lint your code.",
   "main": "src/index.js",
   "bin": {
@@ -11,7 +11,7 @@
     "test:lint": "eslint --format codeframe \"+(bin|src|test)/**/*.js\" \"scripts/postinstall\" --fix",
     "test:unit": "mocha \"test/unit/**/*.spec.js\" --timeout 15000",
     "test:unit:coverage": "nyc --reporter=html --reporter=text npm run test:unit && nyc report --reporter=text-lcov | coveralls",
-    "test:system": "node test/system/utils/init.js && ava \"test/system/**/*.spec.js\" --verbose --fail-fast && node test/system/utils/clean.js",
+    "test:system": "node test/system/utils/init.js && ava && node test/system/utils/clean.js",
     "postinstall": "node ./src/postinstall.js"
   },
   "repository": {
@@ -48,51 +48,57 @@
   },
   "homepage": "https://github.com/keenwon/elint#readme",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.9.0"
   },
   "dependencies": {
-    "@commitlint/core": "^8.0.0",
-    "boxen": "^3.2.0",
+    "@commitlint/core": "^8.1.0",
+    "boxen": "^4.1.0",
     "chalk": "^2.4.2",
-    "co": "^4.6.0",
     "commander": "^2.20.0",
-    "configstore": "^4.0.0",
+    "configstore": "^5.0.0",
     "debug": "^4.1.1",
     "diff": "^4.0.1",
-    "eslint": "^5.16.0",
-    "execa": "^1.0.0",
-    "figures": "^2.0.0",
+    "eslint": "^6.0.1",
+    "execa": "^2.0.3",
+    "figures": "^3.0.0",
     "find-process": "^1.4.2",
     "fs-extra": "^8.1.0",
-    "globby": "^9.2.0",
-    "husky": "^1.3.1",
+    "globby": "^10.0.1",
+    "husky": "^3.0.0",
     "left-pad": "^1.3.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.14",
     "md5": "^2.2.1",
-    "micromatch": "^3.1.10",
+    "micromatch": "^4.0.2",
     "ms": "^2.1.2",
     "node-fetch": "^2.6.0",
     "semver": "^6.2.0",
     "semver-utils": "^1.1.4",
-    "staged-git-files": "^1.1.2",
-    "stylelint": "~9.6.0",
+    "staged-git-files": "^1.2.0",
+    "stylelint": "~10.1.0",
     "which": "^1.3.1",
-    "write-json-file": "^3.2.0"
+    "write-json-file": "^4.1.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^8.0.0",
-    "ava": "^1.4.1",
+    "@commitlint/cli": "^8.1.0",
+    "ava": "^2.2.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "coveralls": "^3.0.4",
-    "deep-equal-in-any-order": "^1.0.13",
-    "eslint-config-standard": "^12.0.0",
+    "coveralls": "^3.0.5",
+    "deep-equal-in-any-order": "^1.0.16",
+    "eslint-config-standard": "^13.0.1",
     "eslint-plugin-import": "^2.18.0",
-    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
     "sinon": "^7.3.2"
+  },
+  "ava": {
+    "files": [
+      "test/system/**/*.spec.js"
+    ],
+    "failFast": true,
+    "verbose": true
   }
 }

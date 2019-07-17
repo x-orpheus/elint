@@ -1,7 +1,6 @@
 'use strict'
 
 const debug = require('debug')('elint:utils:is-git-hooks')
-const co = require('co')
 const find = require('find-process')
 
 const huskyCmdReg = /node_modules(\/|\\)husky/
@@ -57,17 +56,17 @@ function isRunByHusky (ppid) {
  *
  * @returns {Promise<boolean>} 是否是 git hooks 环境
  */
-function isGitHooks () {
-  return co(function * () {
-    const ppid = yield getPPID()
+async function isGitHooks () {
+  try {
+    const ppid = await getPPID()
 
     debug(`ppid: ${ppid}`)
 
     return isRunByHusky(ppid)
-  }).catch(/* istanbul ignore next */ function (err) {
+  } catch (err) {
     debug('error: %o', err)
     return false
-  })
+  }
 }
 
 module.exports = isGitHooks

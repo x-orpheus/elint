@@ -163,7 +163,7 @@ function showHelp () {
     return true
   }
 
-  let argus = process.argv.slice(2)
+  const argus = process.argv.slice(2)
 
   return argus.every(item => item.startsWith('-'))
 }

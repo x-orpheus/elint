@@ -4,8 +4,6 @@ const debug = require('debug')('elint:preset:install-cli')
 const os = require('os')
 const fs = require('fs-extra')
 const path = require('path')
-const co = require('co')
-const _ = require('lodash')
 const npmInstall = require('../lib/npm-install')
 const log = require('../utils/log')
 const { parse, stringify } = require('../utils/package-name')
@@ -37,7 +35,7 @@ function getRegistryUrl (registry) {
  * @param {InstallOptions} [options] install options
  * @returns {void}
  */
-function install (presetName, options = {}) {
+async function install (presetName, options = {}) {
   debug('run install from cli, arguments: %o', arguments)
 
   /**
@@ -83,14 +81,14 @@ function install (presetName, options = {}) {
 
   fs.ensureDirSync(tmpdir)
 
-  co(function * () {
+  try {
     /**
      * step1: 安装 preset
      */
     const installName = stringify({ scope, name, version })
     console.log(`install "${installName}"...`)
 
-    yield npmInstall(installName, {
+    await npmInstall(installName, {
       prefix: tmpdir,
       registry
     })
@@ -120,22 +118,21 @@ function install (presetName, options = {}) {
      */
     console.log('install dependencies...')
 
-    // 兼容 node v6
-    const packages = _.toPairs(dependencies)
+    const packages = Object.entries(dependencies)
       .map(([name, range]) => {
         return `${name}@${packageVersion(range)}`
       })
 
-    yield npmInstall(packages, {
+    await npmInstall(packages, {
       saveDev: true
     })
 
     // 清理临时目录
     fs.removeSync(tmpdir)
-  }).catch(error => {
+  } catch (error) {
     log.error(error.message)
     process.exit(1)
-  })
+  }
 }
 
 module.exports = install

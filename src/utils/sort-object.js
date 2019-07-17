@@ -1,9 +1,9 @@
 'use strict'
 
-const lodash = require('lodash')
+const _ = require('lodash')
 
 function sort (obj) {
-  if (!lodash.isPlainObject(obj)) {
+  if (!_.isPlainObject(obj)) {
     return obj
   }
 

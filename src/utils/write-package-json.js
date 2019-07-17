@@ -3,7 +3,7 @@
 const debug = require('debug')('elint:utils:writePackageJson')
 const path = require('path')
 const fs = require('fs-extra')
-const lodash = require('lodash')
+const _ = require('lodash')
 const writeJsonFile = require('write-json-file')
 const sort = require('./sort-object')
 const { getBaseDir } = require('../env')
@@ -17,7 +17,7 @@ const { getBaseDir } = require('../env')
 function writePackageJson (devDependencies) {
   debug('input devDependencies: %o', devDependencies)
 
-  if (!lodash.isPlainObject(devDependencies)) {
+  if (!_.isPlainObject(devDependencies)) {
     debug('devDependencies isn\'t plain object, return')
     // 不报错
     return Promise.resolve()
