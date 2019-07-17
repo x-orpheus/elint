@@ -5,7 +5,6 @@ const fs = require('fs-extra')
 const path = require('path')
 const jsDiff = require('diff')
 const chalk = require('chalk')
-const leftPad = require('left-pad')
 const findConfigFiles = require('./find-config-files')
 const { getBaseDir } = require('../env')
 
@@ -76,9 +75,9 @@ function fillLineNumber (hunk) {
     line = hunk.lines[i]
 
     if (line.startsWith('-')) {
-      lineNumberStr = leftPad('| ', span)
+      lineNumberStr = '| '.padStart(span)
     } else {
-      lineNumberStr = leftPad(`${index++} | `, span)
+      lineNumberStr = `${index++} | `.padStart(span)
     }
 
     hunk.lines[i] = line.slice(0, 1) + lineNumberStr + line.slice(1)
