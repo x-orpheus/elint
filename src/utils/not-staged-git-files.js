@@ -16,7 +16,7 @@ module.exports = () => {
       return files
     })
     .catch(error => {
-      debug(error)
+      debug('%O', error)
       return []
     })
 }
