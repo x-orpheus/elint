@@ -4,8 +4,8 @@ const debug = require('debug')('elint:main')
 const walker = require('./walker')
 const report = require('./utils/report')
 const isGitHooks = require('./utils/is-git-hooks')
-const eslint = require('./workers/eslint')
-const stylelint = require('./workers/stylelint')
+const { eslintFileLinter } = require('./workers/eslint')
+const { stylelintFileLinter } = require('./workers/stylelint')
 const notifier = require('./notifier')
 
 /**
@@ -32,8 +32,8 @@ async function elint (files, options) {
 
   // linters 对象，方便后续操作
   const linters = {
-    es: eslint,
-    style: stylelint
+    es: eslintFileLinter,
+    style: stylelintFileLinter
   }
 
   // 处理 fix 和 forceFix
@@ -57,8 +57,8 @@ async function elint (files, options) {
     workers.push(linters[type](argus, ...fileList[type]))
   } else {
     /**
-       * 没有明确指定 type，根据文件类型判断支持哪些 linter
-       */
+     * 没有明确指定 type，根据文件类型判断支持哪些 linter
+     */
     Object.entries(linters).forEach(([linterType, linter]) => {
       if (!fileList[linterType].length) {
         return
@@ -78,8 +78,8 @@ async function elint (files, options) {
     const outputs = []
     let success = true
 
-    lintResults.forEach(result => {
-      const output = JSON.parse(result.stdout)
+    lintResults.forEach(({ stdout }) => {
+      const output = JSON.parse(stdout)
       outputs.push(output)
       success = success && output.success
     })
