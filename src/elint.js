@@ -50,7 +50,7 @@ async function elint (files, options) {
 
   const { type } = options
   const argus = JSON.stringify(options)
-  const workers = []
+  const workers = [notifier.notify()]
 
   if (type) {
     // 明确指定 type，例如 elint lint es "*.js"
@@ -68,11 +68,8 @@ async function elint (files, options) {
     })
   }
 
-  // 添加 notifier
-  workers.push(notifier.notify())
-
   Promise.all(workers).then(results => {
-    const notifierResult = results.pop()
+    const notifierResult = results.shift()
     const lintResults = results
 
     const outputs = []
