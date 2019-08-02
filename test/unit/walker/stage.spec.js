@@ -86,4 +86,29 @@ describe('Walker stage 测试', function () {
         return stageFiles(['src/**/*.js'], []).should.eventually.deep.equalInAnyOrder(result)
       })
   })
+
+  it('包含多个非暂存区文件', function () {
+    const filePath1 = 'src/lib/b.js'
+    const filePath2 = 'app/c.js'
+    const result = [
+      'src/a.js',
+      {
+        fileName: filePath1,
+        fileContent: fs.readFileSync(path.join(baseDir, filePath1)).toString()
+      },
+      {
+        fileName: filePath2,
+        fileContent: fs.readFileSync(path.join(baseDir, filePath2)).toString()
+      }
+    ]
+
+    return gitInit()
+      .then(() => appendFile([filePath1, filePath2]))
+      .then(() => {
+        return stageFiles(
+          ['src/**/*.js', 'app/**/*.js'],
+          []
+        ).should.eventually.deep.equalInAnyOrder(result)
+      })
+  })
 })
