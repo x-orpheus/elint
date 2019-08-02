@@ -1,9 +1,9 @@
 'use strict'
 
 const fs = require('fs-extra')
-const path = require('path')
 const mock = require('../mock/env')
 const gitInit = require('../mock/git-init')
+const appendFile = require('../mock/append-file')
 const notStagedGitFiles = require('../../../src/utils/not-staged-git-files')
 const { getBaseDir } = require('../../../src/env')
 
@@ -16,13 +16,6 @@ chai.should()
 
 let unmock
 let baseDir
-
-const touchFile = async paths => {
-  for (let i = 0, j = paths.length; i < j; i++) {
-    const filePath = path.join(baseDir, paths[i])
-    await fs.appendFile(filePath, '\n')
-  }
-}
 
 describe('not-staged-git-files 测试', function () {
   beforeEach(() => {
@@ -52,7 +45,7 @@ describe('not-staged-git-files 测试', function () {
     const result = ['.huskyrc.js']
 
     return gitInit()
-      .then(() => touchFile(result))
+      .then(() => appendFile(result))
       .then(() => {
         return notStagedGitFiles().should.eventually.deep.equal(result)
       })
@@ -62,7 +55,7 @@ describe('not-staged-git-files 测试', function () {
     const result = ['app/c.js', 'app/style.css']
 
     return gitInit()
-      .then(() => touchFile(result))
+      .then(() => appendFile(result))
       .then(() => {
         return notStagedGitFiles().should.eventually.deep.equal(result)
       })

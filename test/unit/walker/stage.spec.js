@@ -1,8 +1,10 @@
 'use strict'
 
 const fs = require('fs-extra')
+const path = require('path')
 const mock = require('../mock/env')
 const gitInit = require('../mock/git-init')
+const appendFile = require('../mock/append-file')
 const stageFiles = require('../../../src/walker/stage')
 const { getBaseDir } = require('../../../src/env')
 
@@ -37,46 +39,51 @@ describe('Walker stage 测试', function () {
   })
 
   it('可以匹配到文件', function () {
-    const result = [
-      'src/a.js',
-      'src/lib/b.js'
-    ]
+    const result = ['src/a.js', 'src/lib/b.js']
 
-    return gitInit()
-      .then(() => {
-        return stageFiles(['src/**/*.js']).should.eventually.deep.equalInAnyOrder(result)
-      })
+    return gitInit().then(() => {
+      return stageFiles(['src/**/*.js']).should.eventually.deep.equalInAnyOrder(result)
+    })
   })
 
   it('匹配不到文件', function () {
-    return gitInit()
-      .then(() => {
-        return stageFiles(['*.txt']).should.eventually.deep.equalInAnyOrder([])
-      })
+    return gitInit().then(() => {
+      return stageFiles(['*.txt']).should.eventually.deep.equalInAnyOrder([])
+    })
   })
 
   it('忽略测试', function () {
-    const result = [
-      'src/a.js'
-    ]
+    const result = ['src/a.js']
 
-    return gitInit()
-      .then(() => {
-        return stageFiles(['src/**/*.js'], ['src/lib/*'])
-          .should.eventually.deep.equalInAnyOrder(result)
-      })
+    return gitInit().then(() => {
+      return stageFiles(['src/**/*.js'], ['src/lib/*']).should.eventually.deep.equalInAnyOrder(
+        result
+      )
+    })
   })
 
   it('忽略测试，规则为空', function () {
+    const result = ['src/a.js', 'src/lib/b.js']
+
+    return gitInit().then(() => {
+      return stageFiles(['src/**/*.js'], []).should.eventually.deep.equalInAnyOrder(result)
+    })
+  })
+
+  it('包含非暂存区文件', function () {
+    const filePath = 'src/lib/b.js'
     const result = [
       'src/a.js',
-      'src/lib/b.js'
+      {
+        fileName: filePath,
+        fileContent: fs.readFileSync(path.join(baseDir, filePath)).toString()
+      }
     ]
 
     return gitInit()
+      .then(() => appendFile([filePath]))
       .then(() => {
-        return stageFiles(['src/**/*.js'], [])
-          .should.eventually.deep.equalInAnyOrder(result)
+        return stageFiles(['src/**/*.js'], []).should.eventually.deep.equalInAnyOrder(result)
       })
   })
 })

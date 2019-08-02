@@ -4,7 +4,12 @@ const debug = require('debug')('elint:not-staged-git-files')
 const execa = require('execa')
 const { getBaseDir } = require('../env')
 
-module.exports = () => {
+/**
+ * 获取没有添加到暂存区的文件
+ *
+ * @returns {Promise<string>} file list
+ */
+function notStagedGitFiles () {
   const baseDir = getBaseDir()
 
   return execa('git', ['diff', '--name-only'], {
@@ -20,3 +25,5 @@ module.exports = () => {
       return []
     })
 }
+
+module.exports = notStagedGitFiles

@@ -4,7 +4,10 @@ const debug = require('debug')('elint:walker:stage')
 const fs = require('fs-extra')
 const mm = require('micromatch')
 const sgf = require('staged-git-files')
+const _ = require('lodash')
 const { getBaseDir } = require('../env')
+const notStagedGitFiles = require('../utils/not-staged-git-files')
+const getStagedFileContent = require('../utils/get-staged-file-content')
 
 const mmOptions = {
   dot: true,
@@ -50,9 +53,9 @@ function match (filename, patterns, ignorePatterns) {
  * @param {Array<string>} patterns 要搜寻的 glob 数组
  * @param {Array<string>} ignorePatterns 忽略的 glob 数组
  *
- * @returns {Promise<object>} fileTree
+ * @returns {Promise<string[]>} file list
  */
-function stageFiles (patterns, ignorePatterns) {
+function getStagedFileList (patterns, ignorePatterns) {
   const baseDir = getBaseDir()
 
   // 如果 baseDir 根本不存在 sgf 会抛出异常
@@ -79,4 +82,42 @@ function stageFiles (patterns, ignorePatterns) {
   })
 }
 
-module.exports = stageFiles
+/**
+ * Git 暂存文件遍历
+ *
+ * @param {Array<string>} patterns 要搜寻的 glob 数组
+ * @param {Array<string>} ignorePatterns 忽略的 glob 数组
+ *
+ * @returns {Promise<string[]>} file list
+ */
+async function stagedFiles (patterns, ignorePatterns) {
+  // 暂存区文件
+  const stagedFileList = await getStagedFileList(patterns, ignorePatterns)
+  // 非暂存区文件
+  const notStagedFileList = await notStagedGitFiles()
+
+  // 交集，需要获取暂存区的内容
+  const needGetContentFileList = _.intersection(stagedFileList, notStagedFileList)
+  // 差级，只需要文件名
+  const pureStagedFileList = _.without(stagedFileList, ...notStagedFileList)
+
+  if (!needGetContentFileList.length) {
+    return pureStagedFileList
+  }
+
+  const fileList = [...pureStagedFileList]
+
+  for (let i = 0, j = needGetContentFileList.length; i < j; i++) {
+    const fileName = needGetContentFileList[i]
+    const fileContent = await getStagedFileContent(fileName)
+
+    fileList.push({
+      fileName,
+      fileContent
+    })
+  }
+
+  return fileList
+}
+
+module.exports = stagedFiles

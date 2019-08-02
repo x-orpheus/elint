@@ -9,7 +9,7 @@ const { getBaseDir } = require('../env')
  * @param {Array<string>} [patterns] 匹配模式
  * @param {Array<string>} [ignorePatterns] 忽略模式
  *
- * @returns {Array<string>} file list
+ * @returns {Promise<string[]>} file list
  */
 function walker (patterns = [], ignorePatterns = []) {
   const baseDir = getBaseDir()
