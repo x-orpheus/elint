@@ -157,14 +157,20 @@ describe('Walker 测试', function () {
     })
 
     it('包含多个 staged file', async () => {
+      const fileName1 = 'src/lib/b.js'
+      const absFileName1 = path.join(baseDir, fileName1)
+      const fileName2 = 'src/a.css'
+      const absFileName2 = path.join(baseDir, fileName2)
+
       const tmpl = `
         const walker = require('${walkerPath}')
         const gitInit = require('${gitInitPath}')
         const appendFile = require('${appendFilePath}')
 
         gitInit()
+          .then(() => appendFile(['${fileName1}', '${fileName2}']))
           .then(() => {
-            walker(['src/**/*']).then(result => {
+            walker(['src/**/*.+(js|css)']).then(result => {
               process.stdout.write(JSON.stringify(result))
             })
           })
@@ -173,10 +179,10 @@ describe('Walker 测试', function () {
       const result = {
         es: [
           getPath('src/a.js'),
-          getPath('src/lib/b.js')
+          { fileName: absFileName1, fileContent: fs.readFileSync(absFileName1).toString() }
         ],
         style: [
-          getPath('src/a.css')
+          { fileName: absFileName2, fileContent: fs.readFileSync(absFileName2).toString() }
         ]
       }
 
