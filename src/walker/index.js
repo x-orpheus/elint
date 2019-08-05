@@ -1,9 +1,7 @@
 'use strict'
 
 const debug = require('debug')('elint:walker')
-const path = require('path')
 const isGitHooks = require('../utils/is-git-hooks')
-const { getBaseDir } = require('../env')
 const { defaultIgnore } = require('../config')
 const { getFileTree, fillFileTree } = require('./filetree')
 const local = require('./local')
@@ -49,12 +47,6 @@ async function walker (patterns, options = {}) {
   } else {
     fileList = await local(patterns, ignorePatterns)
   }
-
-  // 转为绝对路径
-  const baseDir = getBaseDir()
-  fileList = fileList.map(p => {
-    return path.join(baseDir, p)
-  })
 
   fillFileTree(fileTree, fileList)
 

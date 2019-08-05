@@ -20,10 +20,11 @@ function run (tmpl) {
   const huskyFilePath = path.join(baseDir, 'node_modules/husky/index.js')
 
   const huskyFileContent = `
-    const execa = require('${execaPath}');
+    const execa = require('${execaPath}')
+
     execa('node', ['${execFilePath}']).then(result => {
-      process.stdout.write(JSON.stringify(result.stdout));
-    });
+      process.stdout.write(JSON.stringify(result.stdout))
+    })
   `
 
   // 创建文件

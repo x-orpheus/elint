@@ -1,12 +1,16 @@
 'use strict'
 
-const {
-  getFileTree,
-  fillFileTree
-} = require('../../../src/walker/filetree')
+const path = require('path')
+const { getFileTree, fillFileTree } = require('../../../src/walker/filetree')
+const { getBaseDir } = require('../../../src/env')
 
 const chai = require('chai')
 chai.should()
+
+const baseDir = getBaseDir()
+const getPath = p => {
+  return path.join(baseDir, p)
+}
 
 describe('Walker filetree 测试', function () {
   it('getFileTree 测试', function () {
@@ -31,12 +35,10 @@ describe('Walker filetree 测试', function () {
         es: [],
         style: []
       }
-      const fileList = [
-        'index.js'
-      ]
+      const fileList = ['index.js']
 
       return fillFileTree(fileTree, fileList).should.be.deep.equal({
-        es: fileList,
+        es: [getPath('index.js')],
         style: []
       })
     })
@@ -46,13 +48,11 @@ describe('Walker filetree 测试', function () {
         es: [],
         style: []
       }
-      const fileList = [
-        'index.css'
-      ]
+      const fileList = ['index.css']
 
       return fillFileTree(fileTree, fileList).should.be.deep.equal({
         es: [],
-        style: fileList
+        style: [getPath('index.css')]
       })
     })
 
@@ -61,14 +61,11 @@ describe('Walker filetree 测试', function () {
         es: [],
         style: []
       }
-      const fileList = [
-        'index.js',
-        'index.css'
-      ]
+      const fileList = ['index.js', 'index.css']
 
       return fillFileTree(fileTree, fileList).should.be.deep.equal({
-        es: ['index.js'],
-        style: ['index.css']
+        es: [getPath('index.js')],
+        style: [getPath('index.css')]
       })
     })
 
@@ -77,15 +74,11 @@ describe('Walker filetree 测试', function () {
         es: [],
         style: []
       }
-      const fileList = [
-        'index.js',
-        'index.css',
-        'index.html'
-      ]
+      const fileList = ['index.js', 'index.css', 'index.html']
 
       return fillFileTree(fileTree, fileList).should.be.deep.equal({
-        es: ['index.js', 'index.html'],
-        style: ['index.css', 'index.html']
+        es: [getPath('index.js'), getPath('index.html')],
+        style: [getPath('index.css'), getPath('index.html')]
       })
     })
   })
