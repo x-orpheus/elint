@@ -155,5 +155,34 @@ describe('Walker 测试', function () {
 
       return JSON.parse(JSON.parse(expected)).should.deep.equalInAnyOrder(result)
     })
+
+    it('包含多个 staged file', async () => {
+      const tmpl = `
+        const walker = require('${walkerPath}')
+        const gitInit = require('${gitInitPath}')
+        const appendFile = require('${appendFilePath}')
+
+        gitInit()
+          .then(() => {
+            walker(['src/**/*']).then(result => {
+              process.stdout.write(JSON.stringify(result))
+            })
+          })
+      `
+
+      const result = {
+        es: [
+          getPath('src/a.js'),
+          getPath('src/lib/b.js')
+        ],
+        style: [
+          getPath('src/a.css')
+        ]
+      }
+
+      const expected = await runInHusky(tmpl)
+
+      return JSON.parse(JSON.parse(expected)).should.deep.equalInAnyOrder(result)
+    })
   })
 })
