@@ -32,8 +32,6 @@ function getFileTree () {
  * @returns {object} filled file tree
  */
 function fillFileTree (fileTree, fileList) {
-  let extname
-  let isString
   const baseDir = getBaseDir()
 
   fileList.forEach(filePath => {

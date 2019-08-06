@@ -1,31 +1,16 @@
 'use strict'
 
 const exec = require('../../lib/exec')
-const fileLinter = require.resolve('./file.js')
-const textLinter = require.resolve('./text.js')
+const stylelintLinter = require.resolve('./stylelint.js')
 
 /**
- * 执行 stylelint 校验文件
+ * 执行 stylelint
  *
  * @param {string[]} argus 待执行 stylelint 的文件列表
  * @returns {Promise} promise
  */
-function stylelintFileLinter (...argus) {
-  return exec('node')(fileLinter, ...argus)
+function stylelint (...argus) {
+  return exec('node')(stylelintLinter, ...argus)
 }
 
-/**
- * 执行 stylelint 校验文本
- *
- * @param {string} code 待校验的文本
- * @param {string} codeFilename 待校验文本的文件名
- * @returns {Promise} promise
- */
-function stylelintTextLinter (code, codeFilename) {
-  return exec('node')(textLinter, code, codeFilename)
-}
-
-module.exports = {
-  stylelintFileLinter,
-  stylelintTextLinter
-}
+module.exports = stylelint

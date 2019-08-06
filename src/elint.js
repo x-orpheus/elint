@@ -4,8 +4,8 @@ const debug = require('debug')('elint:main')
 const walker = require('./walker')
 const report = require('./utils/report')
 const isGitHooks = require('./utils/is-git-hooks')
-const { eslintFileLinter } = require('./workers/eslint')
-const { stylelintFileLinter } = require('./workers/stylelint')
+const eslint = require('./workers/eslint')
+const stylelint = require('./workers/stylelint')
 const notifier = require('./notifier')
 
 /**
@@ -32,8 +32,8 @@ async function elint (files, options) {
 
   // linters 对象，方便后续操作
   const linters = {
-    es: eslintFileLinter,
-    style: stylelintFileLinter
+    es: eslint,
+    style: stylelint
   }
 
   // 处理 fix 和 forceFix

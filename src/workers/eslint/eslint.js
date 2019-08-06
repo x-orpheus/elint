@@ -22,7 +22,17 @@ const customFormatter = require.resolve('./formatter.js')
  * 输入参数处理
  * 输入的数据类似：node file.js "{\"fix\": true}" a.js b.js c.js
  */
-const files = process.argv.slice(3)
+const fileAndContents = process.argv.slice(3)
+
+// 处理 files 和 contents
+const files = []
+const contents = []
+
+fileAndContents.forEach(item => {
+  typeof item === 'string' ? files.push(item) : contents.push(item)
+})
+
+// 处理 options
 let options = {}
 
 try {
@@ -32,21 +42,28 @@ try {
 }
 
 const fix = !!options.fix
+
+// eslint 引擎
 const engine = new CLIEngine({
   fix
 })
 const formatter = engine.getFormatter(customFormatter)
-const report = engine.executeOnFiles(files)
+const fileReport = engine.executeOnFiles(files)
 
 if (fix) {
-  CLIEngine.outputFixes(report)
+  CLIEngine.outputFixes(fileReport)
 }
 
-if (report.errorCount) {
+const contentReport = []
+contents.forEach(content => {
+  contentReport.push(engine.executeOnText(content.fileContent, content.fileContent))
+})
+
+result.output = formatter(fileReport.results, ...contentReport.map(item => item.results))
+
+if (fileReport.errorCount || contentReport.some(item => !!item.errorCount)) {
   result.success = false
 }
-
-result.output = formatter(report.results)
 
 setBlocking(true)
 process.stdout.write(JSON.stringify(result))
