@@ -10,15 +10,12 @@ const fs = require('fs-extra')
 const createTmpProjectFromCache = require('./utils/create-tmp-project-from-cache')
 const run = require('./utils/run')
 
-let tmpDir
-
 const appendFile = async filePath => {
-  const absFilePath = path.join(tmpDir, filePath)
-  await fs.appendFile(absFilePath, '\n')
+  await fs.appendFile(filePath, '\n')
 }
 
 test.beforeEach(async t => {
-  tmpDir = await createTmpProjectFromCache()
+  const tmpDir = await createTmpProjectFromCache()
 
   await run('git init', tmpDir)
   await run('git config user.name "zhang san"', tmpDir)
@@ -159,7 +156,7 @@ test('lint stage files(error)', async t => {
  * 在 git hooks 中执行 lint，lint 的文件符合规范
  * 在 git add file 后，再次修改了 file，修改成不符合规范的
  */
-test.only('lint stage files from git', async t => {
+test('lint stage files from git', async t => {
   const { tmpDir } = t.context
 
   // 添加符合规范的文件
@@ -167,7 +164,7 @@ test.only('lint stage files from git', async t => {
 
   // 然后修改的不符合规范了，但是不执行 git add
   // 此时 lint 应该直接从暂存区获取文件内容，不报错
-  await appendFile('src/standard.css')
+  await appendFile(path.join(tmpDir, 'src/standard.css'))
 
   // 强行修改 .huskyrc.js，commit 前执行 lint style
   const huskyFilePath = path.join(tmpDir, '.huskyrc.js')
