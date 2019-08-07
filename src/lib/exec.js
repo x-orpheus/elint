@@ -4,13 +4,21 @@ const debug = require('debug')('elint:lib:exec')
 const execa = require('execa')
 
 const exec = pargram => (...argus) => {
-  debug(`run: ${pargram} ${argus.join(' ')}`)
+  const parsedArgus = argus.map(argu => {
+    if (typeof argu === 'object') {
+      return JSON.stringify(argu)
+    }
+
+    return argu
+  })
+
+  debug(`run: ${pargram} ${parsedArgus.join(' ')}`)
 
   const env = Object.assign({}, {
     FORCE_COLOR: 1
   }, process.env)
 
-  return execa(pargram, [...argus], {
+  return execa(pargram, [...parsedArgus], {
     env
   })
 }

@@ -65,18 +65,29 @@ const lintContent = ({
   const contents = []
 
   fileAndContents.forEach(item => {
-    typeof item === 'string' ? files.push(item) : contents.push(item)
+    if (item && item.includes('{')) {
+      try {
+        contents.push(JSON.parse(item))
+      } catch (e) {
+        // do nothing
+      }
+    } else {
+      files.push(item)
+    }
   })
 
-  const lintResults = await Promise.all([
-    lintFiles({ files, fix }),
-    ...contents.map(content => {
-      lintContent({
-        code: content.fileContent,
-        codeFileName: content.fileName
-      })
-    })
-  ])
+  const tasks = []
+
+  if (files.length) {
+    tasks.push(lintFiles({ files, fix }))
+  }
+
+  contents.forEach(content => tasks.push(lintContent({
+    code: content.fileContent,
+    codeFileName: content.fileName
+  })))
+
+  const lintResults = await Promise.all(tasks)
 
   let success = true
   const output = []
