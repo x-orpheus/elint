@@ -9,6 +9,7 @@ async function gitInit () {
   }
 
   await execa('git', ['init'], options)
+  await execa('git', ['config', 'core.autocrlf', 'false'], options)
   await execa('git', ['add', '.'], options)
 }
 
