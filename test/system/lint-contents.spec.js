@@ -10,8 +10,20 @@ const fs = require('fs-extra')
 const createTmpProjectFromCache = require('./utils/create-tmp-project-from-cache')
 const run = require('./utils/run')
 
-const appendFile = async filePath => {
-  await fs.appendFile(filePath, '\n')
+const appendFile = (filePath, content) => fs.appendFile(filePath, content)
+const writeFile = (filePath, content) => fs.writeFile(filePath, content)
+const initHusky = (command, tmpDir) => {
+  // 强行修改 .huskyrc.js，commit 前执行 lint style
+  const huskyFilePath = path.join(tmpDir, '.huskyrc.js')
+  const huskyFileContent = `
+    module.exports = {
+      'hooks': {
+        'commit-msg': '${command}'
+      }
+    }
+  `
+
+  return fs.writeFile(huskyFilePath, huskyFileContent)
 }
 
 test.beforeEach(async t => {
@@ -20,6 +32,7 @@ test.beforeEach(async t => {
   await run('git init', tmpDir)
   await run('git config user.name "zhang san"', tmpDir)
   await run('git config user.email "zhangsan@gmail.com"', tmpDir)
+  await run('git config core.autocrlf false', tmpDir)
 
   /**
    * 这里需要手动安装一次，因为 husky 的 postinstall 检查是 ci 环境，不执行安装
@@ -35,32 +48,72 @@ test.beforeEach(async t => {
   }
 })
 
-/**
- * 在 git hooks 中执行 lint，lint 的文件符合规范
- * 在 git add file 后，再次修改了 file，修改成不符合规范的
- */
-test('文件 git add 后，再次修改，测试 commit 时的校验', async t => {
+test('git add 符合规范的文件后，修改为不符合，commit 成功', async t => {
   const { tmpDir } = t.context
 
   // 添加符合规范的文件
-  await run('git add src/standard.css', tmpDir)
+  await run('git add src/standard1.css', tmpDir)
 
   // 然后修改的不符合规范了，但是不执行 git add
   // 此时 lint 应该直接从暂存区获取文件内容，不报错
-  await appendFile(path.join(tmpDir, 'src/standard.css'))
+  await appendFile(path.join(tmpDir, 'src/standard1.css'), '\n')
 
-  // 强行修改 .huskyrc.js，commit 前执行 lint style
-  const huskyFilePath = path.join(tmpDir, '.huskyrc.js')
-  const huskyFileContent = `
-    module.exports = {
-      'hooks': {
-        'commit-msg': 'elint lint style "src/**/*"'
-      }
-    }
-  `
-
-  await fs.writeFile(huskyFilePath, huskyFileContent)
+  // init husky
+  await initHusky('elint lint style "src/**/*"', tmpDir)
 
   // 只校验 stage 文件，不报错
-  await t.notThrowsAsync(run('git commit -m "build: lint stage files from git"', tmpDir))
+  await t.notThrowsAsync(run('git commit -m "build: success"', tmpDir))
+})
+
+test('git add 符合规范的文件后，修改为不符合，commit 成功（多文件）', async t => {
+  const { tmpDir } = t.context
+
+  // 添加符合规范的文件
+  await run('git add src/standard1.css', tmpDir)
+  await run('git add src/standard2.css', tmpDir)
+
+  // 然后修改的不符合规范了，但是不执行 git add
+  // 此时 lint 应该直接从暂存区获取文件内容，不报错
+  await appendFile(path.join(tmpDir, 'src/standard1.css'), '\n')
+
+  // init husky
+  await initHusky('elint lint style "src/**/*"', tmpDir)
+
+  // 只校验 stage 文件，不报错
+  await t.notThrowsAsync(run('git commit -m "build: success"', tmpDir))
+})
+
+test('git add 不符合规范的文件后，修改为符合规范的，commit 不成功', async t => {
+  const { tmpDir } = t.context
+
+  // 添加符合规范的文件
+  await run('git add src/index.css', tmpDir)
+
+  // 然后修改的不符合规范了，但是不执行 git add
+  // 此时 lint 应该直接从暂存区获取文件内容，不报错
+  await writeFile(path.join(tmpDir, 'src/index.css'), '.div {\n  height: 1rem;\n}\n')
+
+  // init husky
+  await initHusky('elint lint style "src/**/*"', tmpDir)
+
+  // 只校验 stage 文件，不报错
+  await t.throwsAsync(run('git commit -m "build: fail"', tmpDir))
+})
+
+test('git add 不符合规范的文件后，修改为符合规范的，commit 不成功（多文件）', async t => {
+  const { tmpDir } = t.context
+
+  // 添加符合规范的文件
+  await run('git add src/index.css', tmpDir)
+  await run('git add src/standard1.css', tmpDir)
+
+  // 然后修改的不符合规范了，但是不执行 git add
+  // 此时 lint 应该直接从暂存区获取文件内容，不报错
+  await writeFile(path.join(tmpDir, 'src/index.css'), '.div {\n  height: 1rem;\n}\n')
+
+  // init husky
+  await initHusky('elint lint style "src/**/*"', tmpDir)
+
+  // 只校验 stage 文件，不报错
+  await t.throwsAsync(run('git commit -m "build: fail"', tmpDir))
 })

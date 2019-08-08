@@ -78,7 +78,7 @@ test('lint stage files', async t => {
   const { tmpDir } = t.context
 
   // 添加符合规范的文件
-  await run('git add src/standard.css', tmpDir)
+  await run('git add src/standard1.css', tmpDir)
 
   // 强行修改 .huskyrc.js，commit 前执行 lint style
   const huskyFilePath = path.join(tmpDir, '.huskyrc.js')
@@ -104,7 +104,7 @@ test('lint stage files(deep)', async t => {
   const { tmpDir } = t.context
 
   // 添加符合规范的文件
-  await run('git add src/standard.css', tmpDir)
+  await run('git add src/standard2.css', tmpDir)
 
   // 强行修改 .huskyrc.js，commit 前执行 npm run lint-style-without-fix
   // 此时 elint 的父进程并非 husky，父进程的父进程才是，校验 is-git-hooks 方法是否正确

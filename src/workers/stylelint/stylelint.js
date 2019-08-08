@@ -38,17 +38,10 @@ const lintContent = (code, codeFilename) => {
 }
 
 ;(async () => {
+  /**
+   * 处理输入文件
+   */
   const fileAndContents = process.argv.slice(3)
-  let options = {}
-
-  try {
-    options = JSON.parse(process.argv[2])
-  } catch (error) {
-    // do nothing
-  }
-
-  const fix = !!options.fix
-
   const files = []
   const contents = []
 
@@ -64,6 +57,22 @@ const lintContent = (code, codeFilename) => {
     }
   })
 
+  /**
+   * 处理 options
+   */
+  let options = {}
+
+  try {
+    options = JSON.parse(process.argv[2])
+  } catch (error) {
+    // do nothing
+  }
+
+  const fix = !!options.fix
+
+  /**
+   * 生成 task
+   */
   const tasks = []
 
   if (files.length) {
@@ -72,6 +81,9 @@ const lintContent = (code, codeFilename) => {
 
   contents.forEach(content => tasks.push(lintContent(content.fileContent, content.fileName)))
 
+  /**
+   * 执行 stylelint，处理结果
+   */
   const lintResults = await Promise.all(tasks)
 
   let success = true
@@ -88,6 +100,9 @@ const lintContent = (code, codeFilename) => {
     success
   }
 
+  /**
+   * 输出结果
+   */
   setBlocking(true)
   process.stdout.write(JSON.stringify(result))
   process.exit()
