@@ -1,7 +1,7 @@
 'use strict'
 
 /**
- * lint 测试
+ * lint 测试：主要测试直接 lint 文件
  */
 
 const test = require('ava')
