@@ -5,10 +5,7 @@ const stylelint = require('stylelint')
 const setBlocking = require('../../utils/set-blocking')
 const customFormatter = require('./formatter')
 
-const lintFiles = ({
-  files,
-  fix
-}) => {
+const lintFiles = (files, fix) => {
   return stylelint
     .lint({
       files,
@@ -24,14 +21,11 @@ const lintFiles = ({
     }))
 }
 
-const lintContent = ({
-  code,
-  codeFileName
-}) => {
+const lintContent = (code, codeFilename) => {
   return stylelint
     .lint({
       code,
-      codeFileName
+      codeFilename
     })
     .then(data => ({
       success: !data.errored,
@@ -43,13 +37,7 @@ const lintContent = ({
     }))
 }
 
-(async () => {
-  const result = {
-    name: 'stylelint',
-    output: '',
-    success: true
-  }
-
+;(async () => {
   const fileAndContents = process.argv.slice(3)
   let options = {}
 
@@ -79,13 +67,10 @@ const lintContent = ({
   const tasks = []
 
   if (files.length) {
-    tasks.push(lintFiles({ files, fix }))
+    tasks.push(lintFiles(files, fix))
   }
 
-  contents.forEach(content => tasks.push(lintContent({
-    code: content.fileContent,
-    codeFileName: content.fileName
-  })))
+  contents.forEach(content => tasks.push(lintContent(content.fileContent, content.fileName)))
 
   const lintResults = await Promise.all(tasks)
 
@@ -97,8 +82,11 @@ const lintContent = ({
     output.push(item.output)
   })
 
-  result.success = success
-  result.output = customFormatter(_.flatten(output))
+  const result = {
+    name: 'stylelint',
+    output: customFormatter(_.flatten(output)),
+    success
+  }
 
   setBlocking(true)
   process.stdout.write(JSON.stringify(result))
