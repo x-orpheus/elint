@@ -19,20 +19,28 @@ const setBlocking = require('../../utils/set-blocking')
 const customFormatter = require.resolve('./formatter.js')
 
 /**
- * 输入参数处理
+ * 输入文件处理
  * 输入的数据类似：node file.js "{\"fix\": true}" a.js b.js c.js
  */
 const fileAndContents = process.argv.slice(3)
-
-// 处理 files 和 contents
 const files = []
 const contents = []
 
 fileAndContents.forEach(item => {
-  typeof item === 'string' ? files.push(item) : contents.push(item)
+  if (item && item.includes('{')) {
+    try {
+      contents.push(JSON.parse(item))
+    } catch (e) {
+      // do nothing
+    }
+  } else {
+    files.push(item)
+  }
 })
 
-// 处理 options
+/**
+ * 处理 options
+ */
 let options = {}
 
 try {
@@ -43,7 +51,9 @@ try {
 
 const fix = !!options.fix
 
-// eslint 引擎
+/**
+ * eslint 引擎
+ */
 const engine = new CLIEngine({
   fix
 })
@@ -56,10 +66,10 @@ if (fix) {
 
 const contentReport = []
 contents.forEach(content => {
-  contentReport.push(engine.executeOnText(content.fileContent, content.fileContent))
+  contentReport.push(...engine.executeOnText(content.fileContent, content.fileName).results)
 })
 
-result.output = formatter(fileReport.results, ...contentReport.map(item => item.results))
+result.output = formatter([...fileReport.results, ...contentReport])
 
 if (fileReport.errorCount || contentReport.some(item => !!item.errorCount)) {
   result.success = false
