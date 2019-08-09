@@ -1,11 +1,5 @@
 'use strict'
 
-const fs = require('fs-extra')
-const appendFile = message => {
-  fs.appendFileSync('/home/keenwon/Code/elint/output.txt', message)
-  fs.appendFileSync('/home/keenwon/Code/elint/output.txt', '\n\n')
-}
-
 const result = {
   name: 'eslint',
   output: '',
@@ -94,9 +88,6 @@ fileAndContents.forEach(item => {
   }
 })
 
-appendFile(JSON.stringify(files, null, '  '))
-appendFile(JSON.stringify(contents, null, '  '))
-
 /**
  * 处理 options
  */
@@ -116,13 +107,8 @@ const fix = !!options.fix
 const filesResult = lintFiles(files, fix)
 const contentsResult = lintContents(contents)
 
-appendFile(JSON.stringify(filesResult, null, '  '))
-appendFile(JSON.stringify(contentsResult, null, '  '))
-
 result.success = filesResult.success && contentsResult.success
 result.output = formatter([...filesResult.results, ...contentsResult.results])
-
-appendFile(JSON.stringify(result, null, '  '))
 
 setBlocking(true)
 process.stdout.write(JSON.stringify(result))
