@@ -1,6 +1,7 @@
 'use strict'
 
-const stylish = require('eslint/lib/cli-engine/formatters/stylish')
+const CLIEngine = require('eslint').CLIEngine
+const stylish = CLIEngine.getFormatter('stylish')
 
 /**
  * @typedef {Object} ESLintResultMessage
