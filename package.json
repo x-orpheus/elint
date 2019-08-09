@@ -82,7 +82,7 @@
     "ava": "^2.2.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "coveralls": "^3.0.5",
+    "coveralls": "^3.0.6",
     "deep-equal-in-any-order": "^1.0.16",
     "eslint-config-standard": "^13.0.1",
     "eslint-plugin-import": "^2.18.2",
