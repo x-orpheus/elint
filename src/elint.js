@@ -12,7 +12,6 @@ const notifier = require('./notifier')
  * @typedef ELintOptions
  * @property {stirng} type lint 类型
  * @property {boolean} fix 是否自动修复问题
- * @property {boolean} forceFix 是否强制自动修复问题
  */
 
 /**
@@ -36,14 +35,11 @@ async function elint (files, options) {
     style: stylelint
   }
 
-  // 处理 fix 和 forceFix
+  // 处理 fix
   const isGit = await isGitHooks()
 
   if (isGit) {
     options.fix = false
-  }
-  if (options.forceFix) {
-    options.fix = true
   }
 
   debug('parsed options: %o', options)

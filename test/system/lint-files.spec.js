@@ -27,12 +27,6 @@ test('lint --fix', async t => {
   await t.notThrowsAsync(run('npm run lint-fix', tmpDir))
 })
 
-test('lint --force-fix', async t => {
-  const tmpDir = t.context.tmpDir
-
-  await t.notThrowsAsync(run('npm run lint-force-fix', tmpDir))
-})
-
 /**
  * 执行 lint --fix，但是 glob 只有 js 文件
  * 期望结果：不报错，仅显示 eslint pass
@@ -81,12 +75,6 @@ test('lint es --fix', async t => {
   await t.notThrowsAsync(run('npm run lint-es-fix', tmpDir))
 })
 
-test('lint es --force-fix', async t => {
-  const tmpDir = t.context.tmpDir
-
-  await t.notThrowsAsync(run('npm run lint-es-force-fix', tmpDir))
-})
-
 test('lint style', async t => {
   const tmpDir = t.context.tmpDir
 
@@ -107,10 +95,4 @@ test('lint style -f', async t => {
   const tmpDir = t.context.tmpDir
 
   await t.notThrowsAsync(run('npm run lint-style-fix', tmpDir))
-})
-
-test('lint style -ff', async t => {
-  const tmpDir = t.context.tmpDir
-
-  await t.notThrowsAsync(run('npm run lint-style-force-fix', tmpDir))
 })

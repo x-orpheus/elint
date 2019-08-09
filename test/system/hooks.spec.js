@@ -169,25 +169,3 @@ test('lint stage files(fix)', async t => {
   // 报错，因为 fix 在 git hooks 中无效
   await t.throwsAsync(run('git commit -m "build: lint stage files(fix)"', tmpDir))
 })
-
-test('lint stage files(force-fix)', async t => {
-  const { tmpDir } = t.context
-
-  // 添加所有 src 目录下的文件
-  await run('git add src', tmpDir)
-
-  // 强行修改 .huskyrc.js，commit 前执行 lint style
-  const huskyFilePath = path.join(tmpDir, '.huskyrc.js')
-  const huskyFileContent = `
-    module.exports = {
-      'hooks': {
-        'commit-msg': 'elint lint style "src/**/*" --force-fix'
-      }
-    }
-  `
-
-  await fs.writeFile(huskyFilePath, huskyFileContent)
-
-  // 不报错，force-fix
-  await t.notThrowsAsync(run('git commit -m "build: lint stage files(force-fix)"', tmpDir))
-})
