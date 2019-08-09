@@ -1,5 +1,11 @@
 'use strict'
 
+const fs = require('fs-extra')
+const appendFile = message => {
+  fs.appendFileSync('/home/keenwon/Code/elint/output.txt', message)
+  fs.appendFileSync('/home/keenwon/Code/elint/output.txt', '\n\n')
+}
+
 const result = {
   name: 'eslint',
   output: '',
@@ -16,7 +22,57 @@ process.on('uncaughtException', error => {
 
 const CLIEngine = require('eslint').CLIEngine
 const setBlocking = require('../../utils/set-blocking')
-const customFormatter = require.resolve('./formatter.js')
+const formatter = require('./formatter')
+
+const lintFiles = (files, fix = false) => {
+  if (!files.length) {
+    return {
+      success: true,
+      results: []
+    }
+  }
+
+  const engine = new CLIEngine({
+    fix
+  })
+
+  const report = engine.executeOnFiles(files)
+
+  if (fix) {
+    CLIEngine.outputFixes(report)
+  }
+
+  return {
+    success: !report.errorCount,
+    results: report.results
+  }
+}
+
+const lintContents = contents => {
+  if (!contents.length) {
+    return {
+      success: true,
+      results: []
+    }
+  }
+
+  const engine = new CLIEngine()
+  const reports = []
+  let success = true
+
+  contents.forEach(content => {
+    const report = engine.executeOnText(content.fileContent, content.fileName)
+
+    success = success && !report.errorCount
+
+    reports.push(...report.results)
+  })
+
+  return {
+    success,
+    results: reports
+  }
+}
 
 /**
  * 输入文件处理
@@ -38,6 +94,9 @@ fileAndContents.forEach(item => {
   }
 })
 
+appendFile(JSON.stringify(files, null, '  '))
+appendFile(JSON.stringify(contents, null, '  '))
+
 /**
  * 处理 options
  */
@@ -52,28 +111,18 @@ try {
 const fix = !!options.fix
 
 /**
- * eslint 引擎
+ * 执行 eslint
  */
-const engine = new CLIEngine({
-  fix
-})
-const formatter = engine.getFormatter(customFormatter)
-const fileReport = engine.executeOnFiles(files)
+const filesResult = lintFiles(files, fix)
+const contentsResult = lintContents(contents)
 
-if (fix) {
-  CLIEngine.outputFixes(fileReport)
-}
+appendFile(JSON.stringify(filesResult, null, '  '))
+appendFile(JSON.stringify(contentsResult, null, '  '))
 
-const contentReport = []
-contents.forEach(content => {
-  contentReport.push(...engine.executeOnText(content.fileContent, content.fileName).results)
-})
+result.success = filesResult.success && contentsResult.success
+result.output = formatter([...filesResult.results, ...contentsResult.results])
 
-result.output = formatter([...fileReport.results, ...contentReport])
-
-if (fileReport.errorCount || contentReport.some(item => !!item.errorCount)) {
-  result.success = false
-}
+appendFile(JSON.stringify(result, null, '  '))
 
 setBlocking(true)
 process.stdout.write(JSON.stringify(result))
