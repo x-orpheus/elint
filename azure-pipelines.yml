@@ -21,7 +21,7 @@ steps:
     versionSpec: $(node_version)
   displayName: 'Install Node.js'
 
-- script: npm install -g npm
+- script: npm install npm@latest -g
   displayName: 'npm upgrade'
 
 - script: npm install
