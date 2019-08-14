@@ -678,7 +678,7 @@ elint 目前没有集成 tslint 的计划，typescript 用户建议使用 [types
 [travis-image]: https://img.shields.io/travis/x-orpheus/elint.svg?maxAge=3600&logo=travis&style=flat-square
 [travis-url]: https://travis-ci.org/x-orpheus/elint
 [azure-image]: https://img.shields.io/azure-devops/build/x-orpheus/github/1.svg?maxAge=3600&logo=azure-devops&style=flat-square
-[azure-url]: https://dev.azure.com/x-orpheus/github/_build/latest?definitionId=1
+[azure-url]: https://dev.azure.com/keenwon/x-orpheus/github/_build/latest?definitionId=1
 [coveralls-image]: https://img.shields.io/coveralls/github/x-orpheus/elint.svg?maxAge=3600&style=flat-square
 [coveralls-url]: https://coveralls.io/github/x-orpheus/elint?branch=master
 [dependencies-image]: https://img.shields.io/david/x-orpheus/elint.svg?maxAge=3600&style=flat-square
