@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/keenwon/elint.git"
+    "url": "git+https://github.com/x-orpheus/elint.git"
   },
   "keywords": [
     "eslint",
@@ -44,9 +44,9 @@
     "src"
   ],
   "bugs": {
-    "url": "https://github.com/keenwon/elint/issues"
+    "url": "https://github.com/x-orpheus/elint/issues"
   },
-  "homepage": "https://github.com/keenwon/elint#readme",
+  "homepage": "https://github.com/x-orpheus/elint#readme",
   "engines": {
     "node": ">=8.9.0"
   },
