@@ -59,7 +59,7 @@
     "debug": "^4.1.1",
     "diff": "^4.0.1",
     "eslint": "^6.5.1",
-    "execa": "^2.0.5",
+    "execa": "^2.1.0",
     "figures": "^3.0.0",
     "find-process": "^1.4.2",
     "fs-extra": "^8.1.0",
