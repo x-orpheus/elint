@@ -75,7 +75,7 @@
     "staged-git-files": "^1.2.0",
     "stylelint": "~12.0.0",
     "which": "^2.0.1",
-    "write-json-file": "^4.2.0"
+    "write-json-file": "^4.2.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.2.0",
