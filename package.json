@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "@commitlint/core": "^8.2.0",
-    "boxen": "^4.1.0",
+    "boxen": "^4.2.0",
     "chalk": "^3.0.0",
     "commander": "^4.0.1",
     "configstore": "^5.0.0",
