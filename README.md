@@ -3,14 +3,14 @@
 [![Node engine][node-image]][node-url]
 [![NPM version][npm-image]][npm-url]
 [![License][license-image]][license-url]
-[![Coverage Status][coveralls-image]][coveralls-url]
+[![Coverage Status][codecov-image]][codecov-url]
 [![Dependencies Status][dependencies-image]][dependencies-url]
 [![Lgtm Alerts][lgtm-alerts-image]][lgtm-alerts-url]
 [![Lgtm Grade][lgtm-grade-image]][lgtm-grade-url]
 
-|Linux|macOS|Windows|
-|:--:|:--:|:--:|
-|[![Linux build status][circleci-image]][circleci-url]|[![macOS build status][travis-image]][travis-url]|[![Windows build status][azure-image]][azure-url]|
+|unit|system|
+|:--:|:--:|
+|[![unit test status][unit-test-image]][unit-test-url]|[![system test status][system-test-image]][system-test-url]|
 
 专为团队设计的 lint 工具
 
@@ -667,20 +667,18 @@ elint 目前没有集成 tslint 的计划，typescript 用户建议使用 [types
 - git hooks: [文档](https://git-scm.com/docs/githooks)
 - glob primer: [文档](https://github.com/isaacs/node-glob#glob-primer)
 
-[node-image]: https://img.shields.io/node/v/elint.svg?maxAge=3600&style=flat-square
+[node-image]: https://img.shields.io/node/v/elint.svg?maxAge=3600&style=flat-square&logo=node.js&logoColor=white
 [node-url]: https://nodejs.org
-[npm-image]: https://img.shields.io/npm/v/elint.svg?maxAge=3600&style=flat-square
+[npm-image]: https://img.shields.io/npm/v/elint.svg?maxAge=3600&style=flat-square&logo=npm
 [npm-url]: https://www.npmjs.com/package/elint
 [license-image]: https://img.shields.io/github/license/x-orpheus/elint.svg?maxAge=3600&style=flat-square
 [license-url]: https://github.com/x-orpheus/elint/blob/master/LICENSE
-[circleci-image]: https://img.shields.io/circleci/project/github/x-orpheus/elint.svg?maxAge=3600&logo=circleci&style=flat-square
-[circleci-url]: https://circleci.com/gh/x-orpheus/elint
-[travis-image]: https://img.shields.io/travis/x-orpheus/elint.svg?maxAge=3600&logo=travis&style=flat-square
-[travis-url]: https://travis-ci.org/x-orpheus/elint
-[azure-image]: https://img.shields.io/azure-devops/build/keenwon/x-orpheus/3.svg?maxAge=3600&logo=azure-devops&style=flat-square
-[azure-url]: https://dev.azure.com/keenwon/x-orpheus/github/_build/latest?definitionId=1
-[coveralls-image]: https://img.shields.io/coveralls/github/x-orpheus/elint.svg?maxAge=3600&style=flat-square
-[coveralls-url]: https://coveralls.io/github/x-orpheus/elint?branch=master
+[unit-test-image]: https://img.shields.io/github/workflow/status/x-orpheus/elint/unit%20test?maxAge=3600&style=flat-square&logo=github
+[unit-test-url]: https://github.com/x-orpheus/elint/actions?query=workflow%3A%22unit+test%22
+[system-test-image]: https://img.shields.io/github/workflow/status/x-orpheus/elint/system%20test?maxAge=3600&style=flat-square&logo=github
+[system-test-url]: https://github.com/x-orpheus/elint/actions?query=workflow%3A%22system+test%22
+[codecov-image]: https://img.shields.io/codecov/c/github/x-orpheus/elint?token=30359e4823354cb78258bb1cea95a867&maxAge=3600&style=flat-square&logo=codecov
+[codecov-url]: https://codecov.io/gh/x-orpheus/elint
 [dependencies-image]: https://img.shields.io/david/x-orpheus/elint.svg?maxAge=3600&style=flat-square
 [dependencies-url]: https://david-dm.org/x-orpheus/elint
 [devdependencies-image]: https://img.shields.io/david/dev/x-orpheus/elint.svg?maxAge=3600&style=flat-square
