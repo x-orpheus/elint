@@ -42,23 +42,23 @@ test('diff 不存在差异文件', async t => {
 test('直接执行 elint，显示 help', async t => {
   const tmpDir = t.context.tmpDir
 
-  await t.notThrowsAsync(run(`npm run elint`, tmpDir))
+  await t.notThrowsAsync(run('npm run elint', tmpDir))
 })
 
 test('elint --help', async t => {
   const tmpDir = t.context.tmpDir
 
-  await t.notThrowsAsync(run(`npm run elint-help`, tmpDir))
+  await t.notThrowsAsync(run('npm run elint-help', tmpDir))
 })
 
 test('elint 执行无效命令', async t => {
   const tmpDir = t.context.tmpDir
 
-  await t.throwsAsync(run(`npm run elint-invalid-command`, tmpDir))
+  await t.throwsAsync(run('npm run elint-invalid-command', tmpDir))
 })
 
 test('elint 执行无效选项', async t => {
   const tmpDir = t.context.tmpDir
 
-  await t.throwsAsync(run(`npm run elint-invalid-option`, tmpDir))
+  await t.throwsAsync(run('npm run elint-invalid-option', tmpDir))
 })

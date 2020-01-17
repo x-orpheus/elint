@@ -20,7 +20,7 @@ describe('Report 测试', function () {
     const except = []
 
     except.push('\n')
-    except.push(`${chalk.bold(`> name:`)}\n`)
+    except.push(`${chalk.bold('> name:')}\n`)
     except.push('\n')
     except.push('  output')
     except.push('\n')
@@ -42,7 +42,7 @@ describe('Report 测试', function () {
     const except = []
 
     except.push('\n')
-    except.push(`${chalk.bold(`> name:`)}\n`)
+    except.push(`${chalk.bold('> name:')}\n`)
     except.push('\n')
     except.push('  ' + chalk.green(`${figures.tick} Passed`))
     except.push('\n')
@@ -64,7 +64,7 @@ describe('Report 测试', function () {
     const except = []
 
     except.push('\n')
-    except.push(`${chalk.bold(`> name:`)}\n`)
+    except.push(`${chalk.bold('> name:')}\n`)
     except.push('\n')
     except.push('  output\n  output')
     except.push('\n')
@@ -91,13 +91,13 @@ describe('Report 测试', function () {
     const except = []
 
     except.push('\n')
-    except.push(`${chalk.bold(`> name1:`)}\n`)
+    except.push(`${chalk.bold('> name1:')}\n`)
     except.push('\n')
     except.push('  output1')
     except.push('\n')
 
     except.push('\n')
-    except.push(`${chalk.bold(`> name2:`)}\n`)
+    except.push(`${chalk.bold('> name2:')}\n`)
     except.push('\n')
     except.push('  output2')
     except.push('\n')
@@ -119,7 +119,7 @@ describe('Report 测试', function () {
     const except = []
 
     except.push('\n')
-    except.push(`${chalk.bold(`> name:`)}\n`)
+    except.push(`${chalk.bold('> name:')}\n`)
     except.push('\n')
     except.push('  output')
     except.push('\n')
