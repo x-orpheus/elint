@@ -54,7 +54,7 @@
     "@commitlint/core": "^8.3.4",
     "boxen": "^4.2.0",
     "chalk": "^3.0.0",
-    "commander": "^4.1.1",
+    "commander": "^5.0.0",
     "configstore": "^5.0.1",
     "debug": "^4.1.1",
     "diff": "^4.0.2",
