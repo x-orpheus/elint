@@ -62,7 +62,7 @@
     "execa": "^3.4.0",
     "figures": "^3.2.0",
     "find-process": "^1.4.3",
-    "fs-extra": "^8.1.0",
+    "fs-extra": "^9.0.0",
     "globby": "^10.0.2",
     "husky": "^2.7.0",
     "lodash": "^4.17.15",
