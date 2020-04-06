@@ -53,7 +53,7 @@
   "dependencies": {
     "@commitlint/core": "^8.3.4",
     "boxen": "^4.2.0",
-    "chalk": "^3.0.0",
+    "chalk": "^4.0.0",
     "commander": "^4.1.1",
     "configstore": "^5.0.1",
     "debug": "^4.1.1",
