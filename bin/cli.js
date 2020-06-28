@@ -153,19 +153,9 @@ program.on('--help', function () {
   console.log('')
 })
 
+if (!process.argv.slice(2).length) {
+  program.outputHelp()
+  process.exit(0)
+}
+
 program.parse(process.argv)
-
-function showHelp () {
-  // 没有输入任何参数
-  if (process.argv.length === 2) {
-    return true
-  }
-
-  const argus = process.argv.slice(2)
-
-  return argus.every(item => item.startsWith('-'))
-}
-
-if (showHelp()) {
-  program.help()
-}
