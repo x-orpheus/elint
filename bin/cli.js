@@ -17,6 +17,7 @@ debug('process.argv: %o', process.argv)
 program
   .usage('[command] [options]')
   .description(description)
+  .storeOptionsAsProperties(true)
 
 /**
  * 输出 version
