@@ -78,7 +78,7 @@
     "write-json-file": "^4.3.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^9.1.1",
+    "@commitlint/cli": "^9.1.2",
     "ava": "^2.4.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
