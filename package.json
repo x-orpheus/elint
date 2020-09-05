@@ -79,7 +79,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^9.1.2",
-    "ava": "^2.4.0",
+    "ava": "^3.12.1",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "deep-equal-in-any-order": "^1.0.28",
@@ -96,6 +96,7 @@
     "files": [
       "test/system/**/*.spec.js"
     ],
+    "timeout": "600s",
     "failFast": true,
     "verbose": true
   }
