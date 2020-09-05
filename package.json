@@ -73,7 +73,7 @@
     "semver": "^7.3.2",
     "semver-utils": "^1.1.4",
     "staged-git-files": "^1.2.0",
-    "stylelint": "~12.0.1",
+    "stylelint": "~13.7.0",
     "which": "^2.0.2",
     "write-json-file": "^4.3.0"
   },
