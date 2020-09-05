@@ -15,19 +15,39 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v1
-      - name: Use Node.js ${{ matrix.node_version }}
+
+      - name: use Node.js ${{ matrix.node_version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node_version }}
+
+      - name: get npm cache directory
+        id: npm-cache
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+
+      - name: cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.npm-cache.outputs.dir }}
+          key: ${{ runner.os }}-unit-test-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: npm ci
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
+
       - name: npm run test:lint
         run: npm run test:lint
+
       - name: npm run test:unit
         run: npm run test:unit
+
       - name: npm run test:unit:coverage
         if: matrix.node_version == 14 && matrix.os == 'ubuntu-latest'
         run: npm run test:unit:coverage
+
       - name: Upload coverage to Codecov
         if: matrix.node_version == 14 && matrix.os == 'ubuntu-latest'
         uses: codecov/codecov-action@v1
