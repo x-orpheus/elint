@@ -32,7 +32,7 @@ jobs:
           path: ${{ steps.npm-cache.outputs.dir }}
           key: ${{ runner.os }}-unit-test-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-unit-test
 
       - name: npm ci
         if: steps.cache.outputs.cache-hit != 'true'
