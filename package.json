@@ -53,17 +53,17 @@
   "dependencies": {
     "@commitlint/core": "^9.1.2",
     "boxen": "^4.2.0",
-    "chalk": "^3.0.0",
+    "chalk": "^4.1.0",
     "commander": "^6.1.0",
     "configstore": "^5.0.1",
     "debug": "^4.1.1",
     "diff": "^4.0.2",
-    "eslint": "^6.8.0",
-    "execa": "^3.4.0",
+    "eslint": "^7.8.1",
+    "execa": "^4.0.3",
     "figures": "^3.2.0",
     "find-process": "^1.4.3",
-    "fs-extra": "^8.1.0",
-    "globby": "^10.0.2",
+    "fs-extra": "^9.0.1",
+    "globby": "^11.0.1",
     "husky": "^2.7.0",
     "lodash": "^4.17.20",
     "md5": "^2.3.0",
@@ -73,13 +73,13 @@
     "semver": "^7.3.2",
     "semver-utils": "^1.1.4",
     "staged-git-files": "^1.2.0",
-    "stylelint": "~12.0.1",
+    "stylelint": "~13.7.0",
     "which": "^2.0.2",
     "write-json-file": "^4.3.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^9.1.2",
-    "ava": "^2.4.0",
+    "ava": "^3.12.1",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "deep-equal-in-any-order": "^1.0.28",
@@ -88,14 +88,15 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "mocha": "^7.2.0",
+    "mocha": "^8.1.3",
     "nyc": "^15.1.0",
-    "sinon": "^8.1.1"
+    "sinon": "^9.0.3"
   },
   "ava": {
     "files": [
       "test/system/**/*.spec.js"
     ],
+    "timeout": "600s",
     "failFast": true,
     "verbose": true
   }
