@@ -48,7 +48,7 @@
   },
   "homepage": "https://github.com/x-orpheus/elint#readme",
   "engines": {
-    "node": ">=8.9.0"
+    "node": ">=10.12.0"
   },
   "dependencies": {
     "@commitlint/core": "^9.1.2",
