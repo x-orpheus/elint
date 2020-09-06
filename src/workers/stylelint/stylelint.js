@@ -1,9 +1,17 @@
 'use strict'
 
 const _ = require('lodash')
+const path = require('path')
 const stylelint = require('stylelint')
 const setBlocking = require('../../utils/set-blocking')
 const customFormatter = require('./formatter')
+
+const crossPlatformPath = (str) => {
+  return process.platform === 'win32' ? str.replace(/\\/g, '/') : str
+}
+
+// 坑爹的新版 stylelint，files 要根据 cwd 解析
+const cwd = crossPlatformPath(process.cwd())
 
 const lintFiles = (files, fix) => {
   return stylelint
@@ -53,7 +61,7 @@ const lintContent = (code, codeFilename) => {
         // do nothing
       }
     } else {
-      files.push(item)
+      files.push(crossPlatformPath(path.relative(cwd, item)))
     }
   })
 
@@ -79,7 +87,9 @@ const lintContent = (code, codeFilename) => {
     tasks.push(lintFiles(files, fix))
   }
 
-  contents.forEach(content => tasks.push(lintContent(content.fileContent, content.fileName)))
+  if (contents.length) {
+    contents.forEach(content => tasks.push(lintContent(content.fileContent, content.fileName)))
+  }
 
   /**
    * 执行 stylelint，处理结果
