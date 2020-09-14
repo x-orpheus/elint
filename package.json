@@ -51,7 +51,7 @@
     "node": ">=10.12.0"
   },
   "dependencies": {
-    "@commitlint/core": "^9.1.2",
+    "@commitlint/core": "^11.0.0",
     "boxen": "^4.2.0",
     "chalk": "^4.1.0",
     "commander": "^6.1.0",
