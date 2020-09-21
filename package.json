@@ -70,6 +70,7 @@
     "micromatch": "^4.0.2",
     "ms": "^2.1.2",
     "node-fetch": "^2.6.1",
+    "prettier": "^2.1.2",
     "semver": "^7.3.2",
     "semver-utils": "^1.1.4",
     "staged-git-files": "^1.2.0",
