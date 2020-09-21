@@ -2,48 +2,16 @@
 
 const _ = require('lodash')
 const path = require('path')
-const stylelint = require('stylelint')
 const setBlocking = require('../../utils/set-blocking')
 const customFormatter = require('./formatter')
+const { lintFiles, lintContents } = require('./lint')
 
-const crossPlatformPath = (str) => {
+const crossPlatformPath = str => {
   return process.platform === 'win32' ? str.replace(/\\/g, '/') : str
 }
 
 // 坑爹的新版 stylelint，files 要根据 cwd 解析
 const cwd = crossPlatformPath(process.cwd())
-
-const lintFiles = (files, fix) => {
-  return stylelint
-    .lint({
-      files,
-      fix
-    })
-    .then(data => ({
-      success: !data.errored,
-      output: data.results
-    }))
-    .catch(error => ({
-      success: false,
-      output: error.stack
-    }))
-}
-
-const lintContent = (code, codeFilename) => {
-  return stylelint
-    .lint({
-      code,
-      codeFilename
-    })
-    .then(data => ({
-      success: !data.errored,
-      output: data.results
-    }))
-    .catch(error => ({
-      success: false,
-      output: error.stack
-    }))
-}
 
 ;(async () => {
   /**
@@ -88,7 +56,9 @@ const lintContent = (code, codeFilename) => {
   }
 
   if (contents.length) {
-    contents.forEach(content => tasks.push(lintContent(content.fileContent, content.fileName)))
+    contents.forEach(content =>
+      tasks.push(lintContents(content.fileContent, content.fileName))
+    )
   }
 
   /**

@@ -14,59 +14,9 @@ process.on('uncaughtException', error => {
   process.exit()
 })
 
-const CLIEngine = require('eslint').CLIEngine
 const setBlocking = require('../../utils/set-blocking')
 const formatter = require('./formatter')
-
-const lintFiles = (files, fix = false) => {
-  if (!files.length) {
-    return {
-      success: true,
-      results: []
-    }
-  }
-
-  const engine = new CLIEngine({
-    fix
-  })
-
-  const report = engine.executeOnFiles(files)
-
-  if (fix) {
-    CLIEngine.outputFixes(report)
-  }
-
-  return {
-    success: !report.errorCount,
-    results: report.results
-  }
-}
-
-const lintContents = contents => {
-  if (!contents.length) {
-    return {
-      success: true,
-      results: []
-    }
-  }
-
-  const engine = new CLIEngine()
-  const reports = []
-  let success = true
-
-  contents.forEach(content => {
-    const report = engine.executeOnText(content.fileContent, content.fileName)
-
-    success = success && !report.errorCount
-
-    reports.push(...report.results)
-  })
-
-  return {
-    success,
-    results: reports
-  }
-}
+const { lintFiles, lintContents } = require('./lint')
 
 /**
  * 输入文件处理
