@@ -1,10 +1,24 @@
 'use strict'
 
-const _ = require('lodash')
 const path = require('path')
 const setBlocking = require('../../utils/set-blocking')
-const customFormatter = require('./formatter')
-const { lintFiles, lintContent } = require('./lint')
+const eslintFormatter = require('../eslint/formatter')
+// const stylelintFormatter = require('../stylelint/formatter')
+const { lintFiles, lintContents } = require('./lint')
+
+const result = {
+  name: 'prettier',
+  output: '',
+  success: true
+}
+
+process.on('uncaughtException', error => {
+  result.output = error.stack
+  result.success = false
+
+  process.stdout.write(JSON.stringify(result))
+  process.exit()
+})
 
 const crossPlatformPath = str => {
   return process.platform === 'win32' ? str.replace(/\\/g, '/') : str
@@ -15,7 +29,8 @@ const cwd = crossPlatformPath(process.cwd())
 
 ;(async () => {
   /**
-   * 处理输入文件
+   * 输入文件处理
+   * 输入的数据类似：node file.js "{\"fix\": true}" a.js b.js c.js
    */
   const fileAndContents = process.argv.slice(3)
   const files = []
@@ -40,30 +55,23 @@ const cwd = crossPlatformPath(process.cwd())
 
   try {
     options = JSON.parse(process.argv[2])
-  } catch (error) {
+  } catch (err) {
     // do nothing
   }
 
   const fix = !!options.fix
+  const type = options.type
 
-  /**
-   * 生成 task
-   */
   const tasks = []
 
   if (files.length) {
-    tasks.push(lintFiles(files, fix))
+    tasks.push(lintFiles(files, type, fix))
   }
 
   if (contents.length) {
-    contents.forEach(content =>
-      tasks.push(lintContent(content.fileContent, content.fileName))
-    )
+    tasks.push(lintContents(contents, type))
   }
 
-  /**
-   * 执行 stylelint，处理结果
-   */
   const lintResults = await Promise.all(tasks)
 
   let success = true
@@ -71,18 +79,22 @@ const cwd = crossPlatformPath(process.cwd())
 
   lintResults.forEach(item => {
     success = success && item.success
-    output.push(item.output)
+    if (item.messages) {
+      output.push(item.messages)
+    }
+    switch (type) {
+      case 'es':
+        output.push(eslintFormatter(item.results))
+        break
+      case 'style':
+        break
+      default:
+    }
   })
 
-  const result = {
-    name: 'stylelint',
-    output: customFormatter(_.flatten(output)),
-    success
-  }
+  result.success = success
+  result.output = output.join('\n')
 
-  /**
-   * 输出结果
-   */
   setBlocking(true)
   process.stdout.write(JSON.stringify(result))
   process.exit()

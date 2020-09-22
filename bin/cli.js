@@ -37,6 +37,7 @@ program
   .alias('l')
   .description('run lint, type: es, style, commit')
   .option('-f, --fix', 'Automatically fix problems')
+  .option('-p, --prettier', 'Use prettier to lint/format(with --fix) code')
   .option('--no-ignore', 'Disable elint ignore patterns')
   .action((type, files, options) => {
     debug('run lint...')
@@ -66,6 +67,7 @@ program
     const elintOptions = {
       type: parsedType,
       fix: options.fix,
+      prettier: options.prettier,
       noIgnore: options.noIgnore
     }
 

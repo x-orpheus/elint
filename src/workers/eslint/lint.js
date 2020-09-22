@@ -26,7 +26,7 @@ const lintFiles = (files, fix = false) => {
   }
 }
 
-const lintContents = (contents) => {
+const lintContents = (contents, fix = false) => {
   if (!contents.length) {
     return {
       success: true,
@@ -34,11 +34,13 @@ const lintContents = (contents) => {
     }
   }
 
-  const engine = new CLIEngine()
+  const engine = new CLIEngine({
+    fix
+  })
   const reports = []
   let success = true
 
-  contents.forEach((content) => {
+  contents.forEach(content => {
     const report = engine.executeOnText(content.fileContent, content.fileName)
 
     success = success && !report.errorCount

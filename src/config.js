@@ -45,7 +45,10 @@ const linterConfigFile = [
   '.huskyrc.js',
 
   // commitlint
-  '.commitlintrc.js'
+  '.commitlintrc.js',
+
+  // prettier
+  '.prettierrc.js'
 ]
 
 /**
@@ -63,7 +66,8 @@ const defaultIgnore = [
   '.eslintrc.js',
   '.stylelintrc.js',
   '.huskyrc.js',
-  '.commitlintrc.js'
+  '.commitlintrc.js',
+  '.prettierrc.js'
 ]
 
 const registryAlias = {

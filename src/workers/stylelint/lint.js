@@ -6,27 +6,28 @@ const lintFiles = (files, fix) => {
       files,
       fix
     })
-    .then(data => ({
+    .then((data) => ({
       success: !data.errored,
       output: data.results
     }))
-    .catch(error => ({
+    .catch((error) => ({
       success: false,
       output: error.stack
     }))
 }
 
-const lintContents = (code, codeFilename) => {
+const lintContent = (code, codeFilename, fix) => {
   return stylelint
     .lint({
       code,
-      codeFilename
+      codeFilename,
+      fix
     })
-    .then(data => ({
+    .then((data) => ({
       success: !data.errored,
       output: data.results
     }))
-    .catch(error => ({
+    .catch((error) => ({
       success: false,
       output: error.stack
     }))
@@ -34,5 +35,5 @@ const lintContents = (code, codeFilename) => {
 
 module.exports = {
   lintFiles,
-  lintContents
+  lintContent
 }

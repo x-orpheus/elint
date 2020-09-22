@@ -6,11 +6,12 @@ const report = require('./utils/report')
 const isGitHooks = require('./utils/is-git-hooks')
 const eslint = require('./workers/eslint')
 const stylelint = require('./workers/stylelint')
+const prettier = require('./workers/prettier')
 const notifier = require('./notifier')
 
 /**
  * @typedef ELintOptions
- * @property {stirng} type lint 类型
+ * @property {string} type lint 类型
  * @property {boolean} fix 是否自动修复问题
  */
 
@@ -44,27 +45,49 @@ async function elint (files, options) {
 
   debug('parsed options: %o', options)
 
-  const { type } = options
+  const { type, prettier: usePrettier } = options
   const argus = JSON.stringify(options)
   const workers = [notifier.notify()]
 
-  if (type) {
-    // 明确指定 type，例如 elint lint es "*.js"
-    workers.push(linters[type](argus, ...fileList[type]))
-  } else {
-    /**
-     * 没有明确指定 type，根据文件类型判断支持哪些 linter
-     */
-    Object.entries(linters).forEach(([linterType, linter]) => {
-      if (!fileList[linterType].length) {
-        return
-      }
+  if (usePrettier) {
+    if (type) {
+      workers.push(prettier(argus, ...fileList[type]))
+    } else {
+      Object.entries(linters).forEach(([linterType]) => {
+        if (!fileList[linterType].length) {
+          return
+        }
 
-      workers.push(linter(argus, ...fileList[linterType]))
-    })
+        workers.push(
+          prettier(
+            JSON.stringify({
+              ...JSON.parse(argus),
+              type: linterType
+            }),
+            ...fileList[linterType]
+          )
+        )
+      })
+    }
+  } else {
+    if (type) {
+      // 明确指定 type，例如 elint lint es "*.js"
+      workers.push(linters[type](argus, ...fileList[type]))
+    } else {
+      /**
+       * 没有明确指定 type，根据文件类型判断支持哪些 linter
+       */
+      Object.entries(linters).forEach(([linterType, linter]) => {
+        if (!fileList[linterType].length) {
+          return
+        }
+
+        workers.push(linter(argus, ...fileList[linterType]))
+      })
+    }
   }
 
-  Promise.all(workers).then(results => {
+  Promise.all(workers).then((results) => {
     const notifierResult = results.shift()
     const lintResults = results
 
