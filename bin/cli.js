@@ -9,7 +9,7 @@
 const debug = require('debug')('elint:cli')
 const program = require('commander')
 const { description } = require('../package.json')
-const { elint, installFromCli, diff, commitlint, runHooks, version } = require('../src')
+const { elint, commitlint, runHooks, version } = require('../src')
 const log = require('../src/utils/log')
 
 debug('process.argv: %o', process.argv)
@@ -70,35 +70,6 @@ program
     }
 
     elint(parsedFiles, elintOptions)
-  })
-
-/**
- * 安装 preset
- */
-program
-  .command('install [presetName]')
-  .alias('i')
-  .option('-r, --registry <url>', 'Specify npm registry')
-  .option('-k, --keep', 'If there is an old configuration file, keep it from being override')
-  .description('install or update preset')
-  .action((preset, options) => {
-    debug('run install...')
-    installFromCli(preset, {
-      registry: options.registry,
-      keep: options.keep
-    })
-  })
-
-/**
- * 对比 preset config
- */
-program
-  .command('diff')
-  .alias('d')
-  .description('diff preset')
-  .action(() => {
-    debug('run diff...')
-    diff()
   })
 
 /**
