@@ -65,9 +65,6 @@ const lintFiles = async (files, type, fix = false) => {
   files.forEach((filename) => {
     tasks.push(
       (async () => {
-        // 配置文件读取不到就直接让进程挂了
-        const options = getOptionsForFile(filename)
-
         let input
         try {
           input = fs.readFileSync(filename, 'utf-8')
@@ -78,42 +75,21 @@ const lintFiles = async (files, type, fix = false) => {
           return
         }
 
-        let formatted
-        try {
-          formatted = prettier.format(input, options)
-        } catch (error) {
-          success = false
-          const message = handlePrettierError(filename, error)
-          prettierMessages.push(message)
-          return
-        }
+        const lintResult = await lintContents(
+          [
+            {
+              fileName: filename,
+              fileContent: input
+            }
+          ],
+          type
+        )
 
-        let output = formatted
+        success = lintResult.success
+        prettierMessages.push(...lintResult.messages)
+        results.push(...lintResult.results)
 
-        if (linters[type]) {
-          const result = await linters[type](
-            [
-              {
-                fileContent: formatted,
-                fileName: filename
-              }
-            ],
-            true
-          )
-
-          const linterSuccess = result.success
-          success = linterSuccess
-          results.push(...result.results)
-
-          switch (type) {
-            case 'es':
-              output = result.results[0].output
-              break
-            case 'style':
-              output = result.outputs[0]
-              break
-          }
-        }
+        const output = lintResult.outputs[0]
 
         const isDifferent = output !== input
 
@@ -130,9 +106,6 @@ const lintFiles = async (files, type, fix = false) => {
                 prettierMessages.push(message)
               }
             }
-          } else {
-            success = false
-            prettierMessages.push(`${filename}: 未格式化`)
           }
         }
       })()
@@ -143,7 +116,6 @@ const lintFiles = async (files, type, fix = false) => {
 
   return {
     success,
-    type,
     results,
     messages: prettierMessages
   }
@@ -153,7 +125,6 @@ const lintContents = async (contents, type) => {
   if (!contents.length) {
     return {
       success: true,
-      type,
       results: [],
       messages: []
     }
@@ -162,16 +133,18 @@ const lintContents = async (contents, type) => {
   let success = true
   const prettierMessages = []
   const results = []
+  const outputs = []
 
   const tasks = []
 
-  contents.forEach((content) => {
+  contents.forEach((content, index) => {
     const filename = content.fileName
     const input = content.fileContent
+    outputs[index] = input
     tasks.push(
       (async () => {
         const options = getOptionsForFile(filename)
-        let formatted
+        let formatted = input
         try {
           formatted = prettier.format(input, options)
         } catch (error) {
@@ -184,37 +157,36 @@ const lintContents = async (contents, type) => {
 
         if (linters[type]) {
           const result = await linters[type](
-            {
-              fileContent: formatted,
-              fileName: content.fileName
-            },
+            [
+              {
+                fileContent: formatted,
+                fileName: filename
+              }
+            ],
             true
           )
 
           const linterSuccess = result.success
-
+          if (!linterSuccess) {
+            success = linterSuccess
+          }
           results.push(...result.results)
 
-          if (linterSuccess) {
-            switch (type) {
-              case 'es':
-                output = result.results[0].output
-                break
-              case 'style':
-                output = result.outputs[0]
-                break
-            }
-          } else {
-            success = false
-            const message = `${filename}: lint 出错`
-            prettierMessages.push(message)
-            return
+          switch (type) {
+            case 'es':
+              output = result.results[0].output
+              break
+            case 'style':
+              output = result.outputs[0]
+              break
           }
         }
 
         const isDifferent = output !== content.fileContent
+        outputs[index] = output
 
         if (isDifferent) {
+          success = false
           prettierMessages.push(`${filename}: 未格式化`)
         }
       })()
@@ -226,6 +198,7 @@ const lintContents = async (contents, type) => {
   return {
     success,
     results,
+    outputs,
     messages: prettierMessages
   }
 }
