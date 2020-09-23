@@ -19,23 +19,27 @@ const handlePrettierError = (filename, error) => {
   const isParseError = Boolean(error && error.loc)
   const isValidationError = /^Invalid \S+ value\./.test(error && error.message)
 
-  let message
+  const message = {
+    level: 'error',
+    text: '',
+    filename
+  }
 
   if (isParseError) {
     // `invalid.js: SyntaxError: Unexpected token (1:1)`.
-    message = `${filename}: ${String(error)}`
+    message.text = String(error)
   } else if (isValidationError || error instanceof errors.ConfigError) {
     // `Invalid printWidth value. Expected an integer, but received 0.5.`
-    message = error.message
+    message.text = error.message
     // If validation fails for one file, it will fail for all of them.
     process.exit(1)
   } else if (error instanceof errors.DebugError) {
     // `invalid.js: Some debug error message`
-    message = `${filename}: ${error.message}`
+    message.text = error.message
   } else {
     // `invalid.js: Error: Some unexpected error\n[stack trace]`
     /* istanbul ignore next */
-    message = filename + ': ' + (error.stack || error)
+    message.text = error.stack || error
   }
 
   return message
@@ -70,8 +74,11 @@ const lintFiles = async (files, type, fix = false) => {
           input = fs.readFileSync(filename, 'utf-8')
         } catch {
           success = false
-          const message = `${filename}: 文件读取错误`
-          prettierMessages.push(message)
+          prettierMessages.push({
+            level: 'error',
+            text: '文件读取错误',
+            filename
+          })
           return
         }
 
@@ -102,8 +109,11 @@ const lintFiles = async (files, type, fix = false) => {
                 })
               } catch {
                 success = false
-                const message = `${filename}: 保存文件出错`
-                prettierMessages.push(message)
+                prettierMessages.push({
+                  level: 'error',
+                  text: '保存文件出错',
+                  filename
+                })
               }
             }
           }
@@ -149,8 +159,7 @@ const lintContents = async (contents, type) => {
           formatted = prettier.format(input, options)
         } catch (error) {
           success = false
-          const message = handlePrettierError(filename, error)
-          prettierMessages.push(message)
+          prettierMessages.push(handlePrettierError(filename, error))
           return
         }
         let output = formatted
@@ -187,7 +196,11 @@ const lintContents = async (contents, type) => {
 
         if (isDifferent) {
           success = false
-          prettierMessages.push(`${filename}: 未格式化`)
+          prettierMessages.push({
+            level: 'warn',
+            text: '未格式化',
+            filename
+          })
         }
       })()
     )

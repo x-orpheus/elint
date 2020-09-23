@@ -96,8 +96,13 @@ async function elint (files, options) {
 
     lintResults.forEach(({ stdout }) => {
       const output = JSON.parse(stdout)
-      outputs.push(output)
-      success = success && output.success
+      if (Array.isArray(output)) {
+        outputs.push(...output)
+        success = output.reduce((pv, cv) => pv && cv, success)
+      } else {
+        outputs.push(output)
+        success = success && output.success
+      }
     })
 
     console.log(report(outputs))

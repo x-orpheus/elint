@@ -5,19 +5,17 @@ const { flatten } = require('lodash')
 const setBlocking = require('../../utils/set-blocking')
 const eslintFormatter = require('../eslint/formatter')
 const stylelintFormatter = require('../stylelint/formatter')
+const prettierFormatter = require('./formatter')
 const { lintFiles, lintContents } = require('./lint')
 
-const result = {
-  name: 'prettier',
-  output: '',
-  success: true
-}
-
 process.on('uncaughtException', (error) => {
-  result.output = error.stack
-  result.success = false
-
-  process.stdout.write(JSON.stringify(result))
+  process.stdout.write(
+    JSON.stringify({
+      name: 'prettier',
+      output: error.stack,
+      success: false
+    })
+  )
   process.exit()
 })
 
@@ -76,28 +74,38 @@ const cwd = crossPlatformPath(process.cwd())
   const lintResults = await Promise.all(tasks)
 
   let success = true
-  const output = []
+  const prettierOutput = []
+  const lintOutput = []
 
   lintResults.forEach((item) => {
     success = success && item.success
     if (item.messages) {
-      output.push(item.messages.join('\n'))
+      prettierOutput.push(prettierFormatter(item.messages))
     }
     switch (type) {
       case 'es':
-        output.push(eslintFormatter(item.results))
+        lintOutput.push(eslintFormatter(item.results))
         break
       case 'style':
-        output.push(stylelintFormatter(flatten(item.results)))
+        lintOutput.push(stylelintFormatter(flatten(item.results)))
         break
       default:
     }
   })
 
-  result.success = success
-  result.output = output.join('\n')
+  const prettierResult = {
+    name: 'prettier',
+    output: prettierOutput.join(''),
+    success
+  }
+
+  const lintResult = {
+    name: type,
+    output: lintOutput.join(''),
+    success
+  }
 
   setBlocking(true)
-  process.stdout.write(JSON.stringify(result))
+  process.stdout.write(JSON.stringify([prettierResult, lintResult]))
   process.exit()
 })()
