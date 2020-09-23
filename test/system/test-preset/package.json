@@ -5,7 +5,7 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "postinstall": "node elint-helpers/postinstall"
+    "postinstall": "DEBUG=elint-helpers:* elint-helpers install"
   },
   "dependencies": {
     "elint-helpers": "*",

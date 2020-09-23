@@ -5,8 +5,6 @@
  */
 
 const test = require('ava')
-const path = require('path')
-const fs = require('fs-extra')
 const createTmpProjectFromCache = require('./utils/create-tmp-project-from-cache')
 const run = require('./utils/run')
 
