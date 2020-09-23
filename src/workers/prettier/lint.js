@@ -3,11 +3,11 @@
 const prettier = require('prettier')
 const fs = require('fs-extra')
 const { lintContents: eslintLintContents } = require('../eslint/lint')
-const { lintContent: stylelintLintContents } = require('../stylelint/lint')
+const { lintContents: stylelintLintContents } = require('../stylelint/lint')
 
 const { errors } = prettier.__internal
 
-const getOptionsForFile = filename => {
+const getOptionsForFile = (filename) => {
   const options = {
     ...prettier.resolveConfig(filename, { editorconfig: false }),
     filepath: filename
@@ -52,20 +52,17 @@ const lintFiles = async (files, type, fix = false) => {
       success: true,
       type,
       results: [],
-      output: [],
       messages: []
     }
   }
 
   let success = true
   const prettierMessages = []
-  const eslintResults = []
-  // TODO: 统一报错返回
-  const stylelintOutput = []
+  const results = []
 
   const tasks = []
 
-  files.forEach(filename => {
+  files.forEach((filename) => {
     tasks.push(
       (async () => {
         // 配置文件读取不到就直接让进程挂了
@@ -106,15 +103,14 @@ const lintFiles = async (files, type, fix = false) => {
 
           const linterSuccess = result.success
           success = linterSuccess
+          results.push(...result.results)
 
           switch (type) {
             case 'es':
               output = result.results[0].output
-              eslintResults.push(...result.results)
               break
             case 'style':
-              output = result.output[0].output
-              stylelintOutput.push(...result.output)
+              output = result.outputs[0]
               break
           }
         }
@@ -123,14 +119,16 @@ const lintFiles = async (files, type, fix = false) => {
 
         if (isDifferent) {
           if (fix) {
-            try {
-              fs.writeFileSync(filename, output, {
-                encoding: 'utf-8'
-              })
-            } catch {
-              success = false
-              const message = `${filename}: 保存文件出错`
-              prettierMessages.push(message)
+            if (output !== undefined) {
+              try {
+                fs.writeFileSync(filename, output, {
+                  encoding: 'utf-8'
+                })
+              } catch {
+                success = false
+                const message = `${filename}: 保存文件出错`
+                prettierMessages.push(message)
+              }
             }
           } else {
             success = false
@@ -146,8 +144,7 @@ const lintFiles = async (files, type, fix = false) => {
   return {
     success,
     type,
-    results: eslintResults,
-    output: stylelintOutput,
+    results,
     messages: prettierMessages
   }
 }
@@ -158,20 +155,17 @@ const lintContents = async (contents, type) => {
       success: true,
       type,
       results: [],
-      output: [],
       messages: []
     }
   }
 
   let success = true
   const prettierMessages = []
-  const eslintResults = []
-  // TODO: 统一报错返回
-  const stylelintOutput = []
+  const results = []
 
   const tasks = []
 
-  contents.forEach(content => {
+  contents.forEach((content) => {
     const filename = content.fileName
     const input = content.fileContent
     tasks.push(
@@ -180,7 +174,6 @@ const lintContents = async (contents, type) => {
         let formatted
         try {
           formatted = prettier.format(input, options)
-          // reports.push(result)
         } catch (error) {
           success = false
           const message = handlePrettierError(filename, error)
@@ -199,15 +192,16 @@ const lintContents = async (contents, type) => {
           )
 
           const linterSuccess = result.success
+
+          results.push(...result.results)
+
           if (linterSuccess) {
             switch (type) {
               case 'es':
                 output = result.results[0].output
-                eslintResults.push(...result.results)
                 break
               case 'style':
-                output = result.output[0].output
-                stylelintOutput.push(...result.output)
+                output = result.outputs[0]
                 break
             }
           } else {
@@ -231,8 +225,7 @@ const lintContents = async (contents, type) => {
 
   return {
     success,
-    results: eslintResults,
-    output: stylelintOutput,
+    results,
     messages: prettierMessages
   }
 }

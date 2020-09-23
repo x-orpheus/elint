@@ -1,9 +1,10 @@
 'use strict'
 
 const path = require('path')
+const { flatten } = require('lodash')
 const setBlocking = require('../../utils/set-blocking')
 const eslintFormatter = require('../eslint/formatter')
-// const stylelintFormatter = require('../stylelint/formatter')
+const stylelintFormatter = require('../stylelint/formatter')
 const { lintFiles, lintContents } = require('./lint')
 
 const result = {
@@ -12,7 +13,7 @@ const result = {
   success: true
 }
 
-process.on('uncaughtException', error => {
+process.on('uncaughtException', (error) => {
   result.output = error.stack
   result.success = false
 
@@ -20,7 +21,7 @@ process.on('uncaughtException', error => {
   process.exit()
 })
 
-const crossPlatformPath = str => {
+const crossPlatformPath = (str) => {
   return process.platform === 'win32' ? str.replace(/\\/g, '/') : str
 }
 
@@ -36,7 +37,7 @@ const cwd = crossPlatformPath(process.cwd())
   const files = []
   const contents = []
 
-  fileAndContents.forEach(item => {
+  fileAndContents.forEach((item) => {
     if (item && item.includes('{')) {
       try {
         contents.push(JSON.parse(item))
@@ -77,16 +78,17 @@ const cwd = crossPlatformPath(process.cwd())
   let success = true
   const output = []
 
-  lintResults.forEach(item => {
+  lintResults.forEach((item) => {
     success = success && item.success
     if (item.messages) {
-      output.push(item.messages)
+      output.push(item.messages.join('\n'))
     }
     switch (type) {
       case 'es':
         output.push(eslintFormatter(item.results))
         break
       case 'style':
+        output.push(stylelintFormatter(flatten(item.results)))
         break
       default:
     }
