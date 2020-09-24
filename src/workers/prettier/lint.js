@@ -10,7 +10,7 @@ const { errors, createIgnorer } = prettier.__internal
 // 使用 prettier 的方法获取当前文件的格式化配置
 const getOptionsForFile = (filename) => {
   const options = {
-    ...prettier.resolveConfig(filename, { editorconfig: false }),
+    ...prettier.resolveConfig.sync(filename, { editorconfig: false }),
     filepath: filename
   }
   return options
@@ -43,7 +43,7 @@ const handlePrettierError = (filename, error) => {
     // `Invalid printWidth value. Expected an integer, but received 0.5.`
     message.text = error.message
     // If validation fails for one file, it will fail for all of them.
-    process.exit(1)
+    throw new Error(error)
   } else if (error instanceof errors.DebugError) {
     // `invalid.js: Some debug error message`
     message.text = error.message

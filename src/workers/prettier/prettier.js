@@ -13,17 +13,6 @@ const linterName = {
   style: 'stylelint'
 }
 
-process.on('uncaughtException', (error) => {
-  process.stdout.write(
-    JSON.stringify({
-      name: 'prettier',
-      output: error.stack,
-      success: false
-    })
-  )
-  process.exit()
-})
-
 const crossPlatformPath = (str) => {
   return process.platform === 'win32' ? str.replace(/\\/g, '/') : str
 }
@@ -115,4 +104,13 @@ const cwd = crossPlatformPath(process.cwd())
   setBlocking(true)
   process.stdout.write(JSON.stringify([prettierResult, linterResult]))
   process.exit()
-})()
+})().catch((error) => {
+  process.stdout.write(
+    JSON.stringify({
+      name: 'prettier',
+      output: error.stack,
+      success: false
+    })
+  )
+  process.exit()
+})
