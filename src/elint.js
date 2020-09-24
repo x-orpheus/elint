@@ -61,7 +61,7 @@ async function elint (files, options) {
         workers.push(
           prettier(
             JSON.stringify({
-              ...JSON.parse(argus),
+              ...options,
               type: linterType
             }),
             ...fileList[linterType]
