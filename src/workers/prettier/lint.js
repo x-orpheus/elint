@@ -193,7 +193,7 @@ const lintContents = async (contents, type) => {
 
         // 如果 prettier 本身 format 出错了，就只显示出错详情
         if (prettierSuccess && isDifferent) {
-          success = false
+          prettierSuccess = false
           prettierMessages.push({
             level: 'warn',
             text: '未格式化',

@@ -98,7 +98,7 @@ async function elint (files, options) {
       const output = JSON.parse(stdout)
       if (Array.isArray(output)) {
         outputs.push(...output)
-        success = output.reduce((pv, cv) => pv && cv, success)
+        success = output.reduce((pv, cv) => pv && cv.success, success)
       } else {
         outputs.push(output)
         success = success && output.success

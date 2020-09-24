@@ -8,6 +8,11 @@ const stylelintFormatter = require('../stylelint/formatter')
 const prettierFormatter = require('./formatter')
 const { lintFiles, lintContents } = require('./lint')
 
+const linterName = {
+  es: 'eslint',
+  style: 'stylelint'
+}
+
 process.on('uncaughtException', (error) => {
   process.stdout.write(
     JSON.stringify({
@@ -102,7 +107,7 @@ const cwd = crossPlatformPath(process.cwd())
   }
 
   const lintResult = {
-    name: type,
+    name: linterName[type] || type,
     output: lintOutput.join(''),
     success
   }
