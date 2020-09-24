@@ -44,7 +44,18 @@ const passedMessage = chalk.green(`${figures.tick} Passed`)
 function report (results) {
   const arr = []
 
-  results.forEach(result => {
+  // 将 name 相同的 result 合并成一个
+  const mergedResults = results.reduce((pv, cv) => {
+    const itemIndex = pv.findIndex((item) => item.name === cv.name)
+    if (itemIndex !== -1) {
+      pv[itemIndex].success = pv[itemIndex].success && cv.success
+      pv[itemIndex].output += cv.output
+      return pv
+    }
+    return pv.concat(cv)
+  }, [])
+
+  mergedResults.forEach((result) => {
     const name = result.name
     const output = result.output
     const success = result.success
