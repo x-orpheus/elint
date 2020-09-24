@@ -48,7 +48,8 @@ const linterConfigFile = [
   '.commitlintrc.js',
 
   // prettier
-  '.prettierrc.js'
+  '.prettierrc.js',
+  '.prettierignore'
 ]
 
 /**
