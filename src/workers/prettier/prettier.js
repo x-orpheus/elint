@@ -78,13 +78,13 @@ const cwd = crossPlatformPath(process.cwd())
 
   const lintResults = await Promise.all(tasks)
 
-  let success = true
+  let linterSuccess = true
   let prettierSuccess = true
   const prettierOutput = []
   const lintOutput = []
 
   lintResults.forEach((item) => {
-    success = success && item.success
+    linterSuccess = linterSuccess && item.linterSuccess
     prettierSuccess = prettierSuccess && item.prettierSuccess
     if (item.messages) {
       prettierOutput.push(prettierFormatter(item.messages))
@@ -106,13 +106,13 @@ const cwd = crossPlatformPath(process.cwd())
     success: prettierSuccess
   }
 
-  const lintResult = {
+  const linterResult = {
     name: linterName[type] || type,
     output: lintOutput.join(''),
-    success
+    success: linterSuccess
   }
 
   setBlocking(true)
-  process.stdout.write(JSON.stringify([prettierResult, lintResult]))
+  process.stdout.write(JSON.stringify([prettierResult, linterResult]))
   process.exit()
 })()

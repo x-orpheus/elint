@@ -7,6 +7,7 @@ const { lintContents: stylelintLintContents } = require('../stylelint/lint')
 
 const { errors } = prettier.__internal
 
+// 使用 prettier 的方法获取当前文件的格式化配置
 const getOptionsForFile = (filename) => {
   const options = {
     ...prettier.resolveConfig(filename, { editorconfig: false }),
@@ -15,6 +16,7 @@ const getOptionsForFile = (filename) => {
   return options
 }
 
+// prettier cli 的错误处理
 const handlePrettierError = (filename, error) => {
   const isParseError = Boolean(error && error.loc)
   const isValidationError = /^Invalid \S+ value\./.test(error && error.message)
@@ -53,14 +55,14 @@ const linters = {
 const lintFiles = async (files, type, fix = false) => {
   if (!files.length) {
     return {
-      success: true,
+      linterSuccess: true,
       prettierSuccess: true,
       results: [],
       messages: []
     }
   }
 
-  let success = true
+  let linterSuccess = true
   let prettierSuccess = true
   const prettierMessages = []
   const results = []
@@ -74,7 +76,7 @@ const lintFiles = async (files, type, fix = false) => {
         try {
           input = fs.readFileSync(filename, 'utf-8')
         } catch {
-          success = false
+          prettierSuccess = false
           prettierMessages.push({
             level: 'error',
             text: '文件读取错误',
@@ -90,11 +92,12 @@ const lintFiles = async (files, type, fix = false) => {
               fileContent: input
             }
           ],
-          type
+          type,
+          fix
         )
 
-        success = success && lintResult.success
-        prettierSuccess = lintResult.prettierSuccess
+        linterSuccess = linterSuccess && lintResult.linterSuccess
+        prettierSuccess = prettierSuccess && lintResult.prettierSuccess
         prettierMessages.push(...lintResult.messages)
         results.push(...lintResult.results)
 
@@ -108,7 +111,7 @@ const lintFiles = async (files, type, fix = false) => {
               encoding: 'utf-8'
             })
           } catch {
-            success = false
+            prettierSuccess = false
             prettierMessages.push({
               level: 'error',
               text: '保存文件出错',
@@ -123,24 +126,24 @@ const lintFiles = async (files, type, fix = false) => {
   await Promise.all(tasks)
 
   return {
-    success,
+    linterSuccess,
     prettierSuccess,
     results,
     messages: prettierMessages
   }
 }
 
-const lintContents = async (contents, type) => {
+const lintContents = async (contents, type, fix = false) => {
   if (!contents.length) {
     return {
-      success: true,
+      linterSuccess: true,
       prettierSuccess: true,
       results: [],
       messages: []
     }
   }
 
-  let success = true
+  let linterSuccess = true
   let prettierSuccess = true
   const prettierMessages = []
   const results = []
@@ -175,7 +178,7 @@ const lintContents = async (contents, type) => {
             true
           )
 
-          success = success && result.success
+          linterSuccess = linterSuccess && result.success
           results.push(...result.results)
 
           switch (type) {
@@ -192,7 +195,7 @@ const lintContents = async (contents, type) => {
         outputs[index] = output
 
         // 如果 prettier 本身 format 出错了，就只显示出错详情
-        if (prettierSuccess && isDifferent) {
+        if (prettierSuccess && isDifferent && !fix) {
           prettierSuccess = false
           prettierMessages.push({
             level: 'warn',
@@ -207,7 +210,7 @@ const lintContents = async (contents, type) => {
   await Promise.all(tasks)
 
   return {
-    success,
+    linterSuccess,
     prettierSuccess,
     results,
     outputs,
