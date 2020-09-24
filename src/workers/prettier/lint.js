@@ -171,7 +171,9 @@ const lintContents = async (contents, type, fix = false) => {
         const options = getOptionsForFile(filename)
         let formatted = input
 
-        if (!ignorer.ignores(filename)) {
+        const isIgnore = ignorer.ignores(filename)
+
+        if (!isIgnore) {
           try {
             formatted = prettier.format(input, options)
           } catch (error) {
@@ -190,7 +192,8 @@ const lintContents = async (contents, type, fix = false) => {
                 fileName: filename
               }
             ],
-            true
+            // 如果 prettier 忽略了这个文件，那么 lint 将只检测不 fix
+            !isIgnore
           )
 
           linterSuccess = linterSuccess && result.success
@@ -212,7 +215,7 @@ const lintContents = async (contents, type, fix = false) => {
         outputs[index] = output
 
         // 如果 prettier 本身 format 出错了，就只显示出错详情
-        if (prettierSuccess && isDifferent && !fix) {
+        if (prettierSuccess && !isIgnore && isDifferent && !fix) {
           prettierSuccess = false
           prettierMessages.push({
             level: 'warn',
