@@ -74,11 +74,13 @@ const cwd = crossPlatformPath(process.cwd())
   const lintResults = await Promise.all(tasks)
 
   let success = true
+  let prettierSuccess = true
   const prettierOutput = []
   const lintOutput = []
 
   lintResults.forEach((item) => {
     success = success && item.success
+    prettierSuccess = prettierSuccess && item.prettierSuccess
     if (item.messages) {
       prettierOutput.push(prettierFormatter(item.messages))
     }
@@ -96,7 +98,7 @@ const cwd = crossPlatformPath(process.cwd())
   const prettierResult = {
     name: 'prettier',
     output: prettierOutput.join(''),
-    success
+    success: prettierSuccess
   }
 
   const lintResult = {

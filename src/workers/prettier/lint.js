@@ -54,13 +54,14 @@ const lintFiles = async (files, type, fix = false) => {
   if (!files.length) {
     return {
       success: true,
-      type,
+      prettierSuccess: true,
       results: [],
       messages: []
     }
   }
 
   let success = true
+  let prettierSuccess = true
   const prettierMessages = []
   const results = []
 
@@ -92,7 +93,8 @@ const lintFiles = async (files, type, fix = false) => {
           type
         )
 
-        success = lintResult.success
+        success = success && lintResult.success
+        prettierSuccess = lintResult.prettierSuccess
         prettierMessages.push(...lintResult.messages)
         results.push(...lintResult.results)
 
@@ -100,22 +102,18 @@ const lintFiles = async (files, type, fix = false) => {
 
         const isDifferent = output !== input
 
-        if (isDifferent) {
-          if (fix) {
-            if (output !== undefined) {
-              try {
-                fs.writeFileSync(filename, output, {
-                  encoding: 'utf-8'
-                })
-              } catch {
-                success = false
-                prettierMessages.push({
-                  level: 'error',
-                  text: '保存文件出错',
-                  filename
-                })
-              }
-            }
+        if (fix && isDifferent && output !== undefined) {
+          try {
+            fs.writeFileSync(filename, output, {
+              encoding: 'utf-8'
+            })
+          } catch {
+            success = false
+            prettierMessages.push({
+              level: 'error',
+              text: '保存文件出错',
+              filename
+            })
           }
         }
       })()
@@ -126,6 +124,7 @@ const lintFiles = async (files, type, fix = false) => {
 
   return {
     success,
+    prettierSuccess,
     results,
     messages: prettierMessages
   }
@@ -135,12 +134,14 @@ const lintContents = async (contents, type) => {
   if (!contents.length) {
     return {
       success: true,
+      prettierSuccess: true,
       results: [],
       messages: []
     }
   }
 
   let success = true
+  let prettierSuccess = true
   const prettierMessages = []
   const results = []
   const outputs = []
@@ -158,11 +159,10 @@ const lintContents = async (contents, type) => {
         try {
           formatted = prettier.format(input, options)
         } catch (error) {
-          success = false
+          prettierSuccess = false
           prettierMessages.push(handlePrettierError(filename, error))
-          return
         }
-        let output = formatted
+        let output = formatted || input
 
         if (linters[type]) {
           const result = await linters[type](
@@ -175,10 +175,7 @@ const lintContents = async (contents, type) => {
             true
           )
 
-          const linterSuccess = result.success
-          if (!linterSuccess) {
-            success = linterSuccess
-          }
+          success = success && result.success
           results.push(...result.results)
 
           switch (type) {
@@ -194,7 +191,8 @@ const lintContents = async (contents, type) => {
         const isDifferent = output !== content.fileContent
         outputs[index] = output
 
-        if (isDifferent) {
+        // 如果 prettier 本身 format 出错了，就只显示出错详情
+        if (prettierSuccess && isDifferent) {
           success = false
           prettierMessages.push({
             level: 'warn',
@@ -210,6 +208,7 @@ const lintContents = async (contents, type) => {
 
   return {
     success,
+    prettierSuccess,
     results,
     outputs,
     messages: prettierMessages

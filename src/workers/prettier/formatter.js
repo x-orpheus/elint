@@ -1,21 +1,18 @@
 const chalk = require('chalk')
 
-function formatter(messages) {
-  if (!messages) {
-    return '\n'
-  }
-  if (!messages.length) {
-    return `  ${chalk.green.bold('✔')}  文件已格式化\n`
+function formatter (messages) {
+  if (!messages || !messages.length) {
+    return ''
   }
   return messages
     .map((message) => {
-      let output = `${message.filename}\n`
+      let output = `${chalk.underline(message.filename)}\n`
       switch (message.level) {
         case 'warn':
-          output += `  ${chalk.yellow.bold('!')}`
+          output += `   ${chalk.yellow.bold('!')}`
           break
         case 'error':
-          output += `  ${chalk.red.bold('✖')}`
+          output += `   ${chalk.red.bold('✖')}`
           break
       }
       output += `  ${message.text}\n`
