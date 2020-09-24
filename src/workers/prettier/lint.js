@@ -89,7 +89,7 @@ const lintFiles = async (files, type, fix = false) => {
           prettierSuccess = false
           prettierMessages.push({
             level: 'error',
-            text: '文件读取错误',
+            text: 'File read error',
             filename
           })
           return
@@ -124,7 +124,7 @@ const lintFiles = async (files, type, fix = false) => {
             prettierSuccess = false
             prettierMessages.push({
               level: 'error',
-              text: '保存文件出错',
+              text: 'File save error',
               filename
             })
           }
@@ -220,7 +220,7 @@ const lintContents = async (contents, type, fix = false) => {
           prettierSuccess = false
           prettierMessages.push({
             level: 'warn',
-            text: '未格式化',
+            text: 'Not formatted',
             filename
           })
         }
