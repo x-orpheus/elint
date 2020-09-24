@@ -10,6 +10,7 @@ const { errors, createIgnorer } = prettier.__internal
 // 使用 prettier 的方法获取当前文件的格式化配置
 const getOptionsForFile = (filename) => {
   const options = {
+    endOfLine: 'auto',
     ...prettier.resolveConfig.sync(filename, { editorconfig: false }),
     filepath: filename
   }
