@@ -4,7 +4,11 @@
   "description": "elint-preset-system-test",
   "author": "",
   "license": "ISC",
+  "scripts": {
+    "postinstall": "elint-helpers install"
+  },
   "dependencies": {
+    "elint-helpers": "*",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-node": "^6.0.1",

@@ -30,29 +30,6 @@ const linterSuffix = {
 }
 
 /**
- * 支持的配置文件
- */
-const linterConfigFile = [
-  // eslint
-  '.eslintrc.js',
-  '.eslintignore',
-
-  // stylelint
-  '.stylelintrc.js',
-  '.stylelintignore',
-
-  // husky
-  '.huskyrc.js',
-
-  // commitlint
-  '.commitlintrc.js',
-
-  // prettier
-  '.prettierrc.js',
-  '.prettierignore'
-]
-
-/**
  * 默认忽略
  */
 const defaultIgnore = [
@@ -71,19 +48,7 @@ const defaultIgnore = [
   '.prettierrc.js'
 ]
 
-const registryAlias = {
-  npm: 'https://registry.npmjs.org/',
-  cnpm: 'http://r.cnpmjs.org/',
-  taobao: 'https://registry.npm.taobao.org/',
-  nj: 'https://registry.nodejitsu.com/',
-  rednpm: 'http://registry.mirror.cqupt.edu.cn',
-  skimdb: 'https://skimdb.npmjs.com/registry',
-  yarn: 'https://registry.yarnpkg.com/'
-}
-
 module.exports = {
   linterSuffix,
-  linterConfigFile,
-  defaultIgnore,
-  registryAlias
+  defaultIgnore
 }

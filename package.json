@@ -8,11 +8,10 @@
   },
   "scripts": {
     "test": "npm run test:lint && npm run test:unit && npm run test:system",
-    "test:lint": "eslint --format codeframe \"+(bin|src|test)/**/*.js\" \"scripts/postinstall\" --fix",
+    "test:lint": "eslint --format codeframe \"+(bin|src|test)/**/*.js\" --fix",
     "test:unit": "nyc --reporter=html --reporter=text mocha \"test/unit/**/*.spec.js\" --timeout 15000",
     "test:unit:coverage": "nyc report --reporter=lcovonly",
-    "test:system": "node test/system/utils/init.js && ava && node test/system/utils/clean.js",
-    "postinstall": "node ./src/postinstall.js"
+    "test:system": "node test/system/utils/init.js && ava && node test/system/utils/clean.js"
   },
   "repository": {
     "type": "git",
@@ -56,8 +55,7 @@
     "chalk": "^4.1.0",
     "commander": "^6.1.0",
     "configstore": "^5.0.1",
-    "debug": "^4.1.1",
-    "diff": "^4.0.2",
+    "debug": "^4.2.0",
     "eslint": "^7.9.0",
     "execa": "^4.0.3",
     "figures": "^3.2.0",
@@ -66,17 +64,12 @@
     "globby": "^11.0.1",
     "husky": "^2.7.0",
     "lodash": "^4.17.20",
-    "md5": "^2.3.0",
     "micromatch": "^4.0.2",
-    "ms": "^2.1.2",
     "node-fetch": "^2.6.1",
     "prettier": "^2.1.2",
     "semver": "^7.3.2",
-    "semver-utils": "^1.1.4",
     "staged-git-files": "^1.2.0",
-    "stylelint": "~13.7.1",
-    "which": "^2.0.2",
-    "write-json-file": "^4.3.0"
+    "stylelint": "~13.7.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
