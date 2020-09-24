@@ -148,6 +148,31 @@ test('lint stage files(error)', async t => {
   await t.throwsAsync(run('git commit -m "build: lint stage files(error)"', tmpDir))
 })
 
+/**
+ * 在 git hooks 中执行 lint + prettier，lint 的文件不符合规范
+ */
+test('lint stage files with prettier(error)', async t => {
+  const { tmpDir } = t.context
+
+  // 添加所有 src 目录下的文件
+  await run('git add src', tmpDir)
+
+  // 强行修改 .huskyrc.js，commit 前执行 lint style
+  const huskyFilePath = path.join(tmpDir, '.huskyrc.js')
+  const huskyFileContent = `
+    module.exports = {
+      'hooks': {
+        'commit-msg': 'elint lint style "src/**/*" --prettier'
+      }
+    }
+  `
+
+  await fs.writeFile(huskyFilePath, huskyFileContent)
+
+  // 报错
+  await t.throwsAsync(run('git commit -m "build: lint stage files with prettier(error)"', tmpDir))
+})
+
 test('lint stage files(fix)', async t => {
   const { tmpDir } = t.context
 
@@ -168,4 +193,26 @@ test('lint stage files(fix)', async t => {
 
   // 报错，因为 fix 在 git hooks 中无效
   await t.throwsAsync(run('git commit -m "build: lint stage files(fix)"', tmpDir))
+})
+
+test('lint stage files with prettier(fix)', async t => {
+  const { tmpDir } = t.context
+
+  // 添加所有 src 目录下的文件
+  await run('git add src', tmpDir)
+
+  // 强行修改 .huskyrc.js，commit 前执行 lint style
+  const huskyFilePath = path.join(tmpDir, '.huskyrc.js')
+  const huskyFileContent = `
+    module.exports = {
+      'hooks': {
+        'commit-msg': 'elint lint style "src/**/*" --fix --prettier'
+      }
+    }
+  `
+
+  await fs.writeFile(huskyFilePath, huskyFileContent)
+
+  // 报错，因为 fix 在 git hooks 中无效
+  await t.throwsAsync(run('git commit -m "build: lint stage files with prettier(fix)"', tmpDir))
 })
