@@ -5,7 +5,7 @@ const fs = require('fs-extra')
 const { lintContents: eslintLintContents } = require('../eslint/lint')
 const { lintContents: stylelintLintContents } = require('../stylelint/lint')
 
-const { errors } = prettier.__internal
+const { errors, createIgnorer } = prettier.__internal
 
 // 使用 prettier 的方法获取当前文件的格式化配置
 const getOptionsForFile = (filename) => {
@@ -14,6 +14,15 @@ const getOptionsForFile = (filename) => {
     filepath: filename
   }
   return options
+}
+
+let ignorer
+
+const getIgnorer = () => {
+  if (!ignorer) {
+    ignorer = createIgnorer.sync('.prettierignore')
+  }
+  return ignorer
 }
 
 // prettier cli 的错误处理
@@ -143,6 +152,8 @@ const lintContents = async (contents, type, fix = false) => {
     }
   }
 
+  const ignorer = getIgnorer()
+
   let linterSuccess = true
   let prettierSuccess = true
   const prettierMessages = []
@@ -159,12 +170,16 @@ const lintContents = async (contents, type, fix = false) => {
       (async () => {
         const options = getOptionsForFile(filename)
         let formatted = input
-        try {
-          formatted = prettier.format(input, options)
-        } catch (error) {
-          prettierSuccess = false
-          prettierMessages.push(handlePrettierError(filename, error))
+
+        if (!ignorer.ignores(filename)) {
+          try {
+            formatted = prettier.format(input, options)
+          } catch (error) {
+            prettierSuccess = false
+            prettierMessages.push(handlePrettierError(filename, error))
+          }
         }
+
         let output = formatted || input
 
         if (linters[type]) {
@@ -181,13 +196,15 @@ const lintContents = async (contents, type, fix = false) => {
           linterSuccess = linterSuccess && result.success
           results.push(...result.results)
 
-          switch (type) {
-            case 'es':
-              output = result.results[0].output
-              break
-            case 'style':
-              output = result.outputs[0]
-              break
+          if (result.results[0]) {
+            switch (type) {
+              case 'es':
+                output = result.results[0].output
+                break
+              case 'style':
+                output = result.outputs[0]
+                break
+            }
           }
         }
 
