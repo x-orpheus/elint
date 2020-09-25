@@ -65,6 +65,7 @@
     "husky": "^2.7.0",
     "lodash": "^4.17.20",
     "micromatch": "^4.0.2",
+    "ms": "^2.1.2",
     "node-fetch": "^2.6.1",
     "prettier": "^2.1.2",
     "semver": "^7.3.2",
@@ -88,7 +89,7 @@
   },
   "ava": {
     "files": [
-      "test/system/**/*.spec.js"
+      "test/system/lint-files.spec.js"
     ],
     "timeout": "600s",
     "failFast": true,
