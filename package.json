@@ -84,6 +84,7 @@
     "testMatch": [
       "**/test/unit/**/*.spec.js"
     ],
+    "maxConcurrency": 1,
     "collectCoverage": true
   },
   "ava": {
