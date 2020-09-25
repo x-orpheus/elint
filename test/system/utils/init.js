@@ -8,6 +8,7 @@ const os = require('os')
 const run = require('./run')
 const createCacheProject = require('./create-cache-project')
 const { elintPath, presetPath } = require('./variable')
+const hasYarn = require('./has-yarn')
 
 // 输出 CPU 和内存信息
 console.log('=== OS Info ===')
@@ -23,3 +24,7 @@ run('npm pack', presetPath, true)
 
 // 创建缓存项目
 createCacheProject()
+
+if (hasYarn) {
+  createCacheProject(true)
+}

@@ -89,7 +89,7 @@
   },
   "ava": {
     "files": [
-      "test/system/lint-files.spec.js"
+      "test/system/**/*.spec.js"
     ],
     "timeout": "600s",
     "failFast": true,

@@ -9,6 +9,7 @@ const testProjectDir = path.join(__dirname, '../test-project')
 
 // 缓存目录
 const cacheDir = path.join(os.tmpdir(), 'elint_test_system', 'cache')
+const cacheDirYarn = path.join(os.tmpdir(), 'elint_test_system', 'cache-yarn')
 
 // elint
 const elintPath = path.join(__dirname, '../../../')
@@ -21,6 +22,7 @@ const presetPkgPath = path.join(presetPath, 'elint-preset-system-test-1.0.0.tgz'
 module.exports = {
   testProjectDir,
   cacheDir,
+  cacheDirYarn,
   elintPath,
   elintPkgPath,
   presetPath,
