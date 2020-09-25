@@ -41,6 +41,7 @@ const defaultIgnore = [
   '**/.git',
   '**/*.min.js',
   '**/*.min.css',
+  '**/.yarn',
   '.eslintrc.js',
   '.stylelintrc.js',
   '.huskyrc.js',
