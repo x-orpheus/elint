@@ -557,9 +557,21 @@ $ alias mynpm='npm --registry=http://registry.npm.example.com \
   --userconfig=$HOME/.mynpmrc'
 ```
 
-关于 yarn，很可惜，目前不支持
-
 > 上面的 `alias` 命令只是临时修改，终端关闭即实现，永久添加请修改 `.bashrc` 或 `.zshrc`。
+
+2.x 已支持 `yarn 1.x`，无需任何改动即可使用。
+
+但是目前对 `yarn pnp` 支持较为有限，需要自行处理以下工作
+
+1. 由于 `eslint` 是作为 `elint` 的依赖存在的，因此默认配置下如果使用 `eslint` 的插件时会找不到 `eslint`，可以在 `.yarnrc.yml` 中添加以下配置，以放开依赖间的查找能力：
+
+```yml
+pnpMode: "loose"
+pnpFallbackMode: "all"
+```
+
+2. 由于目前 `husky` 还在 2.x 版本不支持 `pnp`，可以通过单独安装 `husky` 的最新版本来解决（注：如果同时安装 `elint` 和 `husky`，可能面临 git hooks 被旧版本替换的问题，可以通过 `yarn rebuild` 重建）
+3. 当前 preset 版本检测功能还没有支持 `pnp`
 
 ### 5.2. 为什么不建议全局安装
 
