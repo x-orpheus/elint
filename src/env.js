@@ -2,7 +2,7 @@
 
 const debug = require('debug')('elint:env')
 const path = require('path')
-const { isNpmOrYarn } = require('./utils/is-npm')
+const { isNpmOrYarn } = require('is-npm')
 
 /**
  * 获取通过 npm script 执行时的项目根路径
