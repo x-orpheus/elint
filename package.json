@@ -84,7 +84,6 @@
     "testMatch": [
       "**/test/unit/**/*.spec.js"
     ],
-    "maxWorkers": 1,
     "collectCoverage": true
   },
   "ava": {
