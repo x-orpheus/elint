@@ -2,10 +2,7 @@
 
 const toMs = require('../../../src/utils/to-ms')
 
-const chai = require('chai')
-chai.should()
-
-describe('to-ms 测试', function () {
+describe('to-ms 测试', () => {
   ;[
     [123, 123],
     [-1, -1],
@@ -23,8 +20,8 @@ describe('to-ms 测试', function () {
     [{}, 0],
     [() => {}, 0]
   ].map(value => {
-    it(`批量测试 input: ${JSON.stringify(value[0])}, output: ${value[1]}`, function () {
-      return toMs(value[0]).should.be.equal(value[1])
+    test(`批量测试 input: ${JSON.stringify(value[0])}, output: ${value[1]}`, () => {
+      expect(toMs(value[0])).toEqual(value[1])
     })
   })
 })

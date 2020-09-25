@@ -7,13 +7,10 @@ const mock = require('../mock/env')
 const { getBaseDir } = require('../../../src/env')
 const setBlockingPath = require.resolve('../../../src/utils/set-blocking')
 
-const chai = require('chai')
-chai.should()
-
 let unmock
 let baseDir
 
-describe('set-blocking 测试', function () {
+describe('set-blocking 测试', () => {
   beforeEach(() => {
     unmock = mock()
     baseDir = getBaseDir()
@@ -24,10 +21,11 @@ describe('set-blocking 测试', function () {
     baseDir = null
   })
 
-  it('测试长输出不被截断', function () {
+  test('测试长输出不被截断', async () => {
     // 创建测试文件
     const filePath = path.join(baseDir, 'child.js')
-    fs.writeFileSync(filePath, `
+
+    await fs.writeFile(filePath, `
       const setBlocking = require("${setBlockingPath}");
 
       let buffer = "";
@@ -40,9 +38,8 @@ describe('set-blocking 测试', function () {
       process.exit(0);
     `.replace(/\\/g, '\\\\'))
 
-    return execa('node', [filePath])
-      .then(result => {
-        result.stdout.should.match(/line 2999/)
-      })
+    const result = await execa('node', [filePath])
+
+    expect(result.stdout).toMatch(new RegExp('line 2999'))
   })
 })

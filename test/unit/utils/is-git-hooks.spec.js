@@ -5,14 +5,9 @@ const runInHusky = require('../mock/run-in-husky')
 const isGitHooks = require('../../../src/utils/is-git-hooks')
 const isGitHooksPath = require.resolve('../../../src/utils/is-git-hooks.js')
 
-const chaiAsPromised = require('chai-as-promised')
-const chai = require('chai')
-chai.should()
-chai.use(chaiAsPromised)
-
 let unmock
 
-describe('is-git-hooks 测试', function () {
+describe('is-git-hooks 测试', () => {
   beforeEach(() => {
     unmock = mock()
   })
@@ -21,11 +16,12 @@ describe('is-git-hooks 测试', function () {
     unmock()
   })
 
-  it('非 husky 环境', function () {
-    return isGitHooks().should.eventually.equal(false)
+  test('非 husky 环境', async () => {
+    const expected = await isGitHooks()
+    expect(expected).toEqual(false)
   })
 
-  it('husky 环境', function () {
+  test('husky 环境', async () => {
     const tmpl = `
       const isGitHooks = require('${isGitHooksPath}');
       isGitHooks().then(result => {
@@ -33,6 +29,7 @@ describe('is-git-hooks 测试', function () {
       });
     `
 
-    return runInHusky(tmpl).should.eventually.equal('"true"')
+    const expected = await runInHusky(tmpl)
+    expect(expected).toEqual('"true"')
   })
 })

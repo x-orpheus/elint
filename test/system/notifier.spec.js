@@ -32,11 +32,11 @@ test('安装 latest，没有更新提示', async t => {
   await t.notThrowsAsync(run('npm run lint-fix', tmpDir, false, false))
 })
 
-test.only('安装 1.2.0，有更新提示', async t => {
+test.only('安装 3.0.0，有更新提示', async t => {
   const tmpDir = t.context.tmpDir
 
   await run(`npm install --silent ${elintPkgPath}`, tmpDir)
-  await run('npm install --silent elint-preset-test@1.2.0', tmpDir)
+  await run('npm install --silent elint-preset-test@3.0.0', tmpDir)
 
   // 显示更新提示
   await t.notThrowsAsync(run('npm run lint-fix', tmpDir, false, false))

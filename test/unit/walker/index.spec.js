@@ -11,14 +11,7 @@ const gitInitPath = require.resolve('../mock/git-init')
 const appendFilePath = require.resolve('../mock/append-file')
 const walkerPath = require.resolve('../../../src/walker')
 
-const deepEqualInAnyOrder = require('deep-equal-in-any-order')
-const chaiAsPromised = require('chai-as-promised')
-const chai = require('chai')
-chai.should()
-chai.use(deepEqualInAnyOrder)
-chai.use(chaiAsPromised)
-
-describe('Walker 测试', function () {
+describe('Walker 测试', () => {
   let unmock
   let baseDir
   let getPath
@@ -35,22 +28,30 @@ describe('Walker 测试', function () {
     unmock()
   })
 
-  describe('功能测试', function () {
-    it('空测试', function () {
-      return walker().should.eventually.deep.equal({
+  describe('功能测试', () => {
+    test('空测试', async () => {
+      const result = {
         es: [],
         style: []
-      })
+      }
+
+      const expected = await walker()
+
+      expect(expected).toEqual(result)
     })
 
-    it('普通环境', function () {
-      return walker(['*.txt']).should.eventually.deep.equal({
+    test('普通环境', async () => {
+      const result = {
         es: [],
         style: []
-      })
+      }
+
+      const expected = await walker(['*.txt'])
+
+      expect(expected).toEqual(result)
     })
 
-    it('husky 环境：匹配不到', async () => {
+    test('husky 环境：匹配不到', async () => {
       const tmpl = `
         const walker = require('${walkerPath}')
         const gitInit = require('${gitInitPath}')
@@ -65,10 +66,10 @@ describe('Walker 测试', function () {
 
       const expected = await runInHusky(tmpl)
 
-      return JSON.parse(JSON.parse(expected)).should.deep.equalInAnyOrder(result)
+      expect(JSON.parse(JSON.parse(expected))).toEqual(result)
     })
 
-    it('husky 环境：可以匹配到', async () => {
+    test('husky 环境：可以匹配到', async () => {
       const tmpl = `
         const walker = require('${walkerPath}')
         const gitInit = require('${gitInitPath}')
@@ -85,22 +86,27 @@ describe('Walker 测试', function () {
       }
 
       const expected = await runInHusky(tmpl)
+      const parsedExpected = JSON.parse(JSON.parse(expected))
 
-      return JSON.parse(JSON.parse(expected)).should.deep.equalInAnyOrder(result)
+      expect(parsedExpected.es.sort()).toEqual(result.es.sort())
+      expect(parsedExpected.style.sort()).toEqual(result.style.sort())
     })
   })
 
-  describe('Ignore 功能测试', function () {
-    it('开启忽略规则', function () {
+  describe('Ignore 功能测试', () => {
+    test('开启忽略规则', async () => {
       const result = {
         es: [getPath('app/c.js'), getPath('src/a.js'), getPath('src/lib/b.js')],
         style: []
       }
 
-      return walker(['**/*.js']).should.eventually.deep.equalInAnyOrder(result)
+      const expected = await walker(['**/*.js'])
+
+      expect(expected.es.sort()).toEqual(result.es.sort())
+      expect(expected.style.sort()).toEqual(result.style.sort())
     })
 
-    it('关闭忽略规则', function () {
+    test('关闭忽略规则', async () => {
       const result = {
         es: [
           getPath('.huskyrc.js'),
@@ -121,12 +127,15 @@ describe('Walker 测试', function () {
         style: []
       }
 
-      return walker(['**/*.js'], { noIgnore: true }).should.eventually.deep.equalInAnyOrder(result)
+      const expected = await walker(['**/*.js'], { noIgnore: true })
+
+      expect(expected.es.sort()).toEqual(result.es.sort())
+      expect(expected.style.sort()).toEqual(result.style.sort())
     })
   })
 
-  describe('staged file 测试', function () {
-    it('包含 staged file', async () => {
+  describe('staged file 测试', () => {
+    test('包含 staged file', async () => {
       const fileName = 'src/lib/b.js'
       const absFileName = path.join(baseDir, fileName)
       const tmpl = `
@@ -152,11 +161,13 @@ describe('Walker 测试', function () {
       }
 
       const expected = await runInHusky(tmpl)
+      const parsedExpected = JSON.parse(JSON.parse(expected))
 
-      return JSON.parse(JSON.parse(expected)).should.deep.equalInAnyOrder(result)
+      expect(parsedExpected.es.sort()).toEqual(result.es.sort())
+      expect(parsedExpected.style.sort()).toEqual(result.style.sort())
     })
 
-    it('包含多个 staged file', async () => {
+    test('包含多个 staged file', async () => {
       const fileName1 = 'src/lib/b.js'
       const absFileName1 = path.join(baseDir, fileName1)
       const fileName2 = 'src/a.css'
@@ -188,7 +199,10 @@ describe('Walker 测试', function () {
 
       const expected = await runInHusky(tmpl)
 
-      return JSON.parse(JSON.parse(expected)).should.deep.equalInAnyOrder(result)
+      const parsedExpected = JSON.parse(JSON.parse(expected))
+
+      expect(parsedExpected.es.sort()).toEqual(result.es.sort())
+      expect(parsedExpected.style.sort()).toEqual(result.style.sort())
     })
   })
 })
