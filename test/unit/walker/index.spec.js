@@ -161,8 +161,10 @@ describe('Walker 测试', () => {
       }
 
       const expected = await runInHusky(tmpl)
+      const parsedExpected = JSON.parse(JSON.parse(expected))
 
-      expect(JSON.parse(JSON.parse(expected))).toEqual(result)
+      expect(parsedExpected.es.sort()).toEqual(result.es.sort())
+      expect(parsedExpected.style.sort()).toEqual(result.style.sort())
     })
 
     test('包含多个 staged file', async () => {
@@ -197,7 +199,10 @@ describe('Walker 测试', () => {
 
       const expected = await runInHusky(tmpl)
 
-      expect(JSON.parse(JSON.parse(expected))).toEqual(result)
+      const parsedExpected = JSON.parse(JSON.parse(expected))
+
+      expect(parsedExpected.es.sort()).toEqual(result.es.sort())
+      expect(parsedExpected.style.sort()).toEqual(result.style.sort())
     })
   })
 })
