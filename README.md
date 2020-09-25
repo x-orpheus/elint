@@ -66,10 +66,11 @@
 
 ### 1.1. ELint
 
-elint 是一款代码校验工具，基于 eslint、stylelint、commitlint 等工具封装而成。elint 本身不包含任何校验规则，校验规则通过 preset 定义。elint 的主要功能包括：
+elint 是一款代码校验工具，基于 eslint、stylelint、commitlint、prettier 等工具封装而成。elint 本身不包含任何校验规则，校验规则通过 preset 定义。elint 的主要功能包括：
 
 - 支持对 js，css 的校验 (eslint, stylelint)。
 - 支持对 git commit message 的校验 (husky, commitlint)。
+- 支持对代码进行格式化 (prettier)。
 - **编写**定制化、场景化的 preset，preset 包含所有验证规则，**保证团队内部校验规则的一致性和可复用**。
 
 ### 1.2. Preset
@@ -87,6 +88,8 @@ elint-preset-<name>
 ├── node_modules
 ├── package.json
 ├── package-lock.json
+├── .prettierignore     # 定义 prettier 忽略规则
+├── .prettierrc.js      # 定义 prettier 的规则
 ├── .stylelintignore    # 定义 stylelint 忽略规则
 └── .stylelintrc.js     # 定义 stylelint 的规则，用于 css 的校验
 ```
@@ -94,15 +97,15 @@ elint-preset-<name>
 要求：
 
 1. npm package name 必须以 `elint-preset-` 开头，如： `elint-preset-<name>` 或 `@team/elint-preset-<name>`。
-2. linter 的配置文件名必须是 `.commitlintrc.js`, `.eslintrc.js`, `.stylelintrc.js`。
-3. 对于 eslint 和 stylelint，支持使用 `.eslintignore`, `.stylelintignore` 定义需要忽略校验的文件和文件夹。
+2. linter 的配置文件名必须是 `.commitlintrc.js`, `.eslintrc.js`, `.stylelintrc.js`, `.prettierrc.js`。
+3. 对于 eslint、stylelint 和 prettier，支持使用 `.eslintignore`, `.stylelintignore`, `.prettierignore` 定义需要忽略校验的文件和文件夹。
 4. git hooks (使用 husky) 的配置文件名必须是 `.huskyrc.js`。
 5. 所有配置文件必须放在 preset 的根目录。
 6. 依赖的 linter plugin（例如 eslint-plugin-react），必须明确定义在 `package.json` 的 `dependencies` 中。
 
 满足以上要求的 npm package 就是一个合法的 elint preset。
 
-> 一般来说，不建议把 `.eslintignore`，`.stylelintignore` 添加到 preset 中，因为 preset 应该对所有项目都是适用的（除非你的 preset 限定在一个很小的范围内使用，各个项目的目录结构都是一致的，此时可以使用它们来定义需要忽略校验的文件和文件夹）。
+> 一般来说，不建议把 `.eslintignore`，`.stylelintignore`, `.prettierignore` 添加到 preset 中，因为 preset 应该对所有项目都是适用的（除非你的 preset 限定在一个很小的范围内使用，各个项目的目录结构都是一致的，此时可以使用它们来定义需要忽略校验的文件和文件夹）。
 
 > 在 `package.json` 中添加关键字 `elint-preset` 会方便大家找到。[这里](https://npms.io/search?q=keywords%3Aelint-preset)可以查找现有的 preset。
 
@@ -369,6 +372,7 @@ options 可选的值：
 
 - -f, --fix: 自动修复错误
 - --no-ignore: 忽略 elint 遍历文件时的默认忽略规则
+- -p, --prettier: 检测代码格式，与 fix 共用时会对代码进行格式化
 
 当添加 `--fix` 时，会尝试自动修复问题，无法自动修复的问题依旧会输出出来。
 

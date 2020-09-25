@@ -4,6 +4,7 @@ const { version: elintVersion } = require('../package.json')
 const { version: eslintVersion } = require('eslint/package.json')
 const { version: stylelintVersion } = require('stylelint/package.json')
 const { version: commitlintVersion } = require('@commitlint/core/package.json')
+const { version: prettierVersion } = require('prettier/package.json')
 const { version: huskyVersion } = require('husky/package.json')
 const tryRequire = require('./utils/try-require')
 const padEnd = require('./utils/pad-end')
@@ -22,6 +23,7 @@ function version () {
     eslint: eslintVersion,
     stylelint: stylelintVersion,
     commitlint: commitlintVersion,
+    prettier: prettierVersion,
     husky: huskyVersion
   }
 

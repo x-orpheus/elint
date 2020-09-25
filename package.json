@@ -66,6 +66,7 @@
     "lodash": "^4.17.20",
     "micromatch": "^4.0.2",
     "node-fetch": "^2.6.1",
+    "prettier": "^2.1.2",
     "semver": "^7.3.2",
     "staged-git-files": "^1.2.0",
     "stylelint": "~13.7.1"

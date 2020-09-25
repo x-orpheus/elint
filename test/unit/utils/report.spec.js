@@ -128,4 +128,47 @@ describe('Report 测试', function () {
 
     report(input).should.be.equal(except.join(''))
   })
+
+  it('合并相同 name 的配置', function () {
+    const input = [
+      {
+        name: 'name',
+        output: 'output1',
+        success: true
+      },
+      {
+        name: 'name2',
+        output: 'output2',
+        success: true
+      },
+      {
+        name: 'name',
+        output: ' output2',
+        success: true
+      },
+      {
+        name: 'name',
+        output: ' output3',
+        success: false
+      }
+    ]
+
+    const except = []
+
+    except.push('\n')
+    except.push(`${chalk.bold('> name:')}\n`)
+    except.push('\n')
+    except.push('  output1 output2 output3')
+    except.push('\n')
+
+    except.push('\n')
+    except.push(`${chalk.bold('> name2:')}\n`)
+    except.push('\n')
+    except.push('  output2')
+    except.push('\n')
+
+    except.push('\n')
+
+    report(input).should.be.equal(except.join(''))
+  })
 })

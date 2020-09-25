@@ -116,3 +116,73 @@ test('git add 不符合规范的文件后，修改为符合规范的，commit �
   // 只校验 stage 文件，不报错
   await t.throwsAsync(run('git commit -m "build: fail"', tmpDir))
 })
+
+test('git add 符合规范的文件后，修改为不符合，commit 成功（使用 prettier）', async t => {
+  const { tmpDir } = t.context
+
+  // 添加符合规范的文件
+  await run('git add src/standard1.css', tmpDir)
+
+  // 然后修改的不符合规范了，但是不执行 git add
+  // 此时 lint 应该直接从暂存区获取文件内容，不报错
+  await writeFile(path.join(tmpDir, 'src/standard1.css'), '.div {\n  height: 0.11111rem;\n}\n')
+
+  // init husky
+  await initHusky('elint lint style "src/**/*" -p', tmpDir)
+
+  // 只校验 stage 文件，不报错
+  await t.notThrowsAsync(run('git commit -m "build: success"', tmpDir))
+})
+
+test('git add 符合规范的文件后，修改为不符合，commit 成功（多文件）（使用 prettier）', async t => {
+  const { tmpDir } = t.context
+
+  // 添加符合规范的文件
+  await run('git add src/standard1.css', tmpDir)
+  await run('git add src/standard2.css', tmpDir)
+
+  // 然后修改的不符合规范了，但是不执行 git add
+  // 此时 lint 应该直接从暂存区获取文件内容，不报错
+  await writeFile(path.join(tmpDir, 'src/standard1.css'), '.div {\n  height: 0.11111rem;\n}\n')
+
+  // init husky
+  await initHusky('elint lint style "src/**/*" -p', tmpDir)
+
+  // 只校验 stage 文件，不报错
+  await t.notThrowsAsync(run('git commit -m "build: success"', tmpDir))
+})
+
+test('git add 不符合规范的文件后，修改为符合规范的，commit 不成功（使用 prettier）', async t => {
+  const { tmpDir } = t.context
+
+  // 添加不符合规范的文件
+  await run('git add src/index.js', tmpDir)
+
+  // 然后修改的符合规范了，但是不执行 git add
+  // 此时 lint 应该直接从暂存区获取文件内容，报错
+  await writeFile(path.join(tmpDir, 'src/index.js'), 'const a = 1')
+
+  // init husky
+  await initHusky('elint lint es "src/**/*" -p', tmpDir)
+
+  // 只校验 stage 文件，不报错
+  await t.throwsAsync(run('git commit -m "build: fail"', tmpDir))
+})
+
+test('git add 不符合规范的文件后，修改为符合规范的，commit 不成功（多文件）（使用 prettier）', async t => {
+  const { tmpDir } = t.context
+
+  // 添加不符合规范的文件
+  await run('git add src/index.js', tmpDir)
+  await run('git add src/standard.js', tmpDir)
+
+  // 然后修改的符合规范了，但是不执行 git add
+  // 此时 lint 应该直接从暂存区获取文件内容，报错
+  await writeFile(path.join(tmpDir, 'src/index.js'), 'const a = 1')
+
+  // init husky
+  await initHusky('elint lint es "src/**/*" -p', tmpDir)
+
+  // 只校验 stage 文件，不报错
+  await t.throwsAsync(run('git commit -m "build: fail"', tmpDir))
+})
