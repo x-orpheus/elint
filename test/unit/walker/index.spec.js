@@ -102,7 +102,8 @@ describe('Walker 测试', () => {
 
       const expected = await walker(['**/*.js'])
 
-      expect(expected).toEqual(result)
+      expect(expected.es.sort()).toEqual(result.es.sort())
+      expect(expected.style.sort()).toEqual(result.style.sort())
     })
 
     test('关闭忽略规则', async () => {
