@@ -2,7 +2,7 @@
 
 const debug = require('debug')('elint:env')
 const path = require('path')
-const isNpm = require('./utils/is-npm')
+const { isNpmOrYarn } = require('is-npm')
 
 /**
  * 获取通过 npm script 执行时的项目根路径
@@ -31,9 +31,9 @@ function getInitCwd () {
  */
 const getBaseDir = () => {
   /* istanbul ignore next */
-  const baseDir = isNpm ? getInitCwd() : process.cwd()
+  const baseDir = isNpmOrYarn ? getInitCwd() : process.cwd()
 
-  debug(`isNpm: ${isNpm}`)
+  debug(`isNpmOrYarn: ${isNpmOrYarn}`)
   debug(`base dir: ${baseDir}`)
 
   return baseDir

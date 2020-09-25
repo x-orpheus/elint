@@ -41,5 +41,8 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
+      - name: install yarn # 全局安装 yarn
+        run: npm install -g yarn
+
       - name: npm run test:system
         run: npm run test:system
