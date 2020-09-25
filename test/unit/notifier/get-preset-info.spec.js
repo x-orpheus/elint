@@ -6,9 +6,6 @@ const mock = require('../mock/env')
 const { getBaseDir } = require('../../../src/env')
 const getPresetInfo = require('../../../src/notifier/get-preset-info')
 
-const chai = require('chai')
-const should = chai.should()
-
 let unmock
 
 const normalPresetInfo = {
@@ -24,10 +21,10 @@ const scopePresetInfo = {
 }
 
 function remove (p) {
-  fs.removeSync(path.join(getBaseDir(), p))
+  return fs.remove(path.join(getBaseDir(), p))
 }
 
-describe('GetPresetInfo 测试', function () {
+describe('GetPresetInfo 测试', () => {
   beforeEach(() => {
     unmock = mock()
   })
@@ -36,61 +33,61 @@ describe('GetPresetInfo 测试', function () {
     unmock()
   })
 
-  it('从 package-lock.json 中获取数据', function () {
+  test('从 package-lock.json 中获取数据', async () => {
     // 删除 elint-preset-node 和 @scope/elint-preset-scope
-    remove('node_modules/elint-preset-node')
-    remove('node_modules/@scope/elint-preset-scope')
+    await remove('node_modules/elint-preset-node')
+    await remove('node_modules/@scope/elint-preset-scope')
 
-    return getPresetInfo().should.be.deep.equal(normalPresetInfo)
+    expect(getPresetInfo()).toEqual(normalPresetInfo)
   })
 
-  it('[scope] 从 package-lock.json 中获取数据', function () {
+  test('[scope] 从 package-lock.json 中获取数据', async () => {
     // 删除 elint-preset-node 和 elint-preset-normal
-    remove('node_modules/elint-preset-node')
-    remove('node_modules/elint-preset-normal')
+    await remove('node_modules/elint-preset-node')
+    await remove('node_modules/elint-preset-normal')
 
-    return getPresetInfo().should.be.deep.equal(scopePresetInfo)
+    expect(getPresetInfo()).toEqual(scopePresetInfo)
   })
 
-  it('从 node_modules 中获取数据', function () {
+  test('从 node_modules 中获取数据', async () => {
     // 删除 elint-preset-node， @scope/elint-preset-scope, package-lock.json
-    remove('node_modules/elint-preset-node')
-    remove('node_modules/@scope/elint-preset-scope')
-    remove('package-lock.json')
+    await remove('node_modules/elint-preset-node')
+    await remove('node_modules/@scope/elint-preset-scope')
+    await remove('package-lock.json')
 
-    return getPresetInfo().should.be.deep.equal(normalPresetInfo)
+    expect(getPresetInfo()).toEqual(normalPresetInfo)
   })
 
-  it('[scope] 从 node_modules 中获取数据', function () {
+  test('[scope] 从 node_modules 中获取数据', async () => {
     // 删除 elint-preset-node， elint-preset-normal, package-lock.json
-    remove('node_modules/elint-preset-node')
-    remove('node_modules/elint-preset-normal')
-    remove('package-lock.json')
+    await remove('node_modules/elint-preset-node')
+    await remove('node_modules/elint-preset-normal')
+    await remove('package-lock.json')
 
-    return getPresetInfo().should.be.deep.equal(scopePresetInfo)
+    expect(getPresetInfo()).toEqual(scopePresetInfo)
   })
 
-  it('未安装 preset', function () {
+  test('未安装 preset', async () => {
     // 删除 node_modules 和 package-lock
-    remove('node_modules')
-    remove('package-lock.json')
+    await remove('node_modules')
+    await remove('package-lock.json')
 
-    return should.not.exist(getPresetInfo())
+    expect(getPresetInfo()).toBeFalsy()
   })
 
-  it('_resolved 缺失', function () {
+  test('_resolved 缺失', async () => {
     // 删除 elint-preset-normal @scope/elint-preset-scope, package-lock.json
-    remove('node_modules/elint-preset-normal')
-    remove('node_modules/@scope/elint-preset-scope')
-    remove('package-lock.json')
+    await remove('node_modules/elint-preset-normal')
+    await remove('node_modules/@scope/elint-preset-scope')
+    await remove('package-lock.json')
 
-    return should.not.exist(getPresetInfo())
+    expect(getPresetInfo()).toBeFalsy()
   })
 
-  it('package-lock 中不存在 preset 信息', function () {
+  test('package-lock 中不存在 preset 信息', async () => {
     // 删除 elint-preset-node 和 @scope/elint-preset-scope
-    remove('node_modules/elint-preset-node')
-    remove('node_modules/@scope/elint-preset-scope')
+    await remove('node_modules/elint-preset-node')
+    await remove('node_modules/@scope/elint-preset-scope')
 
     // 删除 package-lock 中 elint-preset-normal 的信息
     const packageLockPath = path.join(getBaseDir(), 'package-lock.json')
@@ -98,14 +95,14 @@ describe('GetPresetInfo 测试', function () {
       "dependencies": {}
     }`
 
-    fs.writeFileSync(packageLockPath, packageLockContent)
+    await fs.writeFile(packageLockPath, packageLockContent)
 
-    return getPresetInfo().should.be.deep.equal(normalPresetInfo)
+    expect(getPresetInfo()).toEqual(normalPresetInfo)
   })
 
-  it('本地安装，resolved 非 url', function () {
-    remove('node_modules/elint-preset-node')
-    remove('node_modules/@scope/elint-preset-scope')
+  test('本地安装，resolved 非 url', async () => {
+    await remove('node_modules/elint-preset-node')
+    await remove('node_modules/@scope/elint-preset-scope')
 
     const packageLockPath = path.join(getBaseDir(), 'package-lock.json')
     const packageLockContent = `{
@@ -117,20 +114,20 @@ describe('GetPresetInfo 测试', function () {
       }
     }`
 
-    fs.writeFileSync(packageLockPath, packageLockContent)
+    await fs.writeFile(packageLockPath, packageLockContent)
 
-    return should.not.exist(getPresetInfo())
+    expect(getPresetInfo()).toBeFalsy()
   })
 
-  it('package.json 缺失', function () {
+  test('package.json 缺失', async () => {
     // 删除 elint-preset-node， @scope/elint-preset-scope, package-lock.json
-    remove('node_modules/elint-preset-node')
-    remove('node_modules/@scope/elint-preset-scope')
-    remove('package-lock.json')
+    await remove('node_modules/elint-preset-node')
+    await remove('node_modules/@scope/elint-preset-scope')
+    await remove('package-lock.json')
 
     // package.json 缺失（虽然不知道为什么会缺失）
-    remove('node_modules/elint-preset-normal/package.json')
+    await remove('node_modules/elint-preset-normal/package.json')
 
-    return should.not.exist(getPresetInfo())
+    expect(getPresetInfo()).toBeFalsy()
   })
 })

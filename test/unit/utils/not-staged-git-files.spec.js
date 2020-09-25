@@ -7,17 +7,10 @@ const appendFile = require('../mock/append-file')
 const notStagedGitFiles = require('../../../src/utils/not-staged-git-files')
 const { getBaseDir } = require('../../../src/env')
 
-const deepEqualInAnyOrder = require('deep-equal-in-any-order')
-const chaiAsPromised = require('chai-as-promised')
-const chai = require('chai')
-chai.use(deepEqualInAnyOrder)
-chai.use(chaiAsPromised)
-chai.should()
-
 let unmock
 let baseDir
 
-describe('not-staged-git-files 测试', function () {
+describe('not-staged-git-files 测试', () => {
   beforeEach(() => {
     unmock = mock()
     baseDir = getBaseDir()
@@ -28,36 +21,42 @@ describe('not-staged-git-files 测试', function () {
     baseDir = null
   })
 
-  it('目录不存在', function () {
-    fs.removeSync(baseDir)
-    return notStagedGitFiles().should.eventually.deep.equal([])
+  test('目录不存在', async () => {
+    await fs.remove(baseDir)
+    const expected = await notStagedGitFiles()
+
+    expect(expected).toEqual([])
   })
 
-  it('没有 not staged file', function () {
+  test('没有 not staged file', async () => {
     const result = []
 
-    return gitInit().then(() => {
-      return notStagedGitFiles().should.eventually.deep.equal(result)
-    })
+    await gitInit()
+
+    const expected = await notStagedGitFiles()
+
+    expect(expected).toEqual(result)
   })
 
-  it('单个 staged file', function () {
+  test('单个 staged file', async () => {
     const result = ['.huskyrc.js']
 
-    return gitInit()
-      .then(() => appendFile(result))
-      .then(() => {
-        return notStagedGitFiles().should.eventually.deep.equal(result)
-      })
+    await gitInit()
+    await appendFile(result)
+
+    const expected = await notStagedGitFiles()
+
+    expect(expected).toEqual(result)
   })
 
-  it('多个 staged file', function () {
+  test('多个 staged file', async () => {
     const result = ['app/c.js', 'app/style.css']
 
-    return gitInit()
-      .then(() => appendFile(result))
-      .then(() => {
-        return notStagedGitFiles().should.eventually.deep.equal(result)
-      })
+    await gitInit()
+    await appendFile(result)
+
+    const expected = await notStagedGitFiles()
+
+    expect(expected).toEqual(result)
   })
 })

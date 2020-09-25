@@ -8,17 +8,10 @@ const appendFile = require('../mock/append-file')
 const stageFiles = require('../../../src/walker/stage')
 const { getBaseDir } = require('../../../src/env')
 
-const deepEqualInAnyOrder = require('deep-equal-in-any-order')
-const chaiAsPromised = require('chai-as-promised')
-const chai = require('chai')
-chai.use(deepEqualInAnyOrder)
-chai.use(chaiAsPromised)
-chai.should()
-
 let unmock
 let baseDir
 
-describe('Walker stage 测试', function () {
+describe('Walker stage 测试', () => {
   beforeEach(() => {
     unmock = mock()
     baseDir = getBaseDir()
@@ -29,48 +22,65 @@ describe('Walker stage 测试', function () {
     baseDir = null
   })
 
-  it('目录不存在', function () {
-    fs.removeSync(baseDir)
-    return stageFiles(['**/*.js']).should.eventually.deep.equal([])
+  test('目录不存在', async () => {
+    await fs.remove(baseDir)
+
+    const expected = []
+
+    const result = await stageFiles(['**/*.js'])
+
+    expect(result).toEqual(expected)
   })
 
-  it('git 项目不存在', function () {
-    return stageFiles(['**/*.js']).should.eventually.deep.equal([])
+  test('git 项目不存在', async () => {
+    const expected = []
+
+    const result = await stageFiles(['**/*.js'])
+
+    expect(result).toEqual(expected)
   })
 
-  it('可以匹配到文件', function () {
+  test('可以匹配到文件', async () => {
+    await gitInit()
+
     const result = ['src/a.js', 'src/lib/b.js']
 
-    return gitInit().then(() => {
-      return stageFiles(['src/**/*.js']).should.eventually.deep.equalInAnyOrder(result)
-    })
+    const expected = await stageFiles(['src/**/*.js'])
+
+    expect(result.sort()).toEqual(expected.sort())
   })
 
-  it('匹配不到文件', function () {
-    return gitInit().then(() => {
-      return stageFiles(['*.txt']).should.eventually.deep.equalInAnyOrder([])
-    })
+  test('匹配不到文件', async () => {
+    await gitInit()
+
+    const result = []
+
+    const expected = await stageFiles(['*.txt'])
+
+    expect(result).toEqual(expected)
   })
 
-  it('忽略测试', function () {
+  test('忽略测试', async () => {
+    await gitInit()
+
     const result = ['src/a.js']
 
-    return gitInit().then(() => {
-      return stageFiles(['src/**/*.js'], ['src/lib/*']).should.eventually.deep.equalInAnyOrder(
-        result
-      )
-    })
+    const expected = await stageFiles(['src/**/*.js'], ['src/lib/*'])
+
+    expect(result).toEqual(expected)
   })
 
-  it('忽略测试，规则为空', function () {
+  test('忽略测试，规则为空', async () => {
+    await gitInit()
+
     const result = ['src/a.js', 'src/lib/b.js']
 
-    return gitInit().then(() => {
-      return stageFiles(['src/**/*.js'], []).should.eventually.deep.equalInAnyOrder(result)
-    })
+    const expected = await stageFiles(['src/**/*.js'], [])
+
+    expect(result.sort()).toEqual(expected.sort())
   })
 
-  it('包含非暂存区文件', function () {
+  test('包含非暂存区文件', async () => {
     const filePath = 'src/lib/b.js'
     const result = [
       'src/a.js',
@@ -80,14 +90,16 @@ describe('Walker stage 测试', function () {
       }
     ]
 
-    return gitInit()
-      .then(() => appendFile([filePath]))
-      .then(() => {
-        return stageFiles(['src/**/*.js'], []).should.eventually.deep.equalInAnyOrder(result)
-      })
+    await gitInit()
+
+    await appendFile([filePath])
+
+    const expected = await stageFiles(['src/**/*.js'], [])
+
+    expect(expected).toEqual(result)
   })
 
-  it('包含多个非暂存区文件', function () {
+  test('包含多个非暂存区文件', async () => {
     const filePath1 = 'src/lib/b.js'
     const filePath2 = 'app/c.js'
     const result = [
@@ -102,13 +114,15 @@ describe('Walker stage 测试', function () {
       }
     ]
 
-    return gitInit()
-      .then(() => appendFile([filePath1, filePath2]))
-      .then(() => {
-        return stageFiles(
-          ['src/**/*.js', 'app/**/*.js'],
-          []
-        ).should.eventually.deep.equalInAnyOrder(result)
-      })
+    await gitInit()
+
+    await appendFile([filePath1, filePath2])
+
+    const expected = await stageFiles(
+      ['src/**/*.js', 'app/**/*.js'],
+      []
+    )
+
+    expect(result).toEqual(expected)
   })
 })

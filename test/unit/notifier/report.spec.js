@@ -2,17 +2,14 @@
 
 const report = require('../../../src/notifier/report')
 
-const chai = require('chai')
-const should = chai.should()
-
-describe('Report 测试', function () {
+describe('Report 测试', () => {
   ;[true, 1, undefined, null, {}, () => {}].map(value => {
-    it(`异常输入 ${JSON.stringify(value)}`, function () {
-      return should.not.exist(report(value))
+    test(`异常输入 ${JSON.stringify(value)}`, () => {
+      expect(report(value)).toBeFalsy()
     })
   })
 
-  it('正常输入', function () {
+  test('正常输入', function () {
     const value = {
       name: 'name',
       current: '1.2.3',
@@ -22,9 +19,9 @@ describe('Report 测试', function () {
     const result = report(value)
 
     return (
-      result.should.be.include(value.name) &&
-      result.should.be.include(value.current) &&
-      result.should.be.include(value.latest)
+      expect(result).toContain(value.name) &&
+      expect(result).toContain(value.current) &&
+      expect(result).toContain(value.latest)
     )
   })
 })

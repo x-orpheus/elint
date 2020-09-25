@@ -47,10 +47,6 @@ jobs:
       - name: npm run test:unit
         run: npm run test:unit
 
-      - name: npm run test:unit:coverage
-        if: matrix.node_version == 14 && matrix.os == 'ubuntu-latest'
-        run: npm run test:unit:coverage
-
       - name: Upload coverage to Codecov
         if: matrix.node_version == 14 && matrix.os == 'ubuntu-latest'
         uses: codecov/codecov-action@v1

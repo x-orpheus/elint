@@ -4,11 +4,8 @@ const chalk = require('chalk')
 const figures = require('figures')
 const report = require('../../../src/utils/report')
 
-const chai = require('chai')
-chai.should()
-
-describe('Report 测试', function () {
-  it('单条成功', function () {
+describe('Report 测试', () => {
+  test('单条成功', () => {
     const input = [
       {
         name: 'name',
@@ -17,20 +14,20 @@ describe('Report 测试', function () {
       }
     ]
 
-    const except = []
+    const result = []
 
-    except.push('\n')
-    except.push(`${chalk.bold('> name:')}\n`)
-    except.push('\n')
-    except.push('  output')
-    except.push('\n')
+    result.push('\n')
+    result.push(`${chalk.bold('> name:')}\n`)
+    result.push('\n')
+    result.push('  output')
+    result.push('\n')
 
-    except.push('\n')
+    result.push('\n')
 
-    report(input).should.be.equal(except.join(''))
+    expect(report(input)).toEqual(result.join(''))
   })
 
-  it('单条成功, output 为空', function () {
+  test('单条成功, output 为空', () => {
     const input = [
       {
         name: 'name',
@@ -39,20 +36,20 @@ describe('Report 测试', function () {
       }
     ]
 
-    const except = []
+    const result = []
 
-    except.push('\n')
-    except.push(`${chalk.bold('> name:')}\n`)
-    except.push('\n')
-    except.push('  ' + chalk.green(`${figures.tick} Passed`))
-    except.push('\n')
+    result.push('\n')
+    result.push(`${chalk.bold('> name:')}\n`)
+    result.push('\n')
+    result.push('  ' + chalk.green(`${figures.tick} Passed`))
+    result.push('\n')
 
-    except.push('\n')
+    result.push('\n')
 
-    report(input).should.be.equal(except.join(''))
+    expect(report(input)).toEqual(result.join(''))
   })
 
-  it('单条成功, 输出包含换行', function () {
+  test('单条成功, 输出包含换行', () => {
     const input = [
       {
         name: 'name',
@@ -61,20 +58,20 @@ describe('Report 测试', function () {
       }
     ]
 
-    const except = []
+    const result = []
 
-    except.push('\n')
-    except.push(`${chalk.bold('> name:')}\n`)
-    except.push('\n')
-    except.push('  output\n  output')
-    except.push('\n')
+    result.push('\n')
+    result.push(`${chalk.bold('> name:')}\n`)
+    result.push('\n')
+    result.push('  output\n  output')
+    result.push('\n')
 
-    except.push('\n')
+    result.push('\n')
 
-    report(input).should.be.equal(except.join(''))
+    expect(report(input)).toEqual(result.join(''))
   })
 
-  it('多条成功', function () {
+  test('多条成功', () => {
     const input = [
       {
         name: 'name1',
@@ -88,26 +85,26 @@ describe('Report 测试', function () {
       }
     ]
 
-    const except = []
+    const result = []
 
-    except.push('\n')
-    except.push(`${chalk.bold('> name1:')}\n`)
-    except.push('\n')
-    except.push('  output1')
-    except.push('\n')
+    result.push('\n')
+    result.push(`${chalk.bold('> name1:')}\n`)
+    result.push('\n')
+    result.push('  output1')
+    result.push('\n')
 
-    except.push('\n')
-    except.push(`${chalk.bold('> name2:')}\n`)
-    except.push('\n')
-    except.push('  output2')
-    except.push('\n')
+    result.push('\n')
+    result.push(`${chalk.bold('> name2:')}\n`)
+    result.push('\n')
+    result.push('  output2')
+    result.push('\n')
 
-    except.push('\n')
+    result.push('\n')
 
-    report(input).should.be.equal(except.join(''))
+    expect(report(input)).toEqual(result.join(''))
   })
 
-  it('单条失败', function () {
+  test('单条失败', () => {
     const input = [
       {
         name: 'name',
@@ -116,20 +113,20 @@ describe('Report 测试', function () {
       }
     ]
 
-    const except = []
+    const result = []
 
-    except.push('\n')
-    except.push(`${chalk.bold('> name:')}\n`)
-    except.push('\n')
-    except.push('  output')
-    except.push('\n')
+    result.push('\n')
+    result.push(`${chalk.bold('> name:')}\n`)
+    result.push('\n')
+    result.push('  output')
+    result.push('\n')
 
-    except.push('\n')
+    result.push('\n')
 
-    report(input).should.be.equal(except.join(''))
+    expect(report(input)).toEqual(result.join(''))
   })
 
-  it('合并相同 name 的配置', function () {
+  test('合并相同 name 的配置', () => {
     const input = [
       {
         name: 'name',
@@ -153,22 +150,22 @@ describe('Report 测试', function () {
       }
     ]
 
-    const except = []
+    const result = []
 
-    except.push('\n')
-    except.push(`${chalk.bold('> name:')}\n`)
-    except.push('\n')
-    except.push('  output1 output2 output3')
-    except.push('\n')
+    result.push('\n')
+    result.push(`${chalk.bold('> name:')}\n`)
+    result.push('\n')
+    result.push('  output1 output2 output3')
+    result.push('\n')
 
-    except.push('\n')
-    except.push(`${chalk.bold('> name2:')}\n`)
-    except.push('\n')
-    except.push('  output2')
-    except.push('\n')
+    result.push('\n')
+    result.push(`${chalk.bold('> name2:')}\n`)
+    result.push('\n')
+    result.push('  output2')
+    result.push('\n')
 
-    except.push('\n')
+    result.push('\n')
 
-    report(input).should.be.equal(except.join(''))
+    expect(report(input)).toEqual(result.join(''))
   })
 })

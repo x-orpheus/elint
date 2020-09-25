@@ -3,14 +3,7 @@
 const mock = require('../mock/env')
 const walker = require('../../../src/walker/local')
 
-const deepEqualInAnyOrder = require('deep-equal-in-any-order')
-const chaiAsPromised = require('chai-as-promised')
-const chai = require('chai')
-chai.use(deepEqualInAnyOrder)
-chai.use(chaiAsPromised)
-chai.should()
-
-describe('Walker local 测试', function () {
+describe('Walker local 测试', () => {
   let unmock
 
   beforeEach(() => {
@@ -21,65 +14,83 @@ describe('Walker local 测试', function () {
     unmock()
   })
 
-  it('空测试', function () {
-    return Promise.all([
-      walker().should.eventually.deep.equalInAnyOrder([]),
-      walker([]).should.eventually.deep.equalInAnyOrder([])
-    ])
+  test('空测试', async () => {
+    const result1 = await walker()
+    const result2 = await walker([])
+
+    expect(result1).toEqual([])
+    expect(result2).toEqual([])
   })
 
-  it('单条 glob', function () {
-    const result = [
+  test('单条 glob', async () => {
+    const expected = [
       'src/a.js'
     ]
 
-    return walker('src/*.js').should.eventually.deep.equalInAnyOrder(result)
+    const result = await walker('src/*.js')
+
+    expect(result).toEqual(expected)
   })
 
-  it('单条 glob, 匹配空', function () {
-    return walker('src/*.ts').should.eventually.deep.equalInAnyOrder([])
+  test('单条 glob, 匹配空', async () => {
+    const expected = []
+    const result = await walker('src/*.ts')
+
+    expect(result).toEqual(expected)
   })
 
-  it('单条 glob, deep', function () {
-    const result = [
+  test('单条 glob, deep', async () => {
+    const expected = [
       'src/a.js',
       'src/lib/b.js'
     ]
 
-    return walker('src/**/*.js').should.eventually.deep.equalInAnyOrder(result)
+    const result = await walker('src/**/*.js')
+
+    expect(result.sort()).toEqual(expected.sort())
   })
 
-  it('单条 glob, deep', function () {
-    const result = [
+  test('单条 glob, deep', async () => {
+    const expected = [
       'src/a.css',
       'src/a.js',
       'src/index.html',
       'src/lib/b.js'
     ]
 
-    return walker('src/**/*').should.eventually.deep.equalInAnyOrder(result)
+    const result = await walker('src/**/*')
+
+    expect(result.sort()).toEqual(expected.sort())
   })
 
-  it('多条 glob', function () {
-    const result = [
+  test('多条 glob', async () => {
+    const expected = [
       'src/a.css',
       'src/a.js'
     ]
 
-    return walker(['src/*.js', 'src/*.css']).should.eventually.deep.equalInAnyOrder(result)
+    const result = await walker(['src/*.js', 'src/*.css'])
+
+    expect(result.sort()).toEqual(expected.sort())
   })
 
-  it('多条 glob, 匹配空', function () {
-    return walker(['src/**/*.ts', 'dist/**/*.ts']).should.eventually.deep.equalInAnyOrder([])
+  test('多条 glob, 匹配空', async () => {
+    const expected = []
+
+    const result = await walker(['src/**/*.ts', 'dist/**/*.ts'])
+
+    expect(result).toEqual(expected)
   })
 
-  it('多条 glob, deep', function () {
-    const result = [
+  test('多条 glob, deep', async () => {
+    const expected = [
       'src/a.css',
       'src/a.js',
       'src/lib/b.js'
     ]
 
-    return walker(['src/**/*.js', 'src/**/*.css']).should.eventually.deep.equalInAnyOrder(result)
+    const result = await walker(['src/**/*.js', 'src/**/*.css'])
+
+    expect(result.sort()).toEqual(expected.sort())
   })
 })

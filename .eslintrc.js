@@ -4,7 +4,8 @@ module.exports = {
   extends: 'standard',
   env: {
     node: true,
-    mocha: true
+    mocha: true,
+    jest: true
   },
   rules: {
     'valid-jsdoc': 2,

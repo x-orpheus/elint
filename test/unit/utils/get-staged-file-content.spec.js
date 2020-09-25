@@ -7,17 +7,10 @@ const gitInit = require('../mock/git-init')
 const getStagedFileContent = require('../../../src/utils/get-staged-file-content')
 const { getBaseDir } = require('../../../src/env')
 
-const deepEqualInAnyOrder = require('deep-equal-in-any-order')
-const chaiAsPromised = require('chai-as-promised')
-const chai = require('chai')
-chai.use(deepEqualInAnyOrder)
-chai.use(chaiAsPromised)
-chai.should()
-
 let unmock
 let baseDir
 
-describe('get-staged-file-content 测试', function () {
+describe('get-staged-file-content 测试', () => {
   beforeEach(() => {
     unmock = mock()
     baseDir = getBaseDir()
@@ -28,28 +21,31 @@ describe('get-staged-file-content 测试', function () {
     baseDir = null
   })
 
-  it('文件不存在', function () {
+  test('文件不存在', async () => {
     const filePath = '/asdf/124/qwr/zvafafd/aqwer'
-    return getStagedFileContent(filePath).should.eventually.deep.equal(null)
+    const expected = await getStagedFileContent(filePath)
+
+    expect(expected).toEqual(null)
   })
 
-  it('不是 staged 文件', function () {
+  test('不是 staged 文件', async () => {
     const fileName = 'untracked.js'
     const untrackedFilePath = path.join(baseDir, fileName)
 
-    return gitInit()
-      .then(() => fs.createFile(untrackedFilePath))
-      .then(() => {
-        return getStagedFileContent(fileName).should.eventually.deep.equal(null)
-      })
+    await gitInit()
+    await fs.createFile(untrackedFilePath)
+    const expected = await getStagedFileContent(fileName)
+
+    expect(expected).toEqual(null)
   })
 
-  it('是 staged 文件', function () {
+  test('是 staged 文件', async () => {
     const filePath = 'app/style.css'
-    const fileContent = fs.readFileSync(path.join(baseDir, filePath)).toString()
+    const fileContent = await fs.readFile(path.join(baseDir, filePath))
 
-    return gitInit().then(() => {
-      return getStagedFileContent(filePath).should.eventually.deep.equal(fileContent)
-    })
+    await gitInit()
+    const expected = await getStagedFileContent(filePath)
+
+    expect(expected).toEqual(fileContent.toString())
   })
 })
