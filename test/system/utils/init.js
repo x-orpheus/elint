@@ -25,6 +25,6 @@ run('npm pack', presetPath, true)
 // 创建缓存项目
 createCacheProject()
 
-if (hasYarn) {
+if (hasYarn()) {
   createCacheProject(true)
 }
