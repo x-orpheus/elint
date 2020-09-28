@@ -2,5 +2,6 @@ module.exports = {
   testMatch: [
     '**/test/unit/**/*.spec.js'
   ],
-  collectCoverage: true
+  collectCoverage: true,
+  coverageDirectory: '../../coverage'
 }
