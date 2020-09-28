@@ -10,8 +10,7 @@
     "test": "npm run test:lint && npm run test:unit && npm run test:system",
     "test:lint": "eslint --format codeframe \"+(bin|src|test)/**/*.js\" --fix",
     "test:unit": "jest --config test/unit/jest.config.js",
-    "test:system": "node test/system/utils/init.js && ava && node test/system/utils/clean.js",
-    "test:system2": "jest --config test/system/jest.config.js --runInBand"
+    "test:system": "jest --config test/system/jest.config.js --runInBand"
   },
   "repository": {
     "type": "git",
@@ -75,7 +74,6 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
-    "ava": "^3.12.1",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",
