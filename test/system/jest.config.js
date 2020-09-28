@@ -1,6 +1,6 @@
 module.exports = {
-  globalSetup: './utils/init.js',
-  globalTeardown: './utils/clean.js',
+  globalSetup: './setup.js',
+  globalTeardown: './teardown.js',
   setupFilesAfterEnv: ['jest-extended'],
   testTimeout: 5 * 60 * 1000,
   testMatch: [
