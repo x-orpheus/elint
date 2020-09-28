@@ -4,13 +4,13 @@
  * lint 测试：主要测试 git commit 时，直接读取 staged files 的情况
  */
 
-const test = require('ava')
 const path = require('path')
 const fs = require('fs-extra')
-const createTmpProjectFromCache = require('./utils/create-tmp-project-from-cache')
+const resetCacheProject = require('./utils/reset-cache-project')
 const run = require('./utils/run')
 
 const writeFile = (filePath, content) => fs.writeFile(filePath, content)
+
 const initHusky = (command, tmpDir) => {
   // 强行修改 .huskyrc.js，commit 前执行 lint style
   const huskyFilePath = path.join(tmpDir, '.huskyrc.js')
@@ -25,8 +25,10 @@ const initHusky = (command, tmpDir) => {
   return fs.writeFile(huskyFilePath, huskyFileContent)
 }
 
-test.beforeEach(async t => {
-  const tmpDir = await createTmpProjectFromCache()
+let tmpDir
+
+beforeEach(async () => {
+  tmpDir = await resetCacheProject()
 
   await run('git init', tmpDir)
   await run('git config user.name "zhang san"', tmpDir)
@@ -38,18 +40,13 @@ test.beforeEach(async t => {
    * 手动安装的时候，已经有了配置文件，配置文件 skipCI = false
    */
   await run('npm run hooks-install', tmpDir)
-
-  const hooksPath = path.join(tmpDir, '.git/hooks')
-
-  t.context = {
-    tmpDir,
-    hooksPath
-  }
 })
 
-test('git add 符合规范的文件后，修改为不符合，commit 成功', async t => {
-  const { tmpDir } = t.context
+afterEach(async () => {
+  await run('npm run hooks-uninstall', tmpDir)
+})
 
+test('git add 符合规范的文件后，修改为不符合，commit 成功', async () => {
   // 添加符合规范的文件
   await run('git add src/standard1.css', tmpDir)
 
@@ -61,12 +58,10 @@ test('git add 符合规范的文件后，修改为不符合，commit 成功', as
   await initHusky('elint lint style "src/**/*"', tmpDir)
 
   // 只校验 stage 文件，不报错
-  await t.notThrowsAsync(run('git commit -m "build: success"', tmpDir))
+  await expect(run('git commit -m "build: success"', tmpDir)).toResolve()
 })
 
-test('git add 符合规范的文件后，修改为不符合，commit 成功（多文件）', async t => {
-  const { tmpDir } = t.context
-
+test('git add 符合规范的文件后，修改为不符合，commit 成功（多文件）', async () => {
   // 添加符合规范的文件
   await run('git add src/standard1.css', tmpDir)
   await run('git add src/standard2.css', tmpDir)
@@ -79,12 +74,10 @@ test('git add 符合规范的文件后，修改为不符合，commit 成功（�
   await initHusky('elint lint style "src/**/*"', tmpDir)
 
   // 只校验 stage 文件，不报错
-  await t.notThrowsAsync(run('git commit -m "build: success"', tmpDir))
+  await expect(run('git commit -m "build: success"', tmpDir)).toResolve()
 })
 
-test('git add 不符合规范的文件后，修改为符合规范的，commit 不成功', async t => {
-  const { tmpDir } = t.context
-
+test('git add 不符合规范的文件后，修改为符合规范的，commit 不成功', async () => {
   // 添加不符合规范的文件
   await run('git add src/index.js', tmpDir)
 
@@ -96,12 +89,10 @@ test('git add 不符合规范的文件后，修改为符合规范的，commit �
   await initHusky('elint lint es "src/**/*"', tmpDir)
 
   // 只校验 stage 文件，不报错
-  await t.throwsAsync(run('git commit -m "build: fail"', tmpDir))
+  await expect(run('git commit -m "build: fail"', tmpDir)).toReject()
 })
 
-test('git add 不符合规范的文件后，修改为符合规范的，commit 不成功（多文件）', async t => {
-  const { tmpDir } = t.context
-
+test('git add 不符合规范的文件后，修改为符合规范的，commit 不成功（多文件）', async () => {
   // 添加不符合规范的文件
   await run('git add src/index.js', tmpDir)
   await run('git add src/standard.js', tmpDir)
@@ -114,12 +105,10 @@ test('git add 不符合规范的文件后，修改为符合规范的，commit �
   await initHusky('elint lint es "src/**/*"', tmpDir)
 
   // 只校验 stage 文件，不报错
-  await t.throwsAsync(run('git commit -m "build: fail"', tmpDir))
+  await expect(run('git commit -m "build: fail"', tmpDir)).toReject()
 })
 
-test('git add 符合规范的文件后，修改为不符合，commit 成功（使用 prettier）', async t => {
-  const { tmpDir } = t.context
-
+test('git add 符合规范的文件后，修改为不符合，commit 成功（使用 prettier）', async () => {
   // 添加符合规范的文件
   await run('git add src/standard1.css', tmpDir)
 
@@ -131,12 +120,10 @@ test('git add 符合规范的文件后，修改为不符合，commit 成功（�
   await initHusky('elint lint style "src/**/*" -p', tmpDir)
 
   // 只校验 stage 文件，不报错
-  await t.notThrowsAsync(run('git commit -m "build: success"', tmpDir))
+  await expect(run('git commit -m "build: success"', tmpDir)).toResolve()
 })
 
-test('git add 符合规范的文件后，修改为不符合，commit 成功（多文件）（使用 prettier）', async t => {
-  const { tmpDir } = t.context
-
+test('git add 符合规范的文件后，修改为不符合，commit 成功（多文件）（使用 prettier）', async () => {
   // 添加符合规范的文件
   await run('git add src/standard1.css', tmpDir)
   await run('git add src/standard2.css', tmpDir)
@@ -149,12 +136,10 @@ test('git add 符合规范的文件后，修改为不符合，commit 成功（�
   await initHusky('elint lint style "src/**/*" -p', tmpDir)
 
   // 只校验 stage 文件，不报错
-  await t.notThrowsAsync(run('git commit -m "build: success"', tmpDir))
+  await expect(run('git commit -m "build: success"', tmpDir)).toResolve()
 })
 
-test('git add 不符合规范的文件后，修改为符合规范的，commit 不成功（使用 prettier）', async t => {
-  const { tmpDir } = t.context
-
+test('git add 不符合规范的文件后，修改为符合规范的，commit 不成功（使用 prettier）', async () => {
   // 添加不符合规范的文件
   await run('git add src/index.js', tmpDir)
 
@@ -166,12 +151,10 @@ test('git add 不符合规范的文件后，修改为符合规范的，commit �
   await initHusky('elint lint es "src/**/*" -p', tmpDir)
 
   // 只校验 stage 文件，不报错
-  await t.throwsAsync(run('git commit -m "build: fail"', tmpDir))
+  await expect(run('git commit -m "build: fail"', tmpDir)).toReject()
 })
 
-test('git add 不符合规范的文件后，修改为符合规范的，commit 不成功（多文件）（使用 prettier）', async t => {
-  const { tmpDir } = t.context
-
+test('git add 不符合规范的文件后，修改为符合规范的，commit 不成功（多文件）（使用 prettier）', async () => {
   // 添加不符合规范的文件
   await run('git add src/index.js', tmpDir)
   await run('git add src/standard.js', tmpDir)
@@ -184,5 +167,5 @@ test('git add 不符合规范的文件后，修改为符合规范的，commit �
   await initHusky('elint lint es "src/**/*" -p', tmpDir)
 
   // 只校验 stage 文件，不报错
-  await t.throwsAsync(run('git commit -m "build: fail"', tmpDir))
+  await expect(run('git commit -m "build: fail"', tmpDir)).toReject()
 })

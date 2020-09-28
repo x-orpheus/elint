@@ -4,41 +4,31 @@
  * 杂项测试
  */
 
-const test = require('ava')
-const createTmpProjectFromCache = require('./utils/create-tmp-project-from-cache')
+const resetCacheProject = require('./utils/reset-cache-project')
 const run = require('./utils/run')
 
-test.beforeEach(async t => {
-  const tmpDir = await createTmpProjectFromCache()
-  t.context.tmpDir = tmpDir
+let tmpDir
+
+beforeEach(async () => {
+  tmpDir = await resetCacheProject()
 })
 
-test('version', async t => {
-  const tmpDir = t.context.tmpDir
-
-  await t.notThrowsAsync(run('npm run elint-version', tmpDir))
+test('version', async () => {
+  await expect(run('npm run elint-version', tmpDir)).toResolve()
 })
 
-test('直接执行 elint，显示 help', async t => {
-  const tmpDir = t.context.tmpDir
-
-  await t.notThrowsAsync(run('npm run elint', tmpDir))
+test('直接执行 elint，显示 help', async () => {
+  await expect(run('npm run elint', tmpDir)).toResolve()
 })
 
-test('elint --help', async t => {
-  const tmpDir = t.context.tmpDir
-
-  await t.notThrowsAsync(run('npm run elint-help', tmpDir))
+test('elint --help', async () => {
+  await expect(run('npm run elint-help', tmpDir)).toResolve()
 })
 
-test('elint 执行无效命令', async t => {
-  const tmpDir = t.context.tmpDir
-
-  await t.throwsAsync(run('npm run elint-invalid-command', tmpDir))
+test('elint 执行无效命令', async () => {
+  await expect(run('npm run elint-invalid-command', tmpDir)).toReject()
 })
 
-test('elint 执行无效选项', async t => {
-  const tmpDir = t.context.tmpDir
-
-  await t.throwsAsync(run('npm run elint-invalid-option', tmpDir))
+test('elint 执行无效选项', async () => {
+  await expect(run('npm run elint-invalid-option', tmpDir)).toReject()
 })

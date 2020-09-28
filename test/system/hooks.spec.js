@@ -4,14 +4,16 @@
  * hooks 相关测试
  */
 
-const test = require('ava')
 const path = require('path')
 const fs = require('fs-extra')
-const createTmpProjectFromCache = require('./utils/create-tmp-project-from-cache')
+const resetCacheProject = require('./utils/reset-cache-project')
 const run = require('./utils/run')
 
-test.beforeEach(async t => {
-  const tmpDir = await createTmpProjectFromCache()
+let tmpDir
+let hooksPath
+
+beforeEach(async () => {
+  tmpDir = await resetCacheProject()
 
   await run('git init', tmpDir)
   await run('git config user.name "zhang san"', tmpDir)
@@ -23,60 +25,48 @@ test.beforeEach(async t => {
    */
   await run('npm run hooks-install', tmpDir)
 
-  const hooksPath = path.join(tmpDir, '.git/hooks')
-
-  t.context = {
-    tmpDir,
-    hooksPath
-  }
+  hooksPath = path.join(tmpDir, '.git/hooks')
 })
 
 /**
  * install & uninstall git hooks
  */
-test('hooks install && uninstall', async t => {
-  const { tmpDir, hooksPath } = t.context
+test('hooks install && uninstall', async () => {
   let hooks
 
   await run('npm run hooks-uninstall', tmpDir)
 
   hooks = await fs.readdir(hooksPath)
-  t.is(hooks.filter(p => !p.includes('.sample')).length, 0)
+  expect(hooks.filter(p => !p.includes('.sample')).length).toEqual(0)
 
   await run('npm run hooks-install', tmpDir)
 
   hooks = await fs.readdir(hooksPath)
-  t.not(hooks.filter(p => !p.includes('.sample')).length, 0)
+  expect(hooks.filter(p => !p.includes('.sample')).length).not.toEqual(0)
 })
 
 /**
  * 不合法的 git commit message
  */
-test('lint commtest(error)', async t => {
-  const { tmpDir } = t.context
-
+test('lint commtest(error)', async () => {
   await run('git add package.json', tmpDir)
 
-  await t.throwsAsync(run('git commit -m "lint commtest(error)"', tmpDir))
+  await expect(run('git commit -m "lint commtest(error)"', tmpDir)).toReject()
 })
 
 /**
  * 合法的 git commit message
  */
-test('lint commtest(success)', async t => {
-  const { tmpDir } = t.context
-
+test('lint commtest(success)', async () => {
   await run('git add package.json', tmpDir)
 
-  await t.notThrowsAsync(run('git commit -m "build: lint commtest(success)"', tmpDir))
+  await expect(run('git commit -m "build: lint commtest(success)"', tmpDir)).toResolve()
 })
 
 /**
  * 在 git hooks 中执行 lint，lint 的文件符合规范
  */
-test('lint stage files', async t => {
-  const { tmpDir } = t.context
-
+test('lint stage files', async () => {
   // 添加符合规范的文件
   await run('git add src/standard1.css', tmpDir)
 
@@ -93,16 +83,14 @@ test('lint stage files', async t => {
   await fs.writeFile(huskyFilePath, huskyFileContent)
 
   // 只校验 stage 文件，不报错
-  await t.notThrowsAsync(run('git commit -m "build: lint stage files"', tmpDir))
+  await expect(run('git commit -m "build: lint stage files"', tmpDir)).toResolve()
 })
 
 /**
  * 在 git hooks 中执行 npm script，npm script 中执行 lint
  * lint 的文件符合规范
  */
-test('lint stage files(deep)', async t => {
-  const { tmpDir } = t.context
-
+test('lint stage files(deep)', async () => {
   // 添加符合规范的文件
   await run('git add src/standard2.css', tmpDir)
 
@@ -120,15 +108,13 @@ test('lint stage files(deep)', async t => {
   await fs.writeFile(huskyFilePath, huskyFileContent)
 
   // 只校验 stage 文件，不报错
-  await t.notThrowsAsync(run('git commit -m "build: lint stage files(deep)"', tmpDir))
+  await expect(run('git commit -m "build: lint stage files(deep)"', tmpDir)).toResolve()
 })
 
 /**
  * 在 git hooks 中执行 lint，lint 的文件不符合规范
  */
-test('lint stage files(error)', async t => {
-  const { tmpDir } = t.context
-
+test('lint stage files(error)', async () => {
   // 添加所有 src 目录下的文件
   await run('git add src', tmpDir)
 
@@ -145,15 +131,13 @@ test('lint stage files(error)', async t => {
   await fs.writeFile(huskyFilePath, huskyFileContent)
 
   // 报错
-  await t.throwsAsync(run('git commit -m "build: lint stage files(error)"', tmpDir))
+  await expect(run('git commit -m "build: lint stage files(error)"', tmpDir)).toReject()
 })
 
 /**
  * 在 git hooks 中执行 lint + prettier，lint 的文件不符合规范
  */
-test('lint stage files with prettier(error)', async t => {
-  const { tmpDir } = t.context
-
+test('lint stage files with prettier(error)', async () => {
   // 添加所有 src 目录下的文件
   await run('git add src', tmpDir)
 
@@ -170,12 +154,10 @@ test('lint stage files with prettier(error)', async t => {
   await fs.writeFile(huskyFilePath, huskyFileContent)
 
   // 报错
-  await t.throwsAsync(run('git commit -m "build: lint stage files with prettier(error)"', tmpDir))
+  await expect(run('git commit -m "build: lint stage files with prettier(error)"', tmpDir)).toReject()
 })
 
-test('lint stage files(fix)', async t => {
-  const { tmpDir } = t.context
-
+test('lint stage files(fix)', async () => {
   // 添加所有 src 目录下的文件
   await run('git add src', tmpDir)
 
@@ -192,12 +174,10 @@ test('lint stage files(fix)', async t => {
   await fs.writeFile(huskyFilePath, huskyFileContent)
 
   // 报错，因为 fix 在 git hooks 中无效
-  await t.throwsAsync(run('git commit -m "build: lint stage files(fix)"', tmpDir))
+  await expect(run('git commit -m "build: lint stage files(fix)"', tmpDir)).toReject()
 })
 
-test('lint stage files with prettier(fix)', async t => {
-  const { tmpDir } = t.context
-
+test('lint stage files with prettier(fix)', async () => {
   // 添加所有 src 目录下的文件
   await run('git add src', tmpDir)
 
@@ -214,5 +194,5 @@ test('lint stage files with prettier(fix)', async t => {
   await fs.writeFile(huskyFilePath, huskyFileContent)
 
   // 报错，因为 fix 在 git hooks 中无效
-  await t.throwsAsync(run('git commit -m "build: lint stage files with prettier(fix)"', tmpDir))
+  await expect(run('git commit -m "build: lint stage files with prettier(fix)"', tmpDir)).toReject()
 })

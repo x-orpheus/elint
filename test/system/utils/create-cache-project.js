@@ -5,27 +5,35 @@ const run = require('./run')
 const {
   cacheDir,
   cacheDirYarn,
+  backupDir,
   testProjectDir,
   presetPkgPath,
   elintPkgPath
 } = require('./variable')
 
 // 创建缓存项目：方便后面重复使用
-function createCacheProject (useYarn = false) {
+async function createCacheProject (useYarn = false) {
   const dir = useYarn ? cacheDirYarn : cacheDir
-  if (fs.existsSync(dir)) {
-    fs.emptyDirSync(dir)
+
+  const dirExists = await fs.pathExists(dir)
+
+  if (dirExists) {
+    await fs.emptyDir(dir)
   }
 
   // 创建缓存项目
-  fs.copySync(testProjectDir, dir)
+  await fs.copy(testProjectDir, dir)
 
   if (useYarn) {
-    run(`yarn add --silent ${presetPkgPath} ${elintPkgPath}`, dir, true)
+    await run(`yarn add --silent ${presetPkgPath} ${elintPkgPath}`, dir)
   } else {
-    // 安装依赖
-    run(`npm install --silent ${presetPkgPath} ${elintPkgPath}`, dir, true)
+    await run(`npm install --silent ${presetPkgPath} ${elintPkgPath}`, dir)
   }
+
+  // 创建备份
+  await fs.copy(dir, backupDir, {
+    filter: src => !src.includes('node_modules')
+  })
 }
 
 module.exports = createCacheProject

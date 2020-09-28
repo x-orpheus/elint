@@ -10,21 +10,25 @@ const createCacheProject = require('./create-cache-project')
 const { elintPath, presetPath } = require('./variable')
 const hasYarn = require('./has-yarn')
 
-// 输出 CPU 和内存信息
-console.log('=== OS Info ===')
-console.log(`CPU count: ${os.cpus().length}`)
-console.log(`Memory: ${Math.ceil(os.totalmem() / 1024 / 1024 / 1024)}G`)
-console.log()
+const init = async () => {
+  // 输出 CPU 和内存信息
+  console.log('=== OS Info ===')
+  console.log(`CPU count: ${os.cpus().length}`)
+  console.log(`Memory: ${Math.ceil(os.totalmem() / 1024 / 1024 / 1024)}G`)
+  console.log()
 
-// 同步执行 elint 打包
-run('npm pack', elintPath, true)
+  // 执行 elint 打包
+  await run('npm pack', elintPath)
 
-// 同步执行 preset 打包
-run('npm pack', presetPath, true)
+  // 执行 preset 打包
+  await run('npm pack', presetPath)
 
-// 创建缓存项目
-createCacheProject()
+  // 创建缓存项目
+  await createCacheProject()
 
-if (hasYarn()) {
-  createCacheProject(true)
+  if (hasYarn()) {
+    await createCacheProject(true)
+  }
 }
+
+module.exports = init

@@ -4,34 +4,26 @@
  * 使用 yarn 的测试
  */
 
-const test = require('ava')
-const createTmpProjectFromCache = require('./utils/create-tmp-project-from-cache')
+const resetCacheProject = require('./utils/reset-cache-project')
 const run = require('./utils/run')
 const hasYarn = require('./utils/has-yarn')
 
-test.serial.before('test if yarn exists', async (t) => {
-  t.true(hasYarn())
+let tmpDir
+
+const testIfCondition = hasYarn() ? test : test.skip
+
+beforeEach(async () => {
+  tmpDir = await resetCacheProject(true)
 })
 
-test.serial.before(async (t) => {
-  const tmpDir = await createTmpProjectFromCache(hasYarn())
-  t.context.tmpDir = tmpDir
+testIfCondition('yarn: lint', async () => {
+  await expect(run('yarn lint-without-fix', tmpDir)).toReject()
 })
 
-test.serial('yarn: lint', async (t) => {
-  const tmpDir = t.context.tmpDir
-
-  await t.throwsAsync(run('yarn lint-without-fix', tmpDir))
+testIfCondition('yarn: lint --prettier', async () => {
+  await expect(run('yarn lint-prettier-without-fix', tmpDir)).toReject()
 })
 
-test.serial('yarn: lint --prettier', async (t) => {
-  const tmpDir = t.context.tmpDir
-
-  await t.throwsAsync(run('yarn lint-prettier-without-fix', tmpDir))
-})
-
-test.serial('yarn: lint --fix', async (t) => {
-  const tmpDir = t.context.tmpDir
-
-  await t.notThrowsAsync(run('yarn lint-fix', tmpDir))
+testIfCondition('yarn: lint --fix', async () => {
+  await expect(run('yarn lint-fix', tmpDir)).toReslove()
 })

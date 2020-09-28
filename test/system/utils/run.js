@@ -28,6 +28,7 @@ function run (command, cwd, sync = false, disableNotifier = true) {
   })
 
   console.log(`run: ${program} ${argus.join(' ')}, in ${cwd}`)
+
   return method(program, argus, {
     stdio: 'inherit',
     cwd,

@@ -12,32 +12,28 @@
  *  v2.0.0
  */
 
-const test = require('ava')
-const createTmpProject = require('./utils/create-tmp-project')
+const resetCacheProject = require('./utils/reset-cache-project')
 const run = require('./utils/run')
 const { elintPkgPath } = require('./utils/variable')
 
-test.beforeEach(async t => {
-  const tmpDir = await createTmpProject()
-  t.context.tmpDir = tmpDir
+let tmpDir
+
+beforeEach(async () => {
+  tmpDir = await resetCacheProject()
 })
 
-test('安装 latest，没有更新提示', async t => {
-  const tmpDir = t.context.tmpDir
-
+test('安装 latest，没有更新提示', async () => {
   await run(`npm install --silent ${elintPkgPath}`, tmpDir)
   await run('npm install --silent elint-preset-test@latest', tmpDir)
 
   // 不显示更新提示
-  await t.notThrowsAsync(run('npm run lint-fix', tmpDir, false, false))
+  await expect(run('npm run lint-fix', tmpDir, false, false)).toResolve()
 })
 
-test.only('安装 3.0.0，有更新提示', async t => {
-  const tmpDir = t.context.tmpDir
-
+test('安装 3.0.0，有更新提示', async () => {
   await run(`npm install --silent ${elintPkgPath}`, tmpDir)
   await run('npm install --silent elint-preset-test@3.0.0', tmpDir)
 
   // 显示更新提示
-  await t.notThrowsAsync(run('npm run lint-fix', tmpDir, false, false))
+  await expect(run('npm run lint-fix', tmpDir, false, false)).toResolve()
 })
