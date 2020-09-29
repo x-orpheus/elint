@@ -88,8 +88,8 @@ describe('Walker 测试', () => {
       const expected = await runInHusky(tmpl)
       const parsedExpected = JSON.parse(JSON.parse(expected))
 
-      expect(parsedExpected.es.sort()).toEqual(result.es.sort())
-      expect(parsedExpected.style.sort()).toEqual(result.style.sort())
+      expect(parsedExpected.es).toIncludeSameMembers(result.es)
+      expect(parsedExpected.style).toIncludeSameMembers(result.style)
     })
   })
 
@@ -102,8 +102,8 @@ describe('Walker 测试', () => {
 
       const expected = await walker(['**/*.js'])
 
-      expect(expected.es.sort()).toEqual(result.es.sort())
-      expect(expected.style.sort()).toEqual(result.style.sort())
+      expect(expected.es).toIncludeSameMembers(result.es)
+      expect(expected.style).toIncludeSameMembers(result.style)
     })
 
     test('关闭忽略规则', async () => {
@@ -129,8 +129,8 @@ describe('Walker 测试', () => {
 
       const expected = await walker(['**/*.js'], { noIgnore: true })
 
-      expect(expected.es.sort()).toEqual(result.es.sort())
-      expect(expected.style.sort()).toEqual(result.style.sort())
+      expect(expected.es).toIncludeSameMembers(result.es)
+      expect(expected.style).toIncludeSameMembers(result.style)
     })
   })
 
@@ -163,8 +163,8 @@ describe('Walker 测试', () => {
       const expected = await runInHusky(tmpl)
       const parsedExpected = JSON.parse(JSON.parse(expected))
 
-      expect(parsedExpected.es.sort()).toEqual(result.es.sort())
-      expect(parsedExpected.style.sort()).toEqual(result.style.sort())
+      expect(parsedExpected.es).toIncludeSameMembers(result.es)
+      expect(parsedExpected.style).toIncludeSameMembers(result.style)
     })
 
     test('包含多个 staged file', async () => {
@@ -201,8 +201,8 @@ describe('Walker 测试', () => {
 
       const parsedExpected = JSON.parse(JSON.parse(expected))
 
-      expect(parsedExpected.es.sort()).toEqual(result.es.sort())
-      expect(parsedExpected.style.sort()).toEqual(result.style.sort())
+      expect(parsedExpected.es).toIncludeSameMembers(result.es)
+      expect(parsedExpected.style).toIncludeSameMembers(result.style)
     })
   })
 })

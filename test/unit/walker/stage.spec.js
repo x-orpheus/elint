@@ -47,7 +47,7 @@ describe('Walker stage 测试', () => {
 
     const expected = await stageFiles(['src/**/*.js'])
 
-    expect(result.sort()).toEqual(expected.sort())
+    expect(result).toIncludeSameMembers(expected)
   })
 
   test('匹配不到文件', async () => {
@@ -77,7 +77,7 @@ describe('Walker stage 测试', () => {
 
     const expected = await stageFiles(['src/**/*.js'], [])
 
-    expect(result.sort()).toEqual(expected.sort())
+    expect(result).toIncludeSameMembers(expected)
   })
 
   test('包含非暂存区文件', async () => {

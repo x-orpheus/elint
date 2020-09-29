@@ -47,7 +47,7 @@ describe('Walker local 测试', () => {
 
     const result = await walker('src/**/*.js')
 
-    expect(result.sort()).toEqual(expected.sort())
+    expect(result).toIncludeSameMembers(expected)
   })
 
   test('单条 glob, deep', async () => {
@@ -60,7 +60,7 @@ describe('Walker local 测试', () => {
 
     const result = await walker('src/**/*')
 
-    expect(result.sort()).toEqual(expected.sort())
+    expect(result).toIncludeSameMembers(expected)
   })
 
   test('多条 glob', async () => {
@@ -71,7 +71,7 @@ describe('Walker local 测试', () => {
 
     const result = await walker(['src/*.js', 'src/*.css'])
 
-    expect(result.sort()).toEqual(expected.sort())
+    expect(result).toIncludeSameMembers(expected)
   })
 
   test('多条 glob, 匹配空', async () => {
@@ -91,6 +91,6 @@ describe('Walker local 测试', () => {
 
     const result = await walker(['src/**/*.js', 'src/**/*.css'])
 
-    expect(result.sort()).toEqual(expected.sort())
+    expect(result).toIncludeSameMembers(expected)
   })
 })
