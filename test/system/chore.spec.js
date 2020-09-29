@@ -9,7 +9,10 @@ const run = require('./utils/run')
 
 let tmpDir
 
-beforeEach(async () => {
+/**
+ * 无需每次都 reset
+ */
+beforeAll(async () => {
   tmpDir = await resetCacheProject()
 })
 
