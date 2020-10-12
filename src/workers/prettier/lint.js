@@ -200,16 +200,21 @@ const lintContents = async (contents, type, fix = false) => {
           linterSuccess = linterSuccess && result.success
           results.push(...result.results)
 
+          let lintOutput
+
           if (result.results[0]) {
             switch (type) {
               case 'es':
-                output = result.results[0].output
+                // 当源码没有需要 fix 的问题时，eslint 的结果里没有 output 这个字段
+                lintOutput = result.results[0].output
                 break
               case 'style':
-                output = result.outputs[0]
+                lintOutput = result.outputs[0]
                 break
             }
           }
+
+          output = lintOutput || output
         }
 
         const isDifferent = output !== content.fileContent
