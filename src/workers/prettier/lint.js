@@ -205,7 +205,7 @@ const lintContents = async (contents, type, fix = false) => {
           if (result.results[0]) {
             switch (type) {
               case 'es':
-                // 当源码没有需要 fix 的问题时，eslint 的结果会里没有 output
+                // 当源码没有需要 fix 的问题时，eslint 的结果里没有 output 这个字段
                 lintOutput = result.results[0].output
                 break
               case 'style':
