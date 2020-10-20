@@ -246,5 +246,6 @@ const lintContents = async (contents, type, fix = false) => {
 
 module.exports = {
   lintFiles,
-  lintContents
+  lintContents,
+  clearConfigCache: prettier.clearConfigCache
 }
