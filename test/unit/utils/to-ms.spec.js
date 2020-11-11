@@ -19,7 +19,7 @@ describe('to-ms 测试', () => {
     [NaN, 0],
     [{}, 0],
     [() => {}, 0]
-  ].map(value => {
+  ].forEach(value => {
     test(`批量测试 input: ${JSON.stringify(value[0])}, output: ${value[1]}`, () => {
       expect(toMs(value[0])).toEqual(value[1])
     })
