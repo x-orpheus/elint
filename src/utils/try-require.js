@@ -23,7 +23,7 @@ function getModulesByDir (dir, scope = '') {
 
   modules.forEach(module => {
     if (module.startsWith('.')) {
-
+      // do nothing
     } else if (module.startsWith('@')) {
       const subDir = path.join(nodeModulesDir, module)
       const subModules = getModulesByDir(subDir, module)
