@@ -40,6 +40,6 @@ describe('set-blocking 测试', () => {
 
     const result = await execa('node', [filePath])
 
-    expect(result.stdout).toMatch(new RegExp('line 2999'))
+    expect(result.stdout).toMatch(/line 2999/)
   })
 })
