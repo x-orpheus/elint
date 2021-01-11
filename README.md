@@ -457,16 +457,11 @@ $ elint -v
 
 ### 4.1. 安装 & 初始化过程
 
-如果你编写好了用于自己团队的 preset，并且按照前面介绍的安装方式安装完成，你会发现，elint 将所有的配置文件从 preset 复制到了项目的根目录，这么做的目的是为了兼容在 IDE、build 工具中使用 lint。所以使用 elint 的同时，你仍然可以按照原来的方式，配置你的 IDE，webpack 等，他们与 elint 完全不冲突。
+如果你编写好了用于自己团队的 preset，并且按照前面介绍的安装方式安装完成，你会发现，elint 将所有的配置文件从 preset 复制到了项目的根目录。这是通过定义在 postinstall 中的 `elint-helpers install` 命令完成的。
 
-具体的 preset 初始化过程（install 后自动执行），分为如下两步：
-
-1. 将配置文件 (`.eslintrc.js` 等) 复制到项目的根目录。
-2. 安装 preset 的 `dependencies`，并保存到项目的 `devDependencies` 中。
+这么做的目的是为了兼容在 IDE、build 工具中使用 lint。所以使用 elint 的同时，你仍然可以按照原来的方式，配置你的 IDE，webpack 等，他们与 elint 完全不冲突。
 
 安装（并初始化）完成后，可以根据你的项目的实际情况，添加 npm scripts，例如 test 时执行 `elint lint '**/*.js' '**/*.less'`
-
-无论是先安装 elint，还是先安装 preset，亦或者同时安装，elint 都能准确的感知到 preset 的存在，并完成所有初始化操作。这项功能主要借助于 [npm hook scripts](https://docs.npmjs.com/misc/scripts#hook-scripts)，这也是当你使用 cnpm 时需要格外注意的原因（解决办法参考下面的[常见问题](#51-cnpm-yarn)）。
 
 ### 4.2. 执行过程
 
