@@ -25,12 +25,13 @@
   - [2.1. 安装 elint](#21-安装-elint)
   - [2.2. 编写 preset](#22-编写-preset)
     - [2.2.1. 新建一个 npm package](#221-新建一个-npm-package)
-    - [2.2.2. 添加 eslint 配置文件（可选）](#222-添加-eslint-配置文件可选)
-    - [2.2.3. 添加 stylelint 配置文件（可选）](#223-添加-stylelint-配置文件可选)
-    - [2.2.4. 添加 commitlint 配置文件（可选）](#224-添加-commitlint-配置文件可选)
-    - [2.2.5. 添加 git hooks（可选）](#225-添加-git-hooks可选)
-    - [2.2.6. 设置更新检测周期（可选）](#226-设置更新检测周期可选)
-    - [2.2.7. 发布 npm package](#227-发布-npm-package)
+    - [2.2.2. 安装 elint-helpers](#222-安装-elint-helpers)
+    - [2.2.3. 添加 eslint 配置文件（可选）](#223-添加-eslint-配置文件可选)
+    - [2.2.4. 添加 stylelint 配置文件（可选）](#224-添加-stylelint-配置文件可选)
+    - [2.2.5. 添加 commitlint 配置文件（可选）](#225-添加-commitlint-配置文件可选)
+    - [2.2.6. 添加 git hooks（可选）](#226-添加-git-hooks可选)
+    - [2.2.7. 设置更新检测周期（可选）](#227-设置更新检测周期可选)
+    - [2.2.8. 发布 npm package](#228-发布-npm-package)
   - [2.3. 安装 preset](#23-安装-preset)
   - [2.4. 定义 npm scripts](#24-定义-npm-scripts)
     - [2.4.1. npm test](#241-npm-test)
@@ -39,23 +40,20 @@
   - [3.1. lint](#31-lint)
   - [3.2. hooks](#32-hooks)
   - [3.3. version](#33-version)
-  - [3.4. install](#34-install)
-  - [3.5. diff](#35-diff)
 - [4. 细节 & 原理](#4-细节--原理)
   - [4.1. 安装 & 初始化过程](#41-安装--初始化过程)
   - [4.2. 执行过程](#42-执行过程)
 - [5. 常见问题](#5-常见问题)
-  - [5.1. cnpm, yarn](#51-cnpm-yarn)
+  - [5.1. yarn](#51-yarn)
   - [5.2. 为什么不建议全局安装](#52-为什么不建议全局安装)
-  - [5.3. 安装失败](#53-安装失败)
-  - [5.4. git hooks 不执行或报错](#54-git-hooks-不执行或报错)
-  - [5.5. 配置文件是不是可以 git ignore](#55-配置文件是不是可以-git-ignore)
-  - [5.6. 是否可以安装多个 preset](#56-是否可以安装多个-preset)
-  - [5.7. 某些文件没有被校验到](#57-某些文件没有被校验到)
-  - [5.8. 为什么添加了 fix 选项还是有问题输出](#58-为什么添加了-fix-选项还是有问题输出)
-  - [5.9. 如何禁用颜色输出](#59-如何禁用颜色输出)
-  - [5.10. lint 执行失败，提示包缺失](#510-lint-执行失败提示包缺失)
-  - [5.11. TypeScript](#511-typescript)
+  - [5.3. git hooks 不执行或报错](#53-git-hooks-不执行或报错)
+  - [5.4. 配置文件是不是可以 git ignore](#54-配置文件是不是可以-git-ignore)
+  - [5.5. 是否可以安装多个 preset](#55-是否可以安装多个-preset)
+  - [5.6. 某些文件没有被校验到](#56-某些文件没有被校验到)
+  - [5.7. 为什么添加了 fix 选项还是有问题输出](#57-为什么添加了-fix-选项还是有问题输出)
+  - [5.8. 如何禁用颜色输出](#58-如何禁用颜色输出)
+  - [5.9. lint 执行失败，提示包缺失](#59-lint-执行失败提示包缺失)
+  - [5.10. TypeScript](#510-typescript)
 - [6. 参考](#6-参考)
 
 <!-- /TOC -->
@@ -102,6 +100,7 @@ elint-preset-<name>
 4. git hooks (使用 husky) 的配置文件名必须是 `.huskyrc.js`。
 5. 所有配置文件必须放在 preset 的根目录。
 6. 依赖的 linter plugin（例如 eslint-plugin-react），必须明确定义在 `package.json` 的 `dependencies` 中。
+7. 安装 `elint-helpers` 并添加 postinstall scripts: `elint-helpers install`
 
 满足以上要求的 npm package 就是一个合法的 elint preset。
 
@@ -115,8 +114,7 @@ elint-preset-<name>
 
 开始使用 elint 之前，请先检查下你使用 node 和 npm 版本。运行 elint 需要：
 
-- node：>= 6.0.0，建议尽量使用新版本。
-- npm：>= 3.8.6，同样建议使用新版本。另外部分版本有 bug，可能会导致安装失败，详情查看[常见问题](#53-安装失败)。
+- node：>= 10.12.0，建议尽量使用新版本。
 
 下面我们一起从零开始，一步一步的看看如何将 elint 集成到项目中。
 
@@ -131,8 +129,6 @@ cd test-project
 # 安装 elint
 npm install elint --save-dev
 ```
-
-> 如果你使用 yarn，cnpm（包括基于 cnpm 创建的私有仓库） 等包管理工具，请参考"[内部细节](#4-细节--原理)"和"[常见问题](#51-cnpm-yarn)"章节，我们的示例中统一使用 npm。
 
 > 强烈**不建议**全局安装（具体原因，请阅读[常见问题](#52-为什么不建议全局安装)）。
 
@@ -158,7 +154,23 @@ cd elint-preset-test
 npm init -y
 ```
 
-#### 2.2.2. 添加 eslint 配置文件（可选）
+#### 2.2.2. 安装 elint-helpers
+
+preset 包需要安装 `elint-helpers`, 并添加 npm scripts 以完成初始化工作：
+
+```shell
+npm i elint-helpers
+```
+
+```json
+{
+  "scripts": {
+    "postinstall": "elint-helpers install"
+  }
+}
+```
+
+#### 2.2.3. 添加 eslint 配置文件（可选）
 
 > 这步是可选的，如果你不需要校验 js 文件，可以直接跳过（下同）
 
@@ -191,11 +203,11 @@ npm install eslint-plugin-react --save
 
 > 因为我们使用 elint 执行校验，而 elint 已经集成了 eslint，stylelint 等工具，所以这里不需要再安装了，只需安装额外的 plugin。
 
-#### 2.2.3. 添加 stylelint 配置文件（可选）
+#### 2.2.4. 添加 stylelint 配置文件（可选）
 
 此处省略，和 eslint 一样的做法。
 
-#### 2.2.4. 添加 commitlint 配置文件（可选）
+#### 2.2.5. 添加 commitlint 配置文件（可选）
 
 新建配置文件 `.commitlintrc.js`：
 
@@ -219,7 +231,7 @@ module.exports = {
 };
 ```
 
-#### 2.2.5. 添加 git hooks（可选）
+#### 2.2.6. 添加 git hooks（可选）
 
 新建配置文件 `.huskyrc.js`：
 
@@ -247,7 +259,7 @@ module.exports = {
 >
 > 可能你会觉得，命名为 `precommit` 比 `beforecommit` 更合适。没错，单纯从命名的角度讲，`precommit` 确实更好。但这会与 husky 的规则产生冲突。旧版本的 husky 支持在 package.json 的 scripts 中定义 git hooks。
 
-#### 2.2.6. 设置更新检测周期（可选）
+#### 2.2.7. 设置更新检测周期（可选）
 
 从 1.10.0 版本开始，elint 支持更新检测功能，提示用户更新到新版本的 preset。
 
@@ -263,7 +275,7 @@ module.exports = {
 
 上述配置会让 elint 每三天检测一次是否有新版本 preset。
 
-#### 2.2.7. 发布 npm package
+#### 2.2.8. 发布 npm package
 
 此时项目的目录结构应该是：
 
@@ -439,75 +451,6 @@ $ elint -v
     husky      : 1.0.0-rc.8
 ```
 
-### 3.4. install
-
-前面讲到的 preset 安装，都是直接执行 `npm install`。其实除了这种方式，还可以直接使用 `elint install` 命令安装：
-
-```shell
-elint install [presetName] [options]
-```
-
-`presetName` 可以忽略 `elint-preset-` 前缀。
-
-支持的 options:
-
-- --registry: 指定 npm 仓库地址，可以输入 url 或者 alias。支持如下的 alias：
-  - npm: [https://registry.npmjs.org/](https://registry.npmjs.org/)
-  - cnpm: [http://r.cnpmjs.org/](http://r.cnpmjs.org/)
-  - taobao: [https://registry.npm.taobao.org/](https://registry.npm.taobao.org/)
-  - nj: [https://registry.nodejitsu.com/](https://registry.nodejitsu.com/)
-  - rednpm: [http://registry.mirror.cqupt.edu.cn](http://registry.mirror.cqupt.edu.cn)
-  - skimdb: [https://skimdb.npmjs.com/registry](https://skimdb.npmjs.com/registry)
-- --keep: 不覆盖旧的配置文件（文件完全一样肯定是不会覆盖的，keep 选项只在有文件有差异时生效）
-
-例子：
-
-```shell
-# 安装 elint-preset-test
-$ elint install test
-
-# 从 cnpm 安装 elint-preset-test
-$ elint install test --registry=https://registry.npm.taobao.org/
-
-# 从 cnpm 安装 elint-preset-test, 使用 alias
-$ elint install test --registry=cnpm
-```
-
-这两种安装方式的最大区别就是："否将 preset 视为项目的依赖"：
-
-|安装方式|区别|
-|:--|:--|
-|`npm install`|把 preset 当成依赖，执行 `npm install` 时，项目根目录的配置文件都可能被更新|
-|`elint install`|把 preset 当成配置源，更新时需要再次执行 `elint install`|
-
-除了上面列举的区别外，`elint install` 无视 cnpm，yarn 的限制，如果你十分依赖 cnpm，yarn 时，可以考虑使用 `elint install` 来安装，但要留意保持 preset 的最新。
-
-没有主推这种方式的原因在于，**elint 的设计初衷就是统一团队规范，规范一旦制定，需要严格执行**。`npm install` 会自动更新并覆盖项目根目录的配置文件，一定程度上避免了随意修改配置文件带来的（不同项目之间）校验规则不统一。另外一点就是由于不推荐全局安装 elint，所以 elint 命令需要用 `./node_modules/.bin/elint` 执行，略显麻烦。
-
-### 3.5. diff
-
-万一你使用了 `elint install`，万一你加了 `keep`，万一你没有趁手的 diff 工具，可以尝试：
-
-```shell
-$ elint diff
-```
-
-输出类似：
-
-```diff
- -------------------------------------------------
- diff .eslintrc.js .eslintrc.old.js
- -------------------------------------------------
-  2 |   'extends': [
-  3 |     'plugin:react/recommended'
-  4 |   ],
-  5 |   'rules': {
--   |     'no-console': 0
-+ 6 |     'no-console': 2
-  7 |   }
-  8 | };
-```
-
 ## 4. 细节 & 原理
 
 作为一个项目的维护者，当你将 elint 集成到你的项目中时，了解一些细节会非常有帮助。
@@ -537,29 +480,9 @@ $ elint diff
 
 ## 5. 常见问题
 
-### 5.1. cnpm, yarn
+### 5.1. yarn
 
-使用 cnpm 的目的无外乎两点：解决网络问题、私有仓库。但问题是 cnpm 的私有实现不支持给 elint 带来极大便利的 [npm hook scripts](https://docs.npmjs.com/misc/scripts#hook-scripts)。所以我们只能放弃 `cnpm` 命令，仅使用它的仓库。
-
-如果你只是单纯想从 cnpm 的仓库安装 npm package，提高安装速度。可以删除 `cnpm`，然后定义 alias:
-
-```shell
-$ alias cnpm='npm --registry=https://registry.npm.taobao.org/ \
-  --registryweb=https://npm.taobao.org/ \
-  --userconfig=$HOME/.cnpmrc'
-```
-
-如果你需要使用私有仓库，同样可以删除 `cnpm`，然后定义自己的命令:
-
-```shell
-$ alias mynpm='npm --registry=http://registry.npm.example.com \
-  --registryweb=http://npm.example.com \
-  --userconfig=$HOME/.mynpmrc'
-```
-
-> 上面的 `alias` 命令只是临时修改，终端关闭即实现，永久添加请修改 `.bashrc` 或 `.zshrc`。
-
-2.x 已支持 `yarn 1.x`，无需任何改动即可使用。
+已支持 `yarn 1.x`，无需任何改动即可使用。
 
 但是目前对 `yarn pnp` 支持较为有限，需要自行处理以下工作
 
@@ -581,15 +504,7 @@ elint 强依赖 stylelint, eslint 等工具。而对于 eslint，其文档中写
 
 全局安装 lint 工具和所有的 plugin，项目数量较多时容易引起混乱，且可能对 ci、部署等带来麻烦。
 
-### 5.3. 安装失败
-
-可能是 npm 的 [bug](https://github.com/npm/npm-lifecycle/pull/13) 引起的。如果你的 npm 版本在 5.1.0 ～ 6.1.0 之间，请升级至最新版本的 npm。
-
-elint 安装过程中会检测 npm 版本，具体以检测结果为准。
-
-> windows 升级 npm 请参考：[How can I update npm on Windows?](https://stackoverflow.com/questions/18412129/how-can-i-update-npm-on-windows)
-
-### 5.4. git hooks 不执行或报错
+### 5.3. git hooks 不执行或报错
 
 如果 git hooks 不执行或者报错，尝试下面的方法:
 
@@ -598,7 +513,7 @@ elint 安装过程中会检测 npm 版本，具体以检测结果为准。
 - 检查 `.git/hooks` 目录，是否存在非 `.sample` 结尾的文件，如果不存在，手动注册 git hooks。
 - 还是有问题？报 bug。
 
-### 5.5. 配置文件是不是可以 git ignore
+### 5.4. 配置文件是不是可以 git ignore
 
 如果你能想到这个问题，那么说明你真的理解了 elint 的运作方式。忽略配置文件，防止意外被修改，所有团队成员使用 preset 定义的配置，听起来非常不错。那么从 preset 复制到项目中的各种配置文件，是否可以添加到 `.gitignore` 呢？这要看你的使用场景：
 
@@ -609,11 +524,11 @@ elint 安装过程中会检测 npm 版本，具体以检测结果为准。
 
 再次强调，elint 的设计原则是保证团队规范的严格执行，如果你觉得规则有问题，那么应该提出并推动修改 preset，而不是直接改项目里的配置。
 
-### 5.6. 是否可以安装多个 preset
+### 5.5. 是否可以安装多个 preset
 
 不可以。安装过程中，如果两个 preset 存在相同的配置文件，后安装会覆盖之前的。如果 package.json 中的依赖包含多个 preset，先后顺序由 npm 决定。
 
-### 5.7. 某些文件没有被校验到
+### 5.6. 某些文件没有被校验到
 
 1. 检查你的 glob 写法是否有问题。
 2. 可能是 glob 被传入 elint 之前就被意外解析了，参考 [lint 命令](#31-lint)。
@@ -644,11 +559,11 @@ const defaultIgnore = [
 // 除此之外还有 .gitignore 定义的忽略规则
 ```
 
-### 5.8. 为什么添加了 fix 选项还是有问题输出
+### 5.7. 为什么添加了 fix 选项还是有问题输出
 
 并不是所有规则都支持自动修复，具体可以查看 [eslint rules](https://eslint.org/docs/rules/) 和 [stylelint rules](https://stylelint.io/user-guide/rules/)，可以自动修复的规则都有标识。
 
-### 5.9. 如何禁用颜色输出
+### 5.8. 如何禁用颜色输出
 
 设置环境变量 `FORCE_COLOR` 为 `0` 即可，例如：
 
@@ -656,7 +571,7 @@ const defaultIgnore = [
 $ FORCE_COLOR=0 elint lint "src/**/*.js"
 ```
 
-### 5.10. lint 执行失败，提示包缺失
+### 5.9. lint 执行失败，提示包缺失
 
 如果遇到如下错误，特别在 CI 环境下。可能是 `package-lock.json` 引起的。
 
@@ -670,9 +585,9 @@ Error: Cannot find module 'eslint-config-xxx'
 2. 查看 `package.json` 文件，使用 elint 时只需安装 elint 和 preset，清理掉遗留的 eslint 等依赖。
 3. 重新执行 `npm install`
 
-### 5.11. TypeScript
+### 5.10. TypeScript
 
-elint 目前没有集成 tslint 的计划，typescript 用户建议使用 [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint)。
+使用 [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint)。
 
 ## 6. 参考
 
