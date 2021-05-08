@@ -61,7 +61,7 @@
     "find-process": "^1.4.4",
     "fs-extra": "^9.1.0",
     "globby": "^11.0.3",
-    "husky": "^2.7.0",
+    "husky": "^5.0.6",
     "is-npm": "^5.0.0",
     "lodash": "^4.17.21",
     "micromatch": "^4.0.4",
