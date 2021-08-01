@@ -55,7 +55,7 @@
     "commander": "^7.2.0",
     "configstore": "^5.0.1",
     "debug": "^4.3.1",
-    "eslint": "^7.29.0",
+    "eslint": "^7.32.0",
     "execa": "^5.1.1",
     "figures": "^3.2.0",
     "find-process": "^1.4.4",
