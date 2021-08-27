@@ -25,5 +25,5 @@ testIfCondition('yarn: lint --prettier', async () => {
 })
 
 testIfCondition('yarn: lint --fix', async () => {
-  await expect(run('yarn lint-fix', tmpDir)).toReslove()
+  await expect(run('yarn lint-fix', tmpDir)).toResolve()
 })
