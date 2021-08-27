@@ -12,7 +12,7 @@ const globby = require('globby')
 module.exports = () => {
   // CI 下不用执行清理
   if (process.env.CI) {
-    process.exit(0)
+    return
   }
 
   const tmpDir = os.tmpdir()
@@ -23,6 +23,7 @@ module.exports = () => {
   const dir = path.join(tmpDir, 'elint_test_system')
 
   if (fs.existsSync(dir)) {
+    console.log(`删除临时目录：${dir}`)
     fs.removeSync(dir)
   }
 
@@ -35,7 +36,8 @@ module.exports = () => {
     absolute: true
   })
 
-  packFiles.forEach(filePath => {
+  packFiles.forEach((filePath) => {
+    console.log(`删除临时包：${filePath}`)
     fs.removeSync(filePath)
   })
 }
