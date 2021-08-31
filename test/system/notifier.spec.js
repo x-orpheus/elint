@@ -33,9 +33,9 @@ test('安装 latest，没有更新提示', async () => {
   await expect(run('npm run lint-fix', tmpDir, false, false)).toResolve()
 })
 
-test('安装 4.0.0，有更新提示', async () => {
+test('安装 5.0.0，有更新提示', async () => {
   await run(`npm install --silent ${elintPkgPath}`, tmpDir)
-  await run('npm install --silent elint-preset-test@4.0.0', tmpDir)
+  await run('npm install --silent elint-preset-test@5.0.0', tmpDir)
 
   // 显示更新提示
   await expect(run('npm run lint-fix', tmpDir, false, false)).toResolve()
