@@ -74,7 +74,7 @@ const cwd = crossPlatformPath(process.cwd())
 
   const result = {
     name: 'stylelint',
-    output: customFormatter(_.flatten(output)),
+    output: customFormatter(_.flattenDeep(output)),
     success
   }
 
