@@ -58,7 +58,7 @@
     "eslint": "^7.32.0",
     "execa": "^5.1.1",
     "figures": "^3.2.0",
-    "find-process": "^1.4.5",
+    "find-process": "^1.4.7",
     "fs-extra": "^9.1.0",
     "globby": "^11.0.4",
     "husky": "^2.7.0",
