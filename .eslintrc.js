@@ -1,10 +1,10 @@
 'use strict'
 
 module.exports = {
-  extends: 'standard',
+  extends: ['eslint-config-standard', 'plugin:@typescript-eslint/recommended'],
+  plugins: ['@typescript-eslint'],
   env: {
     node: true,
-    mocha: true,
     jest: true
   },
   rules: {
