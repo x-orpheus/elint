@@ -7,6 +7,7 @@
     "elint": "./bin/cli.js"
   },
   "scripts": {
+    "build": "rimraf dist && tsup src/index.js bin/cli.js --dts --format cjs,esm --splitting",
     "test": "npm run test:lint && npm run test:unit && npm run test:system",
     "test:unit": "jest --config test/unit/jest.config.js",
     "test:system": "jest --config test/system/jest.config.js --runInBand"
@@ -54,7 +55,7 @@
     "commander": "^7.2.0",
     "configstore": "^5.0.1",
     "debug": "^4.3.3",
-    "eslint": "^7.32.0",
+    "eslint": "^8.11.0",
     "execa": "^5.1.1",
     "figures": "^3.2.0",
     "find-process": "^1.4.7",

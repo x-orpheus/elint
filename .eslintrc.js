@@ -22,6 +22,7 @@ module.exports = {
         ignoreStrings: true,
         ignoreTemplateLiterals: true
       }
-    ]
+    ],
+    '@typescript-eslint/no-var-requires': 'off'
   }
 }
