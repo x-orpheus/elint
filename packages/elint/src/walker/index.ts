@@ -1,27 +1,33 @@
-'use strict'
+import _debug from 'debug'
+import isGitHooks from '../utils/is-git-hooks'
+import { defaultIgnore } from '../config'
+import { getFileTree, fillFileTree, FilePath } from './file-tree'
+import local from './local'
+import stage from './stage'
 
-const debug = require('debug')('elint:walker')
-const isGitHooks = require('../utils/is-git-hooks')
-const { defaultIgnore } = require('../config')
-const { getFileTree, fillFileTree } = require('./filetree')
-const local = require('./local')
-const stage = require('./stage')
+const debug = _debug('elint:walker')
+
+export interface WalkerOptions {
+  /**
+   * 是否禁用 ignore 规则
+   *
+   * @default `false`
+   */
+  noIgnore?: boolean
+}
 
 /**
  * 文件遍历
  *
- * @param {Array<string>} patterns 匹配模式
- * @param {object} [options] 配置
+ * @param patterns 匹配模式
+ * @param options 配置
  * @returns {Promise<object>} file tree
  */
-async function walker (patterns, options = {}) {
+async function walker(patterns: string[], options: WalkerOptions = {}) {
   debug(`input glob patterns: ${patterns}`)
   debug('input options: %o', options)
 
   const fileTree = getFileTree()
-  const noIgnore = typeof options.noIgnore === 'boolean'
-    ? options.noIgnore
-    : false // 默认不禁用 ignore 规则
 
   if (!patterns || (Array.isArray(patterns) && !patterns.length)) {
     return Promise.resolve(fileTree)
@@ -34,8 +40,9 @@ async function walker (patterns, options = {}) {
   /**
    * 根据运行环境执行不同的文件遍历策略
    */
-  let fileList
-  let ignorePatterns = []
+  let fileList: FilePath[]
+  let ignorePatterns: string[] = []
+  const { noIgnore = false } = options
 
   if (!noIgnore) {
     debug('ignore rules: %j', defaultIgnore)
@@ -56,4 +63,4 @@ async function walker (patterns, options = {}) {
   return fileTree
 }
 
-module.exports = walker
+export default walker

@@ -1,16 +1,14 @@
-'use strict'
+import _debug from 'debug'
+import path from 'path'
+import { isNpmOrYarn } from 'is-npm'
 
-const debug = require('debug')('elint:env')
-const path = require('path')
-const { isNpmOrYarn } = require('is-npm')
+const debug = _debug('elint:env')
 
 /**
  * 获取通过 npm script 执行时的项目根路径
- *
- * @returns {string} cwd
  */
 /* istanbul ignore next */
-function getInitCwd () {
+function getInitCwd(): string {
   if (process.env.INIT_CWD) {
     debug(`process.env.INIT_CWD: ${process.env.INIT_CWD}`)
     return process.env.INIT_CWD
@@ -26,10 +24,8 @@ function getInitCwd () {
 
 /**
  * 项目根目录
- *
- * @returns {string} base dir
  */
-const getBaseDir = () => {
+export const getBaseDir = (): string => {
   /* istanbul ignore next */
   const baseDir = isNpmOrYarn ? getInitCwd() : process.cwd()
 
@@ -41,17 +37,10 @@ const getBaseDir = () => {
 
 /**
  * 项目的 node_modules 目录
- *
- * @returns {string} node_modules dir
  */
-const getNodeModulesDir = () => {
+export const getNodeModulesDir = (): string => {
   const nodeModulesDir = path.join(getBaseDir(), 'node_modules')
 
   debug(`node_modules dir: ${nodeModulesDir}`)
   return nodeModulesDir
-}
-
-module.exports = {
-  getBaseDir,
-  getNodeModulesDir
 }

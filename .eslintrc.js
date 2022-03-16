@@ -8,7 +8,7 @@ module.exports = {
     jest: true
   },
   rules: {
-    'valid-jsdoc': 2,
+    'space-before-function-paren': 0,
     // specify the maximum length of a line in your program
     // https://eslint.org/docs/rules/max-len
     'max-len': [

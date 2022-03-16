@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "rimraf dist && tsup src/index.js bin/cli.js --dts --format cjs,esm --splitting",
-    "test": "npm run test:lint && npm run test:unit && npm run test:system",
+    "test": "npm run test:unit && npm run test:system",
     "test:unit": "jest --config test/unit/jest.config.js",
     "test:system": "jest --config test/system/jest.config.js --runInBand"
   },
@@ -73,6 +73,10 @@
     "stylelint": "~13.13.1"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.7",
+    "@types/fs-extra": "^9.0.13",
+    "@types/lodash": "^4.14.180",
+    "@types/micromatch": "^4.0.2",
     "jest": "^27.5.1",
     "jest-extended": "^0.11.5"
   },

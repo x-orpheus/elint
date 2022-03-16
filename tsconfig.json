@@ -11,8 +11,10 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "strictNullChecks": true,
+    "strictFunctionTypes": true,
     "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "noImplicitThis": true
   },
   "include": ["packages"],
   "exclude": ["dist", "node_modules"]
