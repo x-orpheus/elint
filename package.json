@@ -5,7 +5,7 @@
     "build": "pnpm -r --filter ./packages run build",
     "prepare": "husky install",
     "preinstall": "npx only-allow pnpm",
-    "lint": "eslint --format codeframe \"+(packages/**/bin|src|test)/**/*.js\" --fix"
+    "lint": "eslint packages --fix"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.1",

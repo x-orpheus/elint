@@ -3,7 +3,7 @@
 const toMs = require('../../../src/utils/to-ms')
 
 describe('to-ms 测试', () => {
-  ;[
+  [
     [123, 123],
     [-1, -1],
     [0, 0],
@@ -18,7 +18,7 @@ describe('to-ms 测试', () => {
     [undefined, 0],
     [NaN, 0],
     [{}, 0],
-    [() => {}, 0]
+    [() => { /* empty */ }, 0]
   ].forEach(value => {
     test(`批量测试 input: ${JSON.stringify(value[0])}, output: ${value[1]}`, () => {
       expect(toMs(value[0])).toEqual(value[1])

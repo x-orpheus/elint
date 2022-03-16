@@ -3,7 +3,7 @@
 const report = require('../../../src/notifier/report')
 
 describe('Report 测试', () => {
-  ;[true, 1, undefined, null, {}, () => {}].forEach(value => {
+  [true, 1, undefined, null, {}, () => { /* empty */ }].forEach(value => {
     test(`异常输入 ${JSON.stringify(value)}`, () => {
       expect(report(value)).toBeFalsy()
     })
