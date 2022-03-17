@@ -2,7 +2,7 @@
 
 const fs = require('fs-extra')
 const path = require('path')
-const execa = require('execa')
+const { execa } = require('execa')
 const { getBaseDir } = require('../../../src/env')
 const execaPath = require.resolve('execa')
 
@@ -12,7 +12,7 @@ const execaPath = require.resolve('execa')
  * @param {string} tmpl 待执行的文件字符串
  * @returns {Promise} promise
  */
-function run (tmpl) {
+function run(tmpl) {
   const baseDir = getBaseDir()
 
   // 文件路径
@@ -34,8 +34,7 @@ function run (tmpl) {
   fs.outputFileSync(huskyFilePath, huskyFileContent.replace(/\\/g, '\\\\'))
   fs.chmodSync(huskyFilePath, 0o755)
 
-  return execa('node', [huskyFilePath])
-    .then(result => result.stdout)
+  return execa('node', [huskyFilePath]).then((result) => result.stdout)
 }
 
 module.exports = run

@@ -1,8 +1,8 @@
 import _debug from 'debug'
-import execa from 'execa'
+import { execa } from 'execa'
 import { getBaseDir } from '../env'
 
-const debug = _debug('elint:not-staged-git-files')
+const debug = _debug('elint:utils:not-staged-git-files')
 
 /**
  * 获取没有添加到暂存区的文件

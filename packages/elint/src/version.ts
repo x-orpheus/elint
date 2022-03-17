@@ -1,25 +1,21 @@
-'use strict'
-
-const { version: elintVersion } = require('../package.json')
-const { version: eslintVersion } = require('eslint/package.json')
-const { version: stylelintVersion } = require('stylelint/package.json')
-const { version: commitlintVersion } = require('@commitlint/core/package.json')
-const { version: prettierVersion } = require('prettier/package.json')
-const { version: huskyVersion } = require('husky/package.json')
-const tryRequire = require('./utils/try-require')
-const padEnd = require('./utils/pad-end')
+import { padEnd } from 'lodash'
+import { version as elintVersion } from '../package.json'
+import { version as eslintVersion } from 'eslint/package.json'
+import { version as stylelintVersion } from 'stylelint/package.json'
+import { version as commitlintVersion } from '@commitlint/core/package.json'
+import { version as prettierVersion } from 'prettier/package.json'
+import { version as huskyVersion } from 'husky/package.json'
+import tryRequire from './utils/try-require'
 
 /**
  * 输出 version
- *
- * @returns {void}
  */
-function version () {
-  const main = {
+function version(): void {
+  const main: Record<string, string> = {
     elint: elintVersion
   }
 
-  const dep = {
+  const dep: Record<string, string> = {
     eslint: eslintVersion,
     stylelint: stylelintVersion,
     commitlint: commitlintVersion,
@@ -36,7 +32,7 @@ function version () {
 
   const output = ['> elint version', '']
 
-  const mainNameLength = Math.max(...Object.keys(main).map(k => k.length))
+  const mainNameLength = Math.max(...Object.keys(main).map((k) => k.length))
 
   Object.entries(main).forEach(([name, version]) => {
     output.push(`  ${padEnd(name, mainNameLength)} : ${version}`)
@@ -45,7 +41,7 @@ function version () {
   output.push('')
   output.push('  Dependencies:')
 
-  const depNameLength = Math.max(...Object.keys(dep).map(k => k.length))
+  const depNameLength = Math.max(...Object.keys(dep).map((k) => k.length))
 
   Object.entries(dep).forEach(([name, version]) => {
     output.push(`    ${padEnd(name, depNameLength)} : ${version}`)
@@ -56,4 +52,4 @@ function version () {
   console.log(output.join('\n'))
 }
 
-module.exports = version
+export default version

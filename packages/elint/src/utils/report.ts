@@ -1,16 +1,14 @@
-'use strict'
-
-const chalk = require('chalk')
-const figures = require('figures')
+import chalk from 'chalk'
+import figures from 'figures'
 
 /**
  * 按行（每行）缩进指定宽度
  *
- * @param {string} string 要操作的字符串
- * @param {number} [span=2] 缩进
- * @returns {string} 处理后的文本
+ * @param string 要操作的字符串
+ * @param span 缩进
+ * @returns 处理后的文本
  */
-function padding (string, span = 2) {
+function padding(string: string, span = 2): string {
   const spaces = ' '.repeat(span)
   return spaces + string.replace(/\n/g, `\n${spaces}`)
 }
@@ -19,33 +17,41 @@ function padding (string, span = 2) {
  * 移除多余的空行
  * 连续两个以上的 \n 合并为两个
  *
- * @param {string} string 要操作的字符串
- * @returns {string} 处理后的文本
+ * @param string 要操作的字符串
+ * @returns 处理后的文本
  */
-function reduceEmptyLine (string) {
+function reduceEmptyLine(string: string): string {
   return string.replace(/\n([ ]*\n)+/g, '\n\n')
 }
 
-/**
- * @typedef Result
- * @property {string} name 段落名
- * @property {string} output 段落内容
- * @property {boolean} success 是否成功
- */
+export interface ReportResult {
+  /**
+   * 段落名
+   */
+  name: string
+  /**
+   * 段落内容
+   */
+  output: string
+  /**
+   * 是否成功
+   */
+  success: boolean
+}
 
 const passedMessage = chalk.green(`${figures.tick} Passed`)
 
 /**
  * report
  *
- * @param {Result[]} results 要输出到命令行的内容
- * @returns {string} output
+ * @param results 要输出到命令行的内容
+ * @returns output
  */
-function report (results) {
+function report(results: ReportResult[]): string {
   const arr = []
 
   // 将 name 相同的 result 合并成一个
-  const mergedResults = results.reduce((pv, cv) => {
+  const mergedResults = results.reduce<ReportResult[]>((pv, cv) => {
     const itemIndex = pv.findIndex((item) => item.name === cv.name)
     if (itemIndex !== -1) {
       pv[itemIndex].success = pv[itemIndex].success && cv.success
@@ -78,4 +84,4 @@ function report (results) {
   return reduceEmptyLine(arr.join(''))
 }
 
-module.exports = report
+export default report

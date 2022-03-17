@@ -1,14 +1,14 @@
 'use strict'
 
-const execa = require('execa')
+const { execa } = require('execa')
 
 // 执行命令
-function run (command, cwd, sync = false, disableNotifier = true) {
+function run(command, cwd, sync = false, disableNotifier = true) {
   const strs = command.match(/(?:[^\s"]+|"[^"]*")+/g)
   const method = sync ? execa.sync : execa
 
   let program = strs[0]
-  const argus = strs.slice(1).map(s => {
+  const argus = strs.slice(1).map((s) => {
     if (/^".+"$/.test(s)) {
       return s.slice(1, -1)
     }

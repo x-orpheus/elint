@@ -2,7 +2,7 @@
 
 const path = require('path')
 const fs = require('fs-extra')
-const execa = require('execa')
+const { execa } = require('execa')
 const mock = require('../mock/env')
 const { getBaseDir } = require('../../../src/env')
 const setBlockingPath = require.resolve('../../../src/utils/set-blocking')
@@ -25,7 +25,9 @@ describe('set-blocking 测试', () => {
     // 创建测试文件
     const filePath = path.join(baseDir, 'child.js')
 
-    await fs.writeFile(filePath, `
+    await fs.writeFile(
+      filePath,
+      `
       const setBlocking = require("${setBlockingPath}");
 
       let buffer = "";
@@ -36,7 +38,8 @@ describe('set-blocking 测试', () => {
       setBlocking(true);
       process.stdout.write(buffer);
       process.exit(0);
-    `.replace(/\\/g, '\\\\'))
+    `.replace(/\\/g, '\\\\')
+    )
 
     const result = await execa('node', [filePath])
 

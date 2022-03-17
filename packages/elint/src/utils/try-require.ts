@@ -1,27 +1,27 @@
-'use strict'
+import _debug from 'debug'
+import path from 'path'
+import fs from 'fs'
+import { getNodeModulesDir } from '../env'
 
-const debug = require('debug')('elint:utils:try-require')
-const path = require('path')
-const fs = require('fs')
-const { getNodeModulesDir } = require('../env')
+const debug = _debug('elint:utils:try-require')
 
 /**
  * 获取全部目录下的模块
  *
- * @param {string} dir 目录
- * @param {string} [scope] scope
- * @returns {Array<string>} modules
+ * @param dir 目录
+ * @param scope
+ * @returns modules
  */
-function getModulesByDir (dir, scope = '') {
+function getModulesByDir(dir: string, scope = ''): string[] {
   const nodeModulesDir = getNodeModulesDir()
-  const results = []
+  const results: string[] = []
   const modules = fs.readdirSync(dir)
 
   if (!modules.length) {
     return results
   }
 
-  modules.forEach(module => {
+  modules.forEach((module) => {
     if (module.startsWith('.')) {
       // do nothing
     } else if (module.startsWith('@')) {
@@ -39,12 +39,12 @@ function getModulesByDir (dir, scope = '') {
 /**
  * 尝试获取已安装的模块，返回模块名
  *
- * @param {RegExp} regexp 正则，描述要 require 的 mudule
- * @returns {string[]} 所有匹配的模块名
+ * @param regexp 正则，描述要 require 的 mudule
+ * @returns 所有匹配的模块名
  */
-function tryRequire (regexp) {
+function tryRequire(regexp: RegExp): string[] {
   const nodeModulesDir = getNodeModulesDir()
-  const results = []
+  const results: string[] = []
 
   debug(`arguments.regexp: ${regexp || 'undefined'}`)
 
@@ -53,12 +53,13 @@ function tryRequire (regexp) {
     return results
   }
 
-  const moduleList = getModulesByDir(nodeModulesDir)
-    .filter(m => regexp.test(m))
+  const moduleList = getModulesByDir(nodeModulesDir).filter((m) =>
+    regexp.test(m)
+  )
 
   debug(`matched modules: ${moduleList.join(', ')}`)
 
   return moduleList
 }
 
-module.exports = tryRequire
+export default tryRequire

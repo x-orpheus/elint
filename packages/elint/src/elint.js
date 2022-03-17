@@ -7,7 +7,7 @@ const isGitHooks = require('./utils/is-git-hooks')
 const eslint = require('./workers/eslint')
 const stylelint = require('./workers/stylelint')
 const prettier = require('./workers/prettier')
-const notifier = require('./notifier')
+// const notifier = require('./notifier')
 
 /**
  * @typedef ELintOptions
@@ -47,7 +47,7 @@ async function elint (files, options) {
 
   const { type, prettier: usePrettier } = options
   const argus = JSON.stringify(options)
-  const workers = [notifier.notify()]
+  const workers = []
 
   if (usePrettier) {
     if (type) {
@@ -107,9 +107,9 @@ async function elint (files, options) {
 
     console.log(report(outputs))
 
-    if (notifierResult) {
-      console.log(notifierResult)
-    }
+    // if (notifierResult) {
+    //   console.log(notifierResult)
+    // }
 
     process.exit(success ? 0 : 1)
   })

@@ -1,5 +1,5 @@
 import _debug from 'debug'
-import execa from 'execa'
+import { execa } from 'execa'
 import { getBaseDir } from '../env'
 
 const debug = _debug('elint:utils:get-staged-file-content')

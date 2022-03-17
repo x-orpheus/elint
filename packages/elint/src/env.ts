@@ -1,5 +1,5 @@
 import _debug from 'debug'
-import path from 'path'
+import path from 'node:path'
 import { isNpmOrYarn } from 'is-npm'
 
 const debug = _debug('elint:env')

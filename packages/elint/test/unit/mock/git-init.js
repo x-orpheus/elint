@@ -1,9 +1,9 @@
 'use strict'
 
-const execa = require('execa')
+const { execa } = require('execa')
 const { getBaseDir } = require('../../../src/env')
 
-async function gitInit () {
+async function gitInit() {
   const options = {
     cwd: getBaseDir()
   }

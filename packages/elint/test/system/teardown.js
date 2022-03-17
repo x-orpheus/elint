@@ -7,7 +7,7 @@
 const os = require('os')
 const path = require('path')
 const fs = require('fs-extra')
-const globby = require('globby')
+const { globbySync } = require('globby')
 
 module.exports = () => {
   // CI 下不用执行清理
@@ -30,7 +30,7 @@ module.exports = () => {
   /**
    * 清理 npm pack 文件
    */
-  const packFiles = globby.sync('elint-*.tgz', {
+  const packFiles = globbySync('elint-*.tgz', {
     cwd: process.cwd(),
     onlyFiles: true,
     absolute: true

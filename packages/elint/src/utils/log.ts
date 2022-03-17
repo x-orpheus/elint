@@ -1,21 +1,28 @@
-'use strict'
+import chalk, { ChalkInstance } from 'chalk'
+import figures from 'figures'
 
-const chalk = require('chalk')
-const figures = require('figures')
+interface ColorFnAndIcon {
+  /**
+   * 图标
+   */
+  icon: string
+  /**
+   * 着色函数
+   */
+  colorFn: ChalkInstance
+}
 
-/**
- * @typedef ColorFnAndIcon
- * @property {function} colorFn 着色函数
- * @property {string} icon 图标
- */
+type LogType = 'error' | 'warn' | 'success' | 'info'
+
+type LogFunction = (...message: string[]) => void
 
 /**
  * 根据 type 获取 colorFn 和 Icon
  *
- * @param {string} type 日志类型
- * @returns {ColorFnAndIcon} colorFn and icon
+ * @param type 日志类型
+ * @returns colorFn and icon
  */
-function getColorFnAndIconByType (type) {
+function getColorFnAndIconByType(type?: LogType): ColorFnAndIcon {
   let colorFn, icon
 
   switch (type) {
@@ -43,10 +50,9 @@ function getColorFnAndIconByType (type) {
 /**
  * 构造日志函数
  *
- * @param {string} type 日志类型
- * @returns {function} log function
+ * @param  type 日志类型
  */
-function log (type) {
+function logCreator(type?: LogType): LogFunction {
   return (...message) => {
     if (!message.length) {
       return
@@ -70,9 +76,11 @@ function log (type) {
   }
 }
 
-module.exports = {
-  error: log('error'),
-  warn: log('warn'),
-  success: log('success'),
-  info: log()
+const log: Record<LogType, LogFunction> = {
+  error: logCreator('error'),
+  warn: logCreator('warn'),
+  success: logCreator('success'),
+  info: logCreator()
 }
+
+export default log

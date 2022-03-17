@@ -1,14 +1,12 @@
-'use strict'
-
-const ms = require('ms')
+import ms from 'ms'
 
 /**
  * 转换为毫秒数
  *
- * @param {string|number} value 待转换的值
- * @returns {number} 转换后的毫秒值
+ * @param value 待转换的值
+ * @returns 转换后的毫秒值
  */
-function toMs (value) {
+function toMs(value: string | number): number {
   if (!['number', 'string'].includes(typeof value)) {
     return 0
   }
@@ -21,7 +19,7 @@ function toMs (value) {
   let msNum
 
   try {
-    msNum = ms(value)
+    msNum = ms(Number(value))
   } catch (error) {
     msNum = 0
   }
@@ -33,4 +31,4 @@ function toMs (value) {
   return 0
 }
 
-module.exports = toMs
+export default toMs

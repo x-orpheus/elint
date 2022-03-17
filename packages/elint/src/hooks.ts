@@ -1,25 +1,24 @@
-'use strict'
+import _debug from 'debug'
+import path from 'node:path'
+import exec from './lib/exec'
+import log from './utils/log'
+import pragram from 'husky/lib/installer/bin'
 
-const debug = require('debug')('elint:hooks')
-const path = require('path')
-const exec = require('./lib/exec')
-const log = require('./utils/log')
-const pragram = require.resolve('husky/lib/installer/bin')
 const huskyDir = path.join(pragram, '../../..')
 
+const debug = _debug('elint:hooks')
+
+export type HuskyAction = 'install' | 'uninstall'
+
 // 支持的 actions
-const supportActions = [
-  'install',
-  'uninstall'
-]
+const supportActions: HuskyAction[] = ['install', 'uninstall']
 
 /**
  * install & uninstall git hooks
  *
- * @param {string} action 要执行的 action
- * @returns {void}
+ * @param action 要执行的 action
  */
-function runHooks (action) {
+function runHooks(action: HuskyAction): void {
   debug(`input action: ${action}`)
   debug(`husky pragram path: ${pragram}`)
   debug(`husky dir: ${huskyDir}`)
@@ -42,9 +41,9 @@ function runHooks (action) {
 
       logFn(...message)
     })
-    .catch(error => {
+    .catch((error) => {
       log.error(error.message || 'error')
     })
 }
 
-module.exports = runHooks
+export default runHooks
