@@ -10,7 +10,7 @@ export type FilePath =
   | string
   | {
       fileName: string
-      fileContent: string | null
+      fileContent: string
     }
 
 export type FileTree = Record<LinterName, FilePath[]>

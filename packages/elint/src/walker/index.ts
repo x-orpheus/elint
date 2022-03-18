@@ -4,10 +4,11 @@ import { defaultIgnore } from '../config'
 import { getFileTree, fillFileTree, FilePath } from './file-tree'
 import local from './local'
 import stage from './stage'
+import type { ElintOptions } from '../elint-next'
 
 const debug = _debug('elint:walker')
 
-export interface WalkerOptions {
+export interface WalkerOptions extends ElintOptions {
   /**
    * 是否禁用 ignore 规则
    *
@@ -21,7 +22,7 @@ export interface WalkerOptions {
  *
  * @param patterns 匹配模式
  * @param options 配置
- * @returns {Promise<object>} file tree
+ * @returns file tree
  */
 async function walker(patterns: string[], options: WalkerOptions = {}) {
   debug(`input glob patterns: ${patterns}`)

@@ -15,6 +15,7 @@ importers:
       eslint-plugin-promise: ^6.0.0
       husky: ^7.0.4
       rimraf: ^3.0.2
+      ts-node: ^10.7.0
       tsup: ^5.12.1
       typescript: ^4.6.2
     devDependencies:
@@ -29,7 +30,8 @@ importers:
       eslint-plugin-promise: 6.0.0_eslint@8.11.0
       husky: 7.0.4
       rimraf: 3.0.2
-      tsup: 5.12.1_typescript@4.6.2
+      ts-node: 10.7.0_e79e62fe450383fd2d418267dc75e645
+      tsup: 5.12.1_ts-node@10.7.0+typescript@4.6.2
       typescript: 4.6.2
 
   packages/elint:
@@ -4154,7 +4156,7 @@ packages:
       find-up: 4.1.0
     dev: true
 
-  /postcss-load-config/3.1.3:
+  /postcss-load-config/3.1.3_ts-node@10.7.0:
     resolution: {integrity: sha512-5EYgaM9auHGtO//ljHH+v/aC/TQ5LHXtL7bQajNAUBKUVKiYE8rYpFms7+V26D9FncaGe2zwCoPQsFKb5zF/Hw==}
     engines: {node: '>= 10'}
     peerDependencies:
@@ -4164,6 +4166,7 @@ packages:
         optional: true
     dependencies:
       lilconfig: 2.0.4
+      ts-node: 10.7.0_e79e62fe450383fd2d418267dc75e645
       yaml: 1.10.2
     dev: true
 
@@ -4856,7 +4859,7 @@ packages:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: true
 
-  /tsup/5.12.1_typescript@4.6.2:
+  /tsup/5.12.1_ts-node@10.7.0+typescript@4.6.2:
     resolution: {integrity: sha512-vI7E4T6+6n5guQ9UKUOkQmzd1n4V9abGK71lbnzJMLJspbkNby5zlwWvgvHafLdYCb1WXpjFuqqmNLjBA0Wz3g==}
     hasBin: true
     peerDependencies:
@@ -4873,7 +4876,7 @@ packages:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 3.1.3
+      postcss-load-config: 3.1.3_ts-node@10.7.0
       resolve-from: 5.0.0
       rollup: 2.70.1
       source-map: 0.7.3
