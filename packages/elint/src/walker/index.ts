@@ -1,12 +1,18 @@
 import _debug from 'debug'
 import isGitHooks from '../utils/is-git-hooks'
 import { defaultIgnore } from '../config'
-import { getFileTree, fillFileTree, FilePath } from './file-tree'
 import local from './local'
 import stage from './stage'
 import type { ElintOptions } from '../elint-next'
 
 const debug = _debug('elint:walker')
+
+export type FilePath =
+  | string
+  | {
+      fileName: string
+      fileContent: string
+    }
 
 export interface WalkerOptions extends ElintOptions {
   /**
@@ -24,14 +30,15 @@ export interface WalkerOptions extends ElintOptions {
  * @param options 配置
  * @returns file tree
  */
-async function walker(patterns: string[], options: WalkerOptions = {}) {
+async function walker(
+  patterns: string[],
+  options: WalkerOptions = {}
+): Promise<FilePath[]> {
   debug(`input glob patterns: ${patterns}`)
   debug('input options: %o', options)
 
-  const fileTree = getFileTree()
-
   if (!patterns || (Array.isArray(patterns) && !patterns.length)) {
-    return Promise.resolve(fileTree)
+    return Promise.resolve([])
   }
 
   const isGit = await isGitHooks()
@@ -56,12 +63,9 @@ async function walker(patterns: string[], options: WalkerOptions = {}) {
     fileList = await local(patterns, ignorePatterns)
   }
 
-  fillFileTree(fileTree, fileList)
-
   debug('fileList: %o', fileList)
-  debug('fileTree: %o', fileTree)
 
-  return fileTree
+  return fileList
 }
 
 export default walker

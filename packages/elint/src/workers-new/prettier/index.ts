@@ -18,23 +18,26 @@ export const elintWorkerPrettier: ElintWorkerFormatter<never> = {
   id: 'elint-worker-prettier',
   name: 'Prettier',
   type: 'formatter',
-  availableExtnameList: [
-    '.js',
-    '.jsx',
-    '.ts',
-    '.tsx',
-    '.mjs',
-    '.css',
-    '.less',
-    '.sass',
-    '.scss',
-    '.md',
-    '.mdx',
-    '.json',
-    '.vue',
-    '.yml'
-  ],
-  async executeOnText(text, { cwd, filePath }) {
+  activateConfig: {
+    extnameList: [
+      '.js',
+      '.jsx',
+      '.ts',
+      '.tsx',
+      '.mjs',
+      '.css',
+      '.less',
+      '.sass',
+      '.scss',
+      '.md',
+      '.mdx',
+      '.json',
+      '.vue',
+      '.yml'
+    ],
+    type: 'file'
+  },
+  async execute(text, { cwd, filePath }) {
     const result: ElintWorkerResult<never> = {
       workerId: this.id,
       input: text,
@@ -54,12 +57,10 @@ export const elintWorkerPrettier: ElintWorkerFormatter<never> = {
 
       result.error = error
       result.success = false
-    }
 
-    if (result.error) {
       result.message = `${
         chalk.underline(filePath) || 'Untitled file'
-      }\n  ${chalk.red('Error')}: ${result.error.message}\n\n`
+      }\n  ${chalk.red('Error')}: ${error.message}\n\n`
     }
 
     return result

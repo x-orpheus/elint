@@ -44,10 +44,12 @@ export const elintWorkerEsLint: ElintWorkerLinter<ESLint.LintResult> = {
   id: 'elint-worker-eslint',
   name: 'ESLint',
   type: 'linter',
-  fixable: true,
   cacheable: true,
-  availableExtnameList: ['.js', '.jsx', '.ts', '.tsx', '.mjs'],
-  async executeOnText(text, { fix, cwd, filePath }) {
+  activateConfig: {
+    extnameList: ['.js', '.jsx', '.ts', '.tsx', '.mjs'],
+    type: 'file'
+  },
+  async execute(text, { fix, cwd, filePath }) {
     const { esLint, formatter } = await getEsLintByOption({ fix, cwd })
 
     const result: ElintWorkerResult<ESLint.LintResult> = {
@@ -64,38 +66,34 @@ export const elintWorkerEsLint: ElintWorkerLinter<ESLint.LintResult> = {
 
       const errorResults = ESLint.getErrorResults(lintResults)
 
+      const lintResult = lintResults[0]
       result.success = errorResults.length === 0
-      result.output = lintResults[0]?.output ?? result.output
-      result.result = lintResults[0]
+      result.output = lintResult?.output ?? result.output
+      result.result = lintResult
+
+      if (lintResult) {
+        result.message = await formatter.format([lintResult])
+
+        // eslint 的 stylish formatter 会在底部添加总结，这里把总结去掉
+        if (result.message) {
+          const removeLineCount =
+            (lintResult.errorCount + lintResult.warningCount > 0 ? 2 : 0) +
+            (lintResult.fixableErrorCount + lintResult.fixableWarningCount > 0
+              ? 2
+              : 0)
+          if (removeLineCount) {
+            result.message =
+              result.message.split('\n').slice(0, -removeLineCount).join('\n') +
+              '\n'
+          }
+        }
+      }
     } catch (e) {
       const error = e instanceof Error ? e : new Error('Unknown error')
 
       result.error = error
       result.success = false
-    }
-
-    if (result.result) {
-      result.message = await formatter.format([result.result])
-
-      // eslint 的 stylish formatter 会在底部添加总结，这里把总结去掉
-      if (result.message) {
-        const removeLineCount =
-          (result.result.errorCount + result.result.warningCount > 0 ? 2 : 0) +
-          (result.result.fixableErrorCount + result.result.fixableWarningCount >
-          0
-            ? 2
-            : 0)
-        if (removeLineCount) {
-          result.message = result.message
-            .split('\n')
-            .slice(0, -removeLineCount)
-            .join('\n') + '\n'
-        }
-      }
-    } else if (result.error) {
-      result.message = `${filePath || 'Untitled file'}: ${
-        result.error.message
-      }\n`
+      result.message = `${filePath || 'Untitled file'}: ${error.message}\n`
     }
 
     return result

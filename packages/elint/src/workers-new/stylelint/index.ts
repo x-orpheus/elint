@@ -1,14 +1,18 @@
-import { lint, LinterResult, formatters } from 'stylelint'
+import stylelint, { type LinterResult } from 'stylelint'
 import { ElintWorkerLinter, ElintWorkerResult } from '../worker'
+
+const { lint, formatters } = stylelint
 
 export const elintWorkerStylelint: ElintWorkerLinter<LinterResult> = {
   id: 'elint-worker-stylelint',
   name: 'Stylelint',
   type: 'linter',
-  fixable: true,
   cacheable: true,
-  availableExtnameList: ['.less', '.sass', '.scss', '.css'],
-  async executeOnText(text, { fix, cwd, filePath }) {
+  activateConfig: {
+    extnameList: ['.less', '.sass', '.scss', '.css'],
+    type: 'file'
+  },
+  async execute(text, { fix, cwd, filePath }) {
     const result: ElintWorkerResult<LinterResult> = {
       workerId: this.id,
       input: text,
@@ -27,21 +31,15 @@ export const elintWorkerStylelint: ElintWorkerLinter<LinterResult> = {
       result.success = !lintResult.errored
       result.result = lintResult
       result.output = lintResult.output ?? result.output
+
+      const stringFormatter = formatters.string
+      result.message = stringFormatter(lintResult.results)
     } catch (e) {
       const error = e instanceof Error ? e : new Error('Unknown error')
 
       result.error = error
       result.success = false
-    }
-
-    if (result.result) {
-      const stringFormatter = formatters.string
-
-      result.message = stringFormatter(result.result.results)
-    } else if (result.error) {
-      result.message = `${filePath || 'Untitled file'}: ${
-        result.error.message
-      }\n`
+      result.message = `${filePath || 'Untitled file'}: ${error.message}\n`
     }
 
     return result

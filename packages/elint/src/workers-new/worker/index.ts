@@ -1,5 +1,7 @@
 export type ElintWorkerType = 'linter' | 'formatter'
 
+export type ElintWorkerActivateType = 'before-all' | 'file' | 'after-all'
+
 export interface ElintWorkerResult<T> {
   /**
    * workerId
@@ -47,6 +49,32 @@ export interface ElintWorkerOption {
   cwd: string
 }
 
+export interface ElintWorkerActivateOption {
+  filePath?: string
+  isGit?: boolean
+  fix?: boolean
+  cwd?: string
+}
+
+export interface ElintWorkerActivateConfig {
+  /**
+   * 支持的扩展名
+   */
+  extnameList?: string[]
+  /**
+   * 执行类型
+   *
+   * 全局 / 文件
+   */
+  type: ElintWorkerActivateType
+  /**
+   * 是否使用当前 worker
+   *
+   * type 非 file 只有传入 activate 才有可能激活
+   */
+  activate?(option: ElintWorkerActivateOption): boolean
+}
+
 export interface ElintWorker<
   Result,
   Option extends ElintWorkerOption = ElintWorkerOption
@@ -63,17 +91,11 @@ export interface ElintWorker<
    * 类型
    */
   type: ElintWorkerType
+  activateConfig: ElintWorkerActivateConfig
   /**
-   * 支持的扩展名
+   * 对文本执行 worker
    */
-  availableExtnameList: (`.${string}` | RegExp)[]
-  /**
-   * 对文本执行
-   */
-  executeOnText(
-    text: string,
-    option: Option
-  ): Promise<ElintWorkerResult<Result>>
+  execute(text: string, option: Option): Promise<ElintWorkerResult<Result>>
   /**
    * 重置操作（例如清理配置缓存）
    */
@@ -92,10 +114,6 @@ export interface ElintWorkerLinter<
   Option extends ElintWorkerLinterOption = ElintWorkerLinterOption
 > extends ElintWorker<Result, Option> {
   type: 'linter'
-  /**
-   * 是否支持自动修复
-   */
-  fixable: boolean
   /**
    * 是否支持缓存
    */
