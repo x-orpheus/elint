@@ -78,8 +78,14 @@ export const elintWorkerEsLint: ElintWorkerLinter<ESLint.LintResult> = {
 
     if (result.result) {
       result.message = await formatter.format([result.result])
+
+      if (result.message) {
+        result.message = result.message.split('\n').slice(0, -3).join('\n')
+      }
     } else if (result.error) {
-      result.message = `${filePath || 'unknown file'}: ${result.error.message}\n`
+      result.message = `${filePath || 'unknown file'}: ${
+        result.error.message
+      }\n`
     }
 
     return result

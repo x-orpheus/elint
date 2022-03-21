@@ -88,7 +88,7 @@ async function elint(files: string[], options: ElintOptions) {
       if (prettier) {
         const formatterResult = await elintWorkerPrettier.executeOnText(
           fileResult.output,
-          { cwd }
+          { cwd, filePath: fileResult.filePath }
         )
 
         fileResult.output = formatterResult.output
@@ -110,7 +110,7 @@ async function elint(files: string[], options: ElintOptions) {
 
       const lintResult = await elintWorkerEsLint.executeOnText(
         fileResult.output,
-        { cwd, fix }
+        { cwd, fix, filePath: fileResult.filePath }
       )
 
       fileResult.output = lintResult.output
@@ -125,7 +125,7 @@ async function elint(files: string[], options: ElintOptions) {
         })
       }
 
-      const isModified = fileResult.output === fileResult.fileContent
+      const isModified = fileResult.output !== fileResult.fileContent
 
       if (isModified) {
         if (fix) {
@@ -145,7 +145,7 @@ async function elint(files: string[], options: ElintOptions) {
               success: false,
               output: `${chalk.underline(
                 fileResult.filePath
-              )}\n   ${chalk.yellow.bold('!')} Not formatted\n`
+              )}\n   ${chalk.yellow.bold('!')} Not formatted\n\n`
             })
           }
         }

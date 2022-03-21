@@ -41,7 +41,9 @@ export const elintWorkerStylelint: ElintWorkerLinter<LinterResult> = {
 
       result.message = stringFormatter(result.result.results)
     } else if (result.error) {
-      result.message = `${filePath || 'unknown file'}: ${result.error.message}\n`
+      result.message = `${filePath || 'unknown file'}: ${
+        result.error.message
+      }\n`
     }
 
     return result
