@@ -6,7 +6,6 @@ import report, { ReportResult } from './utils/report'
 import isGitHooks from './utils/is-git-hooks'
 import { elintWorkerEsLint } from './workers-new/eslint'
 import { elintWorkerPrettier } from './workers-new/prettier'
-import type { ElintWorkerName } from './workers-new/worker'
 // const notifier = require('./notifier')
 
 const debug = _debug('elint:main')
@@ -83,7 +82,7 @@ async function elint(files: string[], options: ElintOptions) {
 
       fileResult.output = fileResult.fileContent
 
-      let formatterName: ElintWorkerName | undefined
+      let formatterId: string | undefined
 
       if (prettier) {
         const formatterResult = await elintWorkerPrettier.executeOnText(
@@ -93,15 +92,15 @@ async function elint(files: string[], options: ElintOptions) {
 
         fileResult.output = formatterResult.output
 
-        formatterName = formatterResult.worker.name
+        formatterId = formatterResult.workerId
 
         if (!fix) {
-          fileResult.success &&= formatterResult.success
+          fileResult.success = fileResult.success && formatterResult.success
         }
 
         if (formatterResult.message) {
           outputs.push({
-            name: formatterResult.worker.name,
+            name: formatterResult.workerId,
             success: formatterResult.success,
             output: formatterResult.message
           })
@@ -115,11 +114,11 @@ async function elint(files: string[], options: ElintOptions) {
 
       fileResult.output = lintResult.output
 
-      fileResult.success &&= lintResult.success
+      fileResult.success = fileResult.success && lintResult.success
 
       if (lintResult.message) {
         outputs.push({
-          name: lintResult.worker.name,
+          name: lintResult.workerId,
           success: lintResult.success,
           output: lintResult.message
         })
@@ -137,15 +136,15 @@ async function elint(files: string[], options: ElintOptions) {
             // empty
           }
         } else if (prettier) {
-          fileResult.success &&= isModified
+          fileResult.success = fileResult.success && isModified
 
-          if (formatterName) {
+          if (formatterId) {
             outputs.push({
-              name: formatterName,
+              name: formatterId,
               success: false,
               output: `${chalk.underline(
                 fileResult.filePath
-              )}\n   ${chalk.yellow.bold('!')} Not formatted\n\n`
+              )}\n  ${chalk.red.bold('!')} Not formatted\n\n`
             })
           }
         }
@@ -161,9 +160,10 @@ async function elint(files: string[], options: ElintOptions) {
 
   await Promise.all(tasks)
 
-  console.log(report(outputs))
-
-  process.exit(success ? 0 : 1)
+  return {
+    success,
+    message: report(outputs)
+  }
 }
 
 export default elint

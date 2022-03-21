@@ -126,10 +126,12 @@ async function stagedFiles(
     const fileName = needGetContentFileList[i]
     const fileContent = await getStagedFileContent(fileName)
 
-    fileList.push({
-      fileName,
-      fileContent
-    })
+    if (fileContent !== null) {
+      fileList.push({
+        fileName,
+        fileContent
+      })
+    }
   }
 
   return fileList

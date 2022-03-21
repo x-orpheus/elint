@@ -1,4 +1,5 @@
 import prettier, { type Options } from 'prettier'
+import chalk from 'chalk'
 import { ElintWorkerFormatter, ElintWorkerResult } from '../worker'
 
 const { clearConfigCache, resolveConfig, format } = prettier
@@ -14,7 +15,8 @@ const getOptionsForFile = (filePath: string) => {
 }
 
 export const elintWorkerPrettier: ElintWorkerFormatter<never> = {
-  name: 'elint-worker-prettier',
+  id: 'elint-worker-prettier',
+  name: 'Prettier',
   type: 'formatter',
   availableExtnameList: [
     '.js',
@@ -34,10 +36,7 @@ export const elintWorkerPrettier: ElintWorkerFormatter<never> = {
   ],
   async executeOnText(text, { cwd, filePath }) {
     const result: ElintWorkerResult<never> = {
-      worker: {
-        name: this.name,
-        type: this.type
-      },
+      workerId: this.id,
       input: text,
       output: text,
       success: true
@@ -51,16 +50,16 @@ export const elintWorkerPrettier: ElintWorkerFormatter<never> = {
       result.output = formatted ?? result.output
       result.success = formatted === text
     } catch (e) {
-      const error = e instanceof Error ? e : new Error('unknown error')
+      const error = e instanceof Error ? e : new Error('Unknown error')
 
       result.error = error
       result.success = false
     }
 
     if (result.error) {
-      result.message = `${filePath || 'unknown file'}: ${
-        result.error.message
-      }\n`
+      result.message = `${
+        chalk.underline(filePath) || 'Untitled file'
+      }\n  ${chalk.red('Error')}: ${result.error.message}\n\n`
     }
 
     return result

@@ -7,7 +7,7 @@
     "elint": "./bin/cli.js"
   },
   "scripts": {
-    "build": "rimraf dist && tsup src/index.ts bin/cli-new.ts --format esm",
+    "build": "rimraf dist && tsup src/index.ts src/cli/index.ts --format esm",
     "test": "npm run test:unit && npm run test:system",
     "test:unit": "jest --config test/unit/jest.config.js",
     "test:system": "jest --config test/system/jest.config.js --runInBand"

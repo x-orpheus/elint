@@ -1,15 +1,10 @@
-export type ElintWorkerName = `elint-worker-${string}`
-
 export type ElintWorkerType = 'linter' | 'formatter'
 
 export interface ElintWorkerResult<T> {
   /**
-   * worker 信息
+   * workerId
    */
-  worker: {
-    name: ElintWorkerName
-    type: ElintWorkerType
-  }
+  workerId: string
   /**
    * 文件路径
    */
@@ -57,9 +52,13 @@ export interface ElintWorker<
   Option extends ElintWorkerOption = ElintWorkerOption
 > {
   /**
-   * 名称(唯一)
+   * worker 名称(唯一)
    */
-  name: ElintWorkerName
+  id: string
+  /**
+   * worker 可读名称
+   */
+  name: string
   /**
    * 类型
    */

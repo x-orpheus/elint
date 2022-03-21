@@ -2,17 +2,15 @@ import { lint, LinterResult, formatters } from 'stylelint'
 import { ElintWorkerLinter, ElintWorkerResult } from '../worker'
 
 export const elintWorkerStylelint: ElintWorkerLinter<LinterResult> = {
-  name: 'elint-worker-stylelint',
+  id: 'elint-worker-stylelint',
+  name: 'Stylelint',
   type: 'linter',
   fixable: true,
   cacheable: true,
   availableExtnameList: ['.less', '.sass', '.scss', '.css'],
   async executeOnText(text, { fix, cwd, filePath }) {
     const result: ElintWorkerResult<LinterResult> = {
-      worker: {
-        name: this.name,
-        type: this.type
-      },
+      workerId: this.id,
       input: text,
       output: text,
       success: true
@@ -30,7 +28,7 @@ export const elintWorkerStylelint: ElintWorkerLinter<LinterResult> = {
       result.result = lintResult
       result.output = lintResult.output ?? result.output
     } catch (e) {
-      const error = e instanceof Error ? e : new Error('unknown error')
+      const error = e instanceof Error ? e : new Error('Unknown error')
 
       result.error = error
       result.success = false
@@ -41,7 +39,7 @@ export const elintWorkerStylelint: ElintWorkerLinter<LinterResult> = {
 
       result.message = stringFormatter(result.result.results)
     } else if (result.error) {
-      result.message = `${filePath || 'unknown file'}: ${
+      result.message = `${filePath || 'Untitled file'}: ${
         result.error.message
       }\n`
     }

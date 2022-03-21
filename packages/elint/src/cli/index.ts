@@ -2,9 +2,9 @@
 
 import _debug from 'debug'
 import { program } from 'commander'
-import { description } from '../package.json'
-import { elint } from '../src'
-import log from '../src/utils/log'
+import { description } from '../../package.json'
+import { elint } from '..'
+import log from '../utils/log'
 
 const debug = _debug('elint:cli')
 
@@ -34,7 +34,7 @@ program
   .option('-f, --fix', 'Automatically fix problems')
   .option('-p, --prettier', 'Use prettier to lint/format(with --fix) code')
   .option('--no-ignore', 'Disable elint ignore patterns')
-  .action((type, files, options) => {
+  .action(async (type, files, options) => {
     debug('run lint...')
 
     if (!type || !files) {
@@ -66,7 +66,11 @@ program
       noIgnore: options.noIgnore
     }
 
-    elint(parsedFiles, elintOptions)
+    const { success, message } = await elint(parsedFiles, elintOptions)
+
+    console.log(message)
+
+    process.exit(success ? 0 : 1)
   })
 
 /**

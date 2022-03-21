@@ -34,3 +34,9 @@ export const defaultIgnore = [
   '**/*.min.css',
   '**/.yarn'
 ]
+
+export const defaultWorkers: string[] = [
+  'elint-worker-eslint',
+  'elint-worker-stylelint',
+  'elint-worker-prettier'
+]

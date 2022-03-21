@@ -41,7 +41,8 @@ const getEsLintByOption = async ({
 }
 
 export const elintWorkerEsLint: ElintWorkerLinter<ESLint.LintResult> = {
-  name: 'elint-worker-eslint',
+  id: 'elint-worker-eslint',
+  name: 'ESLint',
   type: 'linter',
   fixable: true,
   cacheable: true,
@@ -50,10 +51,7 @@ export const elintWorkerEsLint: ElintWorkerLinter<ESLint.LintResult> = {
     const { esLint, formatter } = await getEsLintByOption({ fix, cwd })
 
     const result: ElintWorkerResult<ESLint.LintResult> = {
-      worker: {
-        name: this.name,
-        type: this.type
-      },
+      workerId: this.id,
       input: text,
       output: text,
       success: true
@@ -66,11 +64,11 @@ export const elintWorkerEsLint: ElintWorkerLinter<ESLint.LintResult> = {
 
       const errorResults = ESLint.getErrorResults(lintResults)
 
-      result.success = errorResults.length > 0
+      result.success = errorResults.length === 0
       result.output = lintResults[0]?.output ?? result.output
       result.result = lintResults[0]
     } catch (e) {
-      const error = e instanceof Error ? e : new Error('unknown error')
+      const error = e instanceof Error ? e : new Error('Unknown error')
 
       result.error = error
       result.success = false
@@ -79,11 +77,23 @@ export const elintWorkerEsLint: ElintWorkerLinter<ESLint.LintResult> = {
     if (result.result) {
       result.message = await formatter.format([result.result])
 
+      // eslint 的 stylish formatter 会在底部添加总结，这里把总结去掉
       if (result.message) {
-        result.message = result.message.split('\n').slice(0, -3).join('\n')
+        const removeLineCount =
+          (result.result.errorCount + result.result.warningCount > 0 ? 2 : 0) +
+          (result.result.fixableErrorCount + result.result.fixableWarningCount >
+          0
+            ? 2
+            : 0)
+        if (removeLineCount) {
+          result.message = result.message
+            .split('\n')
+            .slice(0, -removeLineCount)
+            .join('\n') + '\n'
+        }
       }
     } else if (result.error) {
-      result.message = `${filePath || 'unknown file'}: ${
+      result.message = `${filePath || 'Untitled file'}: ${
         result.error.message
       }\n`
     }
