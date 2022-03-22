@@ -96,9 +96,7 @@ export interface ElintResult {
  */
 async function elint(
   files: string[],
-  options: ElintOptions
-): Promise<ElintResult> {
-  const {
+  {
     fix: optionFix = false,
     write = true,
     style = false,
@@ -106,14 +104,24 @@ async function elint(
     checkGit = true,
     workers = defaultWorkers,
     cwd = process.cwd()
-  } = options
+  }: ElintOptions
+): Promise<ElintResult> {
+  const startTime = Date.now()
 
   const isGit = checkGit ? await isGitHooks() : false
 
   // 调整 fix 配置
   const fix = isGit ? false : optionFix
 
-  debug('parsed options: %o', { ...options, fix })
+  debug('parsed options: %o', {
+    fix,
+    write,
+    style,
+    noIgnore,
+    checkGit,
+    workers,
+    cwd
+  } as ElintOptions)
 
   const fileList = await walker(files, {
     noIgnore,
@@ -164,6 +172,8 @@ async function elint(
       }
     }
   }
+
+  debug(`elint complete before-all workers in: ${Date.now() - startTime}ms`)
 
   if (activateTypeWorkerGroup.file.length) {
     fileList.forEach((filePath) => {
@@ -280,6 +290,8 @@ async function elint(
 
   await Promise.all(tasks)
 
+  debug(`elint complete file workers in: ${Date.now() - startTime}ms`)
+
   if (activateTypeWorkerGroup['after-all']) {
     for (const worker of activateTypeWorkerGroup['after-all']) {
       const executeResult = await executeElintWorker(worker, workerBaseOptions)
@@ -291,6 +303,8 @@ async function elint(
     }
   }
 
+  debug(`elint complete after-all workers in: ${Date.now() - startTime}ms`)
+
   if (!elintResult.reports.length) {
     elintResult.reports.push({
       name: 'elint',
@@ -300,6 +314,8 @@ async function elint(
   }
 
   elintResult.message = report(elintResult.reports)
+
+  debug(`elint complete in: ${Date.now() - startTime}ms`)
 
   return elintResult
 }
