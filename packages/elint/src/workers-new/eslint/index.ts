@@ -3,7 +3,7 @@ import {
   ElintWorkerLinter,
   ElintWorkerLinterOption,
   ElintWorkerResult
-} from '../worker'
+} from '../types'
 
 const esLintInstanceMap = new Map<string, ESLint>()
 const esLintFormatterMap = new Map<ESLint, ESLint.Formatter>()
@@ -46,7 +46,7 @@ export const elintWorkerEsLint: ElintWorkerLinter<ESLint.LintResult> = {
   type: 'linter',
   cacheable: true,
   activateConfig: {
-    extnameList: ['.js', '.jsx', '.ts', '.tsx', '.mjs'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs'],
     type: 'file'
   },
   async execute(text, { fix, cwd, filePath }) {

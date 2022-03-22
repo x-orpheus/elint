@@ -1,26 +1,26 @@
 import _debug from 'debug'
-import isGitHooks from '../utils/is-git-hooks'
 import { defaultIgnore } from '../config'
 import local from './local'
 import stage from './stage'
-import type { ElintOptions } from '../elint-next'
 
 const debug = _debug('elint:walker')
 
 export type FilePath =
   | string
   | {
-      fileName: string
+      filePath: string
       fileContent: string
     }
 
-export interface WalkerOptions extends ElintOptions {
+export interface WalkerOptions {
   /**
    * 是否禁用 ignore 规则
-   *
-   * @default `false`
    */
-  noIgnore?: boolean
+  noIgnore: boolean
+  /**
+   * 是否在 git 中调用，在 git 中调用时仅获取暂存区的文件
+   */
+  isGit: boolean
 }
 
 /**
@@ -32,7 +32,7 @@ export interface WalkerOptions extends ElintOptions {
  */
 async function walker(
   patterns: string[],
-  options: WalkerOptions = {}
+  options: WalkerOptions
 ): Promise<FilePath[]> {
   debug(`input glob patterns: ${patterns}`)
   debug('input options: %o', options)
@@ -41,7 +41,7 @@ async function walker(
     return Promise.resolve([])
   }
 
-  const isGit = await isGitHooks()
+  const { noIgnore, isGit } = options
 
   debug(`run in git hooks: ${isGit}`)
 
@@ -50,7 +50,6 @@ async function walker(
    */
   let fileList: FilePath[]
   let ignorePatterns: string[] = []
-  const { noIgnore = false } = options
 
   if (!noIgnore) {
     debug('ignore rules: %j', defaultIgnore)

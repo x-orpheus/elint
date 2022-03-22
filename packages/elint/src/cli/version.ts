@@ -1,11 +1,11 @@
 import { padEnd } from 'lodash'
-import { version as elintVersion } from '../package.json'
+import { version as elintVersion } from '../../package.json'
 import { version as eslintVersion } from 'eslint/package.json'
 import { version as stylelintVersion } from 'stylelint/package.json'
 import { version as commitlintVersion } from '@commitlint/core/package.json'
 import { version as prettierVersion } from 'prettier/package.json'
 import { version as huskyVersion } from 'husky/package.json'
-import tryRequire from './utils/try-require'
+import tryRequire from '../utils/try-require'
 
 /**
  * 输出 version

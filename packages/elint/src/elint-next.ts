@@ -11,33 +11,83 @@ import {
   groupElintWorkersByType,
   loadElintWorkers
 } from './workers-new'
-import { ElintWorkerActivateOption } from './workers-new/worker'
+import {
+  ElintWorkerActivateOption,
+  ElintWorkerResult
+} from './workers-new/types'
 // const notifier = require('./notifier')
 
 const debug = _debug('elint:main')
 
-export interface FileResult {
+export interface ElintFileResult {
+  /**
+   * 文件路径
+   */
   filePath: string
   /**
    * 文件原始内容
    */
-  fileContent: string
+  source: string
   /**
    * 文件输出
    */
   output: string
+  /**
+   * 执行整体结果
+   */
   success: boolean
+  /**
+   * 输出格式化结果
+   */
+  reports: ReportResult[]
+  /**
+   * 各个 worker 结果
+   */
+  workerResults: ElintWorkerResult<unknown>[]
 }
 
 export interface ElintOptions {
+  /**
+   * 是否自动修复
+   */
   fix?: boolean
-  prettier?: boolean
+  /**
+   * 是否将自动修复写入文件
+   *
+   * @default `true`
+   */
+  write?: boolean
+  /**
+   * 是否检查格式
+   */
+  style?: boolean
+  /**
+   * 是否禁用默认忽略规则
+   */
+  noIgnore?: boolean
+  /**
+   * 检查是否在 git 中调用
+   *
+   * 在 git 中调用将会调整一些默认行为
+   *
+   * 1. 仅会获取暂存区内满足传入参数的文件和内容
+   * 2. fix 参数将强制改为 false，不进行自动修复
+   *
+   * @default true
+   */
+  checkGit?: boolean
+  /**
+   * 配置 workers
+   */
   workers?: string[]
+  cwd?: string
 }
 
 export interface ElintResult {
   success: boolean
   message: string
+  reports: ReportResult[]
+  fileResults: ElintFileResult[]
 }
 
 /**
@@ -51,18 +101,45 @@ async function elint(
   files: string[],
   options: ElintOptions
 ): Promise<ElintResult> {
-  const fileList = await walker(files, options)
+  const {
+    fix: optionFix = false,
+    write = true,
+    style = false,
+    noIgnore = false,
+    checkGit = true,
+    workers = defaultWorkers,
+    cwd = process.cwd()
+  } = options
 
-  const { workers = defaultWorkers } = options
+  const isGit = checkGit ? await isGitHooks() : false
+
+  // 调整 fix 配置
+  const fix = isGit ? false : optionFix
+
+  debug('parsed options: %o', { ...options, fix })
+
+  const fileList = await walker(files, {
+    noIgnore,
+    isGit
+  })
 
   const loadedElintWorkers = loadElintWorkers(workers)
 
+  debug(
+    'loaded elint workers: %o',
+    loadedElintWorkers.map((worker) => worker.id)
+  )
+
+  const elintResult: ElintResult = {
+    success: true,
+    message: '',
+    reports: [],
+    fileResults: []
+  }
+
   // 没有匹配到任何文件，直接退出
   if (!fileList.length || !loadedElintWorkers.length) {
-    return {
-      success: true,
-      message: ''
-    }
+    return elintResult
   }
 
   const activateTypeWorkerGroup =
@@ -72,40 +149,25 @@ async function elint(
     activateTypeWorkerGroup.file || []
   )
 
-  // 处理 fix
-  const isGit = await isGitHooks()
-
-  const cwd = process.cwd()
-
-  if (isGit) {
-    options.fix = false
-  }
-
-  const { fix = false, prettier: format = false } = options
-
-  debug('parsed options: %o', options)
-
   const tasks: Promise<void>[] = []
-
-  let success = true
-  const reportResult: ReportResult[] = []
 
   const workerActivateBaseOption: ElintWorkerActivateOption = {
     isGit,
-    fix
+    fix,
+    cwd
   }
 
   if (activateTypeWorkerGroup['before-all']) {
     for (const worker of activateTypeWorkerGroup['before-all']) {
       if (checkElintWorkerActivation(worker, workerActivateBaseOption)) {
-        const result = await worker.execute('', { cwd })
+        const workerResult = await worker.execute('', { cwd })
 
-        success = success && result.success
+        elintResult.success &&= workerResult.success
 
-        reportResult.push({
+        elintResult.reports.push({
           name: worker.name,
-          success: result.success,
-          output: result.message || ''
+          success: workerResult.success,
+          output: workerResult.message || ''
         })
       }
     }
@@ -114,136 +176,134 @@ async function elint(
   if (activateTypeWorkerGroup.file.length) {
     fileList.forEach((filePath) => {
       const task = async (): Promise<void> => {
-        const fileResult: FileResult = {
+        const elintFileResult: ElintFileResult = {
           filePath: '',
-          fileContent: '',
+          source: '',
           output: '',
-          success: true
+          success: true,
+          reports: [],
+          workerResults: []
         }
 
-        if (typeof filePath === 'string') {
-          fileResult.filePath = filePath
-          try {
-            fileResult.fileContent = fs.readFileSync(filePath, 'utf-8')
-          } catch (e) {
-            success = false
-            reportResult.push({
-              name: 'elint',
-              success: false,
-              output: `${chalk.underline(filePath)}\n  ${chalk.red('error:')} ${
-                (e as Error).message
-              }\n\n`
-            })
-            return
+        try {
+          if (typeof filePath === 'string') {
+            elintFileResult.filePath = filePath
+            elintFileResult.source = fs.readFileSync(filePath, 'utf-8')
+          } else {
+            elintFileResult.filePath = filePath.filePath
+            elintFileResult.source = filePath.fileContent
           }
-        } else {
-          fileResult.filePath = filePath.fileName
-          fileResult.fileContent = filePath.fileContent
-        }
 
-        if (typeof fileResult.fileContent !== 'string') {
-          success = false
-          reportResult.push({
-            name: 'elint',
-            success: false,
-            output: `${chalk.underline(filePath)}\n  ${chalk.red(
-              'error:'
-            )} This file is not source code.\n\n`
-          })
-          return
-        }
+          if (typeof elintFileResult.source !== 'string') {
+            throw new Error('This file is not source code.')
+          }
 
-        const workerActivateOption: ElintWorkerActivateOption = {
-          ...workerActivateBaseOption,
-          filePath: fileResult.filePath
-        }
+          const workerActivateOption: ElintWorkerActivateOption = {
+            ...workerActivateBaseOption,
+            filePath: elintFileResult.filePath
+          }
 
-        fileResult.output = fileResult.fileContent
+          elintFileResult.output = elintFileResult.source
 
-        if (format) {
-          for (const formatterWorker of fileWorkerGroup.formatter) {
+          if (style) {
+            for (const formatterWorker of fileWorkerGroup.formatter) {
+              if (
+                !checkElintWorkerActivation(
+                  formatterWorker,
+                  workerActivateOption
+                )
+              ) {
+                continue
+              }
+
+              const formatResult = await formatterWorker.execute(
+                elintFileResult.output,
+                {
+                  cwd,
+                  filePath: elintFileResult.filePath
+                }
+              )
+
+              elintFileResult.output = formatResult.output
+              elintFileResult.workerResults.push(formatResult)
+
+              if (formatResult.message) {
+                elintFileResult.reports.push({
+                  name: formatterWorker.name,
+                  success: formatResult.success,
+                  output: formatResult.message
+                })
+              }
+            }
+          }
+
+          for (const linterWorker of fileWorkerGroup.linter) {
             if (
-              !checkElintWorkerActivation(formatterWorker, workerActivateOption)
+              !checkElintWorkerActivation(linterWorker, workerActivateOption)
             ) {
               continue
             }
-            const formatResult = await formatterWorker.execute(
-              fileResult.output,
+
+            const lintResult = await linterWorker.execute(
+              elintFileResult.output,
               {
                 cwd,
-                filePath: fileResult.filePath
+                fix,
+                filePath: elintFileResult.filePath
               }
             )
 
-            fileResult.output = formatResult.output
+            elintFileResult.output = lintResult.output
+            elintFileResult.workerResults.push(lintResult)
+            elintFileResult.success &&= lintResult.success
 
-            if (formatResult.message) {
-              reportResult.push({
-                name: formatterWorker.name,
-                success: formatResult.success,
-                output: formatResult.message
+            if (lintResult.message) {
+              elintFileResult.reports.push({
+                name: linterWorker.name,
+                success: lintResult.success,
+                output: lintResult.message
               })
             }
           }
-        }
 
-        for (const linterWorker of fileWorkerGroup.linter) {
-          if (!checkElintWorkerActivation(linterWorker, workerActivateOption)) {
-            continue
-          }
+          const isModified = elintFileResult.output !== elintFileResult.source
 
-          const lintResult = await linterWorker.execute(fileResult.output, {
-            cwd,
-            fix,
-            filePath: fileResult.filePath
-          })
-
-          fileResult.output = lintResult.output
-          fileResult.success = fileResult.success && lintResult.success
-
-          if (lintResult.message) {
-            reportResult.push({
-              name: linterWorker.name,
-              success: lintResult.success,
-              output: lintResult.message
-            })
-          }
-        }
-
-        const isModified = fileResult.output !== fileResult.fileContent
-
-        if (isModified) {
-          if (fix) {
-            try {
-              fs.writeFileSync(fileResult.filePath, fileResult.output, {
-                encoding: 'utf-8'
-              })
-            } catch {
-              reportResult.push({
-                name: 'elint',
+          if (isModified) {
+            if (fix) {
+              if (write) {
+                fs.writeFileSync(
+                  elintFileResult.filePath,
+                  elintFileResult.output,
+                  {
+                    encoding: 'utf-8'
+                  }
+                )
+              }
+            } else if (style) {
+              elintFileResult.success = false
+              elintFileResult.reports.push({
+                name: 'elint - formatter',
                 success: false,
-                output: `${chalk.underline(filePath)}\n  ${chalk.red(
-                  'error:'
-                )} This file can not be written\n\n`
+                output: `${chalk.underline(
+                  elintFileResult.filePath
+                )}\n  ${chalk.red.bold('!')} Not formatted\n\n`
               })
-              // empty
             }
-          } else if (format) {
-            fileResult.success = fileResult.success && isModified
-
-            reportResult.push({
-              name: 'elint - formatter',
-              success: false,
-              output: `${chalk.underline(
-                fileResult.filePath
-              )}\n  ${chalk.red.bold('!')} Not formatted\n\n`
-            })
           }
+        } catch (e) {
+          elintFileResult.success = false
+          elintFileResult.reports.push({
+            name: 'elint',
+            success: false,
+            output: `${chalk.underline(filePath)}\n  ${chalk.red('error:')} ${
+              (e as Error).message
+            }\n\n`
+          })
         }
 
-        if (success && !fileResult.success) {
-          success = false
-        }
+        elintResult.success &&= elintFileResult.success
+        elintResult.reports.push(...elintFileResult.reports)
+        elintResult.fileResults.push(elintFileResult)
       }
 
       tasks.push(task())
@@ -255,23 +315,30 @@ async function elint(
   if (activateTypeWorkerGroup['after-all']) {
     for (const worker of activateTypeWorkerGroup['after-all']) {
       if (worker.activateConfig.activate?.(workerActivateBaseOption)) {
-        const result = await worker.execute('', { cwd })
+        const workerResult = await worker.execute('', { cwd })
 
-        success = success && result.success
+        elintResult.success &&= workerResult.success
 
-        reportResult.push({
+        elintResult.reports.push({
           name: worker.name,
-          success: result.success,
-          output: result.message || ''
+          success: workerResult.success,
+          output: workerResult.message || ''
         })
       }
     }
   }
 
-  return {
-    success,
-    message: report(reportResult)
+  if (!elintResult.reports.length) {
+    elintResult.reports.push({
+      name: 'elint',
+      success: true,
+      output: ''
+    })
   }
+
+  elintResult.message = report(elintResult.reports)
+
+  return elintResult
 }
 
 export default elint

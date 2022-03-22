@@ -10,8 +10,11 @@ import type {
   ElintWorkerLinter,
   ElintWorkerFormatter,
   ElintWorkerActivateOption
-} from './worker'
+} from './types'
 
+/**
+ * 内置 worker
+ */
 export const builtInWorkers: Record<string, ElintWorker<unknown>> = {
   'elint-worker-eslint': elintWorkerEsLint,
   'elint-worker-stylelint': elintWorkerStylelint,
@@ -24,6 +27,7 @@ const loadElintWorker = (name: string): ElintWorker<unknown> | null => {
     return builtInWorkers[name]
   }
 
+  // 暂时不支持外部 worker
   return null
 }
 
@@ -35,7 +39,7 @@ export const loadElintWorkers = (names: string[]) => {
   return workers
 }
 
-export type ElintWorkerGroup<T extends string> = {
+type ElintWorkerGroup<T extends string> = {
   [key in T]: ElintWorker<unknown>[]
 }
 
@@ -48,7 +52,7 @@ export const groupElintWorkersByActivateType = (
   ) as ElintWorkerGroup<ElintWorkerActivateType>
 }
 
-export type ElintWorkerGroupByType = {
+type ElintWorkerGroupByType = {
   linter: ElintWorkerLinter<unknown>[]
   formatter: ElintWorkerFormatter<unknown>[]
 }
@@ -65,9 +69,9 @@ export const checkElintWorkerActivation = (
     return worker.activateConfig.activate(option)
   }
 
-  if (option.filePath && worker.activateConfig.extnameList?.length) {
+  if (option.filePath && worker.activateConfig.extensions?.length) {
     if (
-      worker.activateConfig.extnameList.includes(path.extname(option.filePath))
+      worker.activateConfig.extensions.includes(path.extname(option.filePath))
     ) {
       return true
     }

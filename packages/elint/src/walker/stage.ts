@@ -6,7 +6,7 @@ import _ from 'lodash'
 import { getBaseDir } from '../env'
 import notStagedGitFiles from '../utils/not-staged-git-files'
 import getStagedFileContent from '../utils/get-staged-file-content'
-import { FilePath } from './file-tree'
+import type { FilePath } from '.'
 
 const debug = _debug('elint:walker:stage')
 
@@ -123,12 +123,12 @@ async function stagedFiles(
   const fileList: FilePath[] = [...pureStagedFileList]
 
   for (let i = 0, j = needGetContentFileList.length; i < j; i++) {
-    const fileName = needGetContentFileList[i]
-    const fileContent = await getStagedFileContent(fileName)
+    const filePath = needGetContentFileList[i]
+    const fileContent = await getStagedFileContent(filePath)
 
     if (fileContent !== null) {
       fileList.push({
-        fileName,
+        filePath,
         fileContent
       })
     }

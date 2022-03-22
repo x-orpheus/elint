@@ -8,11 +8,7 @@ export interface ElintWorkerResult<T> {
    */
   workerId: string
   /**
-   * 文件路径
-   */
-  filePath?: string
-  /**
-   * 输入文本
+   * 输入
    */
   input: string
   /**
@@ -20,7 +16,21 @@ export interface ElintWorkerResult<T> {
    */
   output: string
   /**
-   * 格式化结果信息
+   * lint / format 是否成功
+   *
+   * lint 类型下表示是否存在 error
+   *
+   * format 类型下表示内容是否和原始一致
+   *
+   * 当 error 存在时，这个值总为 false
+   */
+  success: boolean
+  /**
+   * 文件路径
+   */
+  filePath?: string
+  /**
+   * 经过格式化的结果消息
    */
   message?: string
   /**
@@ -28,20 +38,15 @@ export interface ElintWorkerResult<T> {
    */
   error?: Error
   /**
-   * lint 的内容是否存在 error
-   *
-   * format 后的内容是否和原始一致
-   *
-   * 当 error 时，这个值总为 false
-   */
-  success: boolean
-  /**
    * 执行结果
    */
   result?: T
 }
 
-export interface ElintWorkerOption {
+export interface ElintWorkerExecuteOption {
+  /**
+   * 文件路径
+   */
   filePath?: string
   /**
    * cwd
@@ -50,7 +55,13 @@ export interface ElintWorkerOption {
 }
 
 export interface ElintWorkerActivateOption {
+  /**
+   * 文件路径
+   */
   filePath?: string
+  /**
+   * 是否在 git 环境中
+   */
   isGit?: boolean
   fix?: boolean
   cwd?: string
@@ -60,7 +71,7 @@ export interface ElintWorkerActivateConfig {
   /**
    * 支持的扩展名
    */
-  extnameList?: string[]
+  extensions?: string[]
   /**
    * 执行类型
    *
@@ -77,7 +88,7 @@ export interface ElintWorkerActivateConfig {
 
 export interface ElintWorker<
   Result,
-  Option extends ElintWorkerOption = ElintWorkerOption
+  Option extends ElintWorkerExecuteOption = ElintWorkerExecuteOption
 > {
   /**
    * worker 名称(唯一)
@@ -91,9 +102,12 @@ export interface ElintWorker<
    * 类型
    */
   type: ElintWorkerType
+  /**
+   * 激活配置
+   */
   activateConfig: ElintWorkerActivateConfig
   /**
-   * 对文本执行 worker
+   * 执行函数
    */
   execute(text: string, option: Option): Promise<ElintWorkerResult<Result>>
   /**
@@ -102,7 +116,7 @@ export interface ElintWorker<
   reset?(): void
 }
 
-export interface ElintWorkerLinterOption extends ElintWorkerOption {
+export interface ElintWorkerLinterOption extends ElintWorkerExecuteOption {
   /**
    * 是否修复
    */
@@ -122,7 +136,7 @@ export interface ElintWorkerLinter<
 
 export interface ElintWorkerFormatter<
   Result,
-  Option extends ElintWorkerOption = ElintWorkerOption
+  Option extends ElintWorkerExecuteOption = ElintWorkerExecuteOption
 > extends ElintWorker<Result, Option> {
   type: 'formatter'
 }

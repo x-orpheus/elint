@@ -1,10 +1,7 @@
 import _debug from 'debug'
-import path from 'node:path'
-import exec from './lib/exec'
-import log from './utils/log'
-import pragram from 'husky/lib/installer/bin'
-
-const huskyDir = path.join(pragram, '../../..')
+import husky from 'husky'
+import exec from '../lib/exec'
+import log from '../utils/log'
 
 const debug = _debug('elint:hooks')
 
@@ -20,8 +17,6 @@ const supportActions: HuskyAction[] = ['install', 'uninstall']
  */
 function runHooks(action: HuskyAction): void {
   debug(`input action: ${action}`)
-  debug(`husky pragram path: ${pragram}`)
-  debug(`husky dir: ${huskyDir}`)
 
   if (!action) {
     log.error('请输入 action, 例如：elint hooks install')

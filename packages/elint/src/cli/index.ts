@@ -5,6 +5,7 @@ import { program } from 'commander'
 import { description } from '../../package.json'
 import { elint } from '..'
 import log from '../utils/log'
+import type { ElintOptions } from '../elint-next'
 
 const debug = _debug('elint:cli')
 
@@ -28,45 +29,26 @@ program.option('-v, --version', 'output the version number', () => {
  * 不指定 type，执行除了 commitlint 之外的全部
  */
 program
-  .command('lint [type] [files...]')
+  .command('lint [files...]')
   .alias('l')
-  .description('run lint, type: es, style, commit')
+  .description('run lint')
   .option('-f, --fix', 'Automatically fix problems')
-  .option('-p, --prettier', 'Use prettier to lint/format(with --fix) code')
+  .option('-s, --style', 'Lint code style')
   .option('--no-ignore', 'Disable elint ignore patterns')
-  .action(async (type, files, options) => {
+  .action(async (files, options) => {
     debug('run lint...')
 
-    if (!type || !files) {
+    if (!files) {
       return
     }
 
-    if (type === 'commit') {
-      // commitlint()
-      return
-    }
-
-    let parsedFiles, parsedType
-
-    if (['es', 'style'].includes(type)) {
-      parsedFiles = files
-      parsedType = type
-    } else {
-      parsedFiles = [type, ...files]
-    }
-
-    /**
-     * 坑：commander options 存在循环引用
-     * 手动合并
-     */
-    const elintOptions = {
-      type: parsedType,
+    const elintOptions: ElintOptions = {
       fix: options.fix,
-      prettier: options.prettier,
+      style: options.style,
       noIgnore: options.noIgnore
     }
 
-    const { success, message } = await elint(parsedFiles, elintOptions)
+    const { success, message } = await elint(files, elintOptions)
 
     console.log(message)
 
@@ -108,12 +90,6 @@ program.on('--help', function () {
   console.log('')
   console.log('    lint all js and css')
   console.log('    $ elint lint "**/*.js" "**/*.css"')
-  console.log('')
-  console.log('    run eslint')
-  console.log('    $ elint lint es "**/*.js"')
-  console.log('')
-  console.log('    run commitlint')
-  console.log('    $ elint lint commit')
   console.log('')
   console.log('    install git hooks')
   console.log('    $ elint hooks install')

@@ -1,5 +1,5 @@
 import stylelint, { type LinterResult } from 'stylelint'
-import { ElintWorkerLinter, ElintWorkerResult } from '../worker'
+import { ElintWorkerLinter, ElintWorkerResult } from '../types'
 
 const { lint, formatters } = stylelint
 
@@ -9,7 +9,7 @@ export const elintWorkerStylelint: ElintWorkerLinter<LinterResult> = {
   type: 'linter',
   cacheable: true,
   activateConfig: {
-    extnameList: ['.less', '.sass', '.scss', '.css'],
+    extensions: ['.less', '.sass', '.scss', '.css'],
     type: 'file'
   },
   async execute(text, { fix, cwd, filePath }) {

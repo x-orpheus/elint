@@ -1,6 +1,6 @@
 import prettier, { type Options } from 'prettier'
 import chalk from 'chalk'
-import { ElintWorkerFormatter, ElintWorkerResult } from '../worker'
+import { ElintWorkerFormatter, ElintWorkerResult } from '../types'
 
 const { clearConfigCache, resolveConfig, format } = prettier
 
@@ -19,7 +19,7 @@ export const elintWorkerPrettier: ElintWorkerFormatter<never> = {
   name: 'Prettier',
   type: 'formatter',
   activateConfig: {
-    extnameList: [
+    extensions: [
       '.js',
       '.jsx',
       '.ts',
