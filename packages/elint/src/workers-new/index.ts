@@ -9,8 +9,9 @@ import type {
   ElintWorkerActivateType,
   ElintWorkerLinter,
   ElintWorkerFormatter,
-  ElintWorkerActivateOption
+  ElintWorkerOptions
 } from './types'
+import { ReportResult } from '../utils/report'
 
 /**
  * 内置 worker
@@ -61,21 +62,44 @@ export const groupElintWorkersByType = (workers: ElintWorker<unknown>[]) => {
   return _.groupBy(workers, (worker) => worker.type) as ElintWorkerGroupByType
 }
 
-export const checkElintWorkerActivation = (
+const checkElintWorkerActivation = (
   worker: ElintWorker<unknown>,
-  option: ElintWorkerActivateOption
-) => {
+  options: ElintWorkerOptions
+): boolean => {
   if (worker.activateConfig.activate) {
-    return worker.activateConfig.activate(option)
+    return worker.activateConfig.activate(options)
   }
 
-  if (option.filePath && worker.activateConfig.extensions?.length) {
+  if (options.filePath && worker.activateConfig.extensions?.length) {
     if (
-      worker.activateConfig.extensions.includes(path.extname(option.filePath))
+      worker.activateConfig.extensions.includes(path.extname(options.filePath))
     ) {
       return true
     }
   }
 
   return false
+}
+
+export const executeElintWorker = async <T extends ElintWorker<unknown>>(
+  worker: T,
+  options: ElintWorkerOptions,
+  source = ''
+) => {
+  if (checkElintWorkerActivation(worker, options)) {
+    const workerResult = await worker.execute(source, options)
+
+    const report: ReportResult = {
+      name: worker.name,
+      success: workerResult.success,
+      output: workerResult.message || ''
+    }
+
+    return {
+      success: workerResult.success,
+      workerResult,
+      message: workerResult.message,
+      report
+    }
+  }
 }

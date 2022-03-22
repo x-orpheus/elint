@@ -5,7 +5,7 @@ import { program } from 'commander'
 import { description } from '../../package.json'
 import { elint } from '..'
 import log from '../utils/log'
-import type { ElintOptions } from '../elint-next'
+import type { ElintOptions } from '../elint'
 
 const debug = _debug('elint:cli')
 

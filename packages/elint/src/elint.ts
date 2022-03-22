@@ -6,15 +6,12 @@ import report, { ReportResult } from './utils/report'
 import isGitHooks from './utils/is-git-hooks'
 import { defaultWorkers } from './config'
 import {
-  checkElintWorkerActivation,
+  executeElintWorker,
   groupElintWorkersByActivateType,
   groupElintWorkersByType,
   loadElintWorkers
 } from './workers-new'
-import {
-  ElintWorkerActivateOption,
-  ElintWorkerResult
-} from './workers-new/types'
+import { ElintWorkerOptions, ElintWorkerResult } from './workers-new/types'
 // const notifier = require('./notifier')
 
 const debug = _debug('elint:main')
@@ -151,7 +148,7 @@ async function elint(
 
   const tasks: Promise<void>[] = []
 
-  const workerActivateBaseOption: ElintWorkerActivateOption = {
+  const workerBaseOptions: ElintWorkerOptions = {
     isGit,
     fix,
     cwd
@@ -159,16 +156,11 @@ async function elint(
 
   if (activateTypeWorkerGroup['before-all']) {
     for (const worker of activateTypeWorkerGroup['before-all']) {
-      if (checkElintWorkerActivation(worker, workerActivateBaseOption)) {
-        const workerResult = await worker.execute('', { cwd })
+      const executeResult = await executeElintWorker(worker, workerBaseOptions)
 
-        elintResult.success &&= workerResult.success
-
-        elintResult.reports.push({
-          name: worker.name,
-          success: workerResult.success,
-          output: workerResult.message || ''
-        })
+      if (executeResult) {
+        elintResult.success &&= executeResult.success
+        elintResult.reports.push(executeResult.report)
       }
     }
   }
@@ -198,8 +190,8 @@ async function elint(
             throw new Error('This file is not source code.')
           }
 
-          const workerActivateOption: ElintWorkerActivateOption = {
-            ...workerActivateBaseOption,
+          const workerOptions: ElintWorkerOptions = {
+            ...workerBaseOptions,
             filePath: elintFileResult.filePath
           }
 
@@ -207,62 +199,38 @@ async function elint(
 
           if (style) {
             for (const formatterWorker of fileWorkerGroup.formatter) {
-              if (
-                !checkElintWorkerActivation(
-                  formatterWorker,
-                  workerActivateOption
-                )
-              ) {
-                continue
-              }
-
-              const formatResult = await formatterWorker.execute(
-                elintFileResult.output,
-                {
-                  cwd,
-                  filePath: elintFileResult.filePath
-                }
+              const executeResult = await executeElintWorker(
+                formatterWorker,
+                workerOptions,
+                elintFileResult.output
               )
 
-              elintFileResult.output = formatResult.output
-              elintFileResult.workerResults.push(formatResult)
+              if (executeResult) {
+                elintFileResult.output = executeResult.workerResult.output
+                elintFileResult.workerResults.push(executeResult.workerResult)
 
-              if (formatResult.message) {
-                elintFileResult.reports.push({
-                  name: formatterWorker.name,
-                  success: formatResult.success,
-                  output: formatResult.message
-                })
+                if (executeResult.message) {
+                  elintFileResult.reports.push(executeResult.report)
+                }
               }
             }
           }
 
           for (const linterWorker of fileWorkerGroup.linter) {
-            if (
-              !checkElintWorkerActivation(linterWorker, workerActivateOption)
-            ) {
-              continue
-            }
-
-            const lintResult = await linterWorker.execute(
-              elintFileResult.output,
-              {
-                cwd,
-                fix,
-                filePath: elintFileResult.filePath
-              }
+            const executeResult = await executeElintWorker(
+              linterWorker,
+              workerOptions,
+              elintFileResult.output
             )
 
-            elintFileResult.output = lintResult.output
-            elintFileResult.workerResults.push(lintResult)
-            elintFileResult.success &&= lintResult.success
+            if (executeResult) {
+              elintFileResult.output = executeResult.workerResult.output
+              elintFileResult.workerResults.push(executeResult.workerResult)
+              elintFileResult.success &&= executeResult.success
 
-            if (lintResult.message) {
-              elintFileResult.reports.push({
-                name: linterWorker.name,
-                success: lintResult.success,
-                output: lintResult.message
-              })
+              if (executeResult.message) {
+                elintFileResult.reports.push(executeResult.report)
+              }
             }
           }
 
@@ -314,16 +282,11 @@ async function elint(
 
   if (activateTypeWorkerGroup['after-all']) {
     for (const worker of activateTypeWorkerGroup['after-all']) {
-      if (worker.activateConfig.activate?.(workerActivateBaseOption)) {
-        const workerResult = await worker.execute('', { cwd })
+      const executeResult = await executeElintWorker(worker, workerBaseOptions)
 
-        elintResult.success &&= workerResult.success
-
-        elintResult.reports.push({
-          name: worker.name,
-          success: workerResult.success,
-          output: workerResult.message || ''
-        })
+      if (executeResult) {
+        elintResult.success &&= executeResult.success
+        elintResult.reports.push(executeResult.report)
       }
     }
   }

@@ -43,18 +43,7 @@ export interface ElintWorkerResult<T> {
   result?: T
 }
 
-export interface ElintWorkerExecuteOption {
-  /**
-   * 文件路径
-   */
-  filePath?: string
-  /**
-   * cwd
-   */
-  cwd: string
-}
-
-export interface ElintWorkerActivateOption {
+export interface ElintWorkerOptions {
   /**
    * 文件路径
    */
@@ -62,9 +51,15 @@ export interface ElintWorkerActivateOption {
   /**
    * 是否在 git 环境中
    */
-  isGit?: boolean
-  fix?: boolean
-  cwd?: string
+  isGit: boolean
+  /**
+   * 是否修复
+   */
+  fix: boolean
+  /**
+   * cwd
+   */
+  cwd: string
 }
 
 export interface ElintWorkerActivateConfig {
@@ -83,12 +78,12 @@ export interface ElintWorkerActivateConfig {
    *
    * type 非 file 只有传入 activate 才有可能激活
    */
-  activate?(option: ElintWorkerActivateOption): boolean
+  activate?(options: ElintWorkerOptions): boolean
 }
 
 export interface ElintWorker<
   Result,
-  Option extends ElintWorkerExecuteOption = ElintWorkerExecuteOption
+  Options extends ElintWorkerOptions = ElintWorkerOptions
 > {
   /**
    * worker 名称(唯一)
@@ -109,24 +104,17 @@ export interface ElintWorker<
   /**
    * 执行函数
    */
-  execute(text: string, option: Option): Promise<ElintWorkerResult<Result>>
+  execute(text: string, options: Options): Promise<ElintWorkerResult<Result>>
   /**
    * 重置操作（例如清理配置缓存）
    */
   reset?(): void
 }
 
-export interface ElintWorkerLinterOption extends ElintWorkerExecuteOption {
-  /**
-   * 是否修复
-   */
-  fix: boolean
-}
-
 export interface ElintWorkerLinter<
   Result,
-  Option extends ElintWorkerLinterOption = ElintWorkerLinterOption
-> extends ElintWorker<Result, Option> {
+  Options extends ElintWorkerOptions = ElintWorkerOptions
+> extends ElintWorker<Result, Options> {
   type: 'linter'
   /**
    * 是否支持缓存
@@ -136,7 +124,7 @@ export interface ElintWorkerLinter<
 
 export interface ElintWorkerFormatter<
   Result,
-  Option extends ElintWorkerExecuteOption = ElintWorkerExecuteOption
-> extends ElintWorker<Result, Option> {
+  Options extends ElintWorkerOptions = ElintWorkerOptions
+> extends ElintWorker<Result, Options> {
   type: 'formatter'
 }

@@ -1,7 +1,3 @@
-import elint from './elint-next'
-
-// import commitlint from './workers/commitlint'
-
-// import runHooks from './hooks'
+import elint from './elint'
 
 export { elint }

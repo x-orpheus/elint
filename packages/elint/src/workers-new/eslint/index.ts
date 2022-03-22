@@ -1,17 +1,17 @@
 import { ESLint } from 'eslint'
 import {
   ElintWorkerLinter,
-  ElintWorkerLinterOption,
+  ElintWorkerOptions,
   ElintWorkerResult
 } from '../types'
 
 const esLintInstanceMap = new Map<string, ESLint>()
 const esLintFormatterMap = new Map<ESLint, ESLint.Formatter>()
 
-const getEsLintByOption = async ({
+const getEsLintByOptions = async ({
   fix,
   cwd
-}: ElintWorkerLinterOption): Promise<{
+}: ElintWorkerOptions): Promise<{
   esLint: ESLint
   formatter: ESLint.Formatter
 }> => {
@@ -49,8 +49,10 @@ export const elintWorkerEsLint: ElintWorkerLinter<ESLint.LintResult> = {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs'],
     type: 'file'
   },
-  async execute(text, { fix, cwd, filePath }) {
-    const { esLint, formatter } = await getEsLintByOption({ fix, cwd })
+  async execute(text, options) {
+    const { filePath } = options
+
+    const { esLint, formatter } = await getEsLintByOptions(options)
 
     const result: ElintWorkerResult<ESLint.LintResult> = {
       workerId: this.id,
