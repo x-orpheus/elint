@@ -10,8 +10,8 @@ import {
   groupElintWorkersByActivateType,
   groupElintWorkersByType,
   loadElintWorkers
-} from './workers-new'
-import { ElintWorkerOptions, ElintWorkerResult } from './workers-new/types'
+} from './workers'
+import { ElintWorkerOptions, ElintWorkerResult } from './workers/types'
 // const notifier = require('./notifier')
 
 const debug = _debug('elint:main')
