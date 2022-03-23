@@ -1,5 +1,4 @@
 import prettier, { type Options } from 'prettier'
-import chalk from 'chalk'
 import { ElintWorkerFormatter, ElintWorkerResult } from '../types'
 
 const { clearConfigCache, resolveConfig, format } = prettier
@@ -45,23 +44,12 @@ export const elintWorkerPrettier: ElintWorkerFormatter<never> = {
       success: true
     }
 
-    try {
-      const options = getOptionsForFile(filePath || cwd)
+    const options = getOptionsForFile(filePath || cwd)
 
-      const formatted = format(text, options)
+    const formatted = format(text, options)
 
-      result.output = formatted ?? result.output
-      result.success = formatted === text
-    } catch (e) {
-      const error = e instanceof Error ? e : new Error('Unknown error')
-
-      result.error = error
-      result.success = false
-
-      result.message = `${
-        chalk.underline(filePath) || 'Untitled file'
-      }\n  ${chalk.red('Error')}: ${error.message}\n\n`
-    }
+    result.output = formatted ?? result.output
+    result.success = formatted === text
 
     return result
   },

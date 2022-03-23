@@ -20,27 +20,19 @@ export const elintWorkerStylelint: ElintWorkerLinter<LinterResult> = {
       success: true
     }
 
-    try {
-      const lintResult = await lint({
-        code: text,
-        codeFilename: filePath,
-        fix,
-        cwd
-      })
+    const lintResult = await lint({
+      code: text,
+      codeFilename: filePath,
+      fix,
+      cwd
+    })
 
-      result.success = !lintResult.errored
-      result.result = lintResult
-      result.output = lintResult.output ?? result.output
+    result.success = !lintResult.errored
+    result.result = lintResult
+    result.output = lintResult.output ?? result.output
 
-      const stringFormatter = formatters.string
-      result.message = stringFormatter(lintResult.results)
-    } catch (e) {
-      const error = e instanceof Error ? e : new Error('Unknown error')
-
-      result.error = error
-      result.success = false
-      result.message = `${filePath || 'Untitled file'}: ${error.message}\n`
-    }
+    const stringFormatter = formatters.string
+    result.message = stringFormatter(lintResult.results)
 
     return result
   }

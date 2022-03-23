@@ -2,7 +2,7 @@ import _debug from 'debug'
 import fs from 'fs-extra'
 import chalk from 'chalk'
 import walker from './walker'
-import report, { ReportResult } from './utils/report'
+import { report, createElintErrorReport, ReportResult } from './utils/report'
 import isGitHooks from './utils/is-git-hooks'
 import { defaultWorkers } from './config'
 import {
@@ -142,7 +142,7 @@ async function elint(
     fileResults: []
   }
 
-  // 没有匹配到任何文件，直接退出
+  // 没有匹配到任何文件或没有可用的 worker，直接退出
   if (!fileList.length || !loadedElintWorkers.length) {
     return elintResult
   }
@@ -166,8 +166,9 @@ async function elint(
     for (const worker of activateTypeWorkerGroup['before-all']) {
       const executeResult = await executeElintWorker(worker, workerBaseOptions)
 
-      if (executeResult) {
-        elintResult.success &&= executeResult.success
+      elintResult.success &&= executeResult.success
+
+      if (executeResult.report) {
         elintResult.reports.push(executeResult.report)
       }
     }
@@ -215,13 +216,13 @@ async function elint(
                 elintFileResult.output
               )
 
-              if (executeResult) {
+              if (executeResult.workerResult) {
                 elintFileResult.output = executeResult.workerResult.output
                 elintFileResult.workerResults.push(executeResult.workerResult)
+              }
 
-                if (executeResult.message) {
-                  elintFileResult.reports.push(executeResult.report)
-                }
+              if (executeResult.report) {
+                elintFileResult.reports.push(executeResult.report)
               }
             }
           }
@@ -233,14 +234,15 @@ async function elint(
               elintFileResult.output
             )
 
-            if (executeResult) {
+            elintFileResult.success &&= executeResult.success
+
+            if (executeResult.workerResult) {
               elintFileResult.output = executeResult.workerResult.output
               elintFileResult.workerResults.push(executeResult.workerResult)
-              elintFileResult.success &&= executeResult.success
+            }
 
-              if (executeResult.message) {
-                elintFileResult.reports.push(executeResult.report)
-              }
+            if (executeResult.report) {
+              elintFileResult.reports.push(executeResult.report)
             }
           }
 
@@ -259,24 +261,23 @@ async function elint(
               }
             } else if (style) {
               elintFileResult.success = false
-              elintFileResult.reports.push({
-                name: 'elint - formatter',
-                success: false,
-                output: `${chalk.underline(
-                  elintFileResult.filePath
-                )}\n  ${chalk.red.bold('!')} Not formatted\n\n`
-              })
+              elintFileResult.reports.push(
+                createElintErrorReport(
+                  'elint - formatter',
+                  elintFileResult.filePath,
+                  undefined,
+                  `${chalk.red.bold('!')} Not formatted`
+                )
+              )
             }
           }
         } catch (e) {
           elintFileResult.success = false
-          elintFileResult.reports.push({
-            name: 'elint',
-            success: false,
-            output: `${chalk.underline(filePath)}\n  ${chalk.red('error:')} ${
-              (e as Error).message
-            }\n\n`
-          })
+          elintFileResult.reports.push(
+            createElintErrorReport('elint', elintFileResult.filePath, e)
+          )
+
+          debug(`[${filePath}] error: ${e}`)
         }
 
         elintResult.success &&= elintFileResult.success
@@ -296,8 +297,9 @@ async function elint(
     for (const worker of activateTypeWorkerGroup['after-all']) {
       const executeResult = await executeElintWorker(worker, workerBaseOptions)
 
-      if (executeResult) {
-        elintResult.success &&= executeResult.success
+      elintResult.success &&= executeResult.success
+
+      if (executeResult.report) {
         elintResult.reports.push(executeResult.report)
       }
     }

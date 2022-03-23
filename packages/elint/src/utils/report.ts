@@ -47,7 +47,7 @@ const passedMessage = chalk.green(`${figures.tick} Passed`)
  * @param results 要输出到命令行的内容
  * @returns output
  */
-function report(results: ReportResult[]): string {
+export function report(results: ReportResult[]): string {
   const arr = []
 
   // 将 name 相同的 result 合并成一个
@@ -84,4 +84,20 @@ function report(results: ReportResult[]): string {
   return reduceEmptyLine(arr.join(''))
 }
 
-export default report
+export function createElintErrorReport(
+  name: string,
+  filePath?: string,
+  error?: unknown,
+  customMessage?: string
+): ReportResult {
+  return {
+    name,
+    success: false,
+    output: `${filePath ? `${chalk.underline(filePath)}\n  ` : ''}${
+      customMessage ??
+      `${chalk.red('error:')} ${
+        error instanceof Error ? error.message : 'unknown error'
+      }`
+    }\n\n`
+  }
+}

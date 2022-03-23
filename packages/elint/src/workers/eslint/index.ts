@@ -61,41 +61,33 @@ export const elintWorkerEsLint: ElintWorkerLinter<ESLint.LintResult> = {
       success: true
     }
 
-    try {
-      const lintResults = await esLint.lintText(text, {
-        filePath
-      })
+    const lintResults = await esLint.lintText(text, {
+      filePath
+    })
 
-      const errorResults = ESLint.getErrorResults(lintResults)
+    const errorResults = ESLint.getErrorResults(lintResults)
 
-      const lintResult = lintResults[0]
-      result.success = errorResults.length === 0
-      result.output = lintResult?.output ?? result.output
-      result.result = lintResult
+    const lintResult = lintResults[0]
+    result.success = errorResults.length === 0
+    result.output = lintResult?.output ?? result.output
+    result.result = lintResult
 
-      if (lintResult) {
-        result.message = await formatter.format([lintResult])
+    if (lintResult) {
+      result.message = await formatter.format([lintResult])
 
-        // eslint 的 stylish formatter 会在底部添加总结，这里把总结去掉
-        if (result.message) {
-          const removeLineCount =
-            (lintResult.errorCount + lintResult.warningCount > 0 ? 2 : 0) +
-            (lintResult.fixableErrorCount + lintResult.fixableWarningCount > 0
-              ? 2
-              : 0)
-          if (removeLineCount) {
-            result.message =
-              result.message.split('\n').slice(0, -removeLineCount).join('\n') +
-              '\n'
-          }
+      // eslint 的 stylish formatter 会在底部添加总结，这里把总结去掉
+      if (result.message) {
+        const removeLineCount =
+          (lintResult.errorCount + lintResult.warningCount > 0 ? 2 : 0) +
+          (lintResult.fixableErrorCount + lintResult.fixableWarningCount > 0
+            ? 2
+            : 0)
+        if (removeLineCount) {
+          result.message =
+            result.message.split('\n').slice(0, -removeLineCount).join('\n') +
+            '\n'
         }
       }
-    } catch (e) {
-      const error = e instanceof Error ? e : new Error('Unknown error')
-
-      result.error = error
-      result.success = false
-      result.message = `${filePath || 'Untitled file'}: ${error.message}\n`
     }
 
     return result

@@ -21,8 +21,6 @@ export interface ElintWorkerResult<T> {
    * lint 类型下表示是否存在 error
    *
    * format 类型下表示内容是否和原始一致
-   *
-   * 当 error 存在时，这个值总为 false
    */
   success: boolean
   /**
@@ -33,10 +31,6 @@ export interface ElintWorkerResult<T> {
    * 经过格式化的结果消息
    */
   message?: string
-  /**
-   * 执行中的错误
-   */
-  error?: Error
   /**
    * 执行结果
    */
@@ -62,7 +56,7 @@ export interface ElintWorkerOptions {
   cwd: string
 }
 
-export interface ElintWorkerActivateConfig {
+export interface ElintWorkerActivateConfig<Options extends ElintWorkerOptions> {
   /**
    * 支持的扩展名
    */
@@ -78,7 +72,7 @@ export interface ElintWorkerActivateConfig {
    *
    * type 非 file 只有传入 activate 才有可能激活
    */
-  activate?(options: ElintWorkerOptions): boolean
+  activate?(options: Options): boolean
 }
 
 export interface ElintWorker<
@@ -100,7 +94,7 @@ export interface ElintWorker<
   /**
    * 激活配置
    */
-  activateConfig: ElintWorkerActivateConfig
+  activateConfig: ElintWorkerActivateConfig<Options>
   /**
    * 执行函数
    */

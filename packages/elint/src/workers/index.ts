@@ -1,3 +1,4 @@
+import _debug from 'debug'
 import _ from 'lodash'
 import path from 'node:path'
 import { elintWorkerEsLint } from './eslint'
@@ -9,9 +10,12 @@ import type {
   ElintWorkerActivateType,
   ElintWorkerLinter,
   ElintWorkerFormatter,
-  ElintWorkerOptions
+  ElintWorkerOptions,
+  ElintWorkerResult
 } from './types'
-import { ReportResult } from '../utils/report'
+import { createElintErrorReport, ReportResult } from '../utils/report'
+
+const debug = _debug('elint:workers')
 
 /**
  * 内置 worker
@@ -81,25 +85,43 @@ const checkElintWorkerActivation = (
   return false
 }
 
+export interface ExecuteElintWorkerResult {
+  success: boolean
+  workerResult?: ElintWorkerResult<unknown>
+  report?: ReportResult
+}
+
 export const executeElintWorker = async <T extends ElintWorker<unknown>>(
   worker: T,
   options: ElintWorkerOptions,
   source = ''
-) => {
-  if (checkElintWorkerActivation(worker, options)) {
-    const workerResult = await worker.execute(source, options)
-
-    const report: ReportResult = {
-      name: worker.name,
-      success: workerResult.success,
-      output: workerResult.message || ''
+): Promise<ExecuteElintWorkerResult> => {
+  try {
+    if (!checkElintWorkerActivation(worker, options)) {
+      return {
+        success: true
+      }
     }
+
+    const workerResult = await worker.execute(source, options)
 
     return {
       success: workerResult.success,
       workerResult,
-      message: workerResult.message,
-      report
+      report: workerResult.message
+        ? {
+            name: worker.name,
+            success: workerResult.success,
+            output: workerResult.message
+          }
+        : undefined
+    }
+  } catch (e) {
+    debug(`[${worker.id}] error: ${e}`)
+
+    return {
+      success: false,
+      report: createElintErrorReport(worker.name, options.filePath, e)
     }
   }
 }

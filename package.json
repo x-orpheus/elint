@@ -6,7 +6,7 @@
     "prepare": "husky install",
     "preinstall": "npx only-allow pnpm",
     "lint": "eslint packages --fix",
-    "lint:elint": "pnpm run build && node ./packages/elint/dist/cli lint \"packages/**/workers/**/*.+(js|jsx|ts|tsx|less)\""
+    "lint:elint": "pnpm run build && node ./packages/elint/dist/cli lint \"packages/**/src/**/*.+(ts|tsx)\""
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
