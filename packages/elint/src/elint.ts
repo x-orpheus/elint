@@ -7,7 +7,6 @@ import isGitHooks from './utils/is-git-hooks'
 import { defaultPlugins } from './config'
 import {
   executeElintPlugin,
-  groupElintPluginsByActivateType,
   groupElintPluginsByType,
   loadElintPlugins
 } from './plugin'
@@ -147,94 +146,49 @@ async function elint(
     return elintResult
   }
 
-  const activateTypePluginGroup =
-    groupElintPluginsByActivateType(loadedElintPlugins)
-
-  const filePluginGroup = groupElintPluginsByType(
-    activateTypePluginGroup.file || []
-  )
+  const pluginGroup = groupElintPluginsByType(loadedElintPlugins)
 
   const tasks: Promise<void>[] = []
 
-  const pluginBaseOptions: ElintPluginOptions = {
-    isGit,
-    fix,
-    cwd
-  }
-
-  if (activateTypePluginGroup['before-all']) {
-    for (const plugin of activateTypePluginGroup['before-all']) {
-      const executeResult = await executeElintPlugin(plugin, pluginBaseOptions)
-
-      elintResult.success &&= executeResult.success
-
-      if (executeResult.report) {
-        elintResult.reports.push(executeResult.report)
+  fileList.forEach((filePath) => {
+    const task = async (): Promise<void> => {
+      const elintFileResult: ElintFileResult = {
+        filePath: '',
+        source: '',
+        output: '',
+        success: true,
+        reports: [],
+        pluginResults: []
       }
-    }
-  }
 
-  debug(`elint complete before-all plugins in: ${Date.now() - startTime}ms`)
-
-  if (activateTypePluginGroup.file.length) {
-    fileList.forEach((filePath) => {
-      const task = async (): Promise<void> => {
-        const elintFileResult: ElintFileResult = {
-          filePath: '',
-          source: '',
-          output: '',
-          success: true,
-          reports: [],
-          pluginResults: []
+      try {
+        if (typeof filePath === 'string') {
+          elintFileResult.filePath = filePath
+          elintFileResult.source = fs.readFileSync(filePath, 'utf-8')
+        } else {
+          elintFileResult.filePath = filePath.filePath
+          elintFileResult.source = filePath.fileContent
         }
 
-        try {
-          if (typeof filePath === 'string') {
-            elintFileResult.filePath = filePath
-            elintFileResult.source = fs.readFileSync(filePath, 'utf-8')
-          } else {
-            elintFileResult.filePath = filePath.filePath
-            elintFileResult.source = filePath.fileContent
-          }
+        if (typeof elintFileResult.source !== 'string') {
+          throw new Error('This file is not source code.')
+        }
 
-          if (typeof elintFileResult.source !== 'string') {
-            throw new Error('This file is not source code.')
-          }
+        const pluginOptions: ElintPluginOptions = {
+          fix,
+          cwd,
+          filePath: elintFileResult.filePath
+        }
 
-          const pluginOptions: ElintPluginOptions = {
-            ...pluginBaseOptions,
-            filePath: elintFileResult.filePath
-          }
+        elintFileResult.output = elintFileResult.source
 
-          elintFileResult.output = elintFileResult.source
-
-          if (style) {
-            for (const formatterPlugin of filePluginGroup.formatter) {
-              const executeResult = await executeElintPlugin(
-                formatterPlugin,
-                pluginOptions,
-                elintFileResult.output
-              )
-
-              if (executeResult.pluginResult) {
-                elintFileResult.output = executeResult.pluginResult.output
-                elintFileResult.pluginResults.push(executeResult.pluginResult)
-              }
-
-              if (executeResult.report) {
-                elintFileResult.reports.push(executeResult.report)
-              }
-            }
-          }
-
-          for (const linterPlugin of filePluginGroup.linter) {
+        if (style) {
+          for (const formatterPlugin of pluginGroup.formatter) {
             const executeResult = await executeElintPlugin(
-              linterPlugin,
+              formatterPlugin,
               pluginOptions,
               elintFileResult.output
             )
-
-            elintFileResult.success &&= executeResult.success
 
             if (executeResult.pluginResult) {
               elintFileResult.output = executeResult.pluginResult.output
@@ -245,67 +199,70 @@ async function elint(
               elintFileResult.reports.push(executeResult.report)
             }
           }
-
-          const isModified = elintFileResult.output !== elintFileResult.source
-
-          if (isModified) {
-            if (fix) {
-              if (write) {
-                fs.writeFileSync(
-                  elintFileResult.filePath,
-                  elintFileResult.output,
-                  {
-                    encoding: 'utf-8'
-                  }
-                )
-              }
-            } else if (style) {
-              elintFileResult.success = false
-              elintFileResult.reports.push(
-                createElintErrorReport(
-                  'elint - formatter',
-                  elintFileResult.filePath,
-                  undefined,
-                  `${chalk.red.bold('!')} Not formatted`
-                )
-              )
-            }
-          }
-        } catch (e) {
-          elintFileResult.success = false
-          elintFileResult.reports.push(
-            createElintErrorReport('elint', elintFileResult.filePath, e)
-          )
-
-          debug(`[${filePath}] error: ${e}`)
         }
 
-        elintResult.success &&= elintFileResult.success
-        elintResult.reports.push(...elintFileResult.reports)
-        elintResult.fileResults.push(elintFileResult)
+        for (const linterPlugin of pluginGroup.linter) {
+          const executeResult = await executeElintPlugin(
+            linterPlugin,
+            pluginOptions,
+            elintFileResult.output
+          )
+
+          elintFileResult.success &&= executeResult.success
+
+          if (executeResult.pluginResult) {
+            elintFileResult.output = executeResult.pluginResult.output
+            elintFileResult.pluginResults.push(executeResult.pluginResult)
+          }
+
+          if (executeResult.report) {
+            elintFileResult.reports.push(executeResult.report)
+          }
+        }
+
+        const isModified = elintFileResult.output !== elintFileResult.source
+
+        if (isModified) {
+          if (fix) {
+            if (write) {
+              fs.writeFileSync(
+                elintFileResult.filePath,
+                elintFileResult.output,
+                {
+                  encoding: 'utf-8'
+                }
+              )
+            }
+          } else if (style) {
+            elintFileResult.success = false
+            elintFileResult.reports.push(
+              createElintErrorReport(
+                'elint - formatter',
+                elintFileResult.filePath,
+                undefined,
+                `${chalk.red.bold('!')} Not formatted`
+              )
+            )
+          }
+        }
+      } catch (e) {
+        elintFileResult.success = false
+        elintFileResult.reports.push(
+          createElintErrorReport('elint', elintFileResult.filePath, e)
+        )
+
+        debug(`[${filePath}] error: ${e}`)
       }
 
-      tasks.push(task())
-    })
-  }
+      elintResult.success &&= elintFileResult.success
+      elintResult.reports.push(...elintFileResult.reports)
+      elintResult.fileResults.push(elintFileResult)
+    }
+
+    tasks.push(task())
+  })
 
   await Promise.all(tasks)
-
-  debug(`elint complete file plugins in: ${Date.now() - startTime}ms`)
-
-  if (activateTypePluginGroup['after-all']) {
-    for (const plugin of activateTypePluginGroup['after-all']) {
-      const executeResult = await executeElintPlugin(plugin, pluginBaseOptions)
-
-      elintResult.success &&= executeResult.success
-
-      if (executeResult.report) {
-        elintResult.reports.push(executeResult.report)
-      }
-    }
-  }
-
-  debug(`elint complete after-all plugins in: ${Date.now() - startTime}ms`)
 
   if (!elintResult.reports.length) {
     elintResult.reports.push({

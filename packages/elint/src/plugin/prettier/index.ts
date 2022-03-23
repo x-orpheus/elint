@@ -33,8 +33,7 @@ export const elintPluginPrettier: ElintPlugin<never> = {
       '.json',
       '.vue',
       '.yml'
-    ],
-    type: 'file'
+    ]
   },
   cacheable: true,
   async execute(text, { cwd, filePath }) {

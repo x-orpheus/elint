@@ -16,6 +16,5 @@ export const defaultIgnore = [
 export const defaultPlugins: string[] = [
   'elint-plugin-eslint',
   'elint-plugin-stylelint',
-  'elint-plugin-prettier',
-  'elint-plugin-commitlint'
+  'elint-plugin-prettier'
 ]

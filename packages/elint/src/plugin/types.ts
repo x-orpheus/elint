@@ -1,7 +1,5 @@
 export type ElintPluginType = 'linter' | 'formatter'
 
-export type ElintPluginActivateType = 'before-all' | 'file' | 'after-all'
-
 export interface ElintPluginResult<T> {
   /**
    * pluginId
@@ -43,10 +41,6 @@ export interface ElintPluginOptions {
    */
   filePath?: string
   /**
-   * 是否在 git 环境中
-   */
-  isGit: boolean
-  /**
    * 是否修复
    */
   fix: boolean
@@ -61,12 +55,6 @@ export interface ElintPluginActivateConfig<Options extends ElintPluginOptions> {
    * 支持的扩展名
    */
   extensions?: string[]
-  /**
-   * 执行类型
-   *
-   * 全局 / 文件
-   */
-  type: ElintPluginActivateType
   /**
    * 是否使用当前 plugin
    *

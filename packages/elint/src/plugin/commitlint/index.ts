@@ -17,9 +17,8 @@ export const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
   type: 'linter',
   cacheable: false,
   activateConfig: {
-    type: 'after-all',
-    activate({ isGit }) {
-      return !!isGit
+    activate() {
+      return true
     }
   },
   async execute() {

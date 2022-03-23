@@ -9,8 +9,7 @@ export const elintPluginStylelint: ElintPlugin<LinterResult> = {
   type: 'linter',
   cacheable: true,
   activateConfig: {
-    extensions: ['.less', '.sass', '.scss', '.css'],
-    type: 'file'
+    extensions: ['.less', '.sass', '.scss', '.css']
   },
   async execute(text, { fix, cwd, filePath }) {
     const result: ElintPluginResult<LinterResult> = {

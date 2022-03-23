@@ -7,9 +7,9 @@ import { elintPluginStylelint } from './stylelint'
 import { elintPluginCommitLint } from './commitlint'
 import type {
   ElintPlugin,
-  ElintPluginActivateType,
   ElintPluginOptions,
-  ElintPluginResult
+  ElintPluginResult,
+  ElintPluginType
 } from './types'
 import { createElintErrorReport, ReportResult } from '../utils/report'
 
@@ -42,22 +42,8 @@ export const loadElintPlugins = (names: string[]) => {
   return plugins
 }
 
-type ElintPluginGroup<T extends string> = {
-  [key in T]: ElintPlugin<unknown>[]
-}
-
-export const groupElintPluginsByActivateType = (
-  plugins: ElintPlugin<unknown>[]
-) => {
-  return _.groupBy(
-    plugins,
-    (plugin) => plugin.activateConfig.type
-  ) as ElintPluginGroup<ElintPluginActivateType>
-}
-
 type ElintPluginGroupByType = {
-  linter: ElintPlugin<unknown>[]
-  formatter: ElintPlugin<unknown>[]
+  [key in ElintPluginType]: ElintPlugin<unknown>[]
 }
 
 export const groupElintPluginsByType = (plugins: ElintPlugin<unknown>[]) => {
