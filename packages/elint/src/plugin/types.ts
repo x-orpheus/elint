@@ -1,12 +1,12 @@
-export type ElintWorkerType = 'linter' | 'formatter'
+export type ElintPluginType = 'linter' | 'formatter'
 
-export type ElintWorkerActivateType = 'before-all' | 'file' | 'after-all'
+export type ElintPluginActivateType = 'before-all' | 'file' | 'after-all'
 
-export interface ElintWorkerResult<T> {
+export interface ElintPluginResult<T> {
   /**
-   * workerId
+   * pluginId
    */
-  workerId: string
+  pluginId: string
   /**
    * 输入
    */
@@ -37,7 +37,7 @@ export interface ElintWorkerResult<T> {
   result?: T
 }
 
-export interface ElintWorkerOptions {
+export interface ElintPluginOptions {
   /**
    * 文件路径
    */
@@ -56,7 +56,7 @@ export interface ElintWorkerOptions {
   cwd: string
 }
 
-export interface ElintWorkerActivateConfig<Options extends ElintWorkerOptions> {
+export interface ElintPluginActivateConfig<Options extends ElintPluginOptions> {
   /**
    * 支持的扩展名
    */
@@ -66,59 +66,47 @@ export interface ElintWorkerActivateConfig<Options extends ElintWorkerOptions> {
    *
    * 全局 / 文件
    */
-  type: ElintWorkerActivateType
+  type: ElintPluginActivateType
   /**
-   * 是否使用当前 worker
+   * 是否使用当前 plugin
    *
    * type 非 file 只有传入 activate 才有可能激活
    */
   activate?(options: Options): boolean
 }
 
-export interface ElintWorker<
+export interface ElintPlugin<
   Result,
-  Options extends ElintWorkerOptions = ElintWorkerOptions
+  Options extends ElintPluginOptions = ElintPluginOptions
 > {
   /**
-   * worker 名称(唯一)
+   * plugin 名称(唯一)
    */
   id: string
   /**
-   * worker 可读名称
+   * 可读名称
    */
   name: string
   /**
    * 类型
    */
-  type: ElintWorkerType
+  type: ElintPluginType
   /**
    * 激活配置
    */
-  activateConfig: ElintWorkerActivateConfig<Options>
+  activateConfig: ElintPluginActivateConfig<Options>
+  /**
+   * 是否支持缓存
+   *
+   * 一个文件处理流上有任何插件不支持缓存，则此文件不会被缓存
+   */
+  cacheable: boolean
   /**
    * 执行函数
    */
-  execute(text: string, options: Options): Promise<ElintWorkerResult<Result>>
+  execute(text: string, options: Options): Promise<ElintPluginResult<Result>>
   /**
    * 重置操作（例如清理配置缓存）
    */
   reset?(): void
-}
-
-export interface ElintWorkerLinter<
-  Result,
-  Options extends ElintWorkerOptions = ElintWorkerOptions
-> extends ElintWorker<Result, Options> {
-  type: 'linter'
-  /**
-   * 是否支持缓存
-   */
-  cacheable: boolean
-}
-
-export interface ElintWorkerFormatter<
-  Result,
-  Options extends ElintWorkerOptions = ElintWorkerOptions
-> extends ElintWorker<Result, Options> {
-  type: 'formatter'
 }

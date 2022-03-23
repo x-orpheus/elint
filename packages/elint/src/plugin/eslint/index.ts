@@ -1,9 +1,5 @@
 import { ESLint } from 'eslint'
-import {
-  ElintWorkerLinter,
-  ElintWorkerOptions,
-  ElintWorkerResult
-} from '../types'
+import { ElintPlugin, ElintPluginOptions, ElintPluginResult } from '../types'
 
 const esLintInstanceMap = new Map<string, ESLint>()
 const esLintFormatterMap = new Map<ESLint, ESLint.Formatter>()
@@ -11,7 +7,7 @@ const esLintFormatterMap = new Map<ESLint, ESLint.Formatter>()
 const getEsLintByOptions = async ({
   fix,
   cwd
-}: ElintWorkerOptions): Promise<{
+}: ElintPluginOptions): Promise<{
   esLint: ESLint
   formatter: ESLint.Formatter
 }> => {
@@ -40,8 +36,8 @@ const getEsLintByOptions = async ({
   }
 }
 
-export const elintWorkerEsLint: ElintWorkerLinter<ESLint.LintResult> = {
-  id: 'elint-worker-eslint',
+export const elintPluginEsLint: ElintPlugin<ESLint.LintResult> = {
+  id: 'elint-plugin-eslint',
   name: 'ESLint',
   type: 'linter',
   cacheable: true,
@@ -54,8 +50,8 @@ export const elintWorkerEsLint: ElintWorkerLinter<ESLint.LintResult> = {
 
     const { esLint, formatter } = await getEsLintByOptions(options)
 
-    const result: ElintWorkerResult<ESLint.LintResult> = {
-      workerId: this.id,
+    const result: ElintPluginResult<ESLint.LintResult> = {
+      pluginId: this.id,
       input: text,
       output: text,
       success: true

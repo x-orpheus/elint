@@ -1,5 +1,5 @@
 import prettier, { type Options } from 'prettier'
-import { ElintWorkerFormatter, ElintWorkerResult } from '../types'
+import { ElintPlugin, ElintPluginResult } from '../types'
 
 const { clearConfigCache, resolveConfig, format } = prettier
 
@@ -13,8 +13,8 @@ const getOptionsForFile = (filePath: string) => {
   return options
 }
 
-export const elintWorkerPrettier: ElintWorkerFormatter<never> = {
-  id: 'elint-worker-prettier',
+export const elintPluginPrettier: ElintPlugin<never> = {
+  id: 'elint-plugin-prettier',
   name: 'Prettier',
   type: 'formatter',
   activateConfig: {
@@ -36,9 +36,10 @@ export const elintWorkerPrettier: ElintWorkerFormatter<never> = {
     ],
     type: 'file'
   },
+  cacheable: true,
   async execute(text, { cwd, filePath }) {
-    const result: ElintWorkerResult<never> = {
-      workerId: this.id,
+    const result: ElintPluginResult<never> = {
+      pluginId: this.id,
       input: text,
       output: text,
       success: true

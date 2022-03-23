@@ -4,14 +4,14 @@ import chalk from 'chalk'
 import walker from './walker'
 import { report, createElintErrorReport, ReportResult } from './utils/report'
 import isGitHooks from './utils/is-git-hooks'
-import { defaultWorkers } from './config'
+import { defaultPlugins } from './config'
 import {
-  executeElintWorker,
-  groupElintWorkersByActivateType,
-  groupElintWorkersByType,
-  loadElintWorkers
-} from './workers'
-import { ElintWorkerOptions, ElintWorkerResult } from './workers/types'
+  executeElintPlugin,
+  groupElintPluginsByActivateType,
+  groupElintPluginsByType,
+  loadElintPlugins
+} from './plugin'
+import { ElintPluginOptions, ElintPluginResult } from './plugin/types'
 // const notifier = require('./notifier')
 
 const debug = _debug('elint:main')
@@ -38,9 +38,9 @@ export interface ElintFileResult {
    */
   reports: ReportResult[]
   /**
-   * 各个 worker 结果
+   * 各个 plugin 结果
    */
-  workerResults: ElintWorkerResult<unknown>[]
+  pluginResults: ElintPluginResult<unknown>[]
 }
 
 export interface ElintOptions {
@@ -74,9 +74,9 @@ export interface ElintOptions {
    */
   checkGit?: boolean
   /**
-   * 配置 workers
+   * 配置 plugins
    */
-  workers?: string[]
+  plugins?: string[]
   cwd?: string
 }
 
@@ -102,7 +102,7 @@ async function elint(
     style = false,
     noIgnore = false,
     checkGit = true,
-    workers = defaultWorkers,
+    plugins = defaultPlugins,
     cwd = process.cwd()
   }: ElintOptions
 ): Promise<ElintResult> {
@@ -119,7 +119,7 @@ async function elint(
     style,
     noIgnore,
     checkGit,
-    workers,
+    plugins,
     cwd
   } as ElintOptions)
 
@@ -128,11 +128,11 @@ async function elint(
     isGit
   })
 
-  const loadedElintWorkers = loadElintWorkers(workers)
+  const loadedElintPlugins = loadElintPlugins(plugins)
 
   debug(
-    'loaded elint workers: %o',
-    loadedElintWorkers.map((worker) => worker.id)
+    'loaded elint plugins: %o',
+    loadedElintPlugins.map((plugin) => plugin.id)
   )
 
   const elintResult: ElintResult = {
@@ -142,29 +142,29 @@ async function elint(
     fileResults: []
   }
 
-  // 没有匹配到任何文件或没有可用的 worker，直接退出
-  if (!fileList.length || !loadedElintWorkers.length) {
+  // 没有匹配到任何文件或没有可用的 plugin ，直接退出
+  if (!fileList.length || !loadedElintPlugins.length) {
     return elintResult
   }
 
-  const activateTypeWorkerGroup =
-    groupElintWorkersByActivateType(loadedElintWorkers)
+  const activateTypePluginGroup =
+    groupElintPluginsByActivateType(loadedElintPlugins)
 
-  const fileWorkerGroup = groupElintWorkersByType(
-    activateTypeWorkerGroup.file || []
+  const filePluginGroup = groupElintPluginsByType(
+    activateTypePluginGroup.file || []
   )
 
   const tasks: Promise<void>[] = []
 
-  const workerBaseOptions: ElintWorkerOptions = {
+  const pluginBaseOptions: ElintPluginOptions = {
     isGit,
     fix,
     cwd
   }
 
-  if (activateTypeWorkerGroup['before-all']) {
-    for (const worker of activateTypeWorkerGroup['before-all']) {
-      const executeResult = await executeElintWorker(worker, workerBaseOptions)
+  if (activateTypePluginGroup['before-all']) {
+    for (const plugin of activateTypePluginGroup['before-all']) {
+      const executeResult = await executeElintPlugin(plugin, pluginBaseOptions)
 
       elintResult.success &&= executeResult.success
 
@@ -174,9 +174,9 @@ async function elint(
     }
   }
 
-  debug(`elint complete before-all workers in: ${Date.now() - startTime}ms`)
+  debug(`elint complete before-all plugins in: ${Date.now() - startTime}ms`)
 
-  if (activateTypeWorkerGroup.file.length) {
+  if (activateTypePluginGroup.file.length) {
     fileList.forEach((filePath) => {
       const task = async (): Promise<void> => {
         const elintFileResult: ElintFileResult = {
@@ -185,7 +185,7 @@ async function elint(
           output: '',
           success: true,
           reports: [],
-          workerResults: []
+          pluginResults: []
         }
 
         try {
@@ -201,24 +201,24 @@ async function elint(
             throw new Error('This file is not source code.')
           }
 
-          const workerOptions: ElintWorkerOptions = {
-            ...workerBaseOptions,
+          const pluginOptions: ElintPluginOptions = {
+            ...pluginBaseOptions,
             filePath: elintFileResult.filePath
           }
 
           elintFileResult.output = elintFileResult.source
 
           if (style) {
-            for (const formatterWorker of fileWorkerGroup.formatter) {
-              const executeResult = await executeElintWorker(
-                formatterWorker,
-                workerOptions,
+            for (const formatterPlugin of filePluginGroup.formatter) {
+              const executeResult = await executeElintPlugin(
+                formatterPlugin,
+                pluginOptions,
                 elintFileResult.output
               )
 
-              if (executeResult.workerResult) {
-                elintFileResult.output = executeResult.workerResult.output
-                elintFileResult.workerResults.push(executeResult.workerResult)
+              if (executeResult.pluginResult) {
+                elintFileResult.output = executeResult.pluginResult.output
+                elintFileResult.pluginResults.push(executeResult.pluginResult)
               }
 
               if (executeResult.report) {
@@ -227,18 +227,18 @@ async function elint(
             }
           }
 
-          for (const linterWorker of fileWorkerGroup.linter) {
-            const executeResult = await executeElintWorker(
-              linterWorker,
-              workerOptions,
+          for (const linterPlugin of filePluginGroup.linter) {
+            const executeResult = await executeElintPlugin(
+              linterPlugin,
+              pluginOptions,
               elintFileResult.output
             )
 
             elintFileResult.success &&= executeResult.success
 
-            if (executeResult.workerResult) {
-              elintFileResult.output = executeResult.workerResult.output
-              elintFileResult.workerResults.push(executeResult.workerResult)
+            if (executeResult.pluginResult) {
+              elintFileResult.output = executeResult.pluginResult.output
+              elintFileResult.pluginResults.push(executeResult.pluginResult)
             }
 
             if (executeResult.report) {
@@ -291,11 +291,11 @@ async function elint(
 
   await Promise.all(tasks)
 
-  debug(`elint complete file workers in: ${Date.now() - startTime}ms`)
+  debug(`elint complete file plugins in: ${Date.now() - startTime}ms`)
 
-  if (activateTypeWorkerGroup['after-all']) {
-    for (const worker of activateTypeWorkerGroup['after-all']) {
-      const executeResult = await executeElintWorker(worker, workerBaseOptions)
+  if (activateTypePluginGroup['after-all']) {
+    for (const plugin of activateTypePluginGroup['after-all']) {
+      const executeResult = await executeElintPlugin(plugin, pluginBaseOptions)
 
       elintResult.success &&= executeResult.success
 
@@ -305,7 +305,7 @@ async function elint(
     }
   }
 
-  debug(`elint complete after-all workers in: ${Date.now() - startTime}ms`)
+  debug(`elint complete after-all plugins in: ${Date.now() - startTime}ms`)
 
   if (!elintResult.reports.length) {
     elintResult.reports.push({

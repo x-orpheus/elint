@@ -1,10 +1,10 @@
 import stylelint, { type LinterResult } from 'stylelint'
-import { ElintWorkerLinter, ElintWorkerResult } from '../types'
+import { ElintPlugin, ElintPluginResult } from '../types'
 
 const { lint, formatters } = stylelint
 
-export const elintWorkerStylelint: ElintWorkerLinter<LinterResult> = {
-  id: 'elint-worker-stylelint',
+export const elintPluginStylelint: ElintPlugin<LinterResult> = {
+  id: 'elint-plugin-stylelint',
   name: 'Stylelint',
   type: 'linter',
   cacheable: true,
@@ -13,8 +13,8 @@ export const elintWorkerStylelint: ElintWorkerLinter<LinterResult> = {
     type: 'file'
   },
   async execute(text, { fix, cwd, filePath }) {
-    const result: ElintWorkerResult<LinterResult> = {
-      workerId: this.id,
+    const result: ElintPluginResult<LinterResult> = {
+      pluginId: this.id,
       input: text,
       output: text,
       success: true

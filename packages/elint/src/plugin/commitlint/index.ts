@@ -2,17 +2,17 @@ import _debug from 'debug'
 import commitlint from '@commitlint/core'
 import type { LintOptions, LintOutcome } from '@commitlint/types/lib/lint'
 import type { ParserOptions } from '@commitlint/types/lib/parse'
-import path from 'node:path'
+import path from 'path'
 import fs from 'fs-extra'
 import { getBaseDir } from '../../env'
-import { ElintWorkerLinter, ElintWorkerResult } from '../types'
+import { ElintPlugin, ElintPluginResult } from '../types'
 
 const { format, load, lint, read } = commitlint
 
-const debug = _debug('elint:workers:commitlint')
+const debug = _debug('elint:plugin:commitlint')
 
-export const elintWorkerCommitLint: ElintWorkerLinter<LintOutcome> = {
-  id: 'elint-worker-eslint',
+export const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
+  id: 'elint-plugin-commitlint',
   name: 'commitlint',
   type: 'linter',
   cacheable: false,
@@ -25,8 +25,8 @@ export const elintWorkerCommitLint: ElintWorkerLinter<LintOutcome> = {
   async execute() {
     const baseDir = getBaseDir()
 
-    const result: ElintWorkerResult<LintOutcome> = {
-      workerId: this.id,
+    const result: ElintPluginResult<LintOutcome> = {
+      pluginId: this.id,
       input: '',
       output: '',
       success: true

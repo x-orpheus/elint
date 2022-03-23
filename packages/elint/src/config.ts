@@ -13,9 +13,9 @@ export const defaultIgnore = [
   '**/.yarn'
 ]
 
-export const defaultWorkers: string[] = [
-  'elint-worker-eslint',
-  'elint-worker-stylelint',
-  'elint-worker-prettier',
-  'elint-worker-commitlint'
+export const defaultPlugins: string[] = [
+  'elint-plugin-eslint',
+  'elint-plugin-stylelint',
+  'elint-plugin-prettier',
+  'elint-plugin-commitlint'
 ]
