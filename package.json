@@ -11,9 +11,9 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
-    "@types/node": "^17.0.21",
-    "@typescript-eslint/eslint-plugin": "^5.15.0",
-    "@typescript-eslint/parser": "^5.15.0",
+    "@types/node": "^17.0.23",
+    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/parser": "^5.16.0",
     "elint": "workspace:*",
     "eslint": "^8.11.0",
     "eslint-config-standard": "^17.0.0-1",
