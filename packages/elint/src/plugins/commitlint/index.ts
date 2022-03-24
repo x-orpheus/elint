@@ -5,7 +5,7 @@ import type { ParserOptions } from '@commitlint/types/lib/parse'
 import path from 'path'
 import fs from 'fs-extra'
 import { getBaseDir } from '../../env'
-import { ElintPlugin, ElintPluginResult } from '../types'
+import { ElintPlugin, ElintPluginResult } from '../../plugin/types'
 
 const { format, load, lint, read } = commitlint
 

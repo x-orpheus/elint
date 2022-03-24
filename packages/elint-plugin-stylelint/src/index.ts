@@ -1,9 +1,9 @@
 import stylelint, { type LinterResult } from 'stylelint'
-import { ElintPlugin, ElintPluginResult } from '../types'
+import { ElintPlugin, ElintPluginResult } from 'elint'
 
 const { lint, formatters } = stylelint
 
-export const elintPluginStylelint: ElintPlugin<LinterResult> = {
+const elintPluginStylelint: ElintPlugin<LinterResult> = {
   id: 'elint-plugin-stylelint',
   name: 'Stylelint',
   type: 'linter',
@@ -36,3 +36,5 @@ export const elintPluginStylelint: ElintPlugin<LinterResult> = {
     return result
   }
 }
+
+export default elintPluginStylelint

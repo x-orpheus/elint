@@ -1,5 +1,5 @@
 import { ESLint } from 'eslint'
-import { ElintPlugin, ElintPluginOptions, ElintPluginResult } from '../types'
+import type { ElintPlugin, ElintPluginOptions, ElintPluginResult } from 'elint'
 
 const esLintInstanceMap = new Map<string, ESLint>()
 const esLintFormatterMap = new Map<ESLint, ESLint.Formatter>()
@@ -36,7 +36,7 @@ const getEsLintByOptions = async ({
   }
 }
 
-export const elintPluginEsLint: ElintPlugin<ESLint.LintResult> = {
+const elintPluginEsLint: ElintPlugin<ESLint.LintResult> = {
   id: 'elint-plugin-eslint',
   name: 'ESLint',
   type: 'linter',
@@ -88,3 +88,5 @@ export const elintPluginEsLint: ElintPlugin<ESLint.LintResult> = {
     return result
   }
 }
+
+export default elintPluginEsLint

@@ -8,6 +8,7 @@ importers:
       '@types/node': ^17.0.21
       '@typescript-eslint/eslint-plugin': ^5.15.0
       '@typescript-eslint/parser': ^5.15.0
+      elint: workspace:*
       eslint: ^8.11.0
       eslint-config-standard: ^17.0.0-1
       eslint-plugin-import: ^2.25.4
@@ -23,6 +24,7 @@ importers:
       '@types/node': 17.0.21
       '@typescript-eslint/eslint-plugin': 5.15.0_f2c49ce7d0e93ebcfdb4b7d25b131b28
       '@typescript-eslint/parser': 5.15.0_eslint@8.11.0+typescript@4.6.2
+      elint: link:packages/elint
       eslint: 8.11.0
       eslint-config-standard: 17.0.0-1_056665b4b60c1d150dd9a580761778a1
       eslint-plugin-import: 2.25.4_eslint@8.11.0
@@ -38,7 +40,6 @@ importers:
     specifiers:
       '@commitlint/core': ^16.2.3
       '@types/debug': ^4.1.7
-      '@types/eslint': ^8.4.1
       '@types/fs-extra': ^9.0.13
       '@types/lodash': ^4.14.180
       '@types/micromatch': ^4.0.2
@@ -47,7 +48,9 @@ importers:
       commander: ^9.0.0
       configstore: ^6.0.0
       debug: ^4.3.3
-      eslint: ^8.11.0
+      elint-plugin-eslint: workspace:*
+      elint-plugin-prettier: workspace:*
+      elint-plugin-stylelint: workspace:*
       execa: ^6.1.0
       figures: ^4.0.0
       find-process: ^1.4.7
@@ -60,10 +63,8 @@ importers:
       micromatch: ^4.0.4
       ms: ^2.1.3
       node-fetch: ^3.2.3
-      prettier: ^2.6.0
       semver: ^7.3.5
       staged-git-files: ^1.3.0
-      stylelint: ^14.6.0
     dependencies:
       '@commitlint/core': 16.2.3
       boxen: 6.2.1
@@ -71,7 +72,9 @@ importers:
       commander: 9.0.0
       configstore: 6.0.0
       debug: 4.3.3
-      eslint: 8.11.0
+      elint-plugin-eslint: link:../elint-plugin-eslint
+      elint-plugin-prettier: link:../elint-plugin-prettier
+      elint-plugin-stylelint: link:../elint-plugin-stylelint
       execa: 6.1.0
       figures: 4.0.0
       find-process: 1.4.7
@@ -82,13 +85,10 @@ importers:
       micromatch: 4.0.4
       ms: 2.1.3
       node-fetch: 3.2.3
-      prettier: 2.6.0
       semver: 7.3.5
       staged-git-files: 1.3.0
-      stylelint: 14.6.0
     devDependencies:
       '@types/debug': 4.1.7
-      '@types/eslint': 8.4.1
       '@types/fs-extra': 9.0.13
       '@types/lodash': 4.14.180
       '@types/micromatch': 4.0.2
@@ -97,12 +97,24 @@ importers:
 
   packages/elint-plugin-eslint:
     specifiers:
-      elint: workspace:*
+      '@types/eslint': ^8.4.1
       eslint: ^8.11.0
     dependencies:
       eslint: 8.11.0
     devDependencies:
-      elint: link:../elint
+      '@types/eslint': 8.4.1
+
+  packages/elint-plugin-prettier:
+    specifiers:
+      prettier: ^2.6.0
+    dependencies:
+      prettier: 2.6.0
+
+  packages/elint-plugin-stylelint:
+    specifiers:
+      stylelint: ^14.6.0
+    dependencies:
+      stylelint: 14.6.0
 
 packages:
 

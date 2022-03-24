@@ -1,5 +1,5 @@
 import prettier, { type Options } from 'prettier'
-import { ElintPlugin, ElintPluginResult } from '../types'
+import { ElintPlugin, ElintPluginResult } from 'elint'
 
 const { clearConfigCache, resolveConfig, format } = prettier
 
@@ -13,7 +13,7 @@ const getOptionsForFile = (filePath: string) => {
   return options
 }
 
-export const elintPluginPrettier: ElintPlugin<never> = {
+const elintPluginPrettier: ElintPlugin<never> = {
   id: 'elint-plugin-prettier',
   name: 'Prettier',
   type: 'formatter',
@@ -57,3 +57,5 @@ export const elintPluginPrettier: ElintPlugin<never> = {
     clearConfigCache()
   }
 }
+
+export default elintPluginPrettier

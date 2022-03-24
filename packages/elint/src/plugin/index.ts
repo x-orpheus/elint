@@ -1,10 +1,6 @@
 import _debug from 'debug'
 import _ from 'lodash'
 import path from 'path'
-import { elintPluginEsLint } from './eslint'
-import { elintPluginPrettier } from './prettier'
-import { elintPluginStylelint } from './stylelint'
-import { elintPluginCommitLint } from './commitlint'
 import type {
   ElintPlugin,
   ElintPluginOptions,
@@ -15,29 +11,23 @@ import { createElintErrorReport, ReportResult } from '../utils/report'
 
 const debug = _debug('elint:plugin')
 
-/**
- * 内置 plugin
- */
-export const builtInPlugins: Record<string, ElintPlugin<unknown>> = {
-  'elint-plugin-eslint': elintPluginEsLint,
-  'elint-plugin-stylelint': elintPluginStylelint,
-  'elint-plugin-prettier': elintPluginPrettier,
-  'elint-plugin-commitlint': elintPluginCommitLint
-}
+const loadElintPlugin = async (
+  pluginId: string
+): Promise<ElintPlugin<unknown>> => {
+  const plugin: ElintPlugin<unknown> = (await import(pluginId)).default
 
-const loadElintPlugin = (name: string): ElintPlugin<unknown> | null => {
-  if (builtInPlugins[name]) {
-    return builtInPlugins[name]
+  if (!plugin.id || plugin.id !== pluginId) {
+    throw new Error(`${pluginId} is not an elint plugin`)
   }
-
-  // 暂时不支持外部
-  return null
+  return plugin
 }
 
-export const loadElintPlugins = (names: string[]) => {
-  const plugins = names
-    .map((name) => loadElintPlugin(name))
-    .filter((plugin): plugin is ElintPlugin<unknown> => !!plugin)
+export const loadElintPlugins = async (
+  names: string[]
+): Promise<ElintPlugin<unknown>[]> => {
+  const plugins = (
+    await Promise.all(names.map((name) => loadElintPlugin(name)))
+  ).filter((plugin): plugin is ElintPlugin<unknown> => !!plugin)
 
   return plugins
 }

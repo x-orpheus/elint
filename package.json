@@ -2,17 +2,19 @@
   "version": "2.0.1",
   "private": true,
   "scripts": {
-    "build": "pnpm -r --filter ./packages run build",
+    "clean": "pnpm -r run clean",
+    "build": "pnpm -r --filter elint run build && pnpm -r --filter !elint run build",
     "prepare": "husky install",
     "preinstall": "npx only-allow pnpm",
     "lint": "eslint packages --fix",
-    "lint:elint": "pnpm run build && node ./packages/elint/dist/cli lint \"packages/**/src/**/*.+(ts|tsx)\""
+    "lint:elint": "pnpm --filter ./packages/elint run build && node ./packages/elint/dist/cli lint \"packages/**/src/**/*.+(ts|tsx)\""
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
     "@types/node": "^17.0.21",
     "@typescript-eslint/eslint-plugin": "^5.15.0",
     "@typescript-eslint/parser": "^5.15.0",
+    "elint": "workspace:*",
     "eslint": "^8.11.0",
     "eslint-config-standard": "^17.0.0-1",
     "eslint-plugin-import": "^2.25.4",

@@ -1,0 +1,27 @@
+{
+  "name": "elint-plugin-eslint",
+  "version": "3.0.0",
+  "description": "elint plugin for ESLint",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsup src/index.ts --dts --format esm"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.4.1"
+  },
+  "peerDependencies": {
+    "elint": "workspace:*"
+  },
+  "dependencies": {
+    "eslint": "^8.11.0"
+  }
+}

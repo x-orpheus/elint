@@ -1,0 +1,24 @@
+{
+  "name": "elint-plugin-stylelint",
+  "version": "3.0.0",
+  "description": "elint plugin for Stylelint",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsup src/index.ts --dts --format esm"
+  },
+  "peerDependencies": {
+    "elint": "workspace:*"
+  },
+  "dependencies": {
+    "stylelint": "^14.6.0"
+  }
+}

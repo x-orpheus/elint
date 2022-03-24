@@ -127,7 +127,7 @@ async function elint(
     isGit
   })
 
-  const loadedElintPlugins = loadElintPlugins(plugins)
+  const loadedElintPlugins = await loadElintPlugins(plugins)
 
   debug(
     'loaded elint plugins: %o',
