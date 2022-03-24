@@ -1,4 +1,4 @@
-import elint from './elint'
+import { lintFiles, lintText } from './elint'
 
 import type { ElintOptions, ElintResult } from './elint'
 
@@ -8,7 +8,7 @@ import type {
   ElintPluginOptions
 } from './plugin/types'
 
-export { elint }
+export { lintFiles, lintText }
 
 export type {
   ElintOptions,

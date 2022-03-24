@@ -7,29 +7,57 @@ import type {
   ElintPluginResult,
   ElintPluginType
 } from './types'
-import { createElintErrorReport, ReportResult } from '../utils/report'
+import { createErrorReportResult, ReportResult } from '../utils/report'
 
 const debug = _debug('elint:plugin')
+
+export function isElintPlugin(value: unknown): value is ElintPlugin<unknown> {
+  if (
+    value &&
+    typeof value === 'object' &&
+    (value as ElintPlugin<unknown>).id &&
+    (['formatter', 'linter'] as ElintPluginType[]).indexOf(
+      (value as ElintPlugin<unknown>).type
+    ) !== -1
+  ) {
+    return true
+  }
+  return false
+}
 
 const loadElintPlugin = async (
   pluginId: string
 ): Promise<ElintPlugin<unknown>> => {
-  const plugin: ElintPlugin<unknown> = (await import(pluginId)).default
+  const plugin = (await import(pluginId)).default
 
-  if (!plugin.id || plugin.id !== pluginId) {
+  if (!isElintPlugin(plugin) || plugin.id !== pluginId) {
     throw new Error(`${pluginId} is not an elint plugin`)
   }
   return plugin
 }
 
 export const loadElintPlugins = async (
-  names: string[]
+  plugins: (string | ElintPlugin<unknown>)[]
 ): Promise<ElintPlugin<unknown>[]> => {
-  const plugins = (
-    await Promise.all(names.map((name) => loadElintPlugin(name)))
-  ).filter((plugin): plugin is ElintPlugin<unknown> => !!plugin)
+  const loadedPlugins = await Promise.all(
+    plugins.map((plugin, index) => {
+      if (typeof plugin === 'string') {
+        return loadElintPlugin(plugin)
+      }
+      if (isElintPlugin(plugin)) {
+        return plugin
+      }
 
-  return plugins
+      throw new Error(`plugins[${index}] is not an elint plugin`)
+    })
+  )
+
+  debug(
+    'loaded elint plugins: %o',
+    loadedPlugins.map((plugin) => plugin.id)
+  )
+
+  return loadedPlugins
 }
 
 type ElintPluginGroupByType = {
@@ -40,7 +68,7 @@ export const groupElintPluginsByType = (plugins: ElintPlugin<unknown>[]) => {
   return _.groupBy(plugins, (plugin) => plugin.type) as ElintPluginGroupByType
 }
 
-const checkElintPluginActivation = (
+export const checkElintPluginActivation = (
   plugin: ElintPlugin<unknown>,
   options: ElintPluginOptions
 ): boolean => {
@@ -62,13 +90,13 @@ const checkElintPluginActivation = (
 interface ExecuteElintPluginResult {
   success: boolean
   pluginResult?: ElintPluginResult<unknown>
-  report?: ReportResult
+  reportResult?: ReportResult
 }
 
 export const executeElintPlugin = async <T extends ElintPlugin<unknown>>(
   plugin: T,
-  options: ElintPluginOptions,
-  source = ''
+  source: string,
+  options: ElintPluginOptions
 ): Promise<ExecuteElintPluginResult> => {
   try {
     if (!checkElintPluginActivation(plugin, options)) {
@@ -82,7 +110,7 @@ export const executeElintPlugin = async <T extends ElintPlugin<unknown>>(
     return {
       success: pluginResult.success,
       pluginResult,
-      report: pluginResult.message
+      reportResult: pluginResult.message
         ? {
             name: plugin.name,
             success: pluginResult.success,
@@ -95,7 +123,7 @@ export const executeElintPlugin = async <T extends ElintPlugin<unknown>>(
 
     return {
       success: false,
-      report: createElintErrorReport(plugin.name, options.filePath, e)
+      reportResult: createErrorReportResult(plugin.name, options.filePath, e)
     }
   }
 }

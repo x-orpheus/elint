@@ -6,7 +6,7 @@ import _ from 'lodash'
 import { getBaseDir } from '../env'
 import notStagedGitFiles from '../utils/not-staged-git-files'
 import getStagedFileContent from '../utils/get-staged-file-content'
-import type { FilePath } from '.'
+import type { FileItem } from '.'
 
 const debug = _debug('elint:walker:stage')
 
@@ -102,7 +102,7 @@ function getStagedFileList(
 async function stagedFiles(
   patterns: string[],
   ignorePatterns: string[]
-): Promise<FilePath[]> {
+): Promise<FileItem[]> {
   // 暂存区文件
   const stagedFileList = await getStagedFileList(patterns, ignorePatterns)
   // 非暂存区文件
@@ -120,7 +120,7 @@ async function stagedFiles(
     return pureStagedFileList
   }
 
-  const fileList: FilePath[] = [...pureStagedFileList]
+  const fileList: FileItem[] = [...pureStagedFileList]
 
   for (let i = 0, j = needGetContentFileList.length; i < j; i++) {
     const filePath = needGetContentFileList[i]

@@ -3,9 +3,11 @@
 import _debug from 'debug'
 import { program } from 'commander'
 import { description } from '../../package.json'
-import { elint } from '..'
+import { lintFiles } from '..'
 import log from '../utils/log'
+import isGitHooks from '../utils/is-git-hooks'
 import type { ElintOptions } from '../elint'
+import { report } from '../utils/report'
 
 const debug = _debug('elint:cli')
 
@@ -42,15 +44,20 @@ program
       return
     }
 
+    const isGit = await isGitHooks()
+
     const elintOptions: ElintOptions = {
       fix: options.fix,
       style: options.style,
-      noIgnore: options.noIgnore
+      noIgnore: options.noIgnore,
+      git: isGit
     }
 
-    const { success, message } = await elint(files, elintOptions)
+    const results = await lintFiles(files, elintOptions)
 
-    console.log(message)
+    console.log(report(results))
+
+    const success = !results.some((result) => !result.success)
 
     process.exit(success ? 0 : 1)
   })

@@ -1,5 +1,6 @@
 import chalk from 'chalk'
 import figures from 'figures'
+import { ElintResult } from '../elint'
 
 /**
  * 按行（每行）缩进指定宽度
@@ -47,7 +48,7 @@ const passedMessage = chalk.green(`${figures.tick} Passed`)
  * @param results 要输出到命令行的内容
  * @returns output
  */
-export function report(results: ReportResult[]): string {
+function formatReportResults(results: ReportResult[]): string {
   const arr = []
 
   // 将 name 相同的 result 合并成一个
@@ -84,7 +85,7 @@ export function report(results: ReportResult[]): string {
   return reduceEmptyLine(arr.join(''))
 }
 
-export function createElintErrorReport(
+export function createErrorReportResult(
   name: string,
   filePath?: string,
   error?: unknown,
@@ -100,4 +101,22 @@ export function createElintErrorReport(
       }`
     }\n\n`
   }
+}
+
+export function report(results: ElintResult[]): string {
+  const reportResults: ReportResult[] = []
+
+  results.forEach((result) => {
+    reportResults.push(...result.reportResults)
+  })
+
+  if (!reportResults.length) {
+    reportResults.push({
+      name: 'elint',
+      success: true,
+      output: ''
+    })
+  }
+
+  return formatReportResults(reportResults)
 }
