@@ -64,7 +64,7 @@ program
       plugins: defaultPlugins
     }
 
-    const results = await lintFiles(files, elintOptions)
+    const results = await lintFiles([type, ...files], elintOptions)
 
     console.log(report(results))
 
