@@ -10,6 +10,7 @@ import isGitHooks from '../utils/is-git-hooks'
 import type { ElintOptions } from '../elint'
 import { report } from '../utils/report'
 import { defaultPlugins } from '../config'
+import { commitlint } from './commitlint'
 
 const debug = _debug('elint:cli')
 
@@ -35,16 +36,21 @@ program
  * 不指定 type，执行除了 commitlint 之外的全部
  */
 program
-  .command('lint [files...]')
+  .command('lint [type] [files...]')
   .alias('l')
-  .description('run lint')
+  .description('run lint, type: file, commit')
   .option('-f, --fix', 'Automatically fix problems')
   .option('-s, --style', 'Lint code style')
   .option('--no-ignore', 'Disable elint ignore patterns')
-  .action(async (files, options) => {
+  .action(async (type, files, options) => {
     debug('run lint...')
 
     if (!files) {
+      return
+    }
+
+    if (type === 'commit') {
+      commitlint()
       return
     }
 

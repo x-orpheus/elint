@@ -1,6 +1,6 @@
 import { padEnd } from 'lodash-es'
 import { version as elintVersion } from '../../package.json'
-// import { version as commitlintVersion } from '@commitlint/core/package.json'
+import { elintPluginCommitLint } from './commitlint/plugin'
 // import { version as huskyVersion } from 'husky/package.json'
 // import tryRequire from '../utils/try-require'
 import { defaultPlugins } from '../config'
@@ -27,7 +27,7 @@ function printVersionBlock(
   )
 
   Object.entries(versionMap).forEach(([name, version]) => {
-    output.push(`    ${padEnd(name, versionNameLength)}: ${version}`)
+    output.push(`    ${padEnd(name, versionNameLength)} : ${version}`)
   })
 
   return output
@@ -45,15 +45,18 @@ async function version({
 
   const loadedPlugins = await loadElintPlugins(plugins)
 
+  loadedPlugins.unshift(elintPluginCommitLint)
+
   const pluginVersionMap: Record<string, string> = {}
   const depVersionMap: Record<string, string> = {
-    // commitlint: commitlintVersion,
     // husky: huskyVersion
   }
 
   loadedPlugins.forEach((plugin) => {
     const versionConfig = plugin.getVersion()
-    pluginVersionMap[plugin.id] = versionConfig.version
+    if (versionConfig.version !== 'builtIn') {
+      pluginVersionMap[plugin.id] = versionConfig.version
+    }
 
     Object.entries(versionConfig.dependencies).forEach(([name, version]) => {
       depVersionMap[name] = version

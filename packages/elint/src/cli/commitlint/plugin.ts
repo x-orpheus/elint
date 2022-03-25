@@ -1,13 +1,14 @@
+import { createRequire } from 'module'
 import _debug from 'debug'
 import commitlint from '@commitlint/core'
 import type { LintOptions, LintOutcome } from '@commitlint/types/lib/lint'
 import type { ParserOptions } from '@commitlint/types/lib/parse'
 import path from 'path'
 import fs from 'fs-extra'
-import { getBaseDir } from '../../env'
 import { ElintPlugin, ElintPluginResult } from '../../plugin/types'
 
 const { format, load, lint, read } = commitlint
+const require = createRequire(import.meta.url)
 
 const debug = _debug('elint:plugin:commitlint')
 
@@ -21,9 +22,7 @@ export const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
       return true
     }
   },
-  async execute() {
-    const baseDir = getBaseDir()
-
+  async execute(_, { cwd }) {
     const result: ElintPluginResult<LintOutcome> = {
       pluginId: this.id,
       input: '',
@@ -32,7 +31,7 @@ export const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
     }
 
     const readOptions = {
-      cwd: baseDir,
+      cwd,
       edit: '.git/COMMIT_EDITMSG'
     }
 
@@ -67,5 +66,15 @@ export const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
     result.message = formatted
 
     return result
+  },
+  getVersion() {
+    const commitlintPackageJson = require('@commitlint/core/package.json')
+
+    return {
+      version: 'builtIn',
+      dependencies: {
+        'commitlint(builtIn)': commitlintPackageJson.version
+      }
+    }
   }
 }
