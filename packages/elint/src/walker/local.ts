@@ -1,5 +1,4 @@
 import { globby } from 'globby'
-import { getBaseDir } from '../env'
 
 /**
  * 本地文件遍历
@@ -11,12 +10,11 @@ import { getBaseDir } from '../env'
  */
 export default function walker(
   patterns: string[] = [],
-  ignorePatterns: string[] = []
+  ignorePatterns: string[] = [],
+  cwd: string
 ): Promise<string[]> {
-  const baseDir = getBaseDir()
-
   return globby(patterns, {
-    cwd: baseDir,
+    cwd,
     gitignore: true,
     ignore: ignorePatterns,
     dot: true,

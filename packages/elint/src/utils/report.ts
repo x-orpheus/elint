@@ -48,7 +48,7 @@ const passedMessage = chalk.green(`${figures.tick} Passed`)
  * @param results 要输出到命令行的内容
  * @returns output
  */
-function formatReportResults(results: ReportResult[]): string {
+export function formatReportResults(results: ReportResult[]): string {
   const arr = []
 
   // 将 name 相同的 result 合并成一个

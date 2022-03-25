@@ -13,6 +13,7 @@ import {
   ElintPluginOptions,
   ElintPluginResult
 } from './plugin/types'
+import { getBaseDir } from './env'
 
 const debug = _debug('elint:main')
 
@@ -87,7 +88,7 @@ export async function lintText(
     fix = false,
     style = false,
     plugins = [],
-    cwd = process.cwd(),
+    cwd = getBaseDir(),
     filePath
   }: ElintBasicOptions & { filePath?: string } = {}
 ): Promise<ElintResult> {
@@ -183,7 +184,7 @@ export async function lintFiles(
     noIgnore = false,
     git = false,
     plugins = [],
-    cwd = process.cwd()
+    cwd = getBaseDir()
   }: ElintOptions
 ): Promise<ElintResult[]> {
   const startTime = Date.now()
@@ -193,7 +194,8 @@ export async function lintFiles(
 
   const fileList = await walker(files, {
     noIgnore,
-    git
+    git,
+    cwd
   })
 
   const loadedElintPlugins = await loadElintPlugins(plugins)

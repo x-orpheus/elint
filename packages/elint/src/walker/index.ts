@@ -13,7 +13,7 @@ export type FileItem =
       fileContent: string
     }
 
-type WalkerOptions = Pick<ElintOptions, 'noIgnore' | 'git'>
+type WalkerOptions = Pick<ElintOptions, 'noIgnore' | 'git'> & { cwd: string }
 
 /**
  * 文件遍历
@@ -33,7 +33,7 @@ async function walker(
     return Promise.resolve([])
   }
 
-  const { noIgnore, git } = options
+  const { noIgnore, git, cwd } = options
 
   debug(`run in git mode: ${git}`)
 
@@ -49,9 +49,9 @@ async function walker(
   }
 
   if (git) {
-    fileList = await stage(patterns, ignorePatterns)
+    fileList = await stage(patterns, ignorePatterns, cwd)
   } else {
-    fileList = await local(patterns, ignorePatterns)
+    fileList = await local(patterns, ignorePatterns, cwd)
   }
 
   debug('fileList: %o', fileList)

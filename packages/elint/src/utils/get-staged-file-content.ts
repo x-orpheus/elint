@@ -1,6 +1,5 @@
 import _debug from 'debug'
 import { execa } from 'execa'
-import { getBaseDir } from '../env'
 
 const debug = _debug('elint:utils:get-staged-file-content')
 
@@ -10,12 +9,13 @@ const debug = _debug('elint:utils:get-staged-file-content')
  * @param filePath 文件路径
  * @returns 文件内容
  */
-async function getStagedFileContent(filePath: string): Promise<string | null> {
-  const baseDir = getBaseDir()
-
+async function getStagedFileContent(
+  filePath: string,
+  cwd: string
+): Promise<string | null> {
   try {
     const { stdout } = await execa('git', ['show', `:${filePath}`], {
-      cwd: baseDir,
+      cwd,
       stripFinalNewline: false
     })
     return stdout

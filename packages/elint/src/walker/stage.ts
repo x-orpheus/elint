@@ -3,7 +3,6 @@ import fs from 'fs-extra'
 import mm from 'micromatch'
 import sgf from 'staged-git-files'
 import { intersection, without } from 'lodash-es'
-import { getBaseDir } from '../env'
 import notStagedGitFiles from '../utils/not-staged-git-files'
 import getStagedFileContent from '../utils/get-staged-file-content'
 import type { FileItem } from '.'
@@ -62,16 +61,15 @@ function match(
  */
 function getStagedFileList(
   patterns: string[],
-  ignorePatterns: string[]
+  ignorePatterns: string[],
+  cwd: string
 ): Promise<string[]> {
-  const baseDir = getBaseDir()
-
   // 如果 baseDir 根本不存在 sgf 会抛出异常
-  if (!fs.existsSync(baseDir)) {
+  if (!fs.existsSync(cwd)) {
     return Promise.resolve([])
   }
 
-  sgf.cwd = baseDir
+  sgf.cwd = cwd
 
   return new Promise((resolve) => {
     sgf((err, result) => {
@@ -101,12 +99,13 @@ function getStagedFileList(
  */
 async function stagedFiles(
   patterns: string[],
-  ignorePatterns: string[]
+  ignorePatterns: string[],
+  cwd: string
 ): Promise<FileItem[]> {
   // 暂存区文件
-  const stagedFileList = await getStagedFileList(patterns, ignorePatterns)
+  const stagedFileList = await getStagedFileList(patterns, ignorePatterns, cwd)
   // 非暂存区文件
-  const notStagedFileList = await notStagedGitFiles()
+  const notStagedFileList = await notStagedGitFiles(cwd)
 
   // 交集，需要获取暂存区的内容
   const needGetContentFileList = intersection(stagedFileList, notStagedFileList)
@@ -121,7 +120,7 @@ async function stagedFiles(
 
   for (let i = 0, j = needGetContentFileList.length; i < j; i++) {
     const filePath = needGetContentFileList[i]
-    const fileContent = await getStagedFileContent(filePath)
+    const fileContent = await getStagedFileContent(filePath, cwd)
 
     if (fileContent !== null) {
       fileList.push({
