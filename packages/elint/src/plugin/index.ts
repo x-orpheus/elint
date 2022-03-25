@@ -1,5 +1,5 @@
 import _debug from 'debug'
-import _ from 'lodash'
+import { groupBy } from 'lodash-es'
 import path from 'path'
 import type {
   ElintPlugin,
@@ -65,7 +65,7 @@ type ElintPluginGroupByType = {
 }
 
 export const groupElintPluginsByType = (plugins: ElintPlugin<unknown>[]) => {
-  return _.groupBy(plugins, (plugin) => plugin.type) as ElintPluginGroupByType
+  return groupBy(plugins, (plugin) => plugin.type) as ElintPluginGroupByType
 }
 
 export const checkElintPluginActivation = (

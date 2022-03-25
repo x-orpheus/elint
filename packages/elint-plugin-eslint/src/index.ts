@@ -1,5 +1,9 @@
+import { createRequire } from 'module'
 import { ESLint } from 'eslint'
 import type { ElintPlugin, ElintPluginOptions, ElintPluginResult } from 'elint'
+import { version } from '../package.json'
+
+const require = createRequire(import.meta.url)
 
 const esLintInstanceMap = new Map<string, ESLint>()
 const esLintFormatterMap = new Map<ESLint, ESLint.Formatter>()
@@ -86,6 +90,16 @@ const elintPluginEsLint: ElintPlugin<ESLint.LintResult> = {
     }
 
     return result
+  },
+  getVersion() {
+    const eslintPackageJson = require('eslint/package.json')
+
+    return {
+      version,
+      dependencies: {
+        eslint: eslintPackageJson.version
+      }
+    }
   }
 }
 

@@ -1,6 +1,9 @@
+import { createRequire } from 'module'
 import prettier, { type Options } from 'prettier'
 import { ElintPlugin, ElintPluginResult } from 'elint'
+import { version } from '../package.json'
 
+const require = createRequire(import.meta.url)
 const { clearConfigCache, resolveConfig, format } = prettier
 
 // 使用 prettier 的方法获取当前文件的格式化配置
@@ -52,6 +55,16 @@ const elintPluginPrettier: ElintPlugin<never> = {
     result.success = formatted === text
 
     return result
+  },
+  getVersion() {
+    const prettierPackageJson = require('prettier/package.json')
+
+    return {
+      version,
+      dependencies: {
+        prettier: prettierPackageJson.version
+      }
+    }
   },
   reset() {
     clearConfigCache()

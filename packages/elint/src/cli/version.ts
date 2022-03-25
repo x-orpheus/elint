@@ -1,51 +1,79 @@
-import { padEnd } from 'lodash'
+import { padEnd } from 'lodash-es'
 import { version as elintVersion } from '../../package.json'
-import { version as eslintVersion } from 'eslint/package.json'
-import { version as stylelintVersion } from 'stylelint/package.json'
-import { version as commitlintVersion } from '@commitlint/core/package.json'
-import { version as prettierVersion } from 'prettier/package.json'
-import { version as huskyVersion } from 'husky/package.json'
-import tryRequire from '../utils/try-require'
+// import { version as commitlintVersion } from '@commitlint/core/package.json'
+// import { version as huskyVersion } from 'husky/package.json'
+// import tryRequire from '../utils/try-require'
+import { defaultPlugins } from '../config'
+import { loadElintPlugins } from '../plugin'
+
+export interface VersionOptions {
+  plugins?: string[]
+}
+
+function printVersionBlock(
+  blockName: string,
+  versionMap: Record<string, string>
+): string[] {
+  const output: string[] = []
+
+  if (blockName) {
+    output.push('')
+    output.push(`  ${blockName}`)
+    output.push('')
+  }
+
+  const versionNameLength = Math.max(
+    ...Object.keys(versionMap).map((v) => v.length)
+  )
+
+  Object.entries(versionMap).forEach(([name, version]) => {
+    output.push(`    ${padEnd(name, versionNameLength)}: ${version}`)
+  })
+
+  return output
+}
 
 /**
  * 输出 version
  */
-function version(): void {
+async function version({
+  plugins = defaultPlugins
+}: VersionOptions = {}): Promise<void> {
   const main: Record<string, string> = {
     elint: elintVersion
   }
 
-  const dep: Record<string, string> = {
-    eslint: eslintVersion,
-    stylelint: stylelintVersion,
-    commitlint: commitlintVersion,
-    prettier: prettierVersion,
-    husky: huskyVersion
+  const loadedPlugins = await loadElintPlugins(plugins)
+
+  const pluginVersionMap: Record<string, string> = {}
+  const depVersionMap: Record<string, string> = {
+    // commitlint: commitlintVersion,
+    // husky: huskyVersion
   }
 
-  const preset = tryRequire(/elint-preset/)[0]
-  if (preset) {
-    // eslint-disable-next-line global-require
-    const { version: presetVersion } = require(`${preset}/package.json`)
-    main[preset] = presetVersion
-  }
+  loadedPlugins.forEach((plugin) => {
+    const versionConfig = plugin.getVersion()
+    pluginVersionMap[plugin.id] = versionConfig.version
+
+    Object.entries(versionConfig.dependencies).forEach(([name, version]) => {
+      depVersionMap[name] = version
+    })
+  })
+
+  // const preset = tryRequire(/elint-preset/)[0]
+  // if (preset) {
+  //   // eslint-disable-next-line global-require
+  //   const { version: presetVersion } = require(`${preset}/package.json`)
+  //   main[preset] = presetVersion
+  // }
 
   const output = ['> elint version', '']
 
-  const mainNameLength = Math.max(...Object.keys(main).map((k) => k.length))
+  output.push(...printVersionBlock('', main))
 
-  Object.entries(main).forEach(([name, version]) => {
-    output.push(`  ${padEnd(name, mainNameLength)} : ${version}`)
-  })
+  output.push(...printVersionBlock('Plugins:', pluginVersionMap))
 
-  output.push('')
-  output.push('  Dependencies:')
-
-  const depNameLength = Math.max(...Object.keys(dep).map((k) => k.length))
-
-  Object.entries(dep).forEach(([name, version]) => {
-    output.push(`    ${padEnd(name, depNameLength)} : ${version}`)
-  })
+  output.push(...printVersionBlock('Dependencies:', depVersionMap))
 
   output.push('')
 

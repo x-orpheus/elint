@@ -4,10 +4,12 @@ import _debug from 'debug'
 import { program } from 'commander'
 import { description } from '../../package.json'
 import { lintFiles } from '..'
+import version from './version'
 import log from '../utils/log'
 import isGitHooks from '../utils/is-git-hooks'
 import type { ElintOptions } from '../elint'
 import { report } from '../utils/report'
+import { defaultPlugins } from '../config'
 
 const debug = _debug('elint:cli')
 
@@ -21,10 +23,12 @@ program
 /**
  * 输出 version
  */
-program.option('-v, --version', 'output the version number', () => {
-  // version()
-  process.exit()
-})
+program
+  .option('-v, --version', 'output the version number')
+  .action(async () => {
+    await version()
+    process.exit(0)
+  })
 
 /**
  * 执行 lint
@@ -50,7 +54,8 @@ program
       fix: options.fix,
       style: options.style,
       noIgnore: options.noIgnore,
-      git: isGit
+      git: isGit,
+      plugins: defaultPlugins
     }
 
     const results = await lintFiles(files, elintOptions)

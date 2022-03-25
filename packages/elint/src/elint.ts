@@ -3,7 +3,6 @@ import fs from 'fs-extra'
 import chalk from 'chalk'
 import walker from './walker'
 import { createErrorReportResult, ReportResult } from './utils/report'
-import { defaultPlugins } from './config'
 import {
   executeElintPlugin,
   groupElintPluginsByType,
@@ -87,7 +86,7 @@ export async function lintText(
   {
     fix = false,
     style = false,
-    plugins = defaultPlugins,
+    plugins = [],
     cwd = process.cwd(),
     filePath
   }: ElintBasicOptions & { filePath?: string } = {}
@@ -183,7 +182,7 @@ export async function lintFiles(
     style = false,
     noIgnore = false,
     git = false,
-    plugins = defaultPlugins,
+    plugins = [],
     cwd = process.cwd()
   }: ElintOptions
 ): Promise<ElintResult[]> {

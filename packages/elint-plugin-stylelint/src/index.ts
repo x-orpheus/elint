@@ -1,7 +1,10 @@
+import { createRequire } from 'module'
 import stylelint, { type LinterResult } from 'stylelint'
 import { ElintPlugin, ElintPluginResult } from 'elint'
+import { version } from '../package.json'
 
 const { lint, formatters } = stylelint
+const require = createRequire(import.meta.url)
 
 const elintPluginStylelint: ElintPlugin<LinterResult> = {
   id: 'elint-plugin-stylelint',
@@ -34,6 +37,16 @@ const elintPluginStylelint: ElintPlugin<LinterResult> = {
     result.message = stringFormatter(lintResult.results)
 
     return result
+  },
+  getVersion() {
+    const stylelintPackageJson = require('stylelint/package.json')
+
+    return {
+      version,
+      dependencies: {
+        stylelint: stylelintPackageJson.version
+      }
+    }
   }
 }
 

@@ -2,7 +2,7 @@ import _debug from 'debug'
 import fs from 'fs-extra'
 import mm from 'micromatch'
 import sgf from 'staged-git-files'
-import _ from 'lodash'
+import { intersection, without } from 'lodash-es'
 import { getBaseDir } from '../env'
 import notStagedGitFiles from '../utils/not-staged-git-files'
 import getStagedFileContent from '../utils/get-staged-file-content'
@@ -109,12 +109,9 @@ async function stagedFiles(
   const notStagedFileList = await notStagedGitFiles()
 
   // 交集，需要获取暂存区的内容
-  const needGetContentFileList = _.intersection(
-    stagedFileList,
-    notStagedFileList
-  )
+  const needGetContentFileList = intersection(stagedFileList, notStagedFileList)
   // 差级，只需要文件名
-  const pureStagedFileList = _.without(stagedFileList, ...notStagedFileList)
+  const pureStagedFileList = without(stagedFileList, ...notStagedFileList)
 
   if (!needGetContentFileList.length) {
     return pureStagedFileList

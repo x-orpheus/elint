@@ -50,6 +50,16 @@ export interface ElintPluginOptions {
   cwd: string
 }
 
+export interface ElintPluginVersion {
+  version: string
+  /**
+   * 需要展示 version 的依赖
+   */
+  dependencies: {
+    [name: string]: string
+  }
+}
+
 export interface ElintPluginActivateConfig<Options extends ElintPluginOptions> {
   /**
    * 支持的扩展名
@@ -72,7 +82,7 @@ export interface ElintPlugin<
    */
   id: string
   /**
-   * 可读名称
+   * 可读名称，用于控制台输出
    */
   name: string
   /**
@@ -93,6 +103,7 @@ export interface ElintPlugin<
    * 执行函数
    */
   execute(text: string, options: Options): Promise<ElintPluginResult<Result>>
+  getVersion(): ElintPluginVersion
   /**
    * 重置操作（例如清理配置缓存）
    */
