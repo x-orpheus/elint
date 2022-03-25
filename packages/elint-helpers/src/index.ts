@@ -1,6 +1,7 @@
 import { createRequire } from 'module'
 import _debug from 'debug'
 import path from 'path'
+import fs from 'fs-extra'
 
 const debug = _debug('elint-helpers:install')
 
@@ -9,10 +10,22 @@ export interface InstallOptions {
   projectPath?: string
 }
 
-export function install({ presetPath, projectPath }: InstallOptions = {}) {
-  const currentPresetPath: string = presetPath || process.cwd()
+function getAbsolutePath(currentPath?: string) {
+  if (!currentPath || typeof currentPath !== 'string') {
+    return ''
+  }
 
-  let currentProjectPath: string = projectPath || ''
+  if (path.isAbsolute(currentPath)) {
+    return currentPath
+  }
+
+  return path.join(process.cwd(), currentPath)
+}
+
+export function install({ presetPath, projectPath }: InstallOptions = {}) {
+  const currentPresetPath: string = getAbsolutePath(presetPath) || process.cwd()
+
+  let currentProjectPath: string = getAbsolutePath(projectPath) || ''
 
   if (!currentProjectPath) {
     currentProjectPath = currentPresetPath.split(
@@ -29,6 +42,10 @@ export function install({ presetPath, projectPath }: InstallOptions = {}) {
   debug(`preset: ${currentPresetPath}`)
   debug(`project: ${currentProjectPath}`)
 
+  if (!currentPresetPath || !currentProjectPath) {
+    throw new Error('no available preset or project.')
+  }
+
   const projectName = path.basename(currentProjectPath)
 
   // 在 preset 开发时跳过安装过程
@@ -41,14 +58,26 @@ export function install({ presetPath, projectPath }: InstallOptions = {}) {
 
   const require = createRequire(currentPresetPath)
 
-  const packageJson = require('./package.json')
+  const packageJson = require(path.join(currentPresetPath, 'package.json'))
 
   debug(`preset name: ${packageJson.name}`)
 
-  const config = require(packageJson.name)
+  const config = require(currentPresetPath)
 
   if (config.configs) {
-    console.log(config.configs)
+    config.configs.forEach((fileName: string) => {
+      const from = path.join(currentPresetPath, fileName)
+      const to = path.join(currentProjectPath, fileName)
+
+      if (!fs.pathExistsSync(from)) {
+        return
+      }
+
+      fs.copySync(from, to, { overwrite: true })
+
+      console.log(`  move: from "${from}"`)
+      console.log(`          to "${to}"`)
+    })
   } else {
     console.log(`  ${packageJson.name} does not export any config files.`)
   }
