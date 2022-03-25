@@ -9,7 +9,6 @@ import log from '../utils/log'
 import isGitHooks from '../utils/is-git-hooks'
 import type { ElintOptions } from '../elint'
 import { report } from '../utils/report'
-import { defaultPlugins } from '../config'
 import { commitlint } from './commitlint'
 
 const debug = _debug('elint:cli')
@@ -28,7 +27,7 @@ program
   .option('-v, --version', 'output the version number')
   .action(async () => {
     await version({
-      plugins: defaultPlugins
+      plugins: []
     })
     process.exit(0)
   })
@@ -63,7 +62,7 @@ program
       style: options.style,
       noIgnore: options.noIgnore,
       git: isGit,
-      plugins: defaultPlugins
+      plugins: []
     }
 
     const results = await lintFiles([type, ...files], elintOptions)

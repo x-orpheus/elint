@@ -16,9 +16,10 @@
     "build": "tsup src/index.ts --dts --format esm  --target node12.20"
   },
   "peerDependencies": {
-    "elint": "workspace:*"
+    "prettier": "^2.0.0"
   },
-  "dependencies": {
+  "devDependencies": {
+    "elint": "workspace:*",
     "prettier": "^2.6.0"
   }
 }

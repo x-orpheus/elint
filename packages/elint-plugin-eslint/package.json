@@ -15,13 +15,12 @@
     "clean": "rimraf dist",
     "build": "tsup src/index.ts --dts --format esm  --target node12.20"
   },
-  "devDependencies": {
-    "@types/eslint": "^8.4.1"
-  },
   "peerDependencies": {
-    "elint": "workspace:*"
+    "eslint": "^8.0.0"
   },
-  "dependencies": {
+  "devDependencies": {
+    "@types/eslint": "^8.4.1",
+    "elint": "workspace:*",
     "eslint": "^8.11.0"
   }
 }

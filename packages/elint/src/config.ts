@@ -12,9 +12,3 @@ export const defaultIgnore = [
   '**/*.min.css',
   '**/.yarn'
 ]
-
-export const defaultPlugins: string[] = [
-  'elint-plugin-eslint',
-  'elint-plugin-stylelint',
-  'elint-plugin-prettier'
-]
