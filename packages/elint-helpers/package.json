@@ -1,0 +1,24 @@
+{
+  "name": "elint-helpers",
+  "version": "3.0.0",
+  "description": "elint preset helpers",
+  "bin": {
+    "elint-helpers": "./dist/cli.js"
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsup src/index.ts src/cli.ts --format esm --target node12.20"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+  },
+  "type": "module",
+  "dependencies": {
+    "commander": "^9.1.0",
+    "debug": "^4.3.4",
+    "fs-extra": "^10.0.1"
+  }
+}
