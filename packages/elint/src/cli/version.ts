@@ -3,7 +3,6 @@ import { version as elintVersion } from '../../package.json'
 import { elintPluginCommitLint } from './commitlint/plugin'
 // import { version as huskyVersion } from 'husky/package.json'
 // import tryRequire from '../utils/try-require'
-import { defaultPlugins } from '../config'
 import { loadElintPlugins } from '../plugin'
 
 export interface VersionOptions {
@@ -36,9 +35,7 @@ function printVersionBlock(
 /**
  * 输出 version
  */
-async function version({
-  plugins = defaultPlugins
-}: VersionOptions = {}): Promise<void> {
+async function version({ plugins = [] }: VersionOptions = {}): Promise<void> {
   const main: Record<string, string> = {
     elint: elintVersion
   }

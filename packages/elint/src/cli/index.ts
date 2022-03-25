@@ -27,7 +27,9 @@ program
 program
   .option('-v, --version', 'output the version number')
   .action(async () => {
-    await version()
+    await version({
+      plugins: defaultPlugins
+    })
     process.exit(0)
   })
 
@@ -45,7 +47,7 @@ program
   .action(async (type, files, options) => {
     debug('run lint...')
 
-    if (!files) {
+    if (!files || !type) {
       return
     }
 
