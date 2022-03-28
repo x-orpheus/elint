@@ -26,9 +26,7 @@ program
 program
   .option('-v, --version', 'output the version number')
   .action(async () => {
-    await version({
-      plugins: []
-    })
+    await version()
     process.exit(0)
   })
 
@@ -57,12 +55,13 @@ program
 
     const isGit = await isGitHooks()
 
+    debug(`is in git: ${isGit}`)
+
     const elintOptions: ElintOptions = {
       fix: options.fix,
       style: options.style,
       noIgnore: options.noIgnore,
-      git: isGit,
-      plugins: []
+      git: isGit
     }
 
     const results = await lintFiles([type, ...files], elintOptions)

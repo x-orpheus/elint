@@ -4,6 +4,7 @@ import find from 'find-process'
 const debug = _debug('elint:utils:is-git-hooks')
 
 const huskyCmdReg = /node_modules(\/|\\)husky/
+const huskyV7CmdReg = /\.husky(\/|\\)/
 
 /**
  * 获取 ppid
@@ -39,7 +40,7 @@ async function isRunByHusky(ppid: number): Promise<boolean> {
   if (!cmd || typeof pppid === 'undefined') {
     return false
   }
-  if (huskyCmdReg.test(cmd)) {
+  if (huskyCmdReg.test(cmd) || huskyV7CmdReg.test(cmd)) {
     return true
   }
   return isRunByHusky(pppid)

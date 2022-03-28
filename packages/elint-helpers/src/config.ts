@@ -17,9 +17,15 @@ export const defaultConfigFiles = [
   'stylelint.config.cjs',
   '.stylelintignore',
 
-  // husky
+  // husky v7
   '.huskyrc',
   '.husky',
+
+  // husky legacy
+  '.huskyrc.js',
+  '.huskyrc.yaml',
+  '.huskyrc.yml',
+  '.huskyrc.json',
 
   // commitlint
   '.commitlintrc.js',

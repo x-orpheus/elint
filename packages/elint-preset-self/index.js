@@ -1,5 +1,6 @@
 module.exports = {
   configFiles: [
+    '.husky',
     '.eslintrc.js',
     '.eslintignore',
     '.prettierrc.js',
