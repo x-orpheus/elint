@@ -1,5 +1,5 @@
 module.exports = {
-  configs: [
+  configFiles: [
     '.eslintrc.js',
     '.eslintignore',
     '.prettierrc.js',

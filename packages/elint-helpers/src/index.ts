@@ -2,6 +2,7 @@ import { createRequire } from 'module'
 import _debug from 'debug'
 import path from 'path'
 import fs from 'fs-extra'
+import { defaultConfigFiles } from './config'
 
 const debug = _debug('elint-helpers:install')
 
@@ -42,7 +43,12 @@ export function install({ presetPath, projectPath }: InstallOptions = {}) {
   debug(`preset: ${currentPresetPath}`)
   debug(`project: ${currentProjectPath}`)
 
-  if (!currentPresetPath || !currentProjectPath) {
+  if (
+    !currentPresetPath ||
+    !currentProjectPath ||
+    !fs.existsSync(currentPresetPath) ||
+    !fs.existsSync(currentProjectPath)
+  ) {
     throw new Error('no available preset or project.')
   }
 
@@ -64,21 +70,19 @@ export function install({ presetPath, projectPath }: InstallOptions = {}) {
 
   const config = require(currentPresetPath)
 
-  if (config.configs) {
-    config.configs.forEach((fileName: string) => {
-      const from = path.join(currentPresetPath, fileName)
-      const to = path.join(currentProjectPath, fileName)
+  const configFiles = config.configFiles || defaultConfigFiles
 
-      if (!fs.pathExistsSync(from)) {
-        return
-      }
+  configFiles.forEach((fileName: string) => {
+    const from = path.join(currentPresetPath, fileName)
+    const to = path.join(currentProjectPath, fileName)
 
-      fs.copySync(from, to, { overwrite: true })
+    if (!fs.pathExistsSync(from)) {
+      return
+    }
 
-      console.log(`  move: from "${from}"`)
-      console.log(`          to "${to}"`)
-    })
-  } else {
-    console.log(`  ${packageJson.name} does not export any config files.`)
-  }
+    fs.copySync(from, to, { overwrite: true, recursive: true })
+
+    console.log(`  move: from "${from}"`)
+    console.log(`          to "${to}"`)
+  })
 }
