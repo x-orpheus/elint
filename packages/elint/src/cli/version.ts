@@ -1,13 +1,8 @@
 import { padEnd } from 'lodash-es'
 import { version as elintVersion } from '../../package.json'
+import { loadPresetAndPlugins } from '../elint'
 import { elintPluginCommitLint } from './commitlint/plugin'
 // import { version as huskyVersion } from 'husky/package.json'
-// import tryRequire from '../utils/try-require'
-import { loadElintPlugins } from '../plugin/load'
-
-export interface VersionOptions {
-  plugins?: string[]
-}
 
 function printVersionBlock(
   blockName: string,
@@ -35,18 +30,25 @@ function printVersionBlock(
 /**
  * 输出 version
  */
-async function version({ plugins = [] }: VersionOptions = {}): Promise<void> {
+async function version(): Promise<void> {
   const main: Record<string, string> = {
     elint: elintVersion
   }
 
-  const loadedPlugins = loadElintPlugins(plugins, { cwd: process.cwd() })
+  const { loadedPlugins, internalPreset } = await loadPresetAndPlugins({
+    cwd: process.cwd()
+  })
 
   loadedPlugins.unshift(elintPluginCommitLint)
 
+  const presetVersionMap: Record<string, string> = {}
   const pluginVersionMap: Record<string, string> = {}
   const depVersionMap: Record<string, string> = {
     // husky: huskyVersion
+  }
+
+  if (internalPreset) {
+    presetVersionMap[internalPreset.id] = internalPreset.version
   }
 
   loadedPlugins.forEach((plugin) => {
@@ -60,16 +62,11 @@ async function version({ plugins = [] }: VersionOptions = {}): Promise<void> {
     })
   })
 
-  // const preset = tryRequire(/elint-preset/)[0]
-  // if (preset) {
-  //   // eslint-disable-next-line global-require
-  //   const { version: presetVersion } = require(`${preset}/package.json`)
-  //   main[preset] = presetVersion
-  // }
-
   const output = ['> elint version', '']
 
   output.push(...printVersionBlock('', main))
+
+  output.push(...printVersionBlock('Preset:', presetVersionMap))
 
   output.push(...printVersionBlock('Plugins:', pluginVersionMap))
 

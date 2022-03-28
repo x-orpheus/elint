@@ -8,6 +8,7 @@ import { executeElintPlugin } from './plugin/execute'
 import {
   ElintPlugin,
   ElintPluginOptions,
+  ElintPluginOverridableKey,
   ElintPluginResult
 } from './plugin/types'
 import { getBaseDir } from './env'
@@ -116,6 +117,23 @@ export async function loadPresetAndPlugins({
     cwd,
     presetPath: internalPreset?.path
   })
+
+  if (internalPreset?.preset.overridePluginConfig) {
+    const overridePluginConfig = internalPreset.preset.overridePluginConfig
+
+    loadedPlugins.forEach((plugin) => {
+      if (overridePluginConfig[plugin.id]) {
+        Object.entries(overridePluginConfig[plugin.id]).forEach(
+          ([key, value]) => {
+            if (['activateConfig'].includes(key)) {
+              const overridableKey = key as ElintPluginOverridableKey
+              plugin[overridableKey] = value
+            }
+          }
+        )
+      }
+    })
+  }
 
   return {
     internalPreset,

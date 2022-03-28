@@ -1,5 +1,7 @@
 export type ElintPluginType = 'linter' | 'formatter'
 
+export type ElintPluginOverridableKey = 'activateConfig'
+
 export interface ElintPluginResult<T> {
   /**
    * pluginId
