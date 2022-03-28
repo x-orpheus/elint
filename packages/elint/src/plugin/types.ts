@@ -109,3 +109,17 @@ export interface ElintPlugin<
    */
   reset?(): void
 }
+
+export function isElintPlugin(value: unknown): value is ElintPlugin<unknown> {
+  if (
+    value &&
+    typeof value === 'object' &&
+    (value as ElintPlugin<unknown>).id &&
+    (['formatter', 'linter'] as ElintPluginType[]).indexOf(
+      (value as ElintPlugin<unknown>).type
+    ) !== -1
+  ) {
+    return true
+  }
+  return false
+}

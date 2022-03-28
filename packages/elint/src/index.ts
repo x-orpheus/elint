@@ -7,6 +7,7 @@ import type {
   ElintPluginResult,
   ElintPluginOptions
 } from './plugin/types'
+import type { ElintPreset } from './types/preset'
 
 export { lintFiles, lintText }
 
@@ -15,5 +16,6 @@ export type {
   ElintResult,
   ElintPlugin,
   ElintPluginResult,
-  ElintPluginOptions
+  ElintPluginOptions,
+  ElintPreset
 }

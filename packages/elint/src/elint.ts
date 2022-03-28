@@ -3,11 +3,8 @@ import fs from 'fs-extra'
 import chalk from 'chalk'
 import walker from './walker'
 import { createErrorReportResult, ReportResult } from './utils/report'
-import {
-  executeElintPlugin,
-  groupElintPluginsByType,
-  loadElintPlugins
-} from './plugin'
+import { groupElintPluginsByType, loadElintPlugins } from './plugin/load'
+import { executeElintPlugin } from './plugin/execute'
 import {
   ElintPlugin,
   ElintPluginOptions,
@@ -54,7 +51,11 @@ interface ElintBasicOptions {
    */
   style?: boolean
   /**
-   * 配置 plugins
+   * 预设名
+   */
+  preset?: string
+  /**
+   * 配置 plugins，不可与 preset 同时设置
    */
   plugins?: (string | ElintPlugin<unknown>)[]
   cwd?: string

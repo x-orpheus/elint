@@ -1,5 +1,5 @@
 import { getBaseDir } from '../../env'
-import { executeElintPlugin } from '../../plugin'
+import { executeElintPlugin } from '../../plugin/execute'
 import { formatReportResults } from '../../utils/report'
 import { elintPluginCommitLint } from './plugin'
 
