@@ -9,6 +9,7 @@ coverage/
 **/*.tgz
 dist
 
+/.husky
 /.eslintrc.js
 /.eslintignore
 /.prettierrc.js
