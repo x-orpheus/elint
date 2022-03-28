@@ -11,11 +11,7 @@ const debug = _debug('elint:walker:stage')
 
 const mmOptions: mm.Options = {
   dot: true,
-  nobrace: false,
-  noglobstar: false,
-  noext: false,
-  nocase: false,
-  matchBase: false
+  contains: true
 }
 
 /**

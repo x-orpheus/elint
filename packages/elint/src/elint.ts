@@ -198,17 +198,17 @@ export async function lintFiles(
     cwd
   })
 
+  const elintResultList: ElintResult[] = []
+
+  // 没有匹配到任何文件直接退出
+  if (!fileList.length) {
+    return elintResultList
+  }
+
   const loadedElintPlugins = await loadElintPlugins(plugins)
 
   if (!loadedElintPlugins.length) {
     throw new Error('no available elint plugin')
-  }
-
-  const elintResultList: ElintResult[] = []
-
-  // 没有匹配到任何文件或没有可用的 plugin ，直接退出
-  if (!fileList.length) {
-    return elintResultList
   }
 
   const tasks: Promise<void>[] = []

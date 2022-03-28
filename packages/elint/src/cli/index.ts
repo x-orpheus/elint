@@ -64,13 +64,18 @@ program
       git: isGit
     }
 
-    const results = await lintFiles([type, ...files], elintOptions)
+    try {
+      const results = await lintFiles([type, ...files], elintOptions)
 
-    console.log(report(results))
+      console.log(report(results))
 
-    const success = !results.some((result) => !result.success)
+      const success = !results.some((result) => !result.success)
 
-    process.exit(success ? 0 : 1)
+      process.exit(success ? 0 : 1)
+    } catch (e) {
+      console.log('[elint]', e)
+      process.exit(1)
+    }
   })
 
 /**
