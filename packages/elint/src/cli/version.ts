@@ -3,7 +3,7 @@ import { version as elintVersion } from '../../package.json'
 import { elintPluginCommitLint } from './commitlint/plugin'
 // import { version as huskyVersion } from 'husky/package.json'
 // import tryRequire from '../utils/try-require'
-import { loadElintPlugins } from '../plugin'
+import { loadElintPlugins } from '../plugin/load'
 
 export interface VersionOptions {
   plugins?: string[]
@@ -40,7 +40,7 @@ async function version({ plugins = [] }: VersionOptions = {}): Promise<void> {
     elint: elintVersion
   }
 
-  const loadedPlugins = await loadElintPlugins(plugins)
+  const loadedPlugins = loadElintPlugins(plugins, { cwd: process.cwd() })
 
   loadedPlugins.unshift(elintPluginCommitLint)
 

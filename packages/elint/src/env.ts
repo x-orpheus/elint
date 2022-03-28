@@ -17,8 +17,8 @@ export const getBaseDir = (): string => {
 /**
  * 项目的 node_modules 目录
  */
-export const getNodeModulesDir = (): string => {
-  const nodeModulesDir = path.join(getBaseDir(), 'node_modules')
+export const getNodeModulesDir = (baseDir?: string): string => {
+  const nodeModulesDir = path.join(baseDir || getBaseDir(), 'node_modules')
 
   debug(`node_modules dir: ${nodeModulesDir}`)
   return nodeModulesDir

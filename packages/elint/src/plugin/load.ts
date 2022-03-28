@@ -1,28 +1,41 @@
+import { createRequire } from 'module'
+import path from 'path'
 import _debug from 'debug'
 import { groupBy } from 'lodash-es'
 
 import { ElintPlugin, ElintPluginType, isElintPlugin } from './types'
+import { ElintContext } from '../elint'
 
 const debug = _debug('elint:plugin:load')
 
 const loadElintPlugin = async (
-  pluginId: string
+  pluginId: string,
+  { cwd, presetPath }: ElintContext
 ): Promise<ElintPlugin<unknown>> => {
-  const plugin = (await import(pluginId)).default
+  const require = createRequire(
+    presetPath || path.join(cwd, '__placeholder__.js')
+  )
+
+  const pluginPath = require.resolve(pluginId)
+
+  const pluginModule = await import(pluginPath)
+
+  const plugin = pluginModule.default || pluginModule
 
   if (!isElintPlugin(plugin) || plugin.id !== pluginId) {
-    throw new Error(`${pluginId} is not an elint plugin`)
+    throw new Error(`${pluginId} is not an available elint plugin`)
   }
   return plugin
 }
 
 export const loadElintPlugins = async (
-  plugins: (string | ElintPlugin<unknown>)[]
+  plugins: (string | ElintPlugin<unknown>)[],
+  ctx: ElintContext
 ): Promise<ElintPlugin<unknown>[]> => {
   const loadedPlugins = await Promise.all(
     plugins.map((plugin, index) => {
       if (typeof plugin === 'string') {
-        return loadElintPlugin(plugin)
+        return loadElintPlugin(plugin, ctx)
       }
       if (isElintPlugin(plugin)) {
         return plugin

@@ -16,3 +16,18 @@ export interface ElintPreset {
     [key: string]: unknown
   }
 }
+
+export interface InternalElintPreset {
+  id: string
+  version: string
+  path: string
+  preset: ElintPreset
+}
+
+export function isElintPreset(value: unknown): value is ElintPreset {
+  if (value && typeof value === 'object' && (value as ElintPreset).plugins) {
+    return true
+  }
+
+  return false
+}

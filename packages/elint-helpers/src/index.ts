@@ -68,11 +68,13 @@ export function install({ presetPath, projectPath }: InstallOptions = {}) {
 
   debug(`preset name: ${packageJson.name}`)
 
-  const config = require(currentPresetPath)
+  const configModule = require(currentPresetPath)
 
-  const configFiles = config.configFiles || defaultConfigFiles
+  const config = configModule?.default ?? configModule
 
-  configFiles.forEach((fileName: string) => {
+  const configFiles: string[] = config.configFiles || defaultConfigFiles
+
+  configFiles.forEach((fileName) => {
     const from = path.join(currentPresetPath, fileName)
     const to = path.join(currentProjectPath, fileName)
 

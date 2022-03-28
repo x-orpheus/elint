@@ -1,6 +1,6 @@
 import _debug from 'debug'
 import husky from 'husky'
-import exec from '../lib/exec'
+// import exec from '../lib/exec'
 import log from '../utils/log'
 
 const debug = _debug('elint:hooks')
@@ -29,16 +29,16 @@ function runHooks(action: HuskyAction): void {
   }
 
   // huskyDir 必须指定
-  exec('node')(pragram, action, huskyDir)
-    .then(({ stdout }) => {
-      const logFn = stdout.includes('done') ? log.success : log.info
-      const message = stdout.replace(/husky > /g, '').split('\n')
+  // exec('node')(pragram, action, huskyDir)
+  //   .then(({ stdout }) => {
+  //     const logFn = stdout.includes('done') ? log.success : log.info
+  //     const message = stdout.replace(/husky > /g, '').split('\n')
 
-      logFn(...message)
-    })
-    .catch((error) => {
-      log.error(error.message || 'error')
-    })
+  //     logFn(...message)
+  //   })
+  //   .catch((error) => {
+  //     log.error(error.message || 'error')
+  //   })
 }
 
 export default runHooks
