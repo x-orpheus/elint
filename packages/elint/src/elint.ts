@@ -201,7 +201,7 @@ export async function lintText(
       pluginOptions
     )
 
-    elintResult.success &&= executeResult.success
+    elintResult.success = elintResult.success && executeResult.success
 
     if (executeResult.pluginResult) {
       elintResult.output = executeResult.pluginResult.output

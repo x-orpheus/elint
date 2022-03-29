@@ -17,5 +17,9 @@
     "noImplicitThis": true
   },
   "include": ["packages"],
-  "exclude": ["dist", "node_modules"]
+  "exclude": ["dist", "node_modules"],
+  "ts-node": {
+    "esm": true,
+    "files": true,
+  }
 }

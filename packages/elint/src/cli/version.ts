@@ -1,8 +1,12 @@
+import { createRequire } from 'module'
 import { padEnd } from 'lodash-es'
-import { version as elintVersion } from '../../package.json'
 import { loadPresetAndPlugins } from '../elint'
 import { elintPluginCommitLint } from './commitlint/plugin'
+
 // import { version as huskyVersion } from 'husky/package.json'
+const { version: elintVersion } = createRequire(import.meta.url)(
+  '../../package.json'
+)
 
 function printVersionBlock(
   blockName: string,

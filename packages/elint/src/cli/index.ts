@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import _debug from 'debug'
+import { createRequire } from 'module'
 import { program } from 'commander'
-import { description } from '../../package.json'
 import { lintFiles } from '..'
 import version from './version'
 import log from '../utils/log'
@@ -11,6 +11,7 @@ import type { ElintOptions } from '../elint'
 import { report } from '../utils/report'
 import { commitlint } from './commitlint'
 
+const { description } = createRequire(import.meta.url)('../../package.json')
 const debug = _debug('elint:cli')
 
 debug('process.argv: %o', process.argv)
