@@ -21,6 +21,7 @@ module.exports = {
         ignoreTemplateLiterals: true
       }
     ],
-    '@typescript-eslint/no-var-requires': 'off'
+    '@typescript-eslint/no-var-requires': 'off',
+    'import/extensions': ['error', 'always']
   }
 }

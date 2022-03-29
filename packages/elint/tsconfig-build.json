@@ -3,6 +3,5 @@
   "include": ["src"],
   "compilerOptions": {
     "outDir": "dist"
-  },
-  "files": ["./test/jest.d.ts"]
+  }
 }
