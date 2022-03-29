@@ -1,7 +1,5 @@
-'use strict'
-
-const { execa } = require('execa')
-const { getBaseDir } = require('../../../src/env')
+import { execa } from 'execa'
+import { getBaseDir } from '../../../src/env.js'
 
 async function gitInit() {
   const options = {
@@ -13,4 +11,4 @@ async function gitInit() {
   await execa('git', ['add', '.'], options)
 }
 
-module.exports = gitInit
+export default gitInit

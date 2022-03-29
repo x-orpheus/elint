@@ -1,15 +1,13 @@
-'use strict'
-
-const path = require('path')
-const fs = require('fs-extra')
-const { getBaseDir } = require('../../../src/env')
+import path from 'path'
+import fs from 'fs-extra'
+import { getBaseDir } from '../../../src/env'
 
 /**
  * 更改一个文件（末尾加一个空行）
  * 主要用在 git 相关的测试中
  */
 
-async function appendFile (filePaths) {
+async function appendFile(filePaths: string[]) {
   const baseDir = getBaseDir()
 
   for (let i = 0, j = filePaths.length; i < j; i++) {
@@ -18,4 +16,4 @@ async function appendFile (filePaths) {
   }
 }
 
-module.exports = appendFile
+export default appendFile

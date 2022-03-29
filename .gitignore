@@ -3,7 +3,7 @@
 .vscode/
 node_modules/
 npm-debug.log
-!test/unit/test-project/node_modules/
+!**/test/unit/test-project/node_modules/
 coverage/
 .nyc_output/
 **/*.tgz
