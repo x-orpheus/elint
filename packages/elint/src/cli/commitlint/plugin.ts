@@ -5,7 +5,7 @@ import type { LintOptions, LintOutcome } from '@commitlint/types/lib/lint'
 import type { ParserOptions } from '@commitlint/types/lib/parse'
 import path from 'path'
 import fs from 'fs-extra'
-import { ElintPlugin, ElintPluginResult } from '../../plugin/types'
+import { ElintPlugin, ElintPluginResult } from '../../plugin/types.js'
 
 const { format, load, lint, read } = commitlint
 const require = createRequire(import.meta.url)

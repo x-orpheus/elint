@@ -3,9 +3,9 @@ import fs from 'fs-extra'
 import mm from 'micromatch'
 import sgf from 'staged-git-files'
 import { intersection, without } from 'lodash-es'
-import notStagedGitFiles from '../utils/not-staged-git-files'
-import getStagedFileContent from '../utils/get-staged-file-content'
-import type { FileItem } from '.'
+import notStagedGitFiles from '../utils/not-staged-git-files.js'
+import getStagedFileContent from '../utils/get-staged-file-content.js'
+import type { FileItem } from './index.js'
 
 const debug = _debug('elint:walker:stage')
 

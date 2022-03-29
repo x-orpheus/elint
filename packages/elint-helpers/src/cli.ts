@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
 import _debug from 'debug'
+import { createRequire } from 'module'
 import { program } from 'commander'
-import { description } from '../package.json'
-import { install } from '.'
+import { install } from './index.js'
 
+const { description } = createRequire(import.meta.url)('../package.json')
 const debug = _debug('elint-helpers:cli')
 
 program

@@ -7,7 +7,7 @@
   },
   "scripts": {
     "clean": "rimraf dist",
-    "build": "tsup src/index.ts src/cli.ts --format esm --target node12.20"
+    "build": "tsc"
   },
   "files": [
     "dist"

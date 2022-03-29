@@ -1,19 +1,19 @@
 import _debug from 'debug'
 import fs from 'fs-extra'
 import chalk from 'chalk'
-import walker from './walker'
-import { createErrorReportResult, ReportResult } from './utils/report'
-import { groupElintPluginsByType, loadElintPlugins } from './plugin/load'
-import { executeElintPlugin } from './plugin/execute'
+import walker from './walker/index.js'
+import { createErrorReportResult, ReportResult } from './utils/report.js'
+import { groupElintPluginsByType, loadElintPlugins } from './plugin/load.js'
+import { executeElintPlugin } from './plugin/execute.js'
 import {
   ElintPlugin,
   ElintPluginOptions,
   ElintPluginOverridableKey,
   ElintPluginResult
-} from './plugin/types'
-import { getBaseDir } from './env'
-import { ElintPreset, InternalElintPreset } from './preset/types'
-import { loadElintPreset, tryLoadElintPreset } from './preset/load'
+} from './plugin/types.js'
+import { getBaseDir } from './env.js'
+import { ElintPreset, InternalElintPreset } from './preset/types.js'
+import { loadElintPreset, tryLoadElintPreset } from './preset/load.js'
 
 const debug = _debug('elint:main')
 

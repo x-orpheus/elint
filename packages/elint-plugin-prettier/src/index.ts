@@ -1,7 +1,6 @@
 import { createRequire } from 'module'
 import prettier, { type Options } from 'prettier'
 import { ElintPlugin, ElintPluginResult } from 'elint'
-import { version } from '../package.json'
 
 const require = createRequire(import.meta.url)
 const { clearConfigCache, resolveConfig, format } = prettier
@@ -57,6 +56,7 @@ const elintPluginPrettier: ElintPlugin<never> = {
     return result
   },
   getVersion() {
+    const { version } = require('../package.json')
     const prettierPackageJson = require('prettier/package.json')
 
     return {

@@ -1,13 +1,13 @@
-import { lintFiles, lintText, loadPresetAndPlugins } from './elint'
+import { lintFiles, lintText, loadPresetAndPlugins } from './elint.js'
 
-import type { ElintOptions, ElintResult } from './elint'
+import type { ElintOptions, ElintResult } from './elint.js'
 
 import type {
   ElintPlugin,
   ElintPluginResult,
   ElintPluginOptions
-} from './plugin/types'
-import type { ElintPreset } from './preset/types'
+} from './plugin/types.js'
+import type { ElintPreset } from './preset/types.js'
 
 export { lintFiles, lintText, loadPresetAndPlugins }
 

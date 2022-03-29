@@ -3,8 +3,8 @@ import path from 'path'
 import _debug from 'debug'
 import { groupBy } from 'lodash-es'
 
-import { ElintPlugin, ElintPluginType, isElintPlugin } from './types'
-import { ElintContext } from '../elint'
+import { ElintPlugin, ElintPluginType, isElintPlugin } from './types.js'
+import { ElintContext } from '../elint.js'
 
 const debug = _debug('elint:plugin:load')
 

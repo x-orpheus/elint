@@ -1,8 +1,8 @@
 import _debug from 'debug'
-import { ElintOptions } from '../elint'
-import { defaultIgnore } from '../config'
-import local from './local'
-import stage from './stage'
+import { ElintOptions } from '../elint.js'
+import { defaultIgnore } from '../config.js'
+import local from './local.js'
+import stage from './stage.js'
 
 const debug = _debug('elint:walker')
 

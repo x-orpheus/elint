@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "build": "tsup src/index.ts --dts --format esm  --target node12.20"
+    "build": "tsc"
   },
   "peerDependencies": {
     "stylelint": "^14.0.0"

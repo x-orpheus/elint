@@ -1,4 +1,4 @@
-import { ElintPlugin, ElintPluginOverridableKey } from '../plugin/types'
+import { ElintPlugin, ElintPluginOverridableKey } from '../plugin/types.js'
 
 export interface ElintPreset {
   /**

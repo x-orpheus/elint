@@ -1,7 +1,7 @@
 import { createRequire } from 'module'
 import { padEnd } from 'lodash-es'
-import { loadPresetAndPlugins } from '../elint'
-import { elintPluginCommitLint } from './commitlint/plugin'
+import { loadPresetAndPlugins } from '../elint.js'
+import { elintPluginCommitLint } from './commitlint/plugin.js'
 
 // import { version as huskyVersion } from 'husky/package.json'
 const { version: elintVersion } = createRequire(import.meta.url)(

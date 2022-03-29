@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 import figures from 'figures'
-import { ElintResult } from '../elint'
+import { ElintResult } from '../elint.js'
 
 /**
  * 按行（每行）缩进指定宽度

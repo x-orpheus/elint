@@ -1,7 +1,6 @@
 import { createRequire } from 'module'
 import stylelint, { type LinterResult } from 'stylelint'
 import { ElintPlugin, ElintPluginResult } from 'elint'
-import { version } from '../package.json'
 
 const { lint, formatters } = stylelint
 const require = createRequire(import.meta.url)
@@ -39,6 +38,7 @@ const elintPluginStylelint: ElintPlugin<LinterResult> = {
     return result
   },
   getVersion() {
+    const { version } = require('../package.json')
     const stylelintPackageJson = require('stylelint/package.json')
 
     return {

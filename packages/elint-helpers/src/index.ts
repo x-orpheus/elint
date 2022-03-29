@@ -2,7 +2,7 @@ import { createRequire } from 'module'
 import _debug from 'debug'
 import path from 'path'
 import fs from 'fs-extra'
-import { defaultConfigFiles } from './config'
+import { defaultConfigFiles } from './config.js'
 
 const debug = _debug('elint-helpers:install')
 

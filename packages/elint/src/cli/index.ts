@@ -3,13 +3,13 @@
 import _debug from 'debug'
 import { createRequire } from 'module'
 import { program } from 'commander'
-import { lintFiles } from '..'
-import version from './version'
-import log from '../utils/log'
-import isGitHooks from '../utils/is-git-hooks'
-import type { ElintOptions } from '../elint'
-import { report } from '../utils/report'
-import { commitlint } from './commitlint'
+import { lintFiles } from '../index.js'
+import version from './version.js'
+import log from '../utils/log.js'
+import isGitHooks from '../utils/is-git-hooks.js'
+import type { ElintOptions } from '../elint.js'
+import { report } from '../utils/report.js'
+import { commitlint } from './commitlint/index.js'
 
 const { description } = createRequire(import.meta.url)('../../package.json')
 const debug = _debug('elint:cli')

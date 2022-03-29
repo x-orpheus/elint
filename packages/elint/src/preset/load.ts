@@ -1,9 +1,9 @@
 import { createRequire } from 'module'
 import path from 'path'
 import _debug from 'debug'
-import { ElintContext } from '../elint'
-import { ElintPreset, InternalElintPreset, isElintPreset } from './types'
-import tryRequire from '../utils/try-require'
+import { ElintContext } from '../elint.js'
+import { ElintPreset, InternalElintPreset, isElintPreset } from './types.js'
+import tryRequire from '../utils/try-require.js'
 
 const debug = _debug('elint:preset:load')
 

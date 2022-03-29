@@ -1,7 +1,7 @@
 import _debug from 'debug'
-import husky from 'husky'
+// import husky from 'husky'
 // import exec from '../lib/exec'
-import log from '../utils/log'
+import log from '../utils/log.js'
 
 const debug = _debug('elint:hooks')
 

@@ -8,7 +8,7 @@
     "preinstall": "npx only-allow pnpm",
     "postinstall": "elint-helpers install --preset ./packages/elint-preset-self --project .",
     "lint": "elint lint packages/**/src -s",
-    "start": "NODE_OPTIONS=--experimental-specifier-resolution=node ts-node packages/elint/src/cli/index.ts lint packages/**/src -s"
+    "start": "ts-node packages/elint/src/cli/index.ts lint packages/**/src -s"
   },
   "devDependencies": {
     "@changesets/cli": "^2.22.0",
@@ -27,7 +27,6 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^27.1.4",
     "ts-node": "^10.7.0",
-    "tsup": "^5.12.1",
     "typescript": "^4.6.2"
   }
 }
