@@ -11,6 +11,7 @@
     "lint:elint": "pnpm --filter ./packages/elint run build && node ./packages/elint/dist/cli lint \"packages/**/src/**/*.+(ts|tsx)\""
   },
   "devDependencies": {
+    "@changesets/cli": "^2.22.0",
     "@commitlint/cli": "^16.2.3",
     "@types/node": "^17.0.23",
     "elint": "workspace:*",
