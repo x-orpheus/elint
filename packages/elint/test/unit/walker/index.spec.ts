@@ -1,15 +1,10 @@
-import { createRequire } from 'module'
-// import fs from 'fs-extra'
 import path from 'path'
+import fs from 'fs-extra'
 import mock from '../mock/env.js'
 import { getBaseDir } from '../../../src/env.js'
-import runInHusky from '../mock/run-in-husky.js'
 import walker from '../../../src/walker/index.js'
-
-const require = createRequire(import.meta.url)
-const gitInitPath = require.resolve('../mock/git-init').replace('.ts', '.js')
-// const appendFilePath = require.resolve('../mock/append-file')
-const walkerPath = require.resolve('../../../src/walker').replace('.ts', '.js')
+import gitInit from '../mock/git-init.js'
+import appendFile from '../mock/append-file.js'
 
 describe('Walker 测试', () => {
   let unmock: () => void
@@ -44,42 +39,25 @@ describe('Walker 测试', () => {
       expect(expected).toEqual(result)
     })
 
-    test('husky 环境：匹配不到', async () => {
-      const tmpl = `
-        import walker from '${walkerPath}'
-        import gitInit from '${gitInitPath}'
-
-        gitInit().then(() => {
-          walker(['*.txt'], {cwd: '${baseDir}'}).then(result => {
-            process.stdout.write(JSON.stringify(result))
-          })
-        })
-      `
+    test('git 环境：匹配不到', async () => {
       const result: string[] = []
 
-      const expected = await runInHusky(tmpl)
+      const expected = await walker(['*.txt'], { cwd: baseDir, git: true })
 
-      expect(JSON.parse(JSON.parse(expected))).toEqual(result)
+      expect(expected).toEqual(result)
     })
 
-    test('husky 环境：可以匹配到', async () => {
-      const tmpl = `
-      import walker from '${walkerPath}'
-      import gitInit from '${gitInitPath}'
-
-        gitInit().then(() => {
-          walker(['src/**/*.js'], {cwd: '${baseDir}'}).then(result => {
-            process.stdout.write(JSON.stringify(result))
-          })
-        })
-      `
-
+    test('git 环境：可以匹配到', async () => {
       const result = [getPath('src/a.js'), getPath('src/lib/b.js')]
 
-      const expected = await runInHusky(tmpl)
-      const parsedExpected = JSON.parse(JSON.parse(expected))
+      await gitInit()
 
-      expect(parsedExpected).toIncludeSameMembers(result)
+      const expected = await walker(['src/**/*.js'], {
+        cwd: baseDir,
+        git: true
+      })
+
+      expect(expected).toIncludeSameMembers(result)
     })
   })
 
@@ -122,84 +100,60 @@ describe('Walker 测试', () => {
     })
   })
 
-  // describe('staged file 测试', () => {
-  //   test('包含 staged file', async () => {
-  //     const fileName = 'src/lib/b.js'
-  //     const absFileName = path.join(baseDir, fileName)
-  //     const tmpl = `
-  //       const walker = require('${walkerPath}')
-  //       const gitInit = require('${gitInitPath}')
-  //       const appendFile = require('${appendFilePath}')
+  describe.only('staged file 测试', () => {
+    test('包含 staged file', async () => {
+      const fileName = 'src/lib/b.js'
+      const absFileName = path.join(baseDir, fileName)
 
-  //       gitInit()
-  //         .then(() => appendFile(['${fileName}']))
-  //         .then(() => {
-  //           walker(['src/**/*.js']).then(result => {
-  //             process.stdout.write(JSON.stringify(result))
-  //           })
-  //         })
-  //     `
+      await gitInit()
 
-  //     const result = {
-  //       es: [
-  //         getPath('src/a.js'),
-  //         {
-  //           fileName: absFileName,
-  //           fileContent: fs.readFileSync(absFileName).toString()
-  //         }
-  //       ],
-  //       style: []
-  //     }
+      const result = [
+        getPath('src/a.js'),
+        {
+          filePath: fileName,
+          fileContent: fs.readFileSync(absFileName).toString()
+        }
+      ]
 
-  //     const expected = await runInHusky(tmpl)
-  //     const parsedExpected = JSON.parse(JSON.parse(expected))
+      // 更新文件
+      await appendFile([fileName])
 
-  //     expect(parsedExpected.es).toIncludeSameMembers(result.es)
-  //     expect(parsedExpected.style).toIncludeSameMembers(result.style)
-  //   })
+      const expected = await walker(['src/**/*.js'], {
+        cwd: baseDir,
+        git: true
+      })
 
-  //   test('包含多个 staged file', async () => {
-  //     const fileName1 = 'src/lib/b.js'
-  //     const absFileName1 = path.join(baseDir, fileName1)
-  //     const fileName2 = 'src/a.css'
-  //     const absFileName2 = path.join(baseDir, fileName2)
+      expect(expected).toIncludeSameMembers(result)
+    })
 
-  //     const tmpl = `
-  //       const walker = require('${walkerPath}')
-  //       const gitInit = require('${gitInitPath}')
-  //       const appendFile = require('${appendFilePath}')
+    test('包含多个 staged file', async () => {
+      const fileName1 = 'src/lib/b.js'
+      const absFileName1 = path.join(baseDir, fileName1)
+      const fileName2 = 'src/a.css'
+      const absFileName2 = path.join(baseDir, fileName2)
 
-  //       gitInit()
-  //         .then(() => appendFile(['${fileName1}', '${fileName2}']))
-  //         .then(() => {
-  //           walker(['src/**/*.+(js|css)']).then(result => {
-  //             process.stdout.write(JSON.stringify(result))
-  //           })
-  //         })
-  //     `
+      await gitInit()
 
-  //     const result = {
-  //       es: [
-  //         getPath('src/a.js'),
-  //         {
-  //           fileName: absFileName1,
-  //           fileContent: fs.readFileSync(absFileName1).toString()
-  //         }
-  //       ],
-  //       style: [
-  //         {
-  //           fileName: absFileName2,
-  //           fileContent: fs.readFileSync(absFileName2).toString()
-  //         }
-  //       ]
-  //     }
+      const result = [
+        getPath('src/a.js'),
+        {
+          filePath: fileName1,
+          fileContent: fs.readFileSync(absFileName1).toString()
+        },
+        {
+          filePath: fileName2,
+          fileContent: fs.readFileSync(absFileName2).toString()
+        }
+      ]
 
-  //     const expected = await runInHusky(tmpl)
+      await appendFile([fileName1, fileName2])
 
-  //     const parsedExpected = JSON.parse(JSON.parse(expected))
+      const expected = await walker(['src/**/*.+(js|css)'], {
+        cwd: baseDir,
+        git: true
+      })
 
-  //     expect(parsedExpected.es).toIncludeSameMembers(result.es)
-  //     expect(parsedExpected.style).toIncludeSameMembers(result.style)
-  //   })
-  // })
+      expect(expected).toIncludeSameMembers(result)
+    })
+  })
 })

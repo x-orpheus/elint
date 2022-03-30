@@ -1,17 +1,15 @@
-'use strict'
-
-const fs = require('fs-extra')
-const path = require('path')
-const mock = require('../mock/env')
-const gitInit = require('../mock/git-init')
-const appendFile = require('../mock/append-file')
-const stageFiles = require('../../../src/walker/stage')
-const { getBaseDir } = require('../../../src/env')
-
-let unmock
-let baseDir
+import fs from 'fs-extra'
+import path from 'path'
+import mock from '../mock/env.js'
+import gitInit from '../mock/git-init.js'
+import appendFile from '../mock/append-file.js'
+import stageFiles from '../../../src/walker/stage.js'
+import { getBaseDir } from '../../../src/env.js'
 
 describe('Walker stage 测试', () => {
+  let unmock: () => void
+  let baseDir: string
+
   beforeEach(() => {
     unmock = mock()
     baseDir = getBaseDir()
@@ -19,23 +17,22 @@ describe('Walker stage 测试', () => {
 
   afterEach(() => {
     unmock()
-    baseDir = null
   })
 
   test('目录不存在', async () => {
     await fs.remove(baseDir)
 
-    const expected = []
+    const expected: string[] = []
 
-    const result = await stageFiles(['**/*.js'])
+    const result = await stageFiles(['**/*.js'], undefined, baseDir)
 
     expect(result).toEqual(expected)
   })
 
   test('git 项目不存在', async () => {
-    const expected = []
+    const expected: string[] = []
 
-    const result = await stageFiles(['**/*.js'])
+    const result = await stageFiles(['**/*.js'], undefined, baseDir)
 
     expect(result).toEqual(expected)
   })
@@ -45,7 +42,7 @@ describe('Walker stage 测试', () => {
 
     const result = ['src/a.js', 'src/lib/b.js']
 
-    const expected = await stageFiles(['src/**/*.js'])
+    const expected = await stageFiles(['src/**/*.js'], undefined, baseDir)
 
     expect(result).toIncludeSameMembers(expected)
   })
@@ -53,9 +50,9 @@ describe('Walker stage 测试', () => {
   test('匹配不到文件', async () => {
     await gitInit()
 
-    const result = []
+    const result: string[] = []
 
-    const expected = await stageFiles(['*.txt'])
+    const expected = await stageFiles(['*.txt'], undefined, baseDir)
 
     expect(result).toEqual(expected)
   })
@@ -65,7 +62,7 @@ describe('Walker stage 测试', () => {
 
     const result = ['src/a.js']
 
-    const expected = await stageFiles(['src/**/*.js'], ['src/lib/*'])
+    const expected = await stageFiles(['src/**/*.js'], ['src/lib/*'], baseDir)
 
     expect(result).toEqual(expected)
   })
@@ -75,7 +72,7 @@ describe('Walker stage 测试', () => {
 
     const result = ['src/a.js', 'src/lib/b.js']
 
-    const expected = await stageFiles(['src/**/*.js'], [])
+    const expected = await stageFiles(['src/**/*.js'], [], baseDir)
 
     expect(result).toIncludeSameMembers(expected)
   })
@@ -85,7 +82,7 @@ describe('Walker stage 测试', () => {
     const result = [
       'src/a.js',
       {
-        fileName: filePath,
+        filePath,
         fileContent: fs.readFileSync(path.join(baseDir, filePath)).toString()
       }
     ]
@@ -94,7 +91,7 @@ describe('Walker stage 测试', () => {
 
     await appendFile([filePath])
 
-    const expected = await stageFiles(['src/**/*.js'], [])
+    const expected = await stageFiles(['src/**/*.js'], [], baseDir)
 
     expect(expected).toEqual(result)
   })
@@ -105,11 +102,11 @@ describe('Walker stage 测试', () => {
     const result = [
       'src/a.js',
       {
-        fileName: filePath1,
+        filePath: filePath1,
         fileContent: fs.readFileSync(path.join(baseDir, filePath1)).toString()
       },
       {
-        fileName: filePath2,
+        filePath: filePath2,
         fileContent: fs.readFileSync(path.join(baseDir, filePath2)).toString()
       }
     ]
@@ -120,7 +117,8 @@ describe('Walker stage 测试', () => {
 
     const expected = await stageFiles(
       ['src/**/*.js', 'app/**/*.js'],
-      []
+      [],
+      baseDir
     )
 
     expect(result).toEqual(expected)

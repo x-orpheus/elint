@@ -1,13 +1,16 @@
-'use strict'
+import { createRequire } from 'module'
+import mock from '../mock/env.js'
+import runInHusky from '../mock/run-in-husky.js'
+import isGitHooks from '../../../src/utils/is-git-hooks.js'
 
-const mock = require('../mock/env')
-const runInHusky = require('../mock/run-in-husky')
-const isGitHooks = require('../../../src/utils/is-git-hooks')
-const isGitHooksPath = require.resolve('../../../src/utils/is-git-hooks.js')
-
-let unmock
+const require = createRequire(import.meta.url)
+const isGitHooksPath = require
+  .resolve('../../../src/utils/is-git-hooks')
+  .replace('.ts', '.js')
 
 describe('is-git-hooks 测试', () => {
+  let unmock: () => void
+
   beforeEach(() => {
     unmock = mock()
   })
@@ -23,13 +26,15 @@ describe('is-git-hooks 测试', () => {
 
   test('husky 环境', async () => {
     const tmpl = `
-      const isGitHooks = require('${isGitHooksPath}');
+      import isGitHooks from '${isGitHooksPath}';
+
       isGitHooks().then(result => {
         process.stdout.write(JSON.stringify(result));
       });
     `
 
     const expected = await runInHusky(tmpl)
+
     expect(expected).toEqual('"true"')
   })
 })

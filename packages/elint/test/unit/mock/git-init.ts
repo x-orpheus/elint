@@ -8,6 +8,8 @@ async function gitInit() {
 
   await execa('git', ['init'], options)
   await execa('git', ['config', 'core.autocrlf', 'false'], options)
+  // avoid sgf error when init git
+  await execa('git', ['commit', '--allow-empty', '-m', '"initial empty commit"'], options)
   await execa('git', ['add', '.'], options)
 }
 

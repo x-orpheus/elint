@@ -1,6 +1,6 @@
 import path from 'path'
 import fs from 'fs-extra'
-import { getBaseDir } from '../../../src/env'
+import { getBaseDir } from '../../../src/env.js'
 
 /**
  * 更改一个文件（末尾加一个空行）
