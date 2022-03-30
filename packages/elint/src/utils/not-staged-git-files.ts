@@ -6,7 +6,7 @@ const debug = _debug('elint:utils:not-staged-git-files')
 /**
  * 获取没有添加到暂存区的文件
  */
-async function notStagedGitFiles(cwd: string): Promise<string[]> {
+async function notStagedGitFiles(cwd?: string): Promise<string[]> {
   try {
     const { stdout } = await execa('git', ['diff', '--name-only'], {
       cwd

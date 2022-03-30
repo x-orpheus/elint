@@ -11,7 +11,7 @@ const debug = _debug('elint:utils:get-staged-file-content')
  */
 async function getStagedFileContent(
   filePath: string,
-  cwd: string
+  cwd?: string
 ): Promise<string | null> {
   try {
     const { stdout } = await execa('git', ['show', `:${filePath}`], {

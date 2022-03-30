@@ -13,7 +13,7 @@ export type FileItem =
       fileContent: string
     }
 
-type WalkerOptions = Pick<ElintOptions, 'noIgnore' | 'git'> & { cwd: string }
+type WalkerOptions = Pick<ElintOptions, 'noIgnore' | 'git' | 'cwd'>
 
 /**
  * 文件遍历
