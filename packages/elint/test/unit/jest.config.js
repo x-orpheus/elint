@@ -1,4 +1,5 @@
 export default {
+  rootDir: '../..',
   preset: 'ts-jest',
   extensionsToTreatAsEsm: ['.ts'],
   globals: {
