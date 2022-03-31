@@ -1,16 +1,14 @@
-'use strict'
-
-const fs = require('fs-extra')
-const path = require('path')
-const mock = require('../mock/env')
-const gitInit = require('../mock/git-init')
-const getStagedFileContent = require('../../../src/utils/get-staged-file-content')
-const { getBaseDir } = require('../../../src/env')
-
-let unmock
-let baseDir
+import fs from 'fs-extra'
+import path from 'path'
+import mock from '../mock/env.js'
+import gitInit from '../mock/git-init.js'
+import getStagedFileContent from '../../../src/utils/get-staged-file-content.js'
+import { getBaseDir } from '../../../src/env.js'
 
 describe('get-staged-file-content 测试', () => {
+  let unmock: () => void
+  let baseDir: string
+
   beforeEach(() => {
     unmock = mock()
     baseDir = getBaseDir()
@@ -18,12 +16,11 @@ describe('get-staged-file-content 测试', () => {
 
   afterEach(() => {
     unmock()
-    baseDir = null
   })
 
   test('文件不存在', async () => {
     const filePath = '/asdf/124/qwr/zvafafd/aqwer'
-    const expected = await getStagedFileContent(filePath)
+    const expected = await getStagedFileContent(filePath, baseDir)
 
     expect(expected).toEqual(null)
   })
@@ -34,7 +31,7 @@ describe('get-staged-file-content 测试', () => {
 
     await gitInit()
     await fs.createFile(untrackedFilePath)
-    const expected = await getStagedFileContent(fileName)
+    const expected = await getStagedFileContent(fileName, baseDir)
 
     expect(expected).toEqual(null)
   })
@@ -44,7 +41,7 @@ describe('get-staged-file-content 测试', () => {
     const fileContent = await fs.readFile(path.join(baseDir, filePath))
 
     await gitInit()
-    const expected = await getStagedFileContent(filePath)
+    const expected = await getStagedFileContent(filePath, baseDir)
 
     expect(expected).toEqual(fileContent.toString())
   })
