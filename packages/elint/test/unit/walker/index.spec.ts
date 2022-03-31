@@ -100,7 +100,7 @@ describe('Walker 测试', () => {
     })
   })
 
-  describe.only('staged file 测试', () => {
+  describe('staged file 测试', () => {
     test('包含 staged file', async () => {
       const fileName = 'src/lib/b.js'
       const absFileName = path.join(baseDir, fileName)

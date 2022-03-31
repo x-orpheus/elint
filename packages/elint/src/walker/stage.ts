@@ -58,7 +58,7 @@ function match(
 function getStagedFileList(
   patterns: string[],
   ignorePatterns: string[],
-  cwd?: string
+  cwd: string
 ): Promise<string[]> {
   // 如果 baseDir 根本不存在 sgf 会抛出异常
   if (!cwd || !fs.existsSync(cwd)) {
@@ -96,7 +96,7 @@ function getStagedFileList(
 async function stagedFiles(
   patterns: string[],
   ignorePatterns: string[] = [],
-  cwd?: string
+  cwd: string
 ): Promise<FileItem[]> {
   // 暂存区文件
   const stagedFileList = await getStagedFileList(patterns, ignorePatterns, cwd)

@@ -11,7 +11,7 @@ import { globby } from 'globby'
 export default function walker(
   patterns: string[],
   ignorePatterns: string[] = [],
-  cwd?: string
+  cwd: string
 ): Promise<string[]> {
   return globby(patterns, {
     cwd,

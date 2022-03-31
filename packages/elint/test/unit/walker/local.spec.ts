@@ -16,7 +16,7 @@ describe('Walker local 测试', () => {
   })
 
   test('空测试', async () => {
-    const result = await walker([])
+    const result = await walker([], undefined, baseDir)
 
     expect(result).toEqual([])
   })

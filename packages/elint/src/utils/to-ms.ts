@@ -19,7 +19,7 @@ function toMs(value: string | number): number {
   let msNum
 
   try {
-    msNum = ms(Number(value))
+    msNum = ms(value as string)
   } catch (error) {
     msNum = 0
   }

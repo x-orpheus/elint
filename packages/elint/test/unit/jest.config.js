@@ -17,5 +17,5 @@ export default {
   testTimeout: 5 * 60 * 1000,
   setupFilesAfterEnv: ['jest-extended/all'],
   collectCoverage: true,
-  coverageDirectory: '../../coverage'
+  coverageDirectory: '../../../../coverage'
 }

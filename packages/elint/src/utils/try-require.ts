@@ -47,9 +47,9 @@ function tryRequire(regexp: RegExp, baseDir?: string): string[] {
   const nodeModulesDir = getNodeModulesDir(baseDir)
   const results: string[] = []
 
-  debug(`arguments.regexp: ${regexp || 'undefined'}`)
+  debug(`arguments.regexp: ${regexp}`)
 
-  if (!regexp || !fs.existsSync(nodeModulesDir)) {
+  if (!fs.existsSync(nodeModulesDir)) {
     debug('regexp is undefined or nodeModulesDir not exists')
     return results
   }
