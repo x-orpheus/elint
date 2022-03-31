@@ -57,7 +57,7 @@ export interface ElintPluginVersion {
   /**
    * 需要展示 version 的依赖
    */
-  dependencies: {
+  dependencies?: {
     [name: string]: string
   }
 }

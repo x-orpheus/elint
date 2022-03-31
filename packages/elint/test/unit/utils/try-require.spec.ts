@@ -46,11 +46,13 @@ describe('try-require 测试', () => {
       'elint-preset-normal'
     ]
 
-    const result2 = ['elint-preset-node']
+    const result2 = result1.concat(['elint-plugin-cjs', 'elint-plugin-esm'])
+
+    const result3 = ['elint-preset-node']
 
     expect(tryRequire(/elint-preset/, baseDir)).toEqual(result1)
-    expect(tryRequire(/elint/, baseDir)).toEqual(result1)
-    expect(tryRequire(/node/, baseDir)).toEqual(result2)
+    expect(tryRequire(/elint/, baseDir)).toIncludeSameMembers(result2)
+    expect(tryRequire(/node/, baseDir)).toEqual(result3)
   })
 
   test('存在隐藏文件（点开头）', async () => {

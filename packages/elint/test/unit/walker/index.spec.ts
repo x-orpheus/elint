@@ -88,6 +88,8 @@ describe('Walker 测试', () => {
         getPath('node_modules/@scope/elint-preset-scope/index.js'),
         getPath('node_modules/@scope/elint-preset-scope/.eslintrc.js'),
         getPath('node_modules/@scope/elint-preset-scope/.stylelintrc.js'),
+        getPath('node_modules/elint-plugin-esm/index.js'),
+        getPath('node_modules/elint-plugin-cjs/index.js'),
         getPath('bower_components/a.js')
       ]
 

@@ -41,6 +41,7 @@ export const loadElintPlugins = async (
         return plugin
       }
 
+      /* istanbul ignore next */
       throw new Error(`plugins[${index}] is not an elint plugin`)
     })
   )
