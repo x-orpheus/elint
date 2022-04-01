@@ -22,17 +22,7 @@ export interface ReportInfo {
  * @param info 报告基础信息
  * @returns 用于输出的内容
  */
-function report(info: ReportInfo): string | null {
-  if (!info) {
-    return null
-  }
-
-  const { name, current, latest } = info
-
-  if (!name || !current || !latest) {
-    return null
-  }
-
+function report({ name, current, latest }: ReportInfo): string | null {
   const messages = [
     `update available ${chalk.dim(current)} → ${chalk.green(latest)}`,
     `Run ${chalk.cyan('npm i ' + name + ' -D')} to update`

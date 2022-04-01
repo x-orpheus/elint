@@ -5,7 +5,7 @@ import { findUp } from 'find-up'
 
 const debug = _debug('elint:notifier:')
 
-const PACKAGE_MANAGERS = ['npm', 'yarn', 'pnpm', 'yarn@berry'] as const
+const PACKAGE_MANAGERS = ['pnpm', 'yarn', 'yarn@berry', 'npm'] as const
 
 export type PackageManager = typeof PACKAGE_MANAGERS[number]
 
