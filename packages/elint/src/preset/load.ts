@@ -26,7 +26,7 @@ export const loadElintPreset = async (
     debug(`loaded preset ${presetPackageJson.name} in ${presetPath}`)
 
     return {
-      id: presetPackageJson.name,
+      name: presetPackageJson.name,
       version: presetPackageJson.version || 'unknown',
       path: presetPath,
       preset: presetConfig
@@ -35,7 +35,7 @@ export const loadElintPreset = async (
 
   if (isElintPreset(preset)) {
     return {
-      id: 'anonymous',
+      name: 'anonymous',
       version: 'unknown',
       path: cwd,
       preset

@@ -1,22 +1,28 @@
-'use strict'
+import chalk from 'chalk'
+import boxen, { Options as BoxenOptions } from 'boxen'
 
-const chalk = require('chalk')
-const boxen = require('boxen')
-
-/**
- * @typedef ReportInfo
- * @property {stirng} name preset 名称
- * @property {stirng} current 当前版本
- * @property {stirng} latest 最新版本
- */
+export interface ReportInfo {
+  /**
+   * preset 名称
+   */
+  name: string
+  /**
+   * 当前版本
+   */
+  current: string
+  /**
+   * 最新版本
+   */
+  latest: string
+}
 
 /**
  * 生成 notifier 报告
  *
- * @param {ReportInfo} info 报告基础信息
- * @returns {string} 用于输出的内容
+ * @param info 报告基础信息
+ * @returns 用于输出的内容
  */
-function report (info) {
+function report(info: ReportInfo): string | null {
   if (!info) {
     return null
   }
@@ -32,7 +38,7 @@ function report (info) {
     `Run ${chalk.cyan('npm i ' + name + ' -D')} to update`
   ]
 
-  const boxenOptions = {
+  const boxenOptions: BoxenOptions = {
     padding: 1,
     margin: 1,
     align: 'center',
@@ -43,4 +49,4 @@ function report (info) {
   return boxen(messages.join('\n'), boxenOptions)
 }
 
-module.exports = report
+export default report

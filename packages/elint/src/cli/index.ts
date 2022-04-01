@@ -7,9 +7,11 @@ import { lintFiles } from '../index.js'
 import version from './version.js'
 import log from '../utils/log.js'
 import isGitHooks from '../utils/is-git-hooks.js'
-import type { ElintOptions } from '../elint.js'
+import { ElintOptions, loadPresetAndPlugins } from '../elint.js'
 import { report } from '../utils/report.js'
 import { commitlint } from './commitlint/index.js'
+import notify from '../notifier/index.js'
+import { getBaseDir } from '../env.js'
 
 const { description } = createRequire(import.meta.url)('../../package.json')
 const debug = _debug('elint:cli')
@@ -27,7 +29,13 @@ program
 program
   .option('-v, --version', 'output the version number')
   .action(async () => {
-    await version()
+    const cwd = getBaseDir()
+
+    const loadedPrestAndPlugins = await loadPresetAndPlugins({ cwd })
+
+    await version(loadedPrestAndPlugins)
+    await notify(loadedPrestAndPlugins, cwd)
+
     process.exit(0)
   })
 
@@ -58,11 +66,17 @@ program
 
     debug(`is in git: ${isGit}`)
 
+    const cwd = getBaseDir()
+
+    const loadedPrestAndPlugins = await loadPresetAndPlugins({ cwd })
+
     const elintOptions: ElintOptions = {
       fix: options.fix,
       style: options.style,
       noIgnore: options.noIgnore,
-      git: isGit
+      git: isGit,
+      loadedPrestAndPlugins,
+      cwd
     }
 
     try {
@@ -70,11 +84,15 @@ program
 
       console.log(report(results))
 
+      if (!isGit) {
+        await notify(loadedPrestAndPlugins, cwd)
+      }
+
       const success = !results.some((result) => !result.success)
 
       process.exit(success ? 0 : 1)
     } catch (e) {
-      console.log('[elint]', e)
+      console.error('[elint]', e)
       process.exit(1)
     }
   })

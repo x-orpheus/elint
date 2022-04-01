@@ -26,7 +26,7 @@ export interface ElintPreset {
 }
 
 export interface InternalElintPreset {
-  id: string
+  name: string
   version: string
   path: string
   preset: ElintPreset

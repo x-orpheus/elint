@@ -1,6 +1,6 @@
 import { createRequire } from 'module'
 import { padEnd } from 'lodash-es'
-import { loadPresetAndPlugins } from '../elint.js'
+import { ElintLoadedPresetAndPlugins } from '../elint.js'
 import { elintPluginCommitLint } from './commitlint/plugin.js'
 
 // import { version as huskyVersion } from 'husky/package.json'
@@ -34,14 +34,13 @@ function printVersionBlock(
 /**
  * 输出 version
  */
-async function version(): Promise<void> {
+async function version({
+  loadedPlugins,
+  internalPreset
+}: ElintLoadedPresetAndPlugins): Promise<void> {
   const main: Record<string, string> = {
     elint: elintVersion
   }
-
-  const { loadedPlugins, internalPreset } = await loadPresetAndPlugins({
-    cwd: process.cwd()
-  })
 
   loadedPlugins.unshift(elintPluginCommitLint)
 
@@ -52,7 +51,7 @@ async function version(): Promise<void> {
   }
 
   if (internalPreset) {
-    presetVersionMap[internalPreset.id] = internalPreset.version
+    presetVersionMap[internalPreset.name] = internalPreset.version
   }
 
   loadedPlugins.forEach((plugin) => {
@@ -61,9 +60,11 @@ async function version(): Promise<void> {
       pluginVersionMap[plugin.id] = versionConfig.version
     }
 
-    Object.entries(versionConfig.dependencies).forEach(([name, version]) => {
-      depVersionMap[name] = version
-    })
+    if (versionConfig.dependencies) {
+      Object.entries(versionConfig.dependencies).forEach(([name, version]) => {
+        depVersionMap[name] = version
+      })
+    }
   })
 
   const output = ['> elint version', '']

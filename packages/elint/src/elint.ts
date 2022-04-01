@@ -44,6 +44,11 @@ export interface ElintResult {
   pluginResults: ElintPluginResult<unknown>[]
 }
 
+export interface ElintLoadedPresetAndPlugins {
+  internalPreset?: InternalElintPreset
+  loadedPlugins: ElintPlugin<unknown>[]
+}
+
 interface ElintBasicOptions {
   /**
    * 是否自动修复
@@ -62,6 +67,12 @@ interface ElintBasicOptions {
    */
   plugins?: (string | ElintPlugin<unknown>)[]
   cwd?: string
+  /**
+   * @inner
+   *
+   * 内部使用参数
+   */
+  loadedPrestAndPlugins?: ElintLoadedPresetAndPlugins
 }
 
 export interface ElintOptions extends ElintBasicOptions {
@@ -95,10 +106,10 @@ export async function loadPresetAndPlugins({
   preset,
   plugins,
   cwd = getBaseDir()
-}: Pick<ElintBasicOptions, 'preset' | 'plugins' | 'cwd'>): Promise<{
-  internalPreset?: InternalElintPreset
-  loadedPlugins: ElintPlugin<unknown>[]
-}> {
+}: Pick<
+  ElintBasicOptions,
+  'preset' | 'plugins' | 'cwd'
+>): Promise<ElintLoadedPresetAndPlugins> {
   if (preset && plugins) {
     throw new Error('Can not specify preset and plugins at same time')
   }
@@ -149,7 +160,8 @@ export async function lintText(
     preset,
     plugins,
     cwd = getBaseDir(),
-    filePath
+    filePath,
+    loadedPrestAndPlugins: _loadedPrestAndPlugins
   }: ElintBasicOptions & { filePath?: string } = {}
 ): Promise<ElintResult> {
   const elintResult: ElintResult = {
@@ -161,7 +173,9 @@ export async function lintText(
     pluginResults: []
   }
 
-  const { loadedPlugins } = await loadPresetAndPlugins({ preset, plugins, cwd })
+  const { loadedPlugins } =
+    _loadedPrestAndPlugins ||
+    (await loadPresetAndPlugins({ preset, plugins, cwd }))
 
   if (!loadedPlugins.length) {
     return elintResult
@@ -245,7 +259,8 @@ export async function lintFiles(
     git = false,
     preset,
     plugins,
-    cwd = getBaseDir()
+    cwd = getBaseDir(),
+    loadedPrestAndPlugins: _loadedPrestAndPlugins
   }: ElintOptions
 ): Promise<ElintResult[]> {
   const startTime = Date.now()
@@ -266,7 +281,9 @@ export async function lintFiles(
     return elintResultList
   }
 
-  const { loadedPlugins } = await loadPresetAndPlugins({ preset, plugins, cwd })
+  const { loadedPlugins } =
+    _loadedPrestAndPlugins ||
+    (await loadPresetAndPlugins({ preset, plugins, cwd }))
 
   if (!loadedPlugins.length) {
     throw new Error('no available elint plugin')
@@ -301,7 +318,8 @@ export async function lintFiles(
           style,
           plugins: loadedPlugins,
           cwd,
-          filePath: elintResult.filePath
+          filePath: elintResult.filePath,
+          loadedPrestAndPlugins: _loadedPrestAndPlugins
         })
 
         const isModified = elintResult.output !== elintResult.source

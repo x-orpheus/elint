@@ -1,5 +1,3 @@
-'use strict'
-
 /**
 
 path：
@@ -15,30 +13,24 @@ content:
 
 */
 
-const Configstore = require('configstore')
+import Configstore from 'configstore'
 const conf = new Configstore('elint')
 
 /**
  * 获取上次检测(并提醒)的时间
  *
- * @param {string} presetName Preset Name
- * @returns {number} 上次检测时间
+ * @param presetName Preset Name
+ * @returns 上次检测时间
  */
-function getLastNotifyTime (presetName) {
+export function getLastNotifyTime(presetName: string): number {
   return conf.get(`notifier.${presetName}`)
 }
 
 /**
  * 更新本地存储的检测时间
  *
- * @param {string} presetName Preset Name
- * @returns {void}
+ * @param presetName Preset Name
  */
-function update (presetName) {
+export function updateNotifyTime(presetName: string): void {
   conf.set(`notifier.${presetName}`, Date.now())
-}
-
-module.exports = {
-  getLastNotifyTime,
-  update
 }
