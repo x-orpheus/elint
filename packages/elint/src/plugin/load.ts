@@ -1,9 +1,8 @@
 import { createRequire } from 'module'
 import path from 'path'
 import _debug from 'debug'
-import { groupBy } from 'lodash-es'
 
-import { ElintPlugin, ElintPluginType, isElintPlugin } from './types.js'
+import { ElintPlugin, isElintPlugin } from './types.js'
 import { ElintContext } from '../elint.js'
 
 const debug = _debug('elint:plugin:load')
@@ -52,12 +51,4 @@ export const loadElintPlugins = async (
   )
 
   return loadedPlugins
-}
-
-type ElintPluginGroupByType = {
-  [key in ElintPluginType]: ElintPlugin<unknown>[]
-}
-
-export const groupElintPluginsByType = (plugins: ElintPlugin<unknown>[]) => {
-  return groupBy(plugins, (plugin) => plugin.type) as ElintPluginGroupByType
 }

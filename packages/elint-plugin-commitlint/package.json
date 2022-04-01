@@ -1,0 +1,25 @@
+{
+  "name": "elint-plugin-commitlint",
+  "version": "3.0.0",
+  "description": "elint plugin for commitlint",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "@commitlint/core": "^16.0.0"
+  },
+  "devDependencies": {
+    "@commitlint/core": "^16.2.3",
+    "elint": "workspace:*"
+  }
+}

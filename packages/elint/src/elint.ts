@@ -1,15 +1,17 @@
 import _debug from 'debug'
 import fs from 'fs-extra'
 import chalk from 'chalk'
+import { groupBy } from 'lodash-es'
 import walker from './walker/index.js'
 import { createErrorReportResult, ReportResult } from './utils/report.js'
-import { groupElintPluginsByType, loadElintPlugins } from './plugin/load.js'
+import { loadElintPlugins } from './plugin/load.js'
 import { executeElintPlugin } from './plugin/execute.js'
 import {
   ElintPlugin,
   ElintPluginOptions,
   ElintPluginOverridableKey,
-  ElintPluginResult
+  ElintPluginResult,
+  ElintPluginType
 } from './plugin/types.js'
 import { getBaseDir } from './env.js'
 import { ElintPreset, InternalElintPreset } from './preset/types.js'
@@ -47,6 +49,7 @@ export interface ElintResult {
 export interface ElintLoadedPresetAndPlugins {
   internalPreset?: InternalElintPreset
   loadedPlugins: ElintPlugin<unknown>[]
+  loadedPluginGroup: Record<ElintPluginType, ElintPlugin<unknown>[]>
 }
 
 interface ElintBasicOptions {
@@ -148,8 +151,63 @@ export async function loadPresetAndPlugins({
 
   return {
     internalPreset,
-    loadedPlugins
+    loadedPlugins,
+    loadedPluginGroup: groupBy(
+      loadedPlugins,
+      (plugin) => plugin.type
+    ) as Record<ElintPluginType, ElintPlugin<unknown>[]>
   }
+}
+
+export async function lintCommon({
+  fix = false,
+  preset,
+  plugins,
+  cwd = getBaseDir(),
+  loadedPrestAndPlugins
+}: ElintBasicOptions = {}): Promise<ElintResult> {
+  const elintResult: ElintResult = {
+    source: '',
+    output: '',
+    success: true,
+    reportResults: [],
+    pluginResults: []
+  }
+
+  const { loadedPlugins, loadedPluginGroup } =
+    loadedPrestAndPlugins ||
+    (await loadPresetAndPlugins({ preset, plugins, cwd }))
+
+  if (!loadedPlugins.length) {
+    return elintResult
+  }
+
+  const pluginOptions: ElintPluginOptions = {
+    fix,
+    cwd
+  }
+
+  if (loadedPluginGroup.common) {
+    for (const commonPlugin of loadedPluginGroup.common) {
+      const executeResult = await executeElintPlugin(
+        commonPlugin,
+        '',
+        pluginOptions
+      )
+
+      elintResult.success = elintResult.success && executeResult.success
+
+      if (executeResult.pluginResult) {
+        elintResult.pluginResults.push(executeResult.pluginResult)
+      }
+
+      if (executeResult.reportResult) {
+        elintResult.reportResults.push(executeResult.reportResult)
+      }
+    }
+  }
+
+  return elintResult
 }
 
 export async function lintText(
@@ -161,7 +219,7 @@ export async function lintText(
     plugins,
     cwd = getBaseDir(),
     filePath,
-    loadedPrestAndPlugins: _loadedPrestAndPlugins
+    loadedPrestAndPlugins
   }: ElintBasicOptions & { filePath?: string } = {}
 ): Promise<ElintResult> {
   const elintResult: ElintResult = {
@@ -173,8 +231,8 @@ export async function lintText(
     pluginResults: []
   }
 
-  const { loadedPlugins } =
-    _loadedPrestAndPlugins ||
+  const { loadedPlugins, loadedPluginGroup } =
+    loadedPrestAndPlugins ||
     (await loadPresetAndPlugins({ preset, plugins, cwd }))
 
   if (!loadedPlugins.length) {
@@ -187,10 +245,8 @@ export async function lintText(
     filePath
   }
 
-  const pluginGroup = groupElintPluginsByType(loadedPlugins)
-
-  if (style) {
-    for (const formatterPlugin of pluginGroup.formatter) {
+  if (style && loadedPluginGroup.formatter) {
+    for (const formatterPlugin of loadedPluginGroup.formatter) {
       const executeResult = await executeElintPlugin(
         formatterPlugin,
         elintResult.output,
@@ -208,22 +264,24 @@ export async function lintText(
     }
   }
 
-  for (const linterPlugin of pluginGroup.linter) {
-    const executeResult = await executeElintPlugin(
-      linterPlugin,
-      elintResult.output,
-      pluginOptions
-    )
+  if (loadedPluginGroup.linter) {
+    for (const linterPlugin of loadedPluginGroup.linter) {
+      const executeResult = await executeElintPlugin(
+        linterPlugin,
+        elintResult.output,
+        pluginOptions
+      )
 
-    elintResult.success = elintResult.success && executeResult.success
+      elintResult.success = elintResult.success && executeResult.success
 
-    if (executeResult.pluginResult) {
-      elintResult.output = executeResult.pluginResult.output
-      elintResult.pluginResults.push(executeResult.pluginResult)
-    }
+      if (executeResult.pluginResult) {
+        elintResult.output = executeResult.pluginResult.output
+        elintResult.pluginResults.push(executeResult.pluginResult)
+      }
 
-    if (executeResult.reportResult) {
-      elintResult.reportResults.push(executeResult.reportResult)
+      if (executeResult.reportResult) {
+        elintResult.reportResults.push(executeResult.reportResult)
+      }
     }
   }
 
@@ -260,7 +318,7 @@ export async function lintFiles(
     preset,
     plugins,
     cwd = getBaseDir(),
-    loadedPrestAndPlugins: _loadedPrestAndPlugins
+    loadedPrestAndPlugins
   }: ElintOptions
 ): Promise<ElintResult[]> {
   const startTime = Date.now()
@@ -282,7 +340,7 @@ export async function lintFiles(
   }
 
   const { loadedPlugins } =
-    _loadedPrestAndPlugins ||
+    loadedPrestAndPlugins ||
     (await loadPresetAndPlugins({ preset, plugins, cwd }))
 
   if (!loadedPlugins.length) {
@@ -319,7 +377,7 @@ export async function lintFiles(
           plugins: loadedPlugins,
           cwd,
           filePath: elintResult.filePath,
-          loadedPrestAndPlugins: _loadedPrestAndPlugins
+          loadedPrestAndPlugins
         })
 
         const isModified = elintResult.output !== elintResult.source

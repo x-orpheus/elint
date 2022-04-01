@@ -1,4 +1,4 @@
-export type ElintPluginType = 'linter' | 'formatter'
+export type ElintPluginType = 'linter' | 'formatter' | 'common'
 
 export type ElintPluginOverridableKey = 'activateConfig'
 
@@ -117,7 +117,7 @@ export function isElintPlugin(value: unknown): value is ElintPlugin<unknown> {
     value &&
     typeof value === 'object' &&
     (value as ElintPlugin<unknown>).id &&
-    (['formatter', 'linter'] as ElintPluginType[]).indexOf(
+    (['formatter', 'linter', 'common'] as ElintPluginType[]).indexOf(
       (value as ElintPlugin<unknown>).type
     ) !== -1
   ) {

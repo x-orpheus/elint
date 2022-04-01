@@ -1,7 +1,6 @@
 import { createRequire } from 'module'
 import { padEnd } from 'lodash-es'
 import { ElintLoadedPresetAndPlugins } from '../elint.js'
-import { elintPluginCommitLint } from './commitlint/plugin.js'
 
 // import { version as huskyVersion } from 'husky/package.json'
 const { version: elintVersion } = createRequire(import.meta.url)(
@@ -42,8 +41,6 @@ async function version({
     elint: elintVersion
   }
 
-  loadedPlugins.unshift(elintPluginCommitLint)
-
   const presetVersionMap: Record<string, string> = {}
   const pluginVersionMap: Record<string, string> = {}
   const depVersionMap: Record<string, string> = {
@@ -56,9 +53,7 @@ async function version({
 
   loadedPlugins.forEach((plugin) => {
     const versionConfig = plugin.getVersion()
-    if (versionConfig.version !== 'builtIn') {
-      pluginVersionMap[plugin.id] = versionConfig.version
-    }
+    pluginVersionMap[plugin.id] = versionConfig.version
 
     if (versionConfig.dependencies) {
       Object.entries(versionConfig.dependencies).forEach(([name, version]) => {

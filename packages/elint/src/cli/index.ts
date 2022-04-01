@@ -2,14 +2,19 @@
 
 import _debug from 'debug'
 import { createRequire } from 'module'
+import chalk from 'chalk'
 import { program } from 'commander'
-import { lintFiles } from '../index.js'
 import version from './version.js'
 import log from '../utils/log.js'
 import isGitHooks from '../utils/is-git-hooks.js'
-import { ElintOptions, loadPresetAndPlugins } from '../elint.js'
+import {
+  ElintOptions,
+  lintFiles,
+  lintCommon,
+  loadPresetAndPlugins,
+  ElintResult
+} from '../elint.js'
 import { report } from '../utils/report.js'
-import { commitlint } from './commitlint/index.js'
 import notify from '../notifier/index.js'
 import { getBaseDir } from '../env.js'
 
@@ -46,7 +51,7 @@ program
 program
   .command('lint [type] [files...]')
   .alias('l')
-  .description('run lint, type: file, commit')
+  .description('run lint, type: file, commit, common')
   .option('-f, --fix', 'Automatically fix problems')
   .option('-s, --style', 'Lint code style')
   .option('--no-ignore', 'Disable elint ignore patterns')
@@ -57,18 +62,13 @@ program
       return
     }
 
-    if (type === 'commit') {
-      commitlint()
-      return
-    }
+    const cwd = getBaseDir()
+
+    const loadedPrestAndPlugins = await loadPresetAndPlugins({ cwd })
 
     const isGit = await isGitHooks()
 
     debug(`is in git: ${isGit}`)
-
-    const cwd = getBaseDir()
-
-    const loadedPrestAndPlugins = await loadPresetAndPlugins({ cwd })
 
     const elintOptions: ElintOptions = {
       fix: options.fix,
@@ -80,7 +80,30 @@ program
     }
 
     try {
-      const results = await lintFiles([type, ...files], elintOptions)
+      const results: ElintResult[] = []
+
+      if (type === 'commit' || type === 'common') {
+        if (type === 'commit') {
+          const isContainCommitlint = loadedPrestAndPlugins.loadedPlugins.some(
+            (plugin) => plugin.id === 'elint-plugin-commitlint'
+          )
+
+          if (!isContainCommitlint) {
+            console.warn(
+              chalk.yellow(
+                `\n[elint] Current preset does not contain ${chalk.underline(
+                  'elint-plugin-commitlint'
+                )}\n`
+              )
+            )
+          }
+        }
+        results.push(await lintCommon(elintOptions))
+      } else {
+        const fileList = type === 'file' ? files : [type, ...files]
+
+        results.push(...(await lintFiles(fileList, elintOptions)))
+      }
 
       console.log(report(results))
 
