@@ -109,7 +109,7 @@ export interface ElintPlugin<
   /**
    * 重置操作（例如清理配置缓存）
    */
-  reset?(): void
+  reset?(): void | Promise<void>
 }
 
 export function isElintPlugin(value: unknown): value is ElintPlugin<unknown> {

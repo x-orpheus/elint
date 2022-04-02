@@ -112,7 +112,7 @@ export async function loadPresetAndPlugins({
 }: Pick<
   ElintBasicOptions,
   'preset' | 'plugins' | 'cwd'
->): Promise<ElintLoadedPresetAndPlugins> {
+> = {}): Promise<ElintLoadedPresetAndPlugins> {
   if (preset && plugins) {
     throw new Error('Can not specify preset and plugins at same time')
   }
@@ -407,4 +407,32 @@ export async function lintFiles(
   debug(`elint complete in: ${Date.now() - startTime}ms`)
 
   return elintResultList
+}
+
+export async function reset({
+  preset,
+  plugins,
+  cwd = getBaseDir(),
+  loadedPrestAndPlugins
+}: ElintBasicOptions = {}): Promise<Record<string, unknown>> {
+  const { loadedPlugins } =
+    loadedPrestAndPlugins ||
+    (await loadPresetAndPlugins({ preset, plugins, cwd }))
+
+  const errorMap: Record<string, unknown> = {}
+
+  if (!loadedPlugins.length) {
+    return {}
+  }
+
+  for (const plugin of loadedPlugins) {
+    try {
+      await plugin.reset?.()
+    } catch (e) {
+      errorMap[plugin.id] = e
+      debug(`elint plugin ${plugin.id} reset error %o`, e)
+    }
+  }
+
+  return errorMap
 }

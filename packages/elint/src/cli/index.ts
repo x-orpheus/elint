@@ -13,7 +13,8 @@ import {
   lintFiles,
   lintCommon,
   loadPresetAndPlugins,
-  ElintResult
+  ElintResult,
+  reset
 } from '../elint.js'
 import { report } from '../utils/report.js'
 import notify from '../notifier/index.js'
@@ -24,10 +25,7 @@ const debug = _debug('elint:cli')
 
 debug('process.argv: %o', process.argv)
 
-program
-  .usage('[command] [options]')
-  .description(description)
-  .storeOptionsAsProperties(true)
+program.name('elint').usage('[command] [options]').description(description)
 
 /**
  * 输出 version
@@ -35,12 +33,7 @@ program
 program
   .option('-v, --version', 'output the version number')
   .action(async () => {
-    const cwd = getBaseDir()
-
-    const loadedPrestAndPlugins = await loadPresetAndPlugins({ cwd })
-
-    await version(loadedPrestAndPlugins)
-    await notify(loadedPrestAndPlugins, cwd)
+    await version()
 
     process.exit(0)
   })
@@ -56,7 +49,7 @@ program
   .option('-f, --fix', 'Automatically fix problems')
   .option('-s, --style', 'Lint code style')
   .option('--no-ignore', 'Disable elint ignore patterns')
-  .action(async (type, files, options) => {
+  .action(async (type: string, files: string[], options) => {
     debug('run lint...')
 
     if (!files || !type) {
@@ -126,10 +119,10 @@ program
   .command('hooks [action]')
   .alias('h')
   .description('install & uninstall hooks')
-  .action((action) => {
+  .action((action: string) => {
     debug(`run ${action} hooks...`)
     if (['install', 'uninstall'].indexOf(action) === -1) {
-      log.error(`不支持的 action: ${action}`)
+      log.error(`[elint] hooks 不支持的 action: ${action}`)
       process.exit(1)
     }
 
@@ -145,10 +138,25 @@ program
     }
   })
 
+program.command('reset').action(async () => {
+  const errorMap = await reset()
+
+  if (Object.keys(errorMap).length === 0) {
+    log.success('elint reset successfully')
+    process.exit(0)
+  }
+
+  Object.entries(errorMap).forEach(([pluginId, error]) => {
+    log.error(`${pluginId} error: `, error)
+  })
+
+  process.exit(1)
+})
+
 /**
  * 未知 command
  */
-program.on('command:*', function () {
+program.command('invalid', { isDefault: true, hidden: true }).action(() => {
   const command = program.args.join(' ')
   const message = [
     `Invalid command: ${command}`,
@@ -162,11 +170,11 @@ program.on('command:*', function () {
 /**
  * 输出 help
  */
-program.on('--help', function () {
+program.on('--help', () => {
   console.log('')
   console.log('  Examples:')
   console.log('')
-  console.log('    lint all js and css')
+  console.log('    lint files')
   console.log('    $ elint lint "**/*.js" "**/*.css"')
   console.log('')
   console.log('    install git hooks')

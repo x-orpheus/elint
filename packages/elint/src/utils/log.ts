@@ -14,7 +14,7 @@ interface ColorFnAndIcon {
 
 type LogType = 'error' | 'warn' | 'success' | 'info'
 
-type LogFunction = (...message: string[]) => void
+type LogFunction = (...message: unknown[]) => void
 
 /**
  * 根据 type 获取 colorFn 和 Icon
