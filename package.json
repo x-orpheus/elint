@@ -4,7 +4,7 @@
   "scripts": {
     "clean": "pnpm -r run clean",
     "build": "pnpm -r --filter elint run build && pnpm -r --filter !elint run build",
-    "prepare": "husky install",
+    "prepare": "elint hooks install",
     "preinstall": "npx only-allow pnpm",
     "postinstall": "elint-helpers install --preset ./packages/elint-preset-self --project .",
     "lint": "elint lint packages/**/src -s",
@@ -21,7 +21,6 @@
     "elint": "workspace:*",
     "elint-helpers": "workspace:*",
     "elint-preset-self": "workspace:*",
-    "husky": "^7.0.4",
     "jest": "^27.5.1",
     "jest-extended": "^2.0.0",
     "rimraf": "^3.0.2",

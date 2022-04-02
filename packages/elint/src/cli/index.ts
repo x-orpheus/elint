@@ -4,6 +4,7 @@ import _debug from 'debug'
 import { createRequire } from 'module'
 import chalk from 'chalk'
 import { program } from 'commander'
+import { install as huskyInstall, uninstall as huskyUninstall } from 'husky'
 import version from './version.js'
 import log from '../utils/log.js'
 import isGitHooks from '../utils/is-git-hooks.js'
@@ -89,12 +90,10 @@ program
           )
 
           if (!isContainCommitlint) {
-            console.warn(
-              chalk.yellow(
-                `\n[elint] Current preset does not contain ${chalk.underline(
-                  'elint-plugin-commitlint'
-                )}\n`
-              )
+            log.warn(
+              `\n[elint] Current preset does not contain ${chalk.underline(
+                'elint-plugin-commitlint'
+              )}\n`
             )
           }
         }
@@ -115,7 +114,7 @@ program
 
       process.exit(success ? 0 : 1)
     } catch (e) {
-      console.error('[elint]', e)
+      log.error('[elint]', (e as Error).message)
       process.exit(1)
     }
   })
@@ -129,7 +128,21 @@ program
   .description('install & uninstall hooks')
   .action((action) => {
     debug(`run ${action} hooks...`)
-    // runHooks(action)
+    if (['install', 'uninstall'].indexOf(action) === -1) {
+      log.error(`不支持的 action: ${action}`)
+      process.exit(1)
+    }
+
+    try {
+      if (action === 'install') {
+        huskyInstall()
+      } else {
+        huskyUninstall()
+      }
+    } catch (e) {
+      log.error(`[elint] husky hooks ${action} error`)
+      console.log(e)
+    }
   })
 
 /**
