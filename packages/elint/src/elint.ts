@@ -334,9 +334,22 @@ export async function lintFiles(
 
   const elintResultList: ElintResult[] = []
 
-  // 没有匹配到任何文件直接退出
+  // 没有匹配到任何文件进行提示
   if (!fileList.length) {
-    return elintResultList
+    return elintResultList.concat({
+      success: true,
+      source: '',
+      output: '',
+      reportResults: [
+        createErrorReportResult(
+          'elint',
+          undefined,
+          undefined,
+          `${chalk.yellow('Warning: no file is matched')}`
+        )
+      ],
+      pluginResults: []
+    })
   }
 
   const { loadedPlugins } =

@@ -7,8 +7,8 @@
     "prepare": "elint hooks install",
     "preinstall": "npx only-allow pnpm",
     "postinstall": "elint-helpers install --preset ./packages/elint-preset-self --project .",
-    "lint": "elint lint packages/**/src -s",
-    "start": "ts-node packages/elint/src/cli/index.ts lint packages/**/src -s"
+    "lint": "elint lint \"packages/**/src/*.+(ts)\" -s",
+    "start": "ts-node packages/elint/src/cli/index.ts lint \"packages/**/src/*.+(ts)\" -s"
   },
   "devDependencies": {
     "@changesets/cli": "^2.22.0",
