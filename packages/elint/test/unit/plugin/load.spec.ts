@@ -1,9 +1,6 @@
 import mock from '../mock/env.js'
 import { getBaseDir } from '../../../src/env.js'
-import {
-  groupElintPluginsByType,
-  loadElintPlugins
-} from '../../../src/plugin/load.js'
+import { loadElintPlugins } from '../../../src/plugin/load.js'
 import { ElintPlugin } from '../../../src/index.js'
 
 describe('插件加载测试', () => {
@@ -82,20 +79,5 @@ describe('插件加载测试', () => {
     })
 
     expect(plugins.map((plugin) => plugin.id)).toEqual(['elint-plugin-local'])
-  })
-
-  test('插件分类', async () => {
-    const pluginIdList = ['elint-plugin-esm', 'elint-plugin-cjs']
-
-    const plugins = await loadElintPlugins(pluginIdList, {
-      cwd: baseDir
-    })
-
-    const group = groupElintPluginsByType(plugins)
-
-    expect(group).toEqual({
-      formatter: [plugins[0]],
-      linter: [plugins[1]]
-    })
   })
 })
