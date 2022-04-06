@@ -4,7 +4,8 @@ module.exports = {
     '.eslintrc.js',
     '.eslintignore',
     '.prettierrc.js',
-    '.commitlintrc.js'
+    '.commitlintrc.js',
+    '.stylelintrc.js'
   ],
   plugins: [
     'elint-plugin-eslint',

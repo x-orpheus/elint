@@ -1,6 +1,6 @@
 {
   "name": "elint",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "A easy way to lint your code.",
   "exports": {
     ".": "./dist/index.js",
@@ -14,8 +14,9 @@
     "clean": "rimraf dist",
     "build": "tsc -p tsconfig-build.json",
     "test": "npm run test:unit && npm run test:system",
-    "test:unit": "NODE_OPTIONS=--experimental-vm-modules jest --config test/unit/jest.config.js",
-    "test:system": "jest --config test/system/jest.config.js --runInBand"
+    "test:unit": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config test/unit/jest.config.js",
+    "test:system": "jest --config test/system/jest.config.js --runInBand",
+    "prepublishOnly": "pnpm run clean && pnpm run build"
   },
   "repository": {
     "type": "git",

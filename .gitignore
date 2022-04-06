@@ -14,3 +14,4 @@ dist
 /.eslintignore
 /.prettierrc.js
 /.commitlintrc.js
+/.stylelintrc.js
