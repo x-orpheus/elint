@@ -15,7 +15,10 @@ export const loadElintPreset = async (
     const require = createRequire(path.join(cwd, '__placeholder__.js'))
 
     const presetPath = require.resolve(preset)
-    const presetPackageJson = require(`${preset}/package.json`)
+    const presetPackageJson = require(path.join(
+      path.dirname(presetPath),
+      'package.json'
+    ))
     const presetModule = await import(presetPath)
     const presetConfig = presetModule.default || presetModule
 
