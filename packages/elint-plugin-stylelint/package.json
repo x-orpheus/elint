@@ -13,8 +13,7 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "build": "tsc",
-    "prepublishOnly": "pnpm run clean && pnpm run build"
+    "build": "tsc"
   },
   "peerDependencies": {
     "stylelint": ">=14.0.0"
