@@ -269,7 +269,11 @@ export async function lintText(
       const executeResult = await executeElintPlugin(
         linterPlugin,
         elintResult.output,
-        pluginOptions
+        {
+          ...pluginOptions,
+          // 当需要格式化时，lint 将执行 fix 操作
+          fix: style
+        }
       )
 
       elintResult.success = elintResult.success && executeResult.success
