@@ -30,7 +30,8 @@ const elintPluginStylelint: ElintPlugin<LinterResult> = {
 
     result.success = !lintResult.errored
     result.result = lintResult
-    result.output = lintResult.output ?? result.output
+    // stylelint 当 fix 不为 true 时，output 会返回一个 json
+    result.output = lintResult.output && fix ? lintResult.output : result.output
 
     const stringFormatter = formatters.string
     result.message = stringFormatter(lintResult.results)
