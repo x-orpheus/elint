@@ -7,3 +7,10 @@ npm-debug.log
 coverage/
 .nyc_output/
 **/*.tgz
+
+/.husky
+/.eslintrc.js
+/.eslintignore
+/.prettierrc.js
+/.commitlintrc.js
+/.stylelintrc.js

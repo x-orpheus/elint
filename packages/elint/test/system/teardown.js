@@ -7,10 +7,6 @@ import path from 'path'
 import fs from 'fs-extra'
 
 const teardown = async () => {
-  if (global.__VERDACCIO__) {
-    global.__VERDACCIO__()
-  }
-
   // CI 下不用执行清理
   if (process.env.CI) {
     return
@@ -25,7 +21,7 @@ const teardown = async () => {
 
   if (fs.existsSync(dir)) {
     console.log(`删除临时目录：${dir}`)
-    fs.removeSync(dir)
+    // fs.removeSync(dir)
   }
 }
 

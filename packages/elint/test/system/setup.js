@@ -23,11 +23,7 @@ const init = async () => {
   console.log(`Memory: ${Math.ceil(os.totalmem() / 1024 / 1024 / 1024)}G`)
   console.log()
 
-  const verdaccioTeardown = await startUpLocalRegistry()
-
-  global.__VERDACCIO__ = verdaccioTeardown
-
-  await run('pnpm run clean', projectDir)
+  const closeVerdaccio = await startUpLocalRegistry()
 
   await run('pnpm run build', projectDir)
 
@@ -44,6 +40,8 @@ const init = async () => {
 
   // 创建缓存项目
   await createCacheProject()
+
+  closeVerdaccio()
 }
 
 export default init

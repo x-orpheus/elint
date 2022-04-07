@@ -6,13 +6,13 @@ function run(command, cwd, disableNotifier = true) {
   const strs = command.match(/(?:[^\s"]+|"[^"]*")+/g)
 
   let program = strs[0]
-  const argus = strs.slice(1).map((s) => {
-    if (/^".+"$/.test(s)) {
-      return s.slice(1, -1)
+  const argus = strs.slice(1).reduce((pv, s) => {
+    if (/^".+"$/.test(s) && /^--?/.test(pv[pv.length - 1])) {
+      return pv.concat(s.slice(1, -1))
     }
 
-    return s
-  })
+    return pv.concat(s)
+  }, [])
 
   if (process.platform === 'win32' && program === 'node') {
     program = 'cmd'

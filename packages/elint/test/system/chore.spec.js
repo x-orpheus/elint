@@ -1,11 +1,9 @@
-'use strict'
-
 /**
  * 杂项测试
  */
 
-const resetCacheProject = require('./utils/reset-cache-project')
-const run = require('./utils/run')
+import resetCacheProject from './utils/reset-cache-project.js'
+import run from './utils/run.js'
 
 let tmpDir
 
@@ -20,7 +18,7 @@ test('version', async () => {
   await expect(run('npm run elint-version', tmpDir)).toResolve()
 })
 
-test('直接执行 elint，显示 help', async () => {
+test('直接执行 elint 显示 help', async () => {
   await expect(run('npm run elint', tmpDir)).toResolve()
 })
 
