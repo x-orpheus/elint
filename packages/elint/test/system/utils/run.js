@@ -1,11 +1,9 @@
-'use strict'
-
-const { execa } = require('execa')
+import { execa } from 'execa'
 
 // 执行命令
-function run(command, cwd, sync = false, disableNotifier = true) {
+function run(command, cwd, disableNotifier = true) {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const strs = command.match(/(?:[^\s"]+|"[^"]*")+/g)
-  const method = sync ? execa.sync : execa
 
   let program = strs[0]
   const argus = strs.slice(1).map((s) => {
@@ -29,11 +27,11 @@ function run(command, cwd, sync = false, disableNotifier = true) {
 
   console.log(`run: ${program} ${argus.join(' ')}, in ${cwd}`)
 
-  return method(program, argus, {
+  return execa(program, argus, {
     stdio: 'inherit',
     cwd,
     env
   })
 }
 
-module.exports = run
+export default run

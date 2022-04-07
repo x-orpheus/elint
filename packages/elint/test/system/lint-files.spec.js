@@ -1,13 +1,11 @@
-'use strict'
-
 /**
  * lint 测试：主要测试直接 lint 文件
  */
 
-const path = require('path')
-const fs = require('fs-extra')
-const resetCacheProject = require('./utils/reset-cache-project')
-const run = require('./utils/run')
+import path from 'path'
+import fs from 'fs-extra'
+import resetCacheProject from './utils/reset-cache-project.js'
+import run from './utils/run.js'
 
 let tmpDir
 
@@ -118,5 +116,7 @@ test('lint style --prettier with ignore', async () => {
   const prettierignorePath = path.join(tmpDir, '.prettierignore')
   await fs.appendFile(prettierignorePath, '**/src/index.css')
 
-  return expect(run('npm run lint-style-prettier-without-fix', tmpDir)).toResolve()
+  return expect(
+    run('npm run lint-style-prettier-without-fix', tmpDir)
+  ).toResolve()
 })

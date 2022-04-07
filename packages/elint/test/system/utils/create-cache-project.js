@@ -1,39 +1,32 @@
-'use strict'
-
-const fs = require('fs-extra')
-const run = require('./run')
-const {
+import fs from 'fs-extra'
+import run from './run.js'
+import {
   cacheDir,
-  cacheDirYarn,
   backupDir,
   testProjectDir,
-  presetPkgPath,
-  elintPkgPath
-} = require('./variable')
+  verdaccioPort
+} from './variable.js'
 
 // 创建缓存项目：方便后面重复使用
-async function createCacheProject (useYarn = false) {
-  const dir = useYarn ? cacheDirYarn : cacheDir
-
-  const dirExists = await fs.pathExists(dir)
+async function createCacheProject() {
+  const dirExists = await fs.pathExists(cacheDir)
 
   if (dirExists) {
-    await fs.emptyDir(dir)
+    await fs.emptyDir(cacheDir)
   }
 
   // 创建缓存项目
-  await fs.copy(testProjectDir, dir)
+  await fs.copy(testProjectDir, cacheDir)
 
-  if (useYarn) {
-    await run(`yarn add --silent ${presetPkgPath} ${elintPkgPath}`, dir)
-  } else {
-    await run(`npm install --silent ${presetPkgPath} ${elintPkgPath}`, dir)
-  }
+  await run(
+    `npm install --silent --registry=http://localhost:${verdaccioPort}`,
+    cacheDir
+  )
 
   // 创建备份
-  await fs.copy(dir, backupDir, {
-    filter: src => !src.includes('node_modules')
+  await fs.copy(cacheDir, backupDir, {
+    filter: (src) => !src.includes('node_modules')
   })
 }
 
-module.exports = createCacheProject
+export default createCacheProject

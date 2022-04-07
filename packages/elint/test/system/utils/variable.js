@@ -1,34 +1,34 @@
-'use strict'
+import os from 'os'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
-const os = require('os')
-const path = require('path')
-const { version } = require('../../../package.json')
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // 测试项目
-const testProjectDir = path.join(__dirname, '../test-project')
+export const testProjectDir = path.join(__dirname, '../test-project')
 
 // 缓存目录
-const cacheDir = path.join(os.tmpdir(), 'elint_test_system', 'cache')
-const cacheDirYarn = path.join(os.tmpdir(), 'elint_test_system', 'cache-yarn')
+export const cacheDir = path.join(os.tmpdir(), 'elint_test_system', 'cache')
 
 // 备份目录
-const backupDir = path.join(os.tmpdir(), 'elint_test_system', 'backup')
+export const backupDir = path.join(os.tmpdir(), 'elint_test_system', 'backup')
 
-// elint
-const elintPath = path.join(__dirname, '../../../')
-const elintPkgPath = path.join(elintPath, `elint-${version}.tgz`)
+export const projectDir = path.join(__dirname, '../../../../..')
 
-// preset
-const presetPath = path.join(__dirname, '../test-preset')
-const presetPkgPath = path.join(presetPath, 'elint-preset-system-test-1.0.0.tgz')
+export const verdaccioDir = path.join(projectDir, 'verdaccio')
+export const verdaccioPort = 4873
 
-module.exports = {
-  testProjectDir,
-  cacheDir,
-  cacheDirYarn,
-  backupDir,
-  elintPath,
-  elintPkgPath,
-  presetPath,
-  presetPkgPath
-}
+export const publishPackageList = [
+  'elint',
+  'elint-helpers',
+  'elint-plugin-commitlint',
+  'elint-plugin-eslint',
+  'elint-plugin-prettier',
+  'elint-plugin-stylelint',
+  'elint-preset-self'
+]
+
+// 需要发布的包
+export const publishPackagePathList = publishPackageList.map((packageName) =>
+  path.join(projectDir, 'packages', packageName)
+)

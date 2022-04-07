@@ -1,31 +1,28 @@
-'use strict'
-
-const fs = require('fs-extra')
-const { globby } = require('globby')
-const { cacheDir, cacheDirYarn, backupDir } = require('./variable')
+import fs from 'fs-extra'
+// import { globby } from 'globby'
+import { cacheDir, backupDir } from './variable.js'
 
 // 重置缓存项目
-async function resetCacheProject(useYarn = false) {
-  const dir = useYarn ? cacheDirYarn : cacheDir
-
+async function resetCacheProject() {
   // 清理除了 node_modules 外的所有文件
-  const files = await globby(['*', '!node_modules'], {
-    cwd: dir,
-    dot: true,
-    onlyFiles: false,
-    absolute: true
-  })
+  const files = []
+  // const files = await globby(['*', '!node_modules'], {
+  //   cwd: cacheDir,
+  //   dot: true,
+  //   onlyFiles: false,
+  //   absolute: true
+  // })
 
   for (const file of files) {
     await fs.remove(file)
   }
 
   // 使用备份恢复
-  await fs.copy(backupDir, dir, {
+  await fs.copy(backupDir, cacheDir, {
     overwrite: true
   })
 
-  return dir
+  return cacheDir
 }
 
-module.exports = resetCacheProject
+export default resetCacheProject

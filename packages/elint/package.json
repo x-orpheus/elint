@@ -15,8 +15,7 @@
     "build": "tsc -p tsconfig-build.json",
     "test": "npm run test:unit && npm run test:system",
     "test:unit": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config test/unit/jest.config.js",
-    "test:system": "jest --config test/system/jest.config.js --runInBand",
-    "prepublishOnly": "pnpm run clean && pnpm run build"
+    "test:system": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config test/system/jest.config.js --runInBand"
   },
   "repository": {
     "type": "git",

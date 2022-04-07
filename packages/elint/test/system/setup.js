@@ -1,14 +1,20 @@
-'use strict'
-
 /**
  * 执行一些准备工作
  */
 
-const os = require('os')
-const run = require('./utils/run')
-const createCacheProject = require('./utils/create-cache-project')
-const { elintPath, presetPath } = require('./utils/variable')
-const hasYarn = require('./utils/has-yarn')
+import os from 'os'
+import run from './utils/run.js'
+import {
+  startUpLocalRegistry,
+  publishToLocalRegistry,
+  cleanLocalRegistry
+} from './utils/local-registry.js'
+import createCacheProject from './utils/create-cache-project.js'
+import {
+  projectDir,
+  publishPackageList,
+  publishPackagePathList
+} from './utils/variable.js'
 
 const init = async () => {
   // 输出 CPU 和内存信息
@@ -17,18 +23,27 @@ const init = async () => {
   console.log(`Memory: ${Math.ceil(os.totalmem() / 1024 / 1024 / 1024)}G`)
   console.log()
 
-  // 执行 elint 打包
-  await run('npm pack', elintPath)
+  const verdaccioTeardown = await startUpLocalRegistry()
 
-  // 执行 preset 打包
-  await run('npm pack', presetPath)
+  global.__VERDACCIO__ = verdaccioTeardown
+
+  await run('pnpm run clean', projectDir)
+
+  await run('pnpm run build', projectDir)
+
+  // verdaccio 不支持同版本号覆盖
+  await Promise.all(
+    publishPackageList.map((packageName) => cleanLocalRegistry(packageName))
+  )
+
+  await Promise.all(
+    publishPackagePathList.map((packagePath) =>
+      publishToLocalRegistry(packagePath)
+    )
+  )
 
   // 创建缓存项目
   await createCacheProject()
-
-  if (hasYarn()) {
-    await createCacheProject(true)
-  }
 }
 
-module.exports = init
+export default init

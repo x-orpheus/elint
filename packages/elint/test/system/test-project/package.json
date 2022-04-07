@@ -24,11 +24,14 @@
     "elint": "elint",
     "elint-help": "elint --help",
     "elint-version": "elint -v",
-    "elint-diff": "elint diff",
     "elint-invalid-command": "elint xxxx",
-    "elint-invalid-optoin": "elint --xxxx"
+    "elint-invalid-option": "elint --xxxx"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "elint": "*",
+    "elint-preset-self": "*"
+  }
 }
