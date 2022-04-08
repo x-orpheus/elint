@@ -28,17 +28,6 @@ debug('process.argv: %o', process.argv)
 program.name('elint').usage('[command] [options]').description(description)
 
 /**
- * 输出 version
- */
-program
-  .option('-v, --version', 'output the version number')
-  .action(async () => {
-    await version()
-
-    process.exit(0)
-  })
-
-/**
  * 执行 lint
  * 不指定 type，执行除了 commitlint 之外的全部
  */
@@ -138,34 +127,46 @@ program
     }
   })
 
-program.command('reset').action(async () => {
-  const errorMap = await reset()
+program
+  .command('reset')
+  .description('reset plugin cache')
+  .action(async () => {
+    const errorMap = await reset()
 
-  if (Object.keys(errorMap).length === 0) {
-    log.success('elint reset successfully')
-    process.exit(0)
-  }
+    if (Object.keys(errorMap).length === 0) {
+      log.success('elint reset successfully')
+      process.exit(0)
+    }
 
-  Object.entries(errorMap).forEach(([pluginId, error]) => {
-    log.error(`${pluginId} error: `, error)
+    Object.entries(errorMap).forEach(([pluginId, error]) => {
+      log.error(`${pluginId} error: `, error)
+    })
+
+    process.exit(1)
   })
-
-  process.exit(1)
-})
 
 /**
  * 未知 command
  */
-program.command('invalid', { isDefault: true, hidden: true }).action(() => {
-  const command = program.args.join(' ')
-  const message = [
-    `Invalid command: ${command}`,
-    'See --help for a list of available commands.'
-  ]
+program
+  .command('invalid', { isDefault: true, hidden: true })
+  .option('-v, --version', 'output the version number')
+  .action(async (options) => {
+    console.log(options)
+    if (options.version) {
+      await version()
 
-  log.error(...message)
-  process.exit(1)
-})
+      process.exit(0)
+    }
+    const command = program.args.join(' ')
+    const message = [
+      `Invalid command: ${command}`,
+      'See --help for a list of available commands.'
+    ]
+
+    log.error(...message)
+    process.exit(1)
+  })
 
 /**
  * 输出 help
