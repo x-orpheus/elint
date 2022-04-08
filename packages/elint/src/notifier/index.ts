@@ -2,7 +2,7 @@ import _debug from 'debug'
 import { updateNotifyTime } from './config.js'
 import checker from './checker.js'
 import report from './report.js'
-import type { ElintLoadedPresetAndPlugins } from '../types.js'
+import type { InternalLoadedPresetAndPlugins } from '../types.js'
 
 const debug = _debug('elint:notifier')
 
@@ -12,7 +12,7 @@ const debug = _debug('elint:notifier')
  * @returns 用于输出的内容
  */
 async function notify(
-  loadedPrestAndPlugins: ElintLoadedPresetAndPlugins,
+  internalLoadedPrestAndPlugins: InternalLoadedPresetAndPlugins,
   cwd: string
 ): Promise<string | null> {
   debug('run checker')
@@ -24,7 +24,7 @@ async function notify(
     return null
   }
 
-  const checkerResult = await checker(loadedPrestAndPlugins, cwd)
+  const checkerResult = await checker(internalLoadedPrestAndPlugins, cwd)
 
   if (
     !checkerResult ||

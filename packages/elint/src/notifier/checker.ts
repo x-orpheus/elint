@@ -5,7 +5,7 @@ import { getLastNotifyTime } from './config.js'
 import toMs from '../utils/to-ms.js'
 import type { ReportInfo } from './report.js'
 import getPackageInfo from './get-package-info.js'
-import type { ElintLoadedPresetAndPlugins } from '../types.js'
+import type { InternalLoadedPresetAndPlugins } from '../types.js'
 
 const debug = _debug('elint:notifier:checker')
 /**
@@ -14,7 +14,7 @@ const debug = _debug('elint:notifier:checker')
  * @returns 检测结果
  */
 async function checker(
-  { internalPreset }: ElintLoadedPresetAndPlugins,
+  { internalPreset }: InternalLoadedPresetAndPlugins,
   cwd: string
 ): Promise<ReportInfo | null> {
   try {

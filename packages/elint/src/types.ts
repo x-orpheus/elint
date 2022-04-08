@@ -39,7 +39,7 @@ export interface ElintResult {
 /**
  * elint 内部 preset 和 plugins 加载后的数据结构
  */
-export interface ElintLoadedPresetAndPlugins {
+export interface InternalLoadedPresetAndPlugins {
   internalPreset?: InternalPreset
   loadedPlugins: ElintPlugin<unknown>[]
   loadedPluginGroup: Record<ElintPluginType, ElintPlugin<unknown>[]>
@@ -71,7 +71,7 @@ export interface ElintBasicOptions {
    *
    * 内部使用参数
    */
-  loadedPrestAndPlugins?: ElintLoadedPresetAndPlugins
+  internalLoadedPrestAndPlugins?: InternalLoadedPresetAndPlugins
 }
 
 export interface ElintOptions extends ElintBasicOptions {

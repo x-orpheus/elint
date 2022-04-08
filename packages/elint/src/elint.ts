@@ -17,7 +17,7 @@ import type { InternalPreset } from './preset/types.js'
 import { loadElintPreset, tryLoadElintPreset } from './preset/load.js'
 import type {
   ElintBasicOptions,
-  ElintLoadedPresetAndPlugins,
+  InternalLoadedPresetAndPlugins,
   ElintOptions,
   ElintResult
 } from './types.js'
@@ -35,7 +35,7 @@ export async function loadPresetAndPlugins({
 }: Pick<
   ElintBasicOptions,
   'preset' | 'plugins' | 'cwd'
-> = {}): Promise<ElintLoadedPresetAndPlugins> {
+> = {}): Promise<InternalLoadedPresetAndPlugins> {
   if (preset && plugins) {
     throw new Error('Can not specify preset and plugins at same time')
   }
@@ -54,6 +54,10 @@ export async function loadPresetAndPlugins({
     cwd,
     presetPath: internalPreset?.path
   })
+
+  if (!loadedPlugins.length) {
+    throw new Error('no available elint plugin')
+  }
 
   if (internalPreset?.preset.overridePluginConfig) {
     const overridePluginConfig = internalPreset.preset.overridePluginConfig
@@ -94,7 +98,7 @@ export async function lintCommon({
   preset,
   plugins,
   cwd = getBaseDir(),
-  loadedPrestAndPlugins
+  internalLoadedPrestAndPlugins
 }: ElintBasicOptions = {}): Promise<ElintResult> {
   const elintResult: ElintResult = {
     source: '',
@@ -104,26 +108,16 @@ export async function lintCommon({
     pluginResults: []
   }
 
-  const { loadedPlugins, loadedPluginGroup } =
-    loadedPrestAndPlugins ||
+  const { loadedPluginGroup } =
+    internalLoadedPrestAndPlugins ||
     (await loadPresetAndPlugins({ preset, plugins, cwd }))
-
-  if (!loadedPlugins.length) {
-    return elintResult
-  }
-
-  const pluginOptions: ElintPluginOptions = {
-    fix,
-    cwd
-  }
 
   if (loadedPluginGroup.common) {
     for (const commonPlugin of loadedPluginGroup.common) {
-      const executeResult = await executeElintPlugin(
-        commonPlugin,
-        '',
-        pluginOptions
-      )
+      const executeResult = await executeElintPlugin(commonPlugin, '', {
+        fix,
+        cwd
+      })
 
       elintResult.success = elintResult.success && executeResult.success
 
@@ -149,7 +143,7 @@ export async function lintText(
     plugins,
     cwd = getBaseDir(),
     filePath,
-    loadedPrestAndPlugins
+    internalLoadedPrestAndPlugins
   }: ElintBasicOptions & { filePath?: string } = {}
 ): Promise<ElintResult> {
   const elintResult: ElintResult = {
@@ -161,13 +155,9 @@ export async function lintText(
     pluginResults: []
   }
 
-  const { loadedPlugins, loadedPluginGroup } =
-    loadedPrestAndPlugins ||
+  const { loadedPluginGroup } =
+    internalLoadedPrestAndPlugins ||
     (await loadPresetAndPlugins({ preset, plugins, cwd }))
-
-  if (!loadedPlugins.length) {
-    return elintResult
-  }
 
   const pluginOptions: ElintPluginOptions = {
     fix,
@@ -182,6 +172,8 @@ export async function lintText(
         elintResult.output,
         pluginOptions
       )
+
+      // formatter 的 success 不需要判断
 
       if (executeResult.pluginResult) {
         elintResult.output = executeResult.pluginResult.output
@@ -201,7 +193,7 @@ export async function lintText(
         elintResult.output,
         {
           ...pluginOptions,
-          // 当需要格式化时，lint 将执行 fix 操作
+          // 当需要检查格式化时，lint 将自动执行 fix 操作
           fix: style || fix
         }
       )
@@ -252,7 +244,7 @@ export async function lintFiles(
     preset,
     plugins,
     cwd = getBaseDir(),
-    loadedPrestAndPlugins
+    internalLoadedPrestAndPlugins
   }: ElintOptions
 ): Promise<ElintResult[]> {
   const startTime = Date.now()
@@ -286,13 +278,9 @@ export async function lintFiles(
     })
   }
 
-  const { loadedPlugins } =
-    loadedPrestAndPlugins ||
+  const currentInternalLoadedPrestAndPlugins =
+    internalLoadedPrestAndPlugins ||
     (await loadPresetAndPlugins({ preset, plugins, cwd }))
-
-  if (!loadedPlugins.length) {
-    throw new Error('no available elint plugin')
-  }
 
   const tasks: Promise<void>[] = []
 
@@ -321,10 +309,9 @@ export async function lintFiles(
         elintResult = await lintText(elintResult.source, {
           fix,
           style,
-          plugins: loadedPlugins,
           cwd,
           filePath: elintResult.filePath,
-          loadedPrestAndPlugins
+          internalLoadedPrestAndPlugins: currentInternalLoadedPrestAndPlugins
         })
 
         const isModified = elintResult.output !== elintResult.source
@@ -360,17 +347,13 @@ export async function reset({
   preset,
   plugins,
   cwd = getBaseDir(),
-  loadedPrestAndPlugins
+  internalLoadedPrestAndPlugins
 }: ElintBasicOptions = {}): Promise<Record<string, unknown>> {
   const { loadedPlugins } =
-    loadedPrestAndPlugins ||
+    internalLoadedPrestAndPlugins ||
     (await loadPresetAndPlugins({ preset, plugins, cwd }))
 
   const errorMap: Record<string, unknown> = {}
-
-  if (!loadedPlugins.length) {
-    return {}
-  }
 
   for (const plugin of loadedPlugins) {
     try {

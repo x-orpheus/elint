@@ -41,7 +41,7 @@ program
 
     const cwd = getBaseDir()
 
-    const loadedPrestAndPlugins = await loadPresetAndPlugins({ cwd })
+    const internalLoadedPrestAndPlugins = await loadPresetAndPlugins({ cwd })
 
     const isGit = await isGitHooks()
 
@@ -52,7 +52,7 @@ program
       style: options.style,
       noIgnore: options.noIgnore,
       git: isGit,
-      loadedPrestAndPlugins,
+      internalLoadedPrestAndPlugins,
       cwd
     }
 
@@ -61,9 +61,10 @@ program
 
       if (type === 'commit' || type === 'common') {
         if (type === 'commit') {
-          const isContainCommitlint = loadedPrestAndPlugins.loadedPlugins.some(
-            (plugin) => plugin.id === 'elint-plugin-commitlint'
-          )
+          const isContainCommitlint =
+            internalLoadedPrestAndPlugins.loadedPlugins.some(
+              (plugin) => plugin.id === 'elint-plugin-commitlint'
+            )
 
           if (!isContainCommitlint) {
             log.warn(
@@ -83,7 +84,7 @@ program
       console.log(report(results))
 
       if (!isGit) {
-        await notify(loadedPrestAndPlugins, cwd)
+        await notify(internalLoadedPrestAndPlugins, cwd)
       }
 
       const success = !results.some((result) => !result.success)
