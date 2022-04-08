@@ -73,7 +73,8 @@
   },
   "devDependencies": {
     "@types/configstore": "^5.0.1",
-    "@types/micromatch": "^4.0.2"
+    "@types/micromatch": "^4.0.2",
+    "verdaccio": "^5.8.0"
   },
   "ava": {
     "files": [
