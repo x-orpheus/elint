@@ -1,5 +1,8 @@
-import { ElintPlugin, ElintPluginOverridableKey } from '../plugin/types.js'
+import type { ElintPlugin, ElintPluginOverridableKey } from '../plugin/types.js'
 
+/**
+ * elint preset 配置
+ */
 export interface ElintPreset {
   /**
    * 需要移动到根目录的的配置文件
@@ -25,7 +28,10 @@ export interface ElintPreset {
   }
 }
 
-export interface InternalElintPreset {
+/**
+ * 内部使用的 preset 结构
+ */
+export interface InternalPreset {
   name: string
   version: string
   path: string

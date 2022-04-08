@@ -22,6 +22,10 @@ module.exports = {
       }
     ],
     '@typescript-eslint/no-var-requires': 'off',
-    'import/extensions': ['error', 'always']
+    'import/extensions': ['error', 'always'],
+    '@typescript-eslint/consistent-type-imports': [
+      'error',
+      { prefer: 'type-imports' }
+    ]
   }
 }

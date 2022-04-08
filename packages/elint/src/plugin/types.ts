@@ -1,5 +1,15 @@
+/**
+ * elint 插件类型
+ *
+ * - `linter` lint 检查工具
+ * - `formatter` 格式化工具
+ * - `common` 公共检查工具
+ */
 export type ElintPluginType = 'linter' | 'formatter' | 'common'
 
+/**
+ * 支持 preset 覆盖的配置参数
+ */
 export type ElintPluginOverridableKey = 'activateConfig'
 
 export interface ElintPluginResult<T> {

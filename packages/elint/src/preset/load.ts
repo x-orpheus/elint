@@ -1,8 +1,12 @@
 import { createRequire } from 'module'
 import path from 'path'
 import _debug from 'debug'
-import { ElintContext } from '../elint.js'
-import { ElintPreset, InternalElintPreset, isElintPreset } from './types.js'
+import type { ElintContext } from '../types.js'
+import {
+  type ElintPreset,
+  type InternalPreset,
+  isElintPreset
+} from './types.js'
 import tryRequire from '../utils/try-require.js'
 
 const debug = _debug('elint:preset:load')
@@ -10,7 +14,7 @@ const debug = _debug('elint:preset:load')
 export const loadElintPreset = async (
   preset: string | ElintPreset,
   { cwd }: ElintContext
-): Promise<InternalElintPreset> => {
+): Promise<InternalPreset> => {
   if (typeof preset === 'string') {
     const require = createRequire(path.join(cwd, '__placeholder__.js'))
 
@@ -53,7 +57,7 @@ export const loadElintPreset = async (
  */
 export const tryLoadElintPreset = ({
   cwd
-}: ElintContext): Promise<InternalElintPreset> => {
+}: ElintContext): Promise<InternalPreset> => {
   const presetList = tryRequire(/elint-preset-/, cwd)
 
   debug('find elint preset list: %o', presetList)

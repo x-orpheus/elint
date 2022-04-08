@@ -1,6 +1,6 @@
 import { createRequire } from 'module'
 import prettier, { type Options } from 'prettier'
-import { ElintPlugin, ElintPluginResult } from 'elint'
+import type { ElintPlugin, ElintPluginResult } from 'elint'
 
 const require = createRequire(import.meta.url)
 const { clearConfigCache, resolveConfig, format } = prettier

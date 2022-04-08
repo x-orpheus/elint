@@ -1,6 +1,6 @@
 import { lintFiles, lintText, loadPresetAndPlugins, reset } from './elint.js'
 
-import type { ElintOptions, ElintResult } from './elint.js'
+import type { ElintOptions, ElintResult } from './types.js'
 
 import type {
   ElintPlugin,

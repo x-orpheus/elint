@@ -2,8 +2,8 @@ import { createRequire } from 'module'
 import path from 'path'
 import _debug from 'debug'
 
-import { ElintPlugin, isElintPlugin } from './types.js'
-import { ElintContext } from '../elint.js'
+import { type ElintPlugin, isElintPlugin } from './types.js'
+import type { ElintContext } from '../types.js'
 
 const debug = _debug('elint:plugin:load')
 

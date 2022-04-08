@@ -2,7 +2,7 @@ import _debug from 'debug'
 import { updateNotifyTime } from './config.js'
 import checker from './checker.js'
 import report from './report.js'
-import { ElintLoadedPresetAndPlugins } from '../elint.js'
+import type { ElintLoadedPresetAndPlugins } from '../types.js'
 
 const debug = _debug('elint:notifier')
 

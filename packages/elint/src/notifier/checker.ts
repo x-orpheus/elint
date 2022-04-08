@@ -5,7 +5,7 @@ import { getLastNotifyTime } from './config.js'
 import toMs from '../utils/to-ms.js'
 import type { ReportInfo } from './report.js'
 import getPackageInfo from './get-package-info.js'
-import { ElintLoadedPresetAndPlugins } from '../elint.js'
+import type { ElintLoadedPresetAndPlugins } from '../types.js'
 
 const debug = _debug('elint:notifier:checker')
 /**

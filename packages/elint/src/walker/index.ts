@@ -1,5 +1,5 @@
 import _debug from 'debug'
-import { ElintOptions } from '../elint.js'
+import type { ElintOptions } from '../types.js'
 import { defaultIgnore } from '../config.js'
 import local from './local.js'
 import stage from './stage.js'

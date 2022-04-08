@@ -1,7 +1,11 @@
 import _debug from 'debug'
 import path from 'path'
-import { ElintPlugin, ElintPluginOptions, ElintPluginResult } from './types.js'
-import { createErrorReportResult, ReportResult } from '../utils/report.js'
+import type {
+  ElintPlugin,
+  ElintPluginOptions,
+  ElintPluginResult
+} from './types.js'
+import { createErrorReportResult, type ReportResult } from '../utils/report.js'
 
 const debug = _debug('elint:plugin:execute')
 

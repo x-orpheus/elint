@@ -26,7 +26,7 @@ function getModulesByDir(dir: string, scope = ''): string[] {
     } else if (module.startsWith('@')) {
       const subDir = path.join(dir, module)
       const subModules = getModulesByDir(subDir, module)
-      Array.prototype.push.call(results, ...subModules)
+      results.push(...subModules)
     } else {
       results.push(scope ? `${scope}/${module}` : module)
     }

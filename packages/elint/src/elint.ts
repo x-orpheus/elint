@@ -3,108 +3,31 @@ import fs from 'fs-extra'
 import chalk from 'chalk'
 import { groupBy } from 'lodash-es'
 import walker from './walker/index.js'
-import { createErrorReportResult, ReportResult } from './utils/report.js'
+import { createErrorReportResult } from './utils/report.js'
 import { loadElintPlugins } from './plugin/load.js'
 import { executeElintPlugin } from './plugin/execute.js'
-import {
+import type {
   ElintPlugin,
   ElintPluginOptions,
   ElintPluginOverridableKey,
-  ElintPluginResult,
   ElintPluginType
 } from './plugin/types.js'
 import { getBaseDir } from './env.js'
-import { ElintPreset, InternalElintPreset } from './preset/types.js'
+import type { InternalPreset } from './preset/types.js'
 import { loadElintPreset, tryLoadElintPreset } from './preset/load.js'
+import type {
+  ElintBasicOptions,
+  ElintLoadedPresetAndPlugins,
+  ElintOptions,
+  ElintResult
+} from './types.js'
+import log from './utils/log.js'
 
 const debug = _debug('elint:main')
 
-export interface ElintResult {
-  /**
-   * 文件路径
-   */
-  filePath?: string
-  /**
-   * 文件原始内容
-   */
-  source: string
-  /**
-   * 文件输出
-   */
-  output: string
-  /**
-   * 执行整体结果
-   */
-  success: boolean
-  /**
-   * 输出格式化结果
-   */
-  reportResults: ReportResult[]
-  /**
-   * 各个 plugin 结果
-   */
-  pluginResults: ElintPluginResult<unknown>[]
-}
-
-export interface ElintLoadedPresetAndPlugins {
-  internalPreset?: InternalElintPreset
-  loadedPlugins: ElintPlugin<unknown>[]
-  loadedPluginGroup: Record<ElintPluginType, ElintPlugin<unknown>[]>
-}
-
-interface ElintBasicOptions {
-  /**
-   * 是否自动修复
-   */
-  fix?: boolean
-  /**
-   * 是否检查格式
-   */
-  style?: boolean
-  /**
-   * 预设
-   */
-  preset?: string | ElintPreset
-  /**
-   * 配置 plugins，不可与 preset 同时设置
-   */
-  plugins?: (string | ElintPlugin<unknown>)[]
-  cwd?: string
-  /**
-   * @inner
-   *
-   * 内部使用参数
-   */
-  loadedPrestAndPlugins?: ElintLoadedPresetAndPlugins
-}
-
-export interface ElintOptions extends ElintBasicOptions {
-  /**
-   * 是否将自动修复写入文件
-   *
-   * @default `true`
-   */
-  write?: boolean
-  /**
-   * 是否禁用默认忽略规则
-   */
-  noIgnore?: boolean
-  /**
-   * 是否在 git 中调用
-   *
-   * 在 git 中调用将会调整一些默认行为
-   *
-   * 1. 仅会获取暂存区内满足传入参数的文件和内容
-   * 2. fix 参数将强制改为 false，不进行自动修复
-   */
-  git?: boolean
-}
-
-export interface ElintContext {
-  cwd: string
-  presetPath?: string
-}
-
+/**
+ * 加载 preset 和 plugins
+ */
 export async function loadPresetAndPlugins({
   preset,
   plugins,
@@ -117,7 +40,7 @@ export async function loadPresetAndPlugins({
     throw new Error('Can not specify preset and plugins at same time')
   }
 
-  let internalPreset: InternalElintPreset | undefined
+  let internalPreset: InternalPreset | undefined
 
   if (preset) {
     internalPreset = await loadElintPreset(preset, { cwd })
@@ -137,14 +60,18 @@ export async function loadPresetAndPlugins({
 
     loadedPlugins.forEach((plugin) => {
       if (overridePluginConfig[plugin.id]) {
-        Object.entries(overridePluginConfig[plugin.id]).forEach(
-          ([key, value]) => {
-            if (['activateConfig'].includes(key)) {
-              const overridableKey = key as ElintPluginOverridableKey
-              plugin[overridableKey] = value
-            }
+        Object.keys(overridePluginConfig[plugin.id]).forEach((key) => {
+          const currentKey = key as ElintPluginOverridableKey
+          const currentValue = overridePluginConfig[plugin.id][currentKey]
+          if (
+            !(['activateConfig'] as ElintPluginOverridableKey[]).includes(
+              currentKey
+            )
+          ) {
+            log.warn(`${currentKey} is not in ElintPluginOverridableKey`)
           }
-        )
+          plugin[currentKey] = currentValue
+        })
       }
     })
   }
@@ -159,6 +86,9 @@ export async function loadPresetAndPlugins({
   }
 }
 
+/**
+ * 执行全部 type 为 common 的 plugin
+ */
 export async function lintCommon({
   fix = false,
   preset,

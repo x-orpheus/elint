@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import boxen, { Options as BoxenOptions } from 'boxen'
+import boxen, { type Options as BoxenOptions } from 'boxen'
 
 export interface ReportInfo {
   /**

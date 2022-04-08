@@ -1,6 +1,6 @@
 import { createRequire } from 'module'
 import stylelint, { type LinterResult } from 'stylelint'
-import { ElintPlugin, ElintPluginResult } from 'elint'
+import type { ElintPlugin, ElintPluginResult } from 'elint'
 
 const { lint, formatters } = stylelint
 const require = createRequire(import.meta.url)

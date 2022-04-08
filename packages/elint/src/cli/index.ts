@@ -8,14 +8,8 @@ import { install as huskyInstall, uninstall as huskyUninstall } from 'husky'
 import version from './version.js'
 import log from '../utils/log.js'
 import isGitHooks from '../utils/is-git-hooks.js'
-import {
-  ElintOptions,
-  lintFiles,
-  lintCommon,
-  loadPresetAndPlugins,
-  ElintResult,
-  reset
-} from '../elint.js'
+import { lintFiles, lintCommon, loadPresetAndPlugins, reset } from '../elint.js'
+import type { ElintOptions, ElintResult } from '../types.js'
 import { report } from '../utils/report.js'
 import notify from '../notifier/index.js'
 import { getBaseDir } from '../env.js'
