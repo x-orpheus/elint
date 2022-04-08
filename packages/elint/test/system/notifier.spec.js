@@ -1,5 +1,3 @@
-// 'use strict'
-
 // /**
 //  * 更新检查测试
 //  *
@@ -12,9 +10,9 @@
 //  *  v2.0.0
 //  */
 
-// const resetCacheProject = require('./utils/reset-cache-project')
-// const run = require('./utils/run')
-// const { elintPkgPath } = require('./utils/variable')
+// import resetCacheProject from './utils/reset-cache-project.js'
+// import run from './utils/run.js'
+// import { elintPkgPath } from './utils/variable.js'
 
 // let tmpDir
 
@@ -30,7 +28,7 @@
 //   await run('npm install --silent elint-preset-test@latest', tmpDir)
 
 //   // 不显示更新提示
-//   await expect(run('npm run lint-fix', tmpDir, false, false)).toResolve()
+//   await expect(run('npm run lint-fix', tmpDir, false)).toResolve()
 // })
 
 // test('安装 5.0.0，有更新提示', async () => {
@@ -38,5 +36,5 @@
 //   await run('npm install --silent elint-preset-test@5.0.0', tmpDir)
 
 //   // 显示更新提示
-//   await expect(run('npm run lint-fix', tmpDir, false, false)).toResolve()
+//   await expect(run('npm run lint-fix', tmpDir, false)).toResolve()
 // })
