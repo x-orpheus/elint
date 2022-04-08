@@ -4,9 +4,8 @@
   "scripts": {
     "clean": "pnpm -r run clean",
     "build": "pnpm -r --filter elint run build && pnpm -r --filter !elint run build",
-    "prepare": "elint hooks install",
+    "prepare": "elint hooks install && elint-helpers install --preset ./packages/elint-preset-self --project .",
     "preinstall": "npx only-allow pnpm",
-    "postinstall": "elint-helpers install --preset ./packages/elint-preset-self --project .",
     "lint": "elint lint \"packages/**/src/*.+(ts)\" -s",
     "start": "ts-node packages/elint/src/cli/index.ts lint \"packages/**/src/*.+(ts)\" -s"
   },

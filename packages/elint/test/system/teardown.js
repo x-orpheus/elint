@@ -21,7 +21,7 @@ const teardown = async () => {
 
   if (fs.existsSync(dir)) {
     console.log(`删除临时目录：${dir}`)
-    // fs.removeSync(dir)
+    fs.removeSync(dir)
   }
 }
 

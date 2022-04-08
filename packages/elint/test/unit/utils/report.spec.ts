@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 import figures from 'figures'
-import type { ElintResult } from '../../../src/elint.js'
+import type { ElintResult } from '../../../src/types.js'
 import {
   createErrorReportResult,
   formatReportResults,
