@@ -13,7 +13,6 @@ const debug = _debug('elint:utils:try-require')
  * @returns modules
  */
 function getModulesByDir(dir: string, scope = ''): string[] {
-  const nodeModulesDir = getNodeModulesDir()
   const results: string[] = []
   const modules = fs.readdirSync(dir)
 
@@ -25,7 +24,7 @@ function getModulesByDir(dir: string, scope = ''): string[] {
     if (module.startsWith('.')) {
       // do nothing
     } else if (module.startsWith('@')) {
-      const subDir = path.join(nodeModulesDir, module)
+      const subDir = path.join(dir, module)
       const subModules = getModulesByDir(subDir, module)
       Array.prototype.push.call(results, ...subModules)
     } else {
