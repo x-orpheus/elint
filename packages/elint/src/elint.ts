@@ -272,7 +272,7 @@ export async function lintText(
         {
           ...pluginOptions,
           // 当需要格式化时，lint 将执行 fix 操作
-          fix: style
+          fix: style || fix
         }
       )
 
