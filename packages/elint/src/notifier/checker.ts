@@ -35,6 +35,9 @@ async function checker(
 
     const latestPresetVersion = latestPresetInfo.version
 
+    debug(`preset current version: ${currentPresetVersion}`)
+    debug(`preset latest version: ${latestPresetVersion}`)
+
     // latestPresetVersion <= currentPresetVersion 无需更新
     if (!semver.gt(latestPresetVersion, currentPresetVersion)) {
       return null
@@ -47,11 +50,14 @@ async function checker(
 
     // 禁用 & 未设置更新检查周期
     if (updateCheckIntervalNum <= 0) {
+      debug('preset disabled update check')
       return null
     }
 
     // 未到更新时间
     if (Date.now() - getLastNotifyTime(name) <= updateCheckIntervalNum) {
+      debug('Skip notify')
+
       return null
     }
 

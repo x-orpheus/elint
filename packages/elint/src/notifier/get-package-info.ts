@@ -1,7 +1,7 @@
 import _debug from 'debug'
 import { execa } from 'execa'
 import detectPackageManager, {
-  PackageManager
+  type PackageManager
 } from './detect-package-manager.js'
 
 const debug = _debug('elint:notifier:getPackageInfo')
@@ -50,9 +50,17 @@ async function getPackageInfo(
       .replace('{}', packageName)
       .split(' ')
 
-    const { stdout } = await execa(commands[0], commands.slice(1), {
-      cwd
-    })
+    const { stdout } = await Promise.race([
+      execa(commands[0], commands.slice(1), {
+        cwd
+      }),
+      // 当 registry 无法连接时，npm 和 pnpm 会长时间挂起
+      new Promise<never>((resolve, reject) => {
+        setTimeout(() => {
+          reject(new Error('timeout'))
+        }, 3000)
+      })
+    ])
 
     let info: PackageInfo = JSON.parse(stdout)
 
@@ -65,7 +73,7 @@ async function getPackageInfo(
       throw new Error('not a valid package info')
     }
 
-    debug(`get package info: ${info}`)
+    debug('get package info: %o', info)
 
     return info
   } catch (e) {

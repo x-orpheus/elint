@@ -87,7 +87,10 @@ program
       console.log(report(results))
 
       if (!isGit && options.notifier) {
-        await notify(internalLoadedPrestAndPlugins, cwd)
+        const notifyMessage = await notify(internalLoadedPrestAndPlugins, cwd)
+        if (notifyMessage) {
+          console.log(notifyMessage)
+        }
       } else {
         debug('disable notifier')
       }
