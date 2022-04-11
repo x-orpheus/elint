@@ -1,7 +1,7 @@
 {
   "name": "elint-preset-self",
   "main": "index.js",
-  "version": "3.0.0",
+  "private": true,
   "scripts": {
     "postinstall": "elint-helpers install"
   },

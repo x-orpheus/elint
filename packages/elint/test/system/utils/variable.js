@@ -18,14 +18,23 @@ export const projectDir = path.join(__dirname, '../../../../..')
 export const verdaccioDir = path.join(projectDir, 'verdaccio')
 export const verdaccioPort = 4873
 
+export const testPresetName = 'elint-preset-system-test'
+
+export const tempTestPresetDir = path.join(
+  os.tmpdir(),
+  'elint_test_system',
+  testPresetName
+)
+
+export const testPresetDir = path.join(__dirname, '../test-preset')
+
 export const publishPackageList = [
   'elint',
   'elint-helpers',
   'elint-plugin-commitlint',
   'elint-plugin-eslint',
   'elint-plugin-prettier',
-  'elint-plugin-stylelint',
-  'elint-preset-self'
+  'elint-plugin-stylelint'
 ]
 
 // 需要发布的包

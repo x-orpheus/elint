@@ -28,6 +28,6 @@
   "license": "ISC",
   "dependencies": {
     "elint": "*",
-    "elint-preset-self": "*"
+    "elint-preset-system-test": "1.0.0"
   }
 }

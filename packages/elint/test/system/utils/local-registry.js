@@ -42,9 +42,12 @@ export const startUpLocalRegistry = async () => {
       '1.0.0',
       'verdaccio',
       (webServer, address) => {
-        const teardown = () => {
-          webServer.close(() => {
-            console.log('verdaccio closed')
+        const teardown = async () => {
+          return new Promise((resolve) => {
+            webServer.close(() => {
+              console.log('verdaccio closed')
+              resolve()
+            })
           })
         }
 
@@ -65,4 +68,14 @@ export const publishToLocalRegistry = async (packageDir) => {
     `pnpm publish --registry=http://localhost:${verdaccioPort} --git-checks=false --silent`,
     packageDir
   )
+}
+
+export const bumpPackageVersion = async (packageDir) => {
+  const packageJsonPath = path.join(packageDir, 'package.json')
+  const packageJson = await fs.readJSON(packageJsonPath)
+
+  await fs.writeJSON(packageJsonPath, {
+    ...packageJson,
+    version: '999.999.999'
+  })
 }
