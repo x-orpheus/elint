@@ -31,25 +31,20 @@ const debug = _debug('elint:main')
  */
 export async function loadPresetAndPlugins({
   preset,
-  plugins,
   cwd = getBaseDir()
 }: Pick<
   ElintBasicOptions,
-  'preset' | 'plugins' | 'cwd'
+  'preset' | 'cwd'
 > = {}): Promise<InternalLoadedPresetAndPlugins> {
-  if (preset && plugins) {
-    throw new Error('Can not specify preset and plugins at same time')
-  }
-
   let internalPreset: InternalPreset | undefined
 
   if (preset) {
     internalPreset = await loadElintPreset(preset, { cwd })
-  } else if (!plugins) {
+  } else {
     internalPreset = await tryLoadElintPreset({ cwd })
   }
 
-  const pendingPlugins = internalPreset?.preset.plugins || plugins || []
+  const pendingPlugins = internalPreset?.preset.plugins || []
 
   const loadedPlugins = await loadElintPlugins(pendingPlugins, {
     cwd,
@@ -97,7 +92,6 @@ export async function loadPresetAndPlugins({
 export async function lintCommon({
   fix = false,
   preset,
-  plugins,
   cwd = getBaseDir(),
   internalLoadedPrestAndPlugins
 }: ElintBasicOptions = {}): Promise<ElintResult> {
@@ -111,7 +105,7 @@ export async function lintCommon({
 
   const { loadedPluginGroup } =
     internalLoadedPrestAndPlugins ||
-    (await loadPresetAndPlugins({ preset, plugins, cwd }))
+    (await loadPresetAndPlugins({ preset, cwd }))
 
   if (loadedPluginGroup.common) {
     for (const commonPlugin of loadedPluginGroup.common) {
@@ -141,7 +135,6 @@ export async function lintText(
     fix = false,
     style = false,
     preset,
-    plugins,
     cwd = getBaseDir(),
     filePath,
     internalLoadedPrestAndPlugins
@@ -158,7 +151,7 @@ export async function lintText(
 
   const { loadedPluginGroup } =
     internalLoadedPrestAndPlugins ||
-    (await loadPresetAndPlugins({ preset, plugins, cwd }))
+    (await loadPresetAndPlugins({ preset, cwd }))
 
   const pluginOptions: ElintPluginOptions = {
     fix,
@@ -243,7 +236,6 @@ export async function lintFiles(
     noIgnore = false,
     git = false,
     preset,
-    plugins,
     cwd = getBaseDir(),
     internalLoadedPrestAndPlugins,
     cache = false
@@ -284,7 +276,7 @@ export async function lintFiles(
 
   const currentInternalLoadedPrestAndPlugins =
     internalLoadedPrestAndPlugins ||
-    (await loadPresetAndPlugins({ preset, plugins, cwd }))
+    (await loadPresetAndPlugins({ preset, cwd }))
 
   const tasks: Promise<void>[] = []
 
@@ -376,13 +368,12 @@ export async function lintFiles(
 
 export async function reset({
   preset,
-  plugins,
   cwd = getBaseDir(),
   internalLoadedPrestAndPlugins
 }: ElintBasicOptions = {}): Promise<Record<string, unknown>> {
   const { loadedPlugins } =
     internalLoadedPrestAndPlugins ||
-    (await loadPresetAndPlugins({ preset, plugins, cwd }))
+    (await loadPresetAndPlugins({ preset, cwd }))
 
   const errorMap: Record<string, unknown> = {}
 

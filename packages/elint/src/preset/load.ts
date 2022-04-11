@@ -19,10 +19,18 @@ export const loadElintPreset = async (
     const require = createRequire(path.join(cwd, '__placeholder__.js'))
 
     const presetPath = require.resolve(preset)
-    const presetPackageJson = require(path.join(
-      path.dirname(presetPath),
-      'package.json'
-    ))
+
+    let presetPackageJson: { name: string; version: string } | undefined
+
+    try {
+      presetPackageJson = require(path.join(
+        path.dirname(presetPath),
+        'package.json'
+      ))
+    } catch {
+      debug(`Preset ${preset} doesn't have a package.json`)
+    }
+
     const presetModule = await import(presetPath)
     const presetConfig = presetModule.default || presetModule
 
@@ -30,17 +38,21 @@ export const loadElintPreset = async (
       throw new Error(`${preset} is not an available elint preset`)
     }
 
-    debug(`loaded preset ${presetPackageJson.name} in ${presetPath}`)
+    debug(
+      `loaded preset ${presetPackageJson?.name || 'anonymous'} in ${presetPath}`
+    )
 
     return {
-      name: presetPackageJson.name,
-      version: presetPackageJson.version || 'unknown',
+      name: presetPackageJson?.name || 'anonymous',
+      version: presetPackageJson?.version || 'unknown',
       path: presetPath,
       preset: presetConfig
     }
   }
 
   if (isElintPreset(preset)) {
+    debug('loaded anonymous preset')
+
     return {
       name: 'anonymous',
       version: 'unknown',

@@ -61,10 +61,6 @@ export interface ElintBasicOptions {
    * 预设
    */
   preset?: string | ElintPreset
-  /**
-   * 配置 plugins，不可与 preset 同时设置
-   */
-  plugins?: (string | ElintPlugin<unknown>)[]
   cwd?: string
   /**
    * @inner
