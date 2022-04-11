@@ -94,6 +94,12 @@ export interface ElintOptions extends ElintBasicOptions {
    * 2. fix 参数将强制改为 false，不进行自动修复
    */
   git?: boolean
+  /**
+   * 是否对结果进行缓存
+   *
+   * 当项目中没有 preset 时不进行缓存
+   */
+  cache?: boolean
 }
 
 /**

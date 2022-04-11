@@ -31,7 +31,9 @@ program
   .description('run lint, type: file, commit, common')
   .option('-f, --fix', 'Automatically fix problems')
   .option('-s, --style', 'Lint code style')
+  .option('-c, --cache', 'Cache results')
   .option('--no-ignore', 'Disable elint ignore patterns')
+  .option('--no-notifier', 'Disable check preset updates')
   .action(async (type: string, files: string[], options) => {
     debug('run lint...')
 
@@ -50,10 +52,11 @@ program
     const elintOptions: ElintOptions = {
       fix: options.fix,
       style: options.style,
-      noIgnore: options.noIgnore,
+      noIgnore: !options.ignore,
       git: isGit,
       internalLoadedPrestAndPlugins,
-      cwd
+      cwd,
+      cache: options.cache
     }
 
     try {
@@ -83,8 +86,10 @@ program
 
       console.log(report(results))
 
-      if (!isGit) {
+      if (!isGit && options.notifier) {
         await notify(internalLoadedPrestAndPlugins, cwd)
+      } else {
+        debug('disable notifier')
       }
 
       const success = !results.some((result) => !result.success)

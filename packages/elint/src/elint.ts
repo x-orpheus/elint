@@ -22,6 +22,7 @@ import type {
   ElintResult
 } from './types.js'
 import log from './utils/log.js'
+import getElintCache from './cache/index.js'
 
 const debug = _debug('elint:main')
 
@@ -244,7 +245,8 @@ export async function lintFiles(
     preset,
     plugins,
     cwd = getBaseDir(),
-    internalLoadedPrestAndPlugins
+    internalLoadedPrestAndPlugins,
+    cache = false
   }: ElintOptions
 ): Promise<ElintResult[]> {
   const startTime = Date.now()
@@ -257,6 +259,8 @@ export async function lintFiles(
     git,
     cwd
   })
+
+  debug(`Files count: ${fileList.length}`)
 
   const elintResultList: ElintResult[] = []
 
@@ -284,6 +288,8 @@ export async function lintFiles(
 
   const tasks: Promise<void>[] = []
 
+  const elintCache = getElintCache(cache, cwd)
+
   fileList.forEach((fileItem) => {
     const task = async (): Promise<void> => {
       let elintResult: ElintResult = {
@@ -306,6 +312,22 @@ export async function lintFiles(
 
         elintResult.output = elintResult.source
 
+        const cacheResult = elintCache?.getFileCache(elintResult.filePath, {
+          fix,
+          style,
+          internalLoadedPrestAndPlugins: currentInternalLoadedPrestAndPlugins,
+          write
+        })
+
+        if (cacheResult) {
+          debug(
+            `Skipping file since it hasn't changed: ${elintResult.filePath}`
+          )
+
+          elintResultList.push(elintResult)
+          return
+        }
+
         elintResult = await lintText(elintResult.source, {
           fix,
           style,
@@ -321,6 +343,13 @@ export async function lintFiles(
             encoding: 'utf-8'
           })
         }
+
+        elintCache?.setFileCache(elintResult, {
+          fix,
+          style,
+          internalLoadedPrestAndPlugins: currentInternalLoadedPrestAndPlugins,
+          write
+        })
       } catch (e) {
         elintResult.success = false
         elintResult.reportResults.push(
@@ -337,6 +366,8 @@ export async function lintFiles(
   })
 
   await Promise.all(tasks)
+
+  elintCache?.reconcile()
 
   debug(`elint complete in: ${Date.now() - startTime}ms`)
 

@@ -53,6 +53,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@types/file-entry-cache": "^5.0.2",
     "boxen": "^6.2.1",
     "chalk": "^5.0.1",
     "commander": "^9.1.0",
@@ -60,6 +61,7 @@
     "debug": "^4.3.4",
     "execa": "^6.1.0",
     "figures": "^4.0.0",
+    "file-entry-cache": "^6.0.1",
     "find-process": "^1.4.7",
     "find-up": "^6.3.0",
     "fs-extra": "^10.0.1",

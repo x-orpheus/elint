@@ -6,8 +6,8 @@
     "build": "pnpm -r --filter elint run build && pnpm -r --filter !elint run build",
     "prepare": "elint hooks install && elint-helpers install --preset ./packages/elint-preset-self --project .",
     "preinstall": "npx only-allow pnpm",
-    "lint": "elint lint \"packages/**/src/*.+(ts)\" -s",
-    "start": "ts-node packages/elint/src/cli/index.ts lint \"packages/**/src/*.+(ts)\" -s"
+    "lint": "elint lint \"packages/**/src/*.+(ts)\" -s --no-notifier",
+    "start": "ts-node packages/elint/src/cli/index.ts lint \"packages/**/src/*.+(ts)\" -s --no-notifier"
   },
   "devDependencies": {
     "@changesets/cli": "^2.22.0",
