@@ -49,7 +49,14 @@ class ElintCache {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const cacheMetaResult: CacheMetaResult = (fileDescriptor as any).meta.result
+    const cacheMetaResult: CacheMetaResult = (fileDescriptor as any).meta
+      ?.result
+
+    if (!cacheMetaResult) {
+      debug(`Cache touched without data: ${filePath}`)
+
+      return false
+    }
 
     if (cacheMetaResult.style !== style) {
       debug(
