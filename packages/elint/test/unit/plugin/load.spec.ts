@@ -1,7 +1,7 @@
 import mock from '../mock/env.js'
 import { getBaseDir } from '../../../src/env.js'
 import { loadElintPlugins } from '../../../src/plugin/load.js'
-import { ElintPlugin } from '../../../src/index.js'
+import type { ElintPlugin } from '../../../src/index.js'
 
 describe('插件加载测试', () => {
   let unmock: () => void
