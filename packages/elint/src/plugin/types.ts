@@ -106,12 +106,6 @@ export interface ElintPlugin<
    */
   activateConfig: ElintPluginActivateConfig<Options>
   /**
-   * 是否支持缓存
-   *
-   * 一个文件处理流上有任何插件不支持缓存，则此文件不会被缓存
-   */
-  cacheable: boolean
-  /**
    * 执行函数
    */
   execute(text: string, options: Options): Promise<ElintPluginResult<Result>>

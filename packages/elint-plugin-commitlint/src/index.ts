@@ -13,7 +13,6 @@ const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
   id: 'elint-plugin-commitlint',
   name: 'commitlint',
   type: 'common',
-  cacheable: false,
   activateConfig: {
     activate() {
       return true

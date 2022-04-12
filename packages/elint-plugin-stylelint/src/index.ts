@@ -9,7 +9,6 @@ const elintPluginStylelint: ElintPlugin<LinterResult> = {
   id: 'elint-plugin-stylelint',
   name: 'Stylelint',
   type: 'linter',
-  cacheable: true,
   activateConfig: {
     extensions: ['.less', '.sass', '.scss', '.css']
   },

@@ -43,7 +43,6 @@ const elintPluginEsLint: ElintPlugin<ESLint.LintResult> = {
   id: 'elint-plugin-eslint',
   name: 'ESLint',
   type: 'linter',
-  cacheable: true,
   activateConfig: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs']
   },

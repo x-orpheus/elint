@@ -37,7 +37,6 @@ const elintPluginPrettier: ElintPlugin<never> = {
       '.yml'
     ]
   },
-  cacheable: true,
   async execute(text, { cwd, filePath }) {
     const result: ElintPluginResult<never> = {
       pluginId: this.id,
