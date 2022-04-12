@@ -14,5 +14,7 @@ verdaccio/
 /.eslintrc.js
 /.eslintignore
 /.prettierrc.js
+/.prettierignore
 /.commitlintrc.js
 /.stylelintrc.js
+/.stylelintignore

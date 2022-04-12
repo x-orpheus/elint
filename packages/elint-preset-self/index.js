@@ -1,12 +1,4 @@
 module.exports = {
-  configFiles: [
-    '.husky',
-    '.eslintrc.js',
-    '.eslintignore',
-    '.prettierrc.js',
-    '.commitlintrc.js',
-    '.stylelintrc.js'
-  ],
   plugins: [
     'elint-plugin-eslint',
     'elint-plugin-stylelint',
