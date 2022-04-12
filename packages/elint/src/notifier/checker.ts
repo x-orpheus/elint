@@ -18,12 +18,7 @@ async function checker(
   cwd: string
 ): Promise<ReportInfo | null> {
   try {
-    // 找不到本地安装的 preset
-    if (!internalPreset) {
-      return null
-    }
-
-    debug('preset name: %o', internalPreset?.name)
+    debug('preset name: %o', internalPreset.name)
 
     const { name, version: currentPresetVersion } = internalPreset
     const latestPresetInfo = await getPackageInfo(name, cwd)

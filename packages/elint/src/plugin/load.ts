@@ -12,6 +12,8 @@ const loadElintPlugin = async (
   { cwd, presetPath }: ElintContext
 ): Promise<ElintPlugin<unknown>> => {
   if (typeof plugin === 'string') {
+    debug(`start load plugin: ${plugin}`)
+
     const require = createRequire(
       presetPath || path.join(cwd, '__placeholder__.js')
     )
@@ -26,10 +28,14 @@ const loadElintPlugin = async (
       throw new Error(`${plugin} is not an available elint plugin`)
     }
 
+    debug(`loaded plugin: ${plugin}`)
+
     return pluginConfig
   }
 
   if (isElintPlugin(plugin)) {
+    debug(`loaded custom plugin: ${plugin.id}`)
+
     return plugin
   }
 
@@ -40,6 +46,8 @@ export const loadElintPlugins = async (
   plugins: (string | ElintPlugin<unknown>)[],
   ctx: ElintContext
 ): Promise<ElintPlugin<unknown>[]> => {
+  debug('start load elint plugins')
+
   const loadedPlugins = await Promise.all(
     plugins.map((plugin) => loadElintPlugin(plugin, ctx))
   )

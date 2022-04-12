@@ -36,7 +36,9 @@ export async function loadPresetAndPlugins({
   ElintBasicOptions,
   'preset' | 'cwd'
 > = {}): Promise<InternalLoadedPresetAndPlugins> {
-  let internalPreset: InternalPreset | undefined
+  debug('start load preset and plugins')
+
+  let internalPreset: InternalPreset
 
   if (preset) {
     internalPreset = await loadElintPreset(preset, { cwd })
@@ -44,18 +46,20 @@ export async function loadPresetAndPlugins({
     internalPreset = await tryLoadElintPreset({ cwd })
   }
 
-  const pendingPlugins = internalPreset?.preset.plugins || []
+  debug(`preset ${internalPreset.name} loaded`)
+
+  const pendingPlugins = internalPreset.preset.plugins || []
 
   const loadedPlugins = await loadElintPlugins(pendingPlugins, {
     cwd,
-    presetPath: internalPreset?.path
+    presetPath: internalPreset.path
   })
 
   if (!loadedPlugins.length) {
     throw new Error('no available elint plugin')
   }
 
-  if (internalPreset?.preset.overridePluginConfig) {
+  if (internalPreset.preset.overridePluginConfig) {
     const overridePluginConfig = internalPreset.preset.overridePluginConfig
 
     loadedPlugins.forEach((plugin) => {
@@ -75,6 +79,8 @@ export async function loadPresetAndPlugins({
       }
     })
   }
+
+  debug('loaded preset and plugins')
 
   return {
     internalPreset,

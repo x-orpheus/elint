@@ -1,5 +1,4 @@
 {
-  "version": "2.0.1",
   "private": true,
   "scripts": {
     "clean": "pnpm -r run clean",

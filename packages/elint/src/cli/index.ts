@@ -35,15 +35,17 @@ program
   .option('--no-ignore', 'Disable elint ignore patterns')
   .option('--no-notifier', 'Disable check preset updates')
   .action(async (type: string, files: string[], options) => {
-    debug('run lint...')
-
     if (!files || !type) {
       return
     }
 
     const cwd = getBaseDir()
 
+    debug(`run lint in ${cwd}`)
+
     const internalLoadedPrestAndPlugins = await loadPresetAndPlugins({ cwd })
+
+    debug('loaded preset and plugins')
 
     const isGit = await isGitHooks()
 
@@ -63,6 +65,7 @@ program
       const results: ElintResult[] = []
 
       if (type === 'commit' || type === 'common') {
+        debug('run common lint...')
         if (type === 'commit') {
           const isContainCommitlint =
             internalLoadedPrestAndPlugins.loadedPlugins.some(
@@ -79,6 +82,8 @@ program
         }
         results.push(await lintCommon(elintOptions))
       } else {
+        debug('run file lint...')
+
         const fileList = type === 'file' ? files : [type, ...files]
 
         results.push(...(await lintFiles(fileList, elintOptions)))

@@ -15,6 +15,8 @@ export const loadElintPreset = async (
   preset: string | ElintPreset,
   { cwd }: ElintContext
 ): Promise<InternalPreset> => {
+  debug('start load preset')
+
   if (typeof preset === 'string') {
     const require = createRequire(path.join(cwd, '__placeholder__.js'))
 

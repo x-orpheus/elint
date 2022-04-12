@@ -71,9 +71,7 @@ async function version(cwd?: string): Promise<void> {
   const presetVersionMap: Record<string, string> = {}
   const pluginVersionMap: Record<string, ElintPluginVersion> = {}
 
-  if (internalPreset) {
-    presetVersionMap[internalPreset.name] = internalPreset.version
-  }
+  presetVersionMap[internalPreset.name] = internalPreset.version
 
   loadedPlugins.forEach((plugin) => {
     const versionConfig = plugin.getVersion()

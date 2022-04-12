@@ -36,16 +36,6 @@ class ElintCache {
     filePath: string,
     { style, internalLoadedPrestAndPlugins }: ElintCacheOptions
   ): boolean {
-    // 没有 preset 的不缓存
-    if (
-      !internalLoadedPrestAndPlugins ||
-      !internalLoadedPrestAndPlugins.internalPreset
-    ) {
-      debug(`No preset: ${filePath}`)
-
-      return false
-    }
-
     const fileDescriptor = this.fileEntryCache.getFileDescriptor(filePath)
 
     if (fileDescriptor.notFound) {
@@ -91,15 +81,6 @@ class ElintCache {
 
     if (!filePath) {
       debug('Ignore updating cache without filePath')
-
-      return
-    }
-    // 没有 preset 的不缓存
-    if (
-      !internalLoadedPrestAndPlugins ||
-      !internalLoadedPrestAndPlugins.internalPreset
-    ) {
-      debug(`Ignore updating cache result without preset: ${filePath}`)
 
       return
     }
