@@ -367,7 +367,7 @@ export async function lintFiles(
 
   elintCache?.reconcile()
 
-  debug(`elint complete in: ${Date.now() - startTime}ms`)
+  debug(`elint lint files in: ${Date.now() - startTime}ms`)
 
   return elintResultList
 }

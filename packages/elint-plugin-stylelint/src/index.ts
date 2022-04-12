@@ -29,8 +29,16 @@ const elintPluginStylelint: ElintPlugin<LinterResult> = {
 
     result.success = !lintResult.errored
     result.result = lintResult
+
     // stylelint 当 fix 不为 true 时，output 会返回一个 json
-    result.output = lintResult.output && fix ? lintResult.output : result.output
+    if (fix && lintResult.output) {
+      if (lintResult.output === '[]' && lintResult.results.length === 0) {
+        // 当文件被 stylelint ignore 命中时，返回值会成为 '[]'
+        // 因此这种状态下 output 需要被忽略
+      } else {
+        result.output = lintResult.output
+      }
+    }
 
     const stringFormatter = formatters.string
     result.message = stringFormatter(lintResult.results)

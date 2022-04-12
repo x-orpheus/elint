@@ -40,6 +40,8 @@ program
       return
     }
 
+    const startTime = Date.now()
+
     const cwd = getBaseDir()
 
     debug(`run lint in ${cwd}`)
@@ -105,6 +107,8 @@ program
       }
 
       const success = !results.some((result) => !result.success)
+
+      debug(`elint complete in: ${Date.now() - startTime}ms`)
 
       process.exit(success ? 0 : 1)
     } catch (e) {
