@@ -31,7 +31,8 @@ program
   .description('run lint, type: file, commit, common')
   .option('-f, --fix', 'Automatically fix problems')
   .option('-s, --style', 'Lint code style')
-  .option('-c, --cache', 'Cache results')
+  .option('--cache', 'Cache results')
+  .option('--preset <preset>', 'Set specific preset')
   .option('--no-ignore', 'Disable elint ignore patterns')
   .option('--no-notifier', 'Disable check preset updates')
   .action(async (type: string, files: string[], options) => {
@@ -43,7 +44,10 @@ program
 
     debug(`run lint in ${cwd}`)
 
-    const internalLoadedPrestAndPlugins = await loadPresetAndPlugins({ cwd })
+    const internalLoadedPrestAndPlugins = await loadPresetAndPlugins({
+      cwd,
+      preset: options.preset
+    })
 
     debug('loaded preset and plugins')
 
