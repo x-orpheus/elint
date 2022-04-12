@@ -1,7 +1,7 @@
 import { execa } from 'execa'
 
 // 执行命令
-function run(command, cwd, disableNotifier = true) {
+function run(command, cwd, { stdio = 'inherit', disableNotifier = true } = {}) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const strs = command.match(/(?:[^\s"]+|"[^"]*")+/g)
 
@@ -19,18 +19,16 @@ function run(command, cwd, disableNotifier = true) {
     argus.unshift('/d /s /c')
   }
 
-  const env = Object.assign({}, process.env, {
-    INIT_CWD: cwd,
-    FORCE_COLOR: true,
-    ELINT_DISABLE_UPDATE_NOTIFIER: disableNotifier
-  })
-
   console.log(`run: ${program} ${argus.join(' ')}, in ${cwd}`)
 
   return execa(program, argus, {
-    stdio: 'inherit',
+    stdio,
     cwd,
-    env
+    env: {
+      INIT_CWD: cwd,
+      FORCE_COLOR: true,
+      ELINT_DISABLE_UPDATE_NOTIFIER: disableNotifier
+    }
   })
 }
 

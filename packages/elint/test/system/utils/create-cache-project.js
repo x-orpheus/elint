@@ -14,15 +14,18 @@ import {
   tempTestPresetDir,
   publishPackageList,
   testPresetName,
-  publishPackagePathList
+  publishPackagePathList,
+  projectDir
 } from './variable.js'
 
 // 创建缓存项目：方便后面重复使用
-async function createCacheProject() {
-  const dirExists = await fs.pathExists(cacheDir)
+async function createCacheProject(skipPreparation = false) {
+  if (!skipPreparation) {
+    const dirExists = await fs.pathExists(cacheDir)
 
-  if (dirExists) {
-    await fs.emptyDir(cacheDir)
+    if (dirExists) {
+      await fs.emptyDir(cacheDir)
+    }
   }
 
   // 创建缓存项目
@@ -30,29 +33,33 @@ async function createCacheProject() {
 
   await fs.copy(testPresetDir, tempTestPresetDir)
 
-  // verdaccio 不支持同版本号覆盖
-  await Promise.all(
-    publishPackageList.map((packageName) => cleanLocalRegistry(packageName))
-  )
+  if (!skipPreparation) {
+    await run('pnpm run build', projectDir)
 
-  await cleanLocalRegistry(testPresetName)
-
-  await Promise.all(
-    publishPackagePathList.map((packagePath) =>
-      publishToLocalRegistry(packagePath)
+    // verdaccio 不支持同版本号覆盖
+    await Promise.all(
+      publishPackageList.map((packageName) => cleanLocalRegistry(packageName))
     )
-  )
 
-  await publishToLocalRegistry(tempTestPresetDir)
+    await cleanLocalRegistry(testPresetName)
 
-  await bumpPackageVersion(tempTestPresetDir)
+    await Promise.all(
+      publishPackagePathList.map((packagePath) =>
+        publishToLocalRegistry(packagePath)
+      )
+    )
 
-  await publishToLocalRegistry(tempTestPresetDir)
+    await publishToLocalRegistry(tempTestPresetDir)
 
-  await run(
-    `npm install --silent --registry=http://localhost:${verdaccioPort}`,
-    cacheDir
-  )
+    await bumpPackageVersion(tempTestPresetDir)
+
+    await publishToLocalRegistry(tempTestPresetDir)
+
+    await run(
+      `npm install --silent --registry=http://localhost:${verdaccioPort}`,
+      cacheDir
+    )
+  }
 
   // 创建备份
   await fs.copy(cacheDir, backupDir, {

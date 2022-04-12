@@ -50,13 +50,20 @@ async function getPackageInfo(
       .replace('{}', packageName)
       .split(' ')
 
+    if (process.env.ELINT_SYSTEM_TEST && packageManager === 'npm') {
+      commands.push('--prefer-offline')
+    }
+
+    const getPackageInfoProcess = execa(commands[0], commands.slice(1), {
+      cwd
+    })
+
     const { stdout } = await Promise.race([
-      execa(commands[0], commands.slice(1), {
-        cwd
-      }),
+      getPackageInfoProcess,
       // 当 registry 无法连接时，npm 和 pnpm 会长时间挂起
       new Promise<never>((resolve, reject) => {
         setTimeout(() => {
+          getPackageInfoProcess.cancel()
           reject(new Error('timeout'))
         }, 3000)
       })

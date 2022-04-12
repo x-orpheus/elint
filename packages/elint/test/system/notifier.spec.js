@@ -1,40 +1,40 @@
-// /**
-//  * 更新检查测试
-//  *
-//  * 使用 elint-preset-test 测试更新检查功能
-//  * v1.2.0 开始，package.json 加入 elint 配置：
-//  *
-//  *  v1.2.0
-//  *  v1.2.1
-//  *  v1.3.0
-//  *  v2.0.0
-//  */
+/**
+ * 更新检查测试
+ *
+ * 使用 elint-preset-test 测试更新检查功能
+ * v1.2.0 开始，package.json 加入 elint 配置：
+ */
 
-// import resetCacheProject from './utils/reset-cache-project.js'
-// import run from './utils/run.js'
-// import { elintPkgPath } from './utils/variable.js'
+import { startUpLocalRegistry } from './utils/local-registry.js'
+import resetCacheProject from './utils/reset-cache-project.js'
+import run from './utils/run.js'
+import { verdaccioPort } from './utils/variable.js'
 
-// let tmpDir
+let tmpDir
+let closeVerdaccio
 
-// /**
-//  * 无需每次都 reset
-//  */
-// beforeAll(async () => {
-//   tmpDir = await resetCacheProject()
-// })
+/**
+ * 无需每次都 reset
+ */
+beforeAll(async () => {
+  tmpDir = await resetCacheProject()
 
-// test('安装 latest，没有更新提示', async () => {
-//   await run(`npm install --silent ${elintPkgPath}`, tmpDir)
-//   await run('npm install --silent elint-preset-test@latest', tmpDir)
+  closeVerdaccio = await startUpLocalRegistry()
+})
 
-//   // 不显示更新提示
-//   await expect(run('npm run lint-fix', tmpDir, false)).toResolve()
-// })
+afterAll(async () => {
+  await closeVerdaccio()
+})
 
-// test('安装 5.0.0，有更新提示', async () => {
-//   await run(`npm install --silent ${elintPkgPath}`, tmpDir)
-//   await run('npm install --silent elint-preset-test@5.0.0', tmpDir)
+test('安装 latest，显示更新提示', async () => {
+  const { stdout } = await run(
+    `npm run lint-fix --registry=http://localhost:${verdaccioPort}`,
+    tmpDir,
+    {
+      disableNotifier: false,
+      stdio: 'pipe'
+    }
+  )
 
-//   // 显示更新提示
-//   await expect(run('npm run lint-fix', tmpDir, false)).toResolve()
-// })
+  expect(stdout).toContain('update available')
+})
