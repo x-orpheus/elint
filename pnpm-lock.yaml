@@ -120,9 +120,11 @@ importers:
   packages/elint-plugin-prettier:
     specifiers:
       elint: workspace:*
+      ignore: ^5.2.0
       prettier: ^2.6.0
     devDependencies:
       elint: link:../elint
+      ignore: 5.2.0
       prettier: 2.6.0
 
   packages/elint-plugin-stylelint:
