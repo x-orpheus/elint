@@ -56,6 +56,8 @@ async function walker(
 
   debug('fileList: %o', fileList)
 
+  debug(`files count: ${fileList.length}`)
+
   return fileList
 }
 

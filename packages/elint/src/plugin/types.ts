@@ -38,7 +38,7 @@ export interface ElintPluginResult<T> {
    */
   filePath?: string
   /**
-   * 经过格式化的结果消息
+   * 经过格式化，会直接在命令行输出的消息
    */
   message?: string
   /**

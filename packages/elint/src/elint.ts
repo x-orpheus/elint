@@ -36,17 +36,17 @@ export async function loadPresetAndPlugins({
   ElintBasicOptions,
   'preset' | 'cwd'
 > = {}): Promise<InternalLoadedPresetAndPlugins> {
-  debug('start load preset and plugins')
-
   let internalPreset: InternalPreset
 
   if (preset) {
+    debug(`start load preset: ${preset}`)
+
     internalPreset = await loadElintPreset(preset, { cwd })
   } else {
+    debug('start load preset in node_modules')
+
     internalPreset = await tryLoadElintPreset({ cwd })
   }
-
-  debug(`preset ${internalPreset.name} loaded`)
 
   const pendingPlugins = internalPreset.preset.plugins || []
 
@@ -65,6 +65,8 @@ export async function loadPresetAndPlugins({
     loadedPlugins.forEach((plugin) => {
       if (overridePluginConfig[plugin.id]) {
         Object.keys(overridePluginConfig[plugin.id]).forEach((key) => {
+          debug(`overriding config of ${plugin.id}: ${key}`)
+
           const currentKey = key as ElintPluginOverridableKey
           const currentValue = overridePluginConfig[plugin.id][currentKey]
           if (
@@ -258,8 +260,6 @@ export async function lintFiles(
     cwd
   })
 
-  debug(`Files count: ${fileList.length}`)
-
   const elintResultList: ElintResult[] = []
 
   // 没有匹配到任何文件进行提示
@@ -318,10 +318,6 @@ export async function lintFiles(
         })
 
         if (cacheResult) {
-          debug(
-            `Skipping file since it hasn't changed: ${elintResult.filePath}`
-          )
-
           elintResultList.push(elintResult)
           return
         }

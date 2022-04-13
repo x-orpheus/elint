@@ -7,7 +7,6 @@ const debug = _debug('elint:env')
  * 项目根目录
  */
 export const getBaseDir = (): string => {
-  // unit test
   if (process.env.INIT_CWD) {
     debug(`process.env.INIT_CWD: ${process.env.INIT_CWD}`)
     return process.env.INIT_CWD

@@ -51,8 +51,6 @@ program
       preset: options.preset
     })
 
-    debug('loaded preset and plugins')
-
     const isGit = await isGitHooks()
 
     debug(`is in git: ${isGit}`)
@@ -97,7 +95,11 @@ program
 
       console.log(report(results))
 
+      debug(`lint complete in: ${Date.now() - startTime}ms`)
+
       if (!isGit && options.notifier) {
+        debug('start notifier')
+
         const notifyMessage = await notify(internalLoadedPrestAndPlugins, cwd)
         if (notifyMessage) {
           console.log(notifyMessage)
@@ -108,7 +110,7 @@ program
 
       const success = !results.some((result) => !result.success)
 
-      debug(`elint complete in: ${Date.now() - startTime}ms`)
+      debug(`elint finished in: ${Date.now() - startTime}ms`)
 
       process.exit(success ? 0 : 1)
     } catch (e) {

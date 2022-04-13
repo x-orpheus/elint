@@ -77,6 +77,8 @@ class ElintCache {
       return false
     }
 
+    debug(`Skipping file since it hasn't changed: ${filePath}`)
+
     return true
   }
 

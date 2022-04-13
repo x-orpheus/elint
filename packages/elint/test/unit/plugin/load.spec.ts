@@ -54,7 +54,6 @@ describe('插件加载测试', () => {
         id: 'elint-plugin-local',
         name: 'local',
         type: 'linter',
-        cacheable: false,
         activateConfig: {
           extensions: []
         },
