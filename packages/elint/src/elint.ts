@@ -22,7 +22,7 @@ import type {
   ElintResult
 } from './types.js'
 import log from './utils/log.js'
-import getElintCache from './cache/index.js'
+import { getElintCache, resetElintCache } from './cache/index.js'
 
 const debug = _debug('elint:main')
 
@@ -382,6 +382,8 @@ export async function reset({
     (await loadPresetAndPlugins({ preset, cwd }))
 
   const errorMap: Record<string, unknown> = {}
+
+  resetElintCache(cwd)
 
   for (const plugin of loadedPlugins) {
     try {

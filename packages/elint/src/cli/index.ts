@@ -145,7 +145,7 @@ program
 
 program
   .command('reset')
-  .description('reset plugin cache')
+  .description('reset plugin cache & elint cache')
   .action(async () => {
     const errorMap = await reset()
 

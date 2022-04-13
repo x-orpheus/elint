@@ -128,6 +128,11 @@ class ElintCache {
     debug(`Cache saved to ${this.cacheFilePath}`)
     this.fileEntryCache.reconcile()
   }
+
+  delete() {
+    debug('Cache deleted.')
+    this.fileEntryCache.deleteCacheFile()
+  }
 }
 
 export default ElintCache
