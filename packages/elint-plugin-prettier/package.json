@@ -22,5 +22,8 @@
     "elint": "workspace:*",
     "ignore": "^5.2.0",
     "prettier": "^2.6.0"
+  },
+  "dependencies": {
+    "chalk": "^5.0.1"
   }
 }

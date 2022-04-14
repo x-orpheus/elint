@@ -1,4 +1,5 @@
 import path from 'path'
+import chalk from 'chalk'
 import { createRequire } from 'module'
 import type { Ignore } from 'ignore'
 import prettier, { type Options } from 'prettier'
@@ -34,6 +35,18 @@ const getOptionsForFile = (filePath: string) => {
   return options
 }
 
+// prettier cli 的错误处理
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handlePrettierError = (error: any) => {
+  const isParseError = Boolean(error && error.loc)
+
+  if (isParseError) {
+    return String(error)
+  }
+
+  throw error
+}
+
 const elintPluginPrettier: ElintPlugin<never> = {
   id: 'elint-plugin-prettier',
   name: 'Prettier',
@@ -58,10 +71,10 @@ const elintPluginPrettier: ElintPlugin<never> = {
   },
   async execute(text, { cwd, filePath }) {
     const result: ElintPluginResult<never> = {
-      pluginId: this.id,
       source: text,
       output: text,
-      success: true
+      errorCount: 0,
+      warningCount: 0
     }
 
     const ignorer = getIgnorer(cwd)
@@ -72,10 +85,15 @@ const elintPluginPrettier: ElintPlugin<never> = {
 
     const options = getOptionsForFile(filePath || cwd)
 
-    const formatted = format(text, options)
+    try {
+      const formatted = format(text, options)
 
-    result.output = formatted ?? result.output
-    result.success = formatted === text
+      result.output = formatted ?? result.output
+    } catch (e) {
+      result.message = `${
+        filePath ? `${chalk.underline(filePath)}\n  ` : ''
+      }${handlePrettierError(e)}`
+    }
 
     return result
   },

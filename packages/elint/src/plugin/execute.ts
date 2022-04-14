@@ -1,13 +1,6 @@
-import _debug from 'debug'
 import path from 'path'
-import type {
-  ElintPlugin,
-  ElintPluginOptions,
-  ElintPluginResult
-} from './types.js'
-import { createErrorReportResult, type ReportResult } from '../utils/report.js'
-
-const debug = _debug('elint:plugin:execute')
+import type { ElintResult } from '../types.js'
+import type { ElintPlugin, ElintPluginOptions } from './types.js'
 
 const checkElintPluginActivation = (
   plugin: ElintPlugin<unknown>,
@@ -28,43 +21,28 @@ const checkElintPluginActivation = (
   return false
 }
 
-interface ExecuteElintPluginResult {
-  success: boolean
-  pluginResult?: ElintPluginResult<unknown>
-  reportResult?: ReportResult
-}
-
-export const executeElintPlugin = async <T extends ElintPlugin<unknown>>(
-  plugin: T,
-  source: string,
-  options: ElintPluginOptions
-): Promise<ExecuteElintPluginResult> => {
-  try {
-    if (!checkElintPluginActivation(plugin, options)) {
-      return {
-        success: true
-      }
-    }
-
-    const pluginResult = await plugin.execute(source, options)
-
-    return {
-      success: pluginResult.success,
-      pluginResult,
-      reportResult: pluginResult.message
-        ? {
-            name: plugin.name,
-            success: pluginResult.success,
-            output: pluginResult.message
-          }
-        : undefined
-    }
-  } catch (e) {
-    debug(`[${plugin.id}] error: ${e}`)
-
-    return {
-      success: false,
-      reportResult: createErrorReportResult(plugin.name, options.filePath, e)
-    }
+/**
+ * 执行 elint 插件
+ *
+ * 会直接修改 elintResult 的值
+ */
+export const executeElintPlugin = async <T = unknown>(
+  elintResult: ElintResult,
+  plugin: ElintPlugin<T>,
+  pluginOptions: ElintPluginOptions
+): Promise<void> => {
+  if (!checkElintPluginActivation(plugin, pluginOptions)) {
+    return
   }
+
+  const pluginResult = await plugin.execute(elintResult.output, pluginOptions)
+
+  elintResult.output = pluginResult.output
+  elintResult.errorCount += pluginResult.errorCount
+  elintResult.warningCount += pluginResult.warningCount
+  elintResult.pluginResults.push({
+    ...pluginResult,
+    pluginId: plugin.id,
+    pluginName: plugin.name
+  })
 }

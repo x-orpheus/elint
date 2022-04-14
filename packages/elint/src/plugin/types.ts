@@ -1,3 +1,5 @@
+import type { ElintBaseResult } from '../types.js'
+
 /**
  * elint 插件类型
  *
@@ -12,31 +14,7 @@ export type ElintPluginType = 'linter' | 'formatter' | 'common'
  */
 export type ElintPluginOverridableKey = 'activateConfig'
 
-export interface ElintPluginResult<T> {
-  /**
-   * pluginId
-   */
-  pluginId: string
-  /**
-   * 输入的源码
-   */
-  source: string
-  /**
-   * 输出
-   */
-  output: string
-  /**
-   * lint / format 是否成功
-   *
-   * lint 类型下表示是否存在 error
-   *
-   * format 类型下表示内容是否和原始一致
-   */
-  success: boolean
-  /**
-   * 文件路径
-   */
-  filePath?: string
+export interface ElintPluginResult<T> extends ElintBaseResult {
   /**
    * 经过格式化，可以在命令行输出的消息
    */
@@ -47,15 +25,32 @@ export interface ElintPluginResult<T> {
   result?: T
 }
 
+export interface ElintPluginResultWithPluginData<T>
+  extends ElintPluginResult<T> {
+  /**
+   * 插件标识
+   */
+  pluginId: string
+  pluginName: string
+}
+
 export interface ElintPluginOptions {
   /**
    * 文件路径
    */
   filePath?: string
   /**
-   * 是否修复
+   * 文件源码
+   */
+  source: string
+  /**
+   * 是否修复错误
    */
   fix: boolean
+  /**
+   * 是否检查格式
+   */
+  style: boolean
   /**
    * cwd
    */
@@ -63,6 +58,9 @@ export interface ElintPluginOptions {
 }
 
 export interface ElintPluginVersion {
+  /**
+   * 插件版本号
+   */
   version: string
   /**
    * 需要展示 version 的依赖

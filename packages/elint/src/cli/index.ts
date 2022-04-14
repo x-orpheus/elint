@@ -10,7 +10,7 @@ import log from '../utils/log.js'
 import isGitHooks from '../utils/is-git-hooks.js'
 import { lintFiles, lintCommon, loadPresetAndPlugins, reset } from '../elint.js'
 import type { ElintOptions, ElintResult } from '../types.js'
-import { report } from '../utils/report.js'
+import report from '../utils/report.js'
 import notify from '../notifier/index.js'
 import { getBaseDir } from '../env.js'
 
@@ -108,13 +108,14 @@ program
         debug('disable notifier')
       }
 
-      const success = !results.some((result) => !result.success)
+      const success = !results.some((result) => result.errorCount > 0)
 
       debug(`elint finished in: ${Date.now() - startTime}ms`)
 
       process.exit(success ? 0 : 1)
     } catch (e) {
-      log.error('[elint]', (e as Error).message)
+      console.log(e)
+
       process.exit(1)
     }
   })

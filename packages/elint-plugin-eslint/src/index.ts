@@ -52,20 +52,19 @@ const elintPluginEsLint: ElintPlugin<ESLint.LintResult> = {
     const { esLint, formatter } = await getEsLintByOptions(options)
 
     const result: ElintPluginResult<ESLint.LintResult> = {
-      pluginId: this.id,
       source: text,
       output: text,
-      success: true
+      errorCount: 0,
+      warningCount: 0
     }
 
     const lintResults = await esLint.lintText(text, {
       filePath
     })
 
-    const errorResults = ESLint.getErrorResults(lintResults)
-
     const lintResult = lintResults[0]
-    result.success = errorResults.length === 0
+    result.errorCount = lintResult?.errorCount || 0
+    result.warningCount = lintResult?.warningCount || 0
     result.output = lintResult?.output ?? result.output
     result.result = lintResult
 

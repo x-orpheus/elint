@@ -1,9 +1,7 @@
 import _debug from 'debug'
 import fs from 'fs-extra'
-import chalk from 'chalk'
 import { groupBy } from 'lodash-es'
 import walker from './walker/index.js'
-import { createErrorReportResult } from './utils/report.js'
 import { loadElintPlugins } from './plugin/load.js'
 import { executeElintPlugin } from './plugin/execute.js'
 import type {
@@ -23,8 +21,20 @@ import type {
 } from './types.js'
 import log from './utils/log.js'
 import { getElintCache, resetElintCache } from './cache/index.js'
+import styleChecker from './plugin/built-in/style-checker.js'
 
 const debug = _debug('elint:main')
+
+function createElintResult(config?: Partial<ElintResult>): ElintResult {
+  return {
+    source: '',
+    output: '',
+    errorCount: 0,
+    warningCount: 0,
+    pluginResults: [],
+    ...config
+  }
+}
 
 /**
  * 加载 preset 和 plugins
@@ -99,17 +109,12 @@ export async function loadPresetAndPlugins({
  */
 export async function lintCommon({
   fix = false,
+  style = false,
   preset,
   cwd = getBaseDir(),
   internalLoadedPrestAndPlugins
 }: ElintBasicOptions = {}): Promise<ElintResult> {
-  const elintResult: ElintResult = {
-    source: '',
-    output: '',
-    success: true,
-    reportResults: [],
-    pluginResults: []
-  }
+  const elintResult = createElintResult()
 
   const { loadedPluginGroup } =
     internalLoadedPrestAndPlugins ||
@@ -117,20 +122,12 @@ export async function lintCommon({
 
   if (loadedPluginGroup.common) {
     for (const commonPlugin of loadedPluginGroup.common) {
-      const executeResult = await executeElintPlugin(commonPlugin, '', {
+      await executeElintPlugin(elintResult, commonPlugin, {
         fix,
-        cwd
+        cwd,
+        style,
+        source: elintResult.source
       })
-
-      elintResult.success = elintResult.success && executeResult.success
-
-      if (executeResult.pluginResult) {
-        elintResult.pluginResults.push(executeResult.pluginResult)
-      }
-
-      if (executeResult.reportResult) {
-        elintResult.reportResults.push(executeResult.reportResult)
-      }
     }
   }
 
@@ -148,14 +145,11 @@ export async function lintText(
     internalLoadedPrestAndPlugins
   }: ElintBasicOptions & { filePath?: string } = {}
 ): Promise<ElintResult> {
-  const elintResult: ElintResult = {
+  const elintResult = createElintResult({
     filePath,
     source: text,
-    output: text,
-    success: true,
-    reportResults: [],
-    pluginResults: []
-  }
+    output: text
+  })
 
   const { loadedPluginGroup } =
     internalLoadedPrestAndPlugins ||
@@ -163,69 +157,29 @@ export async function lintText(
 
   const pluginOptions: ElintPluginOptions = {
     fix,
+    style,
     cwd,
-    filePath
+    filePath,
+    source: elintResult.source
   }
 
   if (style && loadedPluginGroup.formatter) {
     for (const formatterPlugin of loadedPluginGroup.formatter) {
-      const executeResult = await executeElintPlugin(
-        formatterPlugin,
-        elintResult.output,
-        pluginOptions
-      )
-
-      // formatter 的 success 不需要判断
-
-      if (executeResult.pluginResult) {
-        elintResult.output = executeResult.pluginResult.output
-        elintResult.pluginResults.push(executeResult.pluginResult)
-      }
-
-      if (executeResult.reportResult) {
-        elintResult.reportResults.push(executeResult.reportResult)
-      }
+      await executeElintPlugin(elintResult, formatterPlugin, pluginOptions)
     }
   }
 
   if (loadedPluginGroup.linter) {
     for (const linterPlugin of loadedPluginGroup.linter) {
-      const executeResult = await executeElintPlugin(
-        linterPlugin,
-        elintResult.output,
-        {
-          ...pluginOptions,
-          // 当需要检查格式化时，lint 将自动执行 fix 操作
-          fix: style || fix
-        }
-      )
-
-      elintResult.success = elintResult.success && executeResult.success
-
-      if (executeResult.pluginResult) {
-        elintResult.output = executeResult.pluginResult.output
-        elintResult.pluginResults.push(executeResult.pluginResult)
-      }
-
-      if (executeResult.reportResult) {
-        elintResult.reportResults.push(executeResult.reportResult)
-      }
+      await executeElintPlugin(elintResult, linterPlugin, {
+        ...pluginOptions,
+        // 当需要检查格式化时，lint 将自动执行 fix 操作
+        fix: style || fix
+      })
     }
   }
 
-  const isModified = elintResult.output !== elintResult.source
-
-  if (style && isModified && !fix) {
-    elintResult.success = false
-    elintResult.reportResults.push(
-      createErrorReportResult(
-        'elint - formatter',
-        filePath,
-        undefined,
-        `${chalk.red.bold('!')} Not formatted`
-      )
-    )
-  }
+  await executeElintPlugin(elintResult, styleChecker, pluginOptions)
 
   return elintResult
 }
@@ -264,20 +218,7 @@ export async function lintFiles(
 
   // 没有匹配到任何文件进行提示
   if (!fileList.length) {
-    return elintResultList.concat({
-      success: true,
-      source: '',
-      output: '',
-      reportResults: [
-        createErrorReportResult(
-          'elint',
-          undefined,
-          undefined,
-          `${chalk.yellow('Warning: no file is matched')}`
-        )
-      ],
-      pluginResults: []
-    })
+    return []
   }
 
   const currentInternalLoadedPrestAndPlugins =
@@ -290,68 +231,58 @@ export async function lintFiles(
 
   fileList.forEach((fileItem) => {
     const task = async (): Promise<void> => {
-      let elintResult: ElintResult = {
-        filePath: undefined,
-        source: '',
-        output: '',
-        success: true,
-        reportResults: [],
-        pluginResults: []
+      let source: string
+      let filePath: string
+
+      if (typeof fileItem === 'string') {
+        filePath = fileItem
+        source = fs.readFileSync(fileItem, 'utf-8')
+      } else {
+        filePath = fileItem.filePath
+        source = fileItem.fileContent
       }
 
-      try {
-        if (typeof fileItem === 'string') {
-          elintResult.filePath = fileItem
-          elintResult.source = fs.readFileSync(fileItem, 'utf-8')
-        } else {
-          elintResult.filePath = fileItem.filePath
-          elintResult.source = fileItem.fileContent
-        }
+      let elintResult = createElintResult({
+        filePath,
+        source,
+        output: source
+      })
 
-        elintResult.output = elintResult.source
+      const cacheResult = elintCache?.getFileCache(filePath, {
+        fix,
+        style,
+        internalLoadedPrestAndPlugins: currentInternalLoadedPrestAndPlugins,
+        write
+      })
 
-        const cacheResult = elintCache?.getFileCache(elintResult.filePath, {
-          fix,
-          style,
-          internalLoadedPrestAndPlugins: currentInternalLoadedPrestAndPlugins,
-          write
-        })
-
-        if (cacheResult) {
-          elintResultList.push(elintResult)
-          return
-        }
-
-        elintResult = await lintText(elintResult.source, {
-          fix,
-          style,
-          cwd,
-          filePath: elintResult.filePath,
-          internalLoadedPrestAndPlugins: currentInternalLoadedPrestAndPlugins
-        })
-
-        const isModified = elintResult.output !== elintResult.source
-
-        if (isModified && fix && write && elintResult.filePath) {
-          fs.writeFileSync(elintResult.filePath, elintResult.output, {
-            encoding: 'utf-8'
-          })
-        }
-
-        elintCache?.setFileCache(elintResult, {
-          fix,
-          style,
-          internalLoadedPrestAndPlugins: currentInternalLoadedPrestAndPlugins,
-          write
-        })
-      } catch (e) {
-        elintResult.success = false
-        elintResult.reportResults.push(
-          createErrorReportResult('elint', elintResult.filePath, e)
-        )
-
-        debug(`[${fileItem}] error: ${e}`)
+      if (cacheResult) {
+        elintResult.fromCache = true
+        elintResultList.push(elintResult)
+        return
       }
+
+      elintResult = await lintText(elintResult.source, {
+        fix,
+        style,
+        cwd,
+        filePath: elintResult.filePath,
+        internalLoadedPrestAndPlugins: currentInternalLoadedPrestAndPlugins
+      })
+
+      const isModified = elintResult.output !== elintResult.source
+
+      if (isModified && fix && write && elintResult.filePath) {
+        fs.writeFileSync(elintResult.filePath, elintResult.output, {
+          encoding: 'utf-8'
+        })
+      }
+
+      elintCache?.setFileCache(elintResult, {
+        fix,
+        style,
+        internalLoadedPrestAndPlugins: currentInternalLoadedPrestAndPlugins,
+        write
+      })
 
       elintResultList.push(elintResult)
     }

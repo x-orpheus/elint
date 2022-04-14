@@ -1,39 +1,42 @@
 import type {
   ElintPlugin,
-  ElintPluginResult,
+  ElintPluginResultWithPluginData,
   ElintPluginType
 } from './plugin/types.js'
 import type { ElintPreset, InternalPreset } from './preset/types.js'
-import type { ReportResult } from './utils/report.js'
 
 /**
- * elint 执行结果结构
+ * elint 基础结果结构
  */
-export interface ElintResult {
+export interface ElintBaseResult {
   /**
    * 文件路径
    */
   filePath?: string
   /**
-   * 文件原始内容
+   * 输入源码
    */
   source: string
   /**
-   * 文件输出
+   * 输出源码
    */
   output: string
+  errorCount: number
+  warningCount: number
+}
+
+/**
+ * elint lint 结果结构
+ */
+export interface ElintResult extends ElintBaseResult {
   /**
-   * 执行整体结果
+   * 是否命中缓存
    */
-  success: boolean
-  /**
-   * 命令行输出结果
-   */
-  reportResults: ReportResult[]
+  fromCache?: boolean
   /**
    * 各个 plugin 结果
    */
-  pluginResults: ElintPluginResult<unknown>[]
+  pluginResults: ElintPluginResultWithPluginData<unknown>[]
 }
 
 /**

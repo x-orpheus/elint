@@ -119,9 +119,12 @@ importers:
 
   packages/elint-plugin-prettier:
     specifiers:
+      chalk: ^5.0.1
       elint: workspace:*
       ignore: ^5.2.0
       prettier: ^2.6.0
+    dependencies:
+      chalk: 5.0.1
     devDependencies:
       elint: link:../elint
       ignore: 5.2.0

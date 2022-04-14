@@ -25,7 +25,7 @@ function reduceEmptyLine(string: string): string {
   return string.replace(/\n([ ]*\n)+/g, '\n\n')
 }
 
-export interface ReportResult {
+interface ReportResult {
   /**
    * 段落名
    */
@@ -48,7 +48,7 @@ const passedMessage = chalk.green(`${figures.tick} Passed`)
  * @param results 要输出到命令行的内容
  * @returns output
  */
-export function formatReportResults(results: ReportResult[]): string {
+function formatReportResults(results: ReportResult[]): string {
   const arr = []
 
   // 将 name 相同的 result 合并成一个
@@ -85,29 +85,17 @@ export function formatReportResults(results: ReportResult[]): string {
   return reduceEmptyLine(arr.join(''))
 }
 
-export function createErrorReportResult(
-  name: string,
-  filePath?: string,
-  error?: unknown,
-  customMessage?: string
-): ReportResult {
-  return {
-    name,
-    success: false,
-    output: `${filePath ? `${chalk.underline(filePath)}\n  ` : ''}${
-      customMessage ??
-      `${chalk.red('error:')} ${
-        error instanceof Error ? error.message : 'unknown error'
-      }`
-    }\n\n`
-  }
-}
-
-export function report(results: ElintResult[]): string {
+function report(results: ElintResult[]): string {
   const reportResults: ReportResult[] = []
 
   results.forEach((result) => {
-    reportResults.push(...result.reportResults)
+    result.pluginResults.forEach((pluginResult) => {
+      reportResults.push({
+        name: pluginResult.pluginName,
+        success: pluginResult.errorCount === 0,
+        output: pluginResult.message || ''
+      })
+    })
   })
 
   if (!reportResults.length) {
@@ -120,3 +108,5 @@ export function report(results: ElintResult[]): string {
 
   return formatReportResults(reportResults)
 }
+
+export default report

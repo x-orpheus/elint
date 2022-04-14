@@ -14,34 +14,43 @@ const elintPluginStylelint: ElintPlugin<LinterResult> = {
   },
   async execute(text, { fix, cwd, filePath }) {
     const result: ElintPluginResult<LinterResult> = {
-      pluginId: this.id,
       source: text,
       output: text,
-      success: true
+      errorCount: 0,
+      warningCount: 0
     }
 
-    const lintResult = await lint({
+    const linterResult = await lint({
       code: text,
       codeFilename: filePath,
       fix,
       cwd
     })
 
-    result.success = !lintResult.errored
-    result.result = lintResult
+    linterResult.results.forEach((lintResult) => {
+      lintResult.warnings.forEach((warning) => {
+        if (warning.severity === 'error') {
+          result.errorCount += 1
+        } else {
+          result.warningCount += 1
+        }
+      })
+    })
+
+    result.result = linterResult
 
     // stylelint 当 fix 不为 true 时，output 会返回一个 json
-    if (fix && lintResult.output) {
-      if (lintResult.output === '[]' && lintResult.results.length === 0) {
+    if (fix && linterResult.output) {
+      if (linterResult.output === '[]' && linterResult.results.length === 0) {
         // 当文件被 stylelint ignore 命中时，返回值会成为 '[]'
         // 因此这种状态下 output 需要被忽略
       } else {
-        result.output = lintResult.output
+        result.output = linterResult.output
       }
     }
 
     const stringFormatter = formatters.string
-    result.message = stringFormatter(lintResult.results)
+    result.message = stringFormatter(linterResult.results)
 
     return result
   },

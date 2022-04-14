@@ -104,7 +104,7 @@ class ElintCache {
     }
 
     // 结果错误或者有 warning 消息的不缓存
-    if (!result.success || result.reportResults.length) {
+    if (result.errorCount || result.warningCount) {
       debug(`Ignore updating cache result with warning or error: ${filePath}`)
 
       return

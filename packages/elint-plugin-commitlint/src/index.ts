@@ -20,10 +20,10 @@ const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
   },
   async execute(_, { cwd }) {
     const result: ElintPluginResult<LintOutcome> = {
-      pluginId: this.id,
+      errorCount: 0,
+      warningCount: 0,
       source: '',
-      output: '',
-      success: true
+      output: ''
     }
 
     const readOptions = {
@@ -51,7 +51,7 @@ const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
       results: [report]
     })
 
-    result.success = report.errors.length === 0
+    result.errorCount = report.errors.length
     result.result = report
     result.message = formatted
 
