@@ -21,7 +21,7 @@ const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
   async execute(_, { cwd }) {
     const result: ElintPluginResult<LintOutcome> = {
       pluginId: this.id,
-      input: '',
+      source: '',
       output: '',
       success: true
     }
@@ -39,7 +39,7 @@ const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
 
     const [message, config] = await Promise.all([read(readOptions), load()])
 
-    result.input = message[0] || ''
+    result.source = message[0] || ''
     result.output = message[0] || ''
 
     const rules = config.rules

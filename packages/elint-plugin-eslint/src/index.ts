@@ -53,7 +53,7 @@ const elintPluginEsLint: ElintPlugin<ESLint.LintResult> = {
 
     const result: ElintPluginResult<ESLint.LintResult> = {
       pluginId: this.id,
-      input: text,
+      source: text,
       output: text,
       success: true
     }

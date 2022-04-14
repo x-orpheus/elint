@@ -61,7 +61,7 @@ describe('插件加载测试', () => {
           return {
             pluginId: this.id,
             success: true,
-            input: '',
+            source: '',
             output: ''
           }
         },

@@ -59,7 +59,7 @@ const elintPluginPrettier: ElintPlugin<never> = {
   async execute(text, { cwd, filePath }) {
     const result: ElintPluginResult<never> = {
       pluginId: this.id,
-      input: text,
+      source: text,
       output: text,
       success: true
     }

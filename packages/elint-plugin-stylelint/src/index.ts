@@ -15,7 +15,7 @@ const elintPluginStylelint: ElintPlugin<LinterResult> = {
   async execute(text, { fix, cwd, filePath }) {
     const result: ElintPluginResult<LinterResult> = {
       pluginId: this.id,
-      input: text,
+      source: text,
       output: text,
       success: true
     }

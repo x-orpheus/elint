@@ -18,9 +18,9 @@ export interface ElintPluginResult<T> {
    */
   pluginId: string
   /**
-   * 输入
+   * 输入的源码
    */
-  input: string
+  source: string
   /**
    * 输出
    */
@@ -38,7 +38,7 @@ export interface ElintPluginResult<T> {
    */
   filePath?: string
   /**
-   * 经过格式化，会直接在命令行输出的消息
+   * 经过格式化，可以在命令行输出的消息
    */
   message?: string
   /**
