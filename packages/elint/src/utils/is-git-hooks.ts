@@ -3,47 +3,38 @@ import find from 'find-process'
 
 const debug = _debug('elint:utils:is-git-hooks')
 
-const huskyCmdReg = /node_modules(\/|\\)husky/
-const huskyV7CmdReg = /\.husky(\/|\\)/
-
-/**
- * 获取 ppid
- * node v7.x 居然不支持 process.ppid（v6.x 支持）
- *
- * @returns ppid
- */
-/* istanbul ignore next */
-async function getPPID(): Promise<number | undefined> {
-  const ppid = process.ppid
-
-  if (typeof ppid === 'number') {
-    return Promise.resolve(ppid)
-  }
-
-  const list = await find('pid', process.pid)
-
-  return list[0]?.ppid
-}
+const huskyLegacyCmdReg = /node_modules(\/|\\)husky/
+const huskyCmdReg = /\.husky(\/|\\)/
+const gitReg = /git/i
 
 /**
  * 根据 pid 判断是否由 husky 调用
- *
- * @param ppid parent pid
- * @returns 是否是 husky 调用
  */
-async function isRunByHusky(ppid: number): Promise<boolean> {
-  const list = await find('pid', ppid)
+async function isRunByHusky(pid: number): Promise<boolean> {
+  const list = await find('pid', pid)
   debug('process list: %o', list)
-  const cmd = list[0]?.cmd
-  const pppid = list[0]?.ppid
 
-  if (!cmd || typeof pppid === 'undefined') {
+  const currentProcess = list[0]
+
+  if (!currentProcess) {
     return false
   }
-  if (huskyCmdReg.test(cmd) || huskyV7CmdReg.test(cmd)) {
+
+  const { cmd, ppid, name } = currentProcess
+
+  if (!cmd || typeof ppid === 'undefined') {
+    return false
+  }
+
+  // 如果已经到
+  if (gitReg.test(name)) {
+    return false
+  }
+
+  if (huskyCmdReg.test(cmd) || huskyLegacyCmdReg.test(cmd)) {
     return true
   }
-  return isRunByHusky(pppid)
+  return isRunByHusky(ppid)
 }
 
 /**
@@ -53,14 +44,11 @@ async function isRunByHusky(ppid: number): Promise<boolean> {
  */
 async function isGitHooks(): Promise<boolean> {
   try {
-    const ppid = await getPPID()
+    const ppid = process.ppid
 
     debug(`ppid: ${ppid}`)
 
-    if (typeof ppid === 'number') {
-      return isRunByHusky(ppid)
-    }
-    return false
+    return isRunByHusky(ppid)
   } catch (err) {
     debug('error: %o', err)
     return false
