@@ -12,6 +12,10 @@ export type ElintCacheOptions = Required<
 >
 
 interface CacheMetaResult {
+  /**
+   * 是否完全成功（没有 warning 和 error）
+   */
+  success: boolean
   style: boolean
   // 扁平结构会减少缓存文件存储量
   presetName: string
@@ -51,8 +55,8 @@ class ElintCache {
     const cacheMetaResult: CacheMetaResult = (fileDescriptor as any).meta
       ?.result
 
-    if (!cacheMetaResult) {
-      debug(`Cache touched without data: ${filePath}`)
+    if (!cacheMetaResult || !cacheMetaResult.success) {
+      debug(`Cache missed: ${filePath}`)
 
       return false
     }
@@ -88,33 +92,23 @@ class ElintCache {
     const filePath = result.filePath
 
     if (!filePath) {
-      debug('Ignore updating cache without filePath')
-
-      return
-    }
-
-    // fix 且不写入文件时的结果不缓存
-    if (fix && !write) {
-      debug(
-        `Ignore updating cache result with fix=true && write=false: ${filePath}`
-      )
-
-      return
-    }
-
-    // 结果错误或者有 warning 消息的不缓存
-    if (result.errorCount || result.warningCount) {
-      debug(`Ignore updating cache result with warning or error: ${filePath}`)
-
       return
     }
 
     const fileDescriptor = this.fileEntryCache.getFileDescriptor(filePath)
 
     if (!fileDescriptor.notFound) {
-      debug(`Updating cache result: ${filePath}`)
+      let success = !result.errorCount && !result.warningCount
+
+      // fix 且不写入文件时的结果不缓存
+      if (fix && !write) {
+        success = false
+      }
+
+      debug(`Updating cache result: ${filePath}, success: ${success}`)
 
       const cacheMetaResult: CacheMetaResult = {
+        success,
         style,
         presetName: internalLoadedPrestAndPlugins.internalPreset.name,
         presetVersion: internalLoadedPrestAndPlugins.internalPreset.version
