@@ -109,13 +109,7 @@ function report(results: ElintResult[]): string {
     })
   })
 
-  if (!reportResults.length) {
-    reportResults.push({
-      name: 'elint',
-      success: true,
-      output: ''
-    })
-  } else {
+  if (errorCount > 0 || warningCount > 0) {
     reportResults.push({
       name: 'elint',
       success: errorCount === 0,
@@ -128,6 +122,12 @@ function report(results: ElintResult[]): string {
           errorCount
         )}, ${warningCount} ${pluralize('warning', warningCount)})`
       )
+    })
+  } else {
+    reportResults.push({
+      name: 'elint',
+      success: true,
+      output: ''
     })
   }
 

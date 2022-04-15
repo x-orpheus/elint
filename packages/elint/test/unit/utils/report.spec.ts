@@ -66,6 +66,11 @@ describe('report 测试', () => {
     result.push('  output2')
     result.push('\n')
     result.push('\n')
+    result.push(`${chalk.bold('> elint:')}\n`)
+    result.push('\n')
+    result.push('  ' + chalk.green(`${figures.tick} Passed`))
+    result.push('\n')
+    result.push('\n')
 
     expect(report(input)).toEqual(result.join(''))
   })
