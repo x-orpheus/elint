@@ -37,7 +37,7 @@ export const loadElintPreset = async (
     const presetConfig = presetModule.default || presetModule
 
     if (!isElintPreset(presetConfig)) {
-      throw new Error(`${preset} is not an available elint preset`)
+      throw new Error(`'${preset}' is not an available elint preset`)
     }
 
     debug(
@@ -63,7 +63,7 @@ export const loadElintPreset = async (
     }
   }
 
-  throw new Error('unknown elint preset')
+  throw new Error('Unknown elint preset')
 }
 
 /**
@@ -81,7 +81,7 @@ export const tryLoadElintPreset = ({
   }
 
   if (presetList.length !== 1) {
-    throw new Error('One project should install one elint preset')
+    throw new Error('One project should install only one elint preset')
   }
 
   return loadElintPreset(presetList[0], { cwd })

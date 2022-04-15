@@ -66,7 +66,9 @@ export async function loadPresetAndPlugins({
   })
 
   if (!loadedPlugins.length) {
-    throw new Error('no available elint plugin')
+    throw new Error(
+      `'${internalPreset.name}' doesn't contain available elint plugins`
+    )
   }
 
   if (internalPreset.preset.overridePluginConfig) {

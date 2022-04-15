@@ -77,7 +77,11 @@ async function getPackageInfo(
     }
 
     if (!info || info.name !== packageName) {
-      throw new Error('not a valid package info')
+      throw new Error(
+        `Command '${commands.join(
+          ' '
+        )}' didn't response with a valid package info`
+      )
     }
 
     debug('get package info: %o', info)

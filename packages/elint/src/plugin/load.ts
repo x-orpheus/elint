@@ -25,7 +25,7 @@ const loadElintPlugin = async (
     const pluginConfig = pluginModule.default || pluginModule
 
     if (!isElintPlugin(pluginConfig) || pluginConfig.id !== plugin) {
-      throw new Error(`${plugin} is not an available elint plugin`)
+      throw new Error(`'${plugin}' is not an available elint plugin`)
     }
 
     debug(`loaded plugin: ${plugin}`)
@@ -39,7 +39,7 @@ const loadElintPlugin = async (
     return plugin
   }
 
-  throw new Error('unknown elint plugin')
+  throw new Error('Unknown elint plugin')
 }
 
 export const loadElintPlugins = async (
