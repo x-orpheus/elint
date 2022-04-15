@@ -28,7 +28,7 @@ const styleChecker: ElintPlugin<never> = {
       message: isModified
         ? `${
             filePath ? `${chalk.underline(filePath)}\n  ` : ''
-          }${chalk.red.bold('!')} Not formatted`
+          }${chalk.red.bold('!')} Not formatted\n\n`
         : undefined
     }
   },

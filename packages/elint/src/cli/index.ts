@@ -171,7 +171,6 @@ program
   .command('invalid', { isDefault: true, hidden: true })
   .option('-v, --version', 'output the version number')
   .action(async (options) => {
-    console.log(options)
     if (options.version) {
       await version()
 
