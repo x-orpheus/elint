@@ -59,8 +59,8 @@ describe('插件加载测试', () => {
         },
         async execute() {
           return {
-            pluginId: this.id,
-            success: true,
+            errorCount: 0,
+            warningCount: 0,
             source: '',
             output: ''
           }
