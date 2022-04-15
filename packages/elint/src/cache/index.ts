@@ -4,7 +4,7 @@ import ElintCache from './elint-cache.js'
 
 let elintCache: ElintCache | undefined
 
-function getElintCachePath(cwd: string): string {
+function getElintCacheFilePath(cwd: string): string {
   let cacheFilePath = path.join(cwd, 'node_modules')
 
   if (fs.existsSync(cacheFilePath)) {
@@ -13,7 +13,7 @@ function getElintCachePath(cwd: string): string {
     cacheFilePath = path.join(cwd, '.cache')
   }
 
-  return cacheFilePath
+  return path.join(cacheFilePath, 'elint')
 }
 
 export function getElintCache(
@@ -25,7 +25,7 @@ export function getElintCache(
   }
 
   if (!elintCache) {
-    elintCache = new ElintCache(getElintCachePath(cwd))
+    elintCache = new ElintCache(getElintCacheFilePath(cwd))
   }
 
   return elintCache

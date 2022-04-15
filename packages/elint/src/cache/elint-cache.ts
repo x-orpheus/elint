@@ -12,7 +12,6 @@ export type ElintCacheOptions = Required<
 >
 
 interface CacheMetaResult {
-  success: boolean
   style: boolean
   // 扁平结构会减少缓存文件存储量
   presetName: string
@@ -29,7 +28,7 @@ class ElintCache {
 
     debug(`Initial cache in ${cacheFilePath}`)
 
-    this.fileEntryCache = fileEntryCache.create('elint', cacheFilePath)
+    this.fileEntryCache = fileEntryCache.create(cacheFilePath)
   }
 
   getFileCache(
@@ -94,7 +93,7 @@ class ElintCache {
       return
     }
 
-    // fix 模式下不写入的不缓存
+    // fix 且不写入文件时的结果不缓存
     if (fix && !write) {
       debug(
         `Ignore updating cache result with fix=true && write=false: ${filePath}`
@@ -116,7 +115,6 @@ class ElintCache {
       debug(`Updating cache result: ${filePath}`)
 
       const cacheMetaResult: CacheMetaResult = {
-        success: true,
         style,
         presetName: internalLoadedPrestAndPlugins.internalPreset.name,
         presetVersion: internalLoadedPrestAndPlugins.internalPreset.version
