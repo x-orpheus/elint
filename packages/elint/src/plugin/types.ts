@@ -127,3 +127,11 @@ export function isElintPlugin(value: unknown): value is ElintPlugin<unknown> {
   }
   return false
 }
+
+/**
+ * 测试插件结果
+ */
+export interface ElintPluginTestResult<T> {
+  version: ElintPluginVersion
+  result: ElintPluginResult<T>
+}

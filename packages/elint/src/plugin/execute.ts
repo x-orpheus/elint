@@ -1,6 +1,11 @@
 import path from 'path'
 import type { ElintResult } from '../types.js'
-import type { ElintPlugin, ElintPluginOptions } from './types.js'
+import {
+  type ElintPlugin,
+  type ElintPluginOptions,
+  type ElintPluginTestResult,
+  isElintPlugin
+} from './types.js'
 
 const checkElintPluginActivation = (
   plugin: ElintPlugin<unknown>,
@@ -45,4 +50,29 @@ export const executeElintPlugin = async <T = unknown>(
     pluginId: plugin.id,
     pluginName: plugin.name
   })
+}
+
+export const testElintPlugin = async <T>(
+  source: string,
+  plugin: ElintPlugin<T>,
+  pluginOptions: ElintPluginOptions
+): Promise<ElintPluginTestResult<T> | null> => {
+  if (!isElintPlugin(plugin)) {
+    throw new Error('Current plugin is not an elint plugin.')
+  }
+
+  if (!checkElintPluginActivation(plugin, pluginOptions)) {
+    return null
+  }
+
+  await plugin.reset?.()
+
+  const version = plugin.getVersion()
+
+  const result = await plugin.execute(source, pluginOptions)
+
+  return {
+    version,
+    result
+  }
 }
