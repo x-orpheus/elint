@@ -14,6 +14,10 @@ function padding(string: string, span = 2): string {
   return spaces + string.replace(/\n/g, `\n${spaces}`)
 }
 
+function pluralize(word: string, count: number) {
+  return count > 1 ? word : `${word}s`
+}
+
 /**
  * 移除多余的空行
  * 连续两个以上的 \n 合并为两个
@@ -87,14 +91,21 @@ function formatReportResults(results: ReportResult[]): string {
 
 function report(results: ElintResult[]): string {
   const reportResults: ReportResult[] = []
+  let errorCount = 0
+  let warningCount = 0
 
   results.forEach((result) => {
+    errorCount += result.errorCount
+    warningCount += result.warningCount
+
     result.pluginResults.forEach((pluginResult) => {
-      reportResults.push({
-        name: pluginResult.pluginName,
-        success: pluginResult.errorCount === 0,
-        output: pluginResult.message || ''
-      })
+      if (pluginResult.message) {
+        reportResults.push({
+          name: pluginResult.pluginName,
+          success: pluginResult.errorCount === 0,
+          output: pluginResult.message
+        })
+      }
     })
   })
 
@@ -103,6 +114,20 @@ function report(results: ElintResult[]): string {
       name: 'elint',
       success: true,
       output: ''
+    })
+  } else {
+    reportResults.push({
+      name: 'elint',
+      success: errorCount === 0,
+      output: chalk[errorCount > 0 ? 'red' : 'yellow'](
+        `${figures.cross} ${errorCount + warningCount} ${pluralize(
+          'problem',
+          errorCount + warningCount
+        )} (${errorCount} ${pluralize(
+          'error',
+          errorCount
+        )}, ${warningCount} ${pluralize('warning', warningCount)})`
+      )
     })
   }
 

@@ -44,7 +44,7 @@ const elintPluginEsLint: ElintPlugin<ESLint.LintResult> = {
   name: 'ESLint',
   type: 'linter',
   activateConfig: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs']
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs']
   },
   async execute(text, options) {
     const { filePath } = options

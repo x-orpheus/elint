@@ -39,7 +39,11 @@ export interface InternalPreset {
 }
 
 export function isElintPreset(value: unknown): value is ElintPreset {
-  if (value && typeof value === 'object' && (value as ElintPreset).plugins) {
+  if (
+    value &&
+    typeof value === 'object' &&
+    Array.isArray((value as ElintPreset).plugins)
+  ) {
     return true
   }
 
