@@ -14,11 +14,7 @@ const getEsLintByOptions = async ({
   esLint: ESLint
   formatter: ESLint.Formatter
 }> => {
-  let key = fix ? '1' : '0'
-  if (cwd) {
-    key += `-${cwd}`
-  }
-
+  const key = `${fix}-${cwd}`
   let esLint = esLintInstanceMap.get(key)
 
   if (!esLint) {
