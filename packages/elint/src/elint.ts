@@ -147,6 +147,7 @@ export async function lintText(
     internalLoadedPrestAndPlugins
   }: ElintBasicOptions & { filePath?: string } = {}
 ): Promise<ElintResult> {
+  debug(`┌─ lint text ${filePath ? `(${filePath})` : ''} start`)
   const elintResult = createElintResult({
     filePath,
     source: text,
@@ -182,6 +183,8 @@ export async function lintText(
   }
 
   await executeElintPlugin(elintResult, styleChecker, pluginOptions)
+
+  debug(`└─ lint text ${filePath ? `(${filePath})` : ''} finish`)
 
   return elintResult
 }
