@@ -227,7 +227,7 @@ export async function lintFiles(
     internalLoadedPrestAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))
 
-  const tasks: Promise<void>[] = []
+  const tasks: (() => Promise<void>)[] = []
 
   const elintCache = getElintCache(cache, cwd)
 
@@ -289,10 +289,16 @@ export async function lintFiles(
       elintResultList.push(elintResult)
     }
 
-    tasks.push(task())
+    tasks.push(task)
   })
 
-  await Promise.all(tasks)
+  debug('elint tasks start')
+
+  for (const task of tasks) {
+    await task()
+  }
+
+  debug('elint task end')
 
   elintCache?.reconcile()
 
