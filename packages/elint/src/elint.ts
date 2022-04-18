@@ -20,7 +20,11 @@ import type {
   ElintResult
 } from './types.js'
 import log from './utils/log.js'
-import { getElintCache, resetElintCache } from './cache/index.js'
+import {
+  getElintCache,
+  getElintCacheLocation,
+  resetElintCache
+} from './cache/index.js'
 import styleChecker from './plugin/built-in/style-checker.js'
 
 const debug = _debug('elint:main')
@@ -205,7 +209,8 @@ export async function lintFiles(
     preset,
     cwd = getBaseDir(),
     internalLoadedPrestAndPlugins,
-    cache = false
+    cache = false,
+    cacheLocation = getElintCacheLocation(cwd)
   }: ElintOptions
 ): Promise<ElintResult[]> {
   const startTime = Date.now()
@@ -232,7 +237,7 @@ export async function lintFiles(
 
   const tasks: (() => Promise<void>)[] = []
 
-  const elintCache = getElintCache(cache, cwd)
+  const elintCache = getElintCache(cache, cacheLocation)
 
   fileList.forEach((fileItem) => {
     const task = async (): Promise<void> => {

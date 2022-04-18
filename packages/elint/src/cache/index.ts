@@ -4,35 +4,40 @@ import ElintCache from './elint-cache.js'
 
 let elintCache: ElintCache | undefined
 
-function getElintCacheFilePath(cwd: string): string {
-  let cacheFilePath = path.join(cwd, 'node_modules')
+const ELINT_CACHE_FILENAME = '.elintcache'
 
-  if (fs.existsSync(cacheFilePath)) {
-    cacheFilePath = path.join(cacheFilePath, '.cache')
+export function getElintCacheLocation(cwd: string): string {
+  let cacheLocation = path.join(cwd, 'node_modules')
+
+  if (fs.existsSync(cacheLocation)) {
+    cacheLocation = path.join(cacheLocation, '.cache')
   } else {
-    cacheFilePath = path.join(cwd, '.cache')
+    cacheLocation = path.join(cwd, '.cache')
   }
 
-  return path.join(cacheFilePath, 'elint')
+  return cacheLocation
 }
 
 export function getElintCache(
-  cache = false,
-  cwd: string
+  cache: boolean,
+  cacheLocation: string
 ): ElintCache | undefined {
   if (!cache) {
     return undefined
   }
 
   if (!elintCache) {
-    elintCache = new ElintCache(getElintCacheFilePath(cwd))
+    elintCache = new ElintCache(path.join(cacheLocation, ELINT_CACHE_FILENAME))
   }
 
   return elintCache
 }
 
-export function resetElintCache(cwd: string): void {
-  const elintCache = getElintCache(true, cwd)
+export function resetElintCache(cacheLocation: string): void {
+  const elintCache = getElintCache(
+    true,
+    path.join(cacheLocation, ELINT_CACHE_FILENAME)
+  )
 
   elintCache?.delete()
 }

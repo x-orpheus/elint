@@ -94,11 +94,15 @@ export interface ElintOptions extends ElintBasicOptions {
    */
   git?: boolean
   /**
-   * 是否对结果进行缓存
+   * 是否开启缓存
    *
    * 当项目中没有 preset 时不进行缓存
    */
   cache?: boolean
+  /**
+   * 缓存位置
+   */
+  cacheLocation?: string
 }
 
 /**
