@@ -202,14 +202,13 @@ export async function lintFiles(
     preset,
     cwd = getBaseDir(),
     internalLoadedPrestAndPlugins,
-    cache: optionCache = false
+    cache = false
   }: ElintOptions
 ): Promise<ElintResult[]> {
   const startTime = Date.now()
 
   // 调整 fix 配置
   const fix = git ? false : optionFix
-  const cache = git ? false : optionCache
 
   const fileList = await walker(files, {
     noIgnore,
