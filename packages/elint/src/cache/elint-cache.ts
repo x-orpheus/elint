@@ -12,10 +12,6 @@ export type ElintCacheOptions = Required<
 >
 
 interface CacheMetaResult {
-  /**
-   * 是否完全成功（没有 warning 和 error）
-   */
-  success: boolean
   style: boolean
   // 扁平结构会减少缓存文件存储量
   presetName: string
@@ -55,7 +51,7 @@ class ElintCache {
     const cacheMetaResult: CacheMetaResult = (fileDescriptor as any).meta
       ?.result
 
-    if (!cacheMetaResult || !cacheMetaResult.success) {
+    if (!cacheMetaResult) {
       debug(`Cache missed: ${filePath}`)
 
       return false
@@ -105,10 +101,16 @@ class ElintCache {
         success = false
       }
 
-      debug(`Updating cache result: ${filePath}, success: ${success}`)
+      if (!success) {
+        this.fileEntryCache.removeEntry(filePath)
+        debug(`Removing cache result: ${filePath}`)
+
+        return
+      }
+
+      debug(`Updating cache result: ${filePath}`)
 
       const cacheMetaResult: CacheMetaResult = {
-        success,
         style,
         presetName: internalLoadedPrestAndPlugins.internalPreset.name,
         presetVersion: internalLoadedPrestAndPlugins.internalPreset.version
