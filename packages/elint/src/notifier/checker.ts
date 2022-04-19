@@ -1,9 +1,6 @@
 import _debug from 'debug'
-import { get } from 'lodash-es'
 import semver from 'semver'
-import { getLastNotifyTime } from './config.js'
-import toMs from '../utils/to-ms.js'
-import type { ReportInfo } from './report.js'
+import type { NotifierReportInfo } from './report.js'
 import getPackageInfo from './get-package-info.js'
 import type { InternalLoadedPresetAndPlugins } from '../types.js'
 
@@ -16,11 +13,12 @@ const debug = _debug('elint:notifier:checker')
 async function checker(
   { internalPreset }: InternalLoadedPresetAndPlugins,
   cwd: string
-): Promise<ReportInfo | null> {
+): Promise<NotifierReportInfo | null> {
   try {
-    debug('preset name: %o', internalPreset.name)
-
     const { name, version: currentPresetVersion } = internalPreset
+
+    debug('preset name: %o', name)
+
     const latestPresetInfo = await getPackageInfo(name, cwd)
 
     // 获取仓库数据失败
@@ -30,29 +28,12 @@ async function checker(
 
     const latestPresetVersion = latestPresetInfo.version
 
-    debug(`preset current version: ${currentPresetVersion}`)
-    debug(`preset latest version: ${latestPresetVersion}`)
+    debug(
+      `preset version: latest(${latestPresetVersion}), current(${currentPresetVersion})`
+    )
 
     // latestPresetVersion <= currentPresetVersion 无需更新
     if (!semver.gt(latestPresetVersion, currentPresetVersion)) {
-      return null
-    }
-
-    const updateCheckInterval =
-      (get(latestPresetInfo, 'elint.updateCheckInterval') as string) || 0
-
-    const updateCheckIntervalNum = toMs(updateCheckInterval)
-
-    // 禁用 & 未设置更新检查周期
-    if (updateCheckIntervalNum <= 0) {
-      debug('preset disabled update check')
-      return null
-    }
-
-    // 未到更新时间
-    if (Date.now() - getLastNotifyTime(name) <= updateCheckIntervalNum) {
-      debug('Skip notify')
-
       return null
     }
 

@@ -28,7 +28,7 @@ afterAll(async () => {
 
 test('安装 latest，显示更新提示', async () => {
   const { stdout } = await run(
-    `npm run lint-fix --registry=http://localhost:${verdaccioPort}`,
+    `npm run lint-fix --registry=http://localhost:${verdaccioPort} -- --force-notifier`,
     tmpDir,
     {
       disableNotifier: false,

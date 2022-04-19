@@ -35,6 +35,7 @@ program
   .option('--preset <preset>', 'Set specific preset')
   .option('--no-ignore', 'Disable elint ignore patterns')
   .option('--no-notifier', 'Disable check preset updates')
+  .option('--force-notifier', 'Force check preset updates')
   .action(async (type: string, files: string[], options) => {
     if (!files || !type) {
       return
@@ -100,7 +101,11 @@ program
       if (!isGit && options.notifier) {
         debug('start notifier')
 
-        const notifyMessage = await notify(internalLoadedPrestAndPlugins, cwd)
+        const notifyMessage = await notify(
+          internalLoadedPrestAndPlugins,
+          cwd,
+          options.forceNotifier
+        )
         if (notifyMessage) {
           console.log(notifyMessage)
         }

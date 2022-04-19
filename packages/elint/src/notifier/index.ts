@@ -1,8 +1,9 @@
 import _debug from 'debug'
-import { updateNotifyTime } from './config.js'
 import checker from './checker.js'
 import report from './report.js'
 import type { InternalLoadedPresetAndPlugins } from '../types.js'
+import { getLastNotifyTime, updateNotifyTime } from './config.js'
+import { UPDATE_CHECK_FREQUENCY } from '../config.js'
 
 const debug = _debug('elint:notifier')
 
@@ -12,10 +13,14 @@ const debug = _debug('elint:notifier')
  * @returns 用于输出的内容
  */
 async function notify(
-  internalLoadedPrestAndPlugins: InternalLoadedPresetAndPlugins,
-  cwd: string
+  internalLoadedPresetAndPlugins: InternalLoadedPresetAndPlugins,
+  cwd: string,
+  /**
+   * 忽略上次检查时间
+   */
+  forceCheck = false
 ): Promise<string | null> {
-  debug('run checker')
+  debug('run update checker')
   debug(
     `ELINT_DISABLE_UPDATE_NOTIFIER: ${process.env.ELINT_DISABLE_UPDATE_NOTIFIER}`
   )
@@ -24,18 +29,25 @@ async function notify(
     return null
   }
 
-  const checkerResult = await checker(internalLoadedPrestAndPlugins, cwd)
+  const presetName = internalLoadedPresetAndPlugins.internalPreset.name
 
+  // 未到更新时间
   if (
-    !checkerResult ||
-    !checkerResult.name ||
-    !checkerResult.latest ||
-    !checkerResult.current
+    !forceCheck &&
+    Date.now() - getLastNotifyTime(presetName) <= UPDATE_CHECK_FREQUENCY
   ) {
+    debug('Skip notify')
+
     return null
   }
 
-  updateNotifyTime(checkerResult.name)
+  const checkerResult = await checker(internalLoadedPresetAndPlugins, cwd)
+
+  updateNotifyTime(presetName)
+
+  if (!checkerResult) {
+    return null
+  }
 
   return report(checkerResult)
 }

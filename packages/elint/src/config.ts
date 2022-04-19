@@ -12,3 +12,5 @@ export const defaultIgnore = [
   '**/*.min.css',
   '**/.yarn'
 ]
+
+export const UPDATE_CHECK_FREQUENCY = 1000 * 60 * 60 * 24 // 1 day

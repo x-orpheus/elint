@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import boxen, { type Options as BoxenOptions } from 'boxen'
 
-export interface ReportInfo {
+export interface NotifierReportInfo {
   /**
    * preset 名称
    */
@@ -22,7 +22,7 @@ export interface ReportInfo {
  * @param info 报告基础信息
  * @returns 用于输出的内容
  */
-function report({ name, current, latest }: ReportInfo): string | null {
+function report({ name, current, latest }: NotifierReportInfo): string | null {
   const messages = [
     `update available ${chalk.dim(current)} → ${chalk.green(latest)}`,
     `Run ${chalk.cyan('npm i ' + name + ' -D')} to update`

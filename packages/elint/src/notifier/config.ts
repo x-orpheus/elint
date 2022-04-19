@@ -13,7 +13,10 @@ content:
 
 */
 
+import _debug from 'debug'
 import Configstore from 'configstore'
+
+const debug = _debug('elint:notifier:config')
 const conf = new Configstore('elint')
 
 /**
@@ -23,7 +26,11 @@ const conf = new Configstore('elint')
  * @returns 上次检测时间
  */
 export function getLastNotifyTime(presetName: string): number {
-  return conf.get(`notifier.${presetName}`)
+  const lastNotifyTime: number = conf.get(`notifier.${presetName}`) || 0
+
+  debug(`get last notify time: ${lastNotifyTime}`)
+
+  return lastNotifyTime
 }
 
 /**
@@ -33,4 +40,6 @@ export function getLastNotifyTime(presetName: string): number {
  */
 export function updateNotifyTime(presetName: string): void {
   conf.set(`notifier.${presetName}`, Date.now())
+
+  debug(`set notify time: ${Date.now()}`)
 }
