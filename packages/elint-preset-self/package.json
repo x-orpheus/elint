@@ -7,19 +7,19 @@
   },
   "dependencies": {
     "@commitlint/core": "^16.2.3",
-    "@typescript-eslint/eslint-plugin": "^5.16.0",
-    "@typescript-eslint/parser": "^5.16.0",
+    "@typescript-eslint/eslint-plugin": "^5.20.0",
+    "@typescript-eslint/parser": "^5.20.0",
     "elint-helpers": "workspace:*",
     "elint-plugin-commitlint": "workspace:*",
     "elint-plugin-eslint": "workspace:*",
     "elint-plugin-prettier": "workspace:*",
     "elint-plugin-stylelint": "workspace:*",
-    "eslint": "^8.11.0",
+    "eslint": "^8.13.0",
     "eslint-config-standard": "^17.0.0-1",
-    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^14.0.0",
     "eslint-plugin-promise": "^6.0.0",
-    "prettier": "^2.6.0",
-    "stylelint": "^14.6.0"
+    "prettier": "^2.6.2",
+    "stylelint": "^14.7.1"
   }
 }

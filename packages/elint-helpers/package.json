@@ -17,8 +17,8 @@
   },
   "type": "module",
   "dependencies": {
-    "commander": "^9.1.0",
+    "commander": "^9.2.0",
     "debug": "^4.3.4",
-    "fs-extra": "^10.0.1"
+    "fs-extra": "^10.1.0"
   }
 }
