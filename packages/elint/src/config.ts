@@ -14,3 +14,5 @@ export const defaultIgnore = [
 ]
 
 export const UPDATE_CHECK_FREQUENCY = 1000 * 60 * 60 * 24 // 1 day
+
+export const PRESET_PATTERN = /elint-preset-/

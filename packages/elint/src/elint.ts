@@ -26,6 +26,7 @@ import {
   resetElintCache
 } from './cache/index.js'
 import styleChecker from './plugin/built-in/style-checker.js'
+import { PRESET_PATTERN } from './config.js'
 
 const debug = _debug('elint:main')
 
@@ -61,7 +62,7 @@ export async function loadPresetAndPlugins({
   } else {
     debug('start load preset in node_modules')
 
-    internalPreset = await tryLoadElintPreset({ cwd })
+    internalPreset = await tryLoadElintPreset(PRESET_PATTERN, { cwd })
   }
 
   const pendingPlugins = internalPreset.preset.plugins || []

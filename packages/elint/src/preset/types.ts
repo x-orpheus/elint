@@ -13,7 +13,7 @@ export interface ElintPreset {
   /**
    * 启用的 plugin 名称
    */
-  plugins: string[]
+  plugins: (string | ElintPlugin<unknown>)[]
   /**
    * 覆盖 plugin 配置
    */

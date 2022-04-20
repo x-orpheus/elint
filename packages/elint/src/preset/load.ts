@@ -69,10 +69,11 @@ export const loadElintPreset = async (
 /**
  * try to find a preset and load it
  */
-export const tryLoadElintPreset = ({
-  cwd
-}: ElintContext): Promise<InternalPreset> => {
-  const presetList = tryRequire(/elint-preset-/, cwd)
+export const tryLoadElintPreset = (
+  pattern: RegExp,
+  { cwd }: ElintContext
+): Promise<InternalPreset> => {
+  const presetList = tryRequire(pattern, cwd)
 
   debug('find elint preset list: %o', presetList)
 

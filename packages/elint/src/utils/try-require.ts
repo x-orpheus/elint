@@ -38,23 +38,23 @@ function getModulesByDir(dir: string, scope = ''): string[] {
 /**
  * 尝试获取已安装的模块，返回模块名
  *
- * @param regexp 正则，描述要 require 的 module
+ * @param pattern 正则，描述要 require 的 module
  * @param baseDir 查找模块的基础路径
  * @returns 所有匹配的模块名
  */
-function tryRequire(regexp: RegExp, baseDir?: string): string[] {
+function tryRequire(pattern: RegExp, baseDir?: string): string[] {
   const nodeModulesDir = getNodeModulesDir(baseDir)
   const results: string[] = []
 
-  debug(`arguments.regexp: ${regexp}`)
+  debug(`pattern: ${pattern}`)
 
   if (!fs.existsSync(nodeModulesDir)) {
-    debug('regexp is undefined or nodeModulesDir not exists')
+    debug('pattern is undefined or nodeModulesDir not exists')
     return results
   }
 
   const moduleList = getModulesByDir(nodeModulesDir).filter((m) =>
-    regexp.test(m)
+    pattern.test(m)
   )
 
   debug(`matched modules: ${moduleList.join(', ')}`)
