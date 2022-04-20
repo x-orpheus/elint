@@ -9,10 +9,12 @@ import { getBaseDir } from '../../../src/env.js'
 describe('Walker stage 测试', () => {
   let unmock: () => void
   let baseDir: string
+  let getPath: (p: string) => string
 
   beforeEach(() => {
     unmock = mock()
     baseDir = getBaseDir()
+    getPath = (p: string) => path.join(baseDir, p)
   })
 
   afterEach(() => {
@@ -40,7 +42,7 @@ describe('Walker stage 测试', () => {
   test('可以匹配到文件', async () => {
     await gitInit()
 
-    const result = ['src/a.js', 'src/lib/b.js']
+    const result = ['src/a.js', 'src/lib/b.js'].map(getPath)
 
     const expected = await stageFiles(['src/**/*.js'], undefined, baseDir)
 
@@ -60,7 +62,7 @@ describe('Walker stage 测试', () => {
   test('忽略测试', async () => {
     await gitInit()
 
-    const result = ['src/a.js']
+    const result = ['src/a.js'].map(getPath)
 
     const expected = await stageFiles(['src/**/*.js'], ['src/lib/*'], baseDir)
 
@@ -70,7 +72,7 @@ describe('Walker stage 测试', () => {
   test('忽略测试，规则为空', async () => {
     await gitInit()
 
-    const result = ['src/a.js', 'src/lib/b.js']
+    const result = ['src/a.js', 'src/lib/b.js'].map(getPath)
 
     const expected = await stageFiles(['src/**/*.js'], [], baseDir)
 
@@ -79,11 +81,12 @@ describe('Walker stage 测试', () => {
 
   test('包含非暂存区文件', async () => {
     const filePath = 'src/lib/b.js'
+    const absFilePath = getPath(filePath)
     const result = [
-      'src/a.js',
+      getPath('src/a.js'),
       {
-        filePath,
-        fileContent: fs.readFileSync(path.join(baseDir, filePath)).toString()
+        filePath: absFilePath,
+        fileContent: fs.readFileSync(absFilePath).toString()
       }
     ]
 
@@ -98,16 +101,18 @@ describe('Walker stage 测试', () => {
 
   test('包含多个非暂存区文件', async () => {
     const filePath1 = 'src/lib/b.js'
+    const absFilePath1 = getPath(filePath1)
     const filePath2 = 'app/c.js'
+    const absFilePath2 = getPath(filePath2)
     const result = [
-      'src/a.js',
+      getPath('src/a.js'),
       {
-        filePath: filePath1,
-        fileContent: fs.readFileSync(path.join(baseDir, filePath1)).toString()
+        filePath: absFilePath1,
+        fileContent: fs.readFileSync(absFilePath1).toString()
       },
       {
-        filePath: filePath2,
-        fileContent: fs.readFileSync(path.join(baseDir, filePath2)).toString()
+        filePath: absFilePath2,
+        fileContent: fs.readFileSync(absFilePath2).toString()
       }
     ]
 

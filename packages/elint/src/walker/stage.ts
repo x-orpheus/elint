@@ -2,6 +2,7 @@ import _debug from 'debug'
 import fs from 'fs-extra'
 import mm from 'micromatch'
 import sgf from 'staged-git-files'
+import path from 'path'
 import { intersection, without } from 'lodash-es'
 import notStagedGitFiles from '../utils/not-staged-git-files.js'
 import getStagedFileContent from '../utils/get-staged-file-content.js'
@@ -108,11 +109,15 @@ async function stagedFiles(
   // 差级，只需要文件名
   const pureStagedFileList = without(stagedFileList, ...notStagedFileList)
 
+  const pureStagedAbsoluteFileList = pureStagedFileList.map((filePath) =>
+    path.join(cwd, filePath)
+  )
+
   if (!needGetContentFileList.length) {
-    return pureStagedFileList
+    return pureStagedAbsoluteFileList
   }
 
-  const fileList: FileItem[] = [...pureStagedFileList]
+  const fileList: FileItem[] = [...pureStagedAbsoluteFileList]
 
   for (let i = 0, j = needGetContentFileList.length; i < j; i++) {
     const filePath = needGetContentFileList[i]
@@ -120,7 +125,7 @@ async function stagedFiles(
 
     if (fileContent !== null) {
       fileList.push({
-        filePath,
+        filePath: path.join(cwd, filePath),
         fileContent
       })
     }

@@ -1,14 +1,17 @@
 import mock from '../mock/env.js'
 import walker from '../../../src/walker/local.js'
 import { getBaseDir } from '../../../src/env.js'
+import path from 'path'
 
 describe('Walker local 测试', () => {
   let unmock: () => void
   let baseDir: string
+  let getPath: (p: string) => string
 
   beforeEach(() => {
     unmock = mock()
     baseDir = getBaseDir()
+    getPath = (p: string) => path.join(baseDir, p)
   })
 
   afterEach(() => {
@@ -22,7 +25,7 @@ describe('Walker local 测试', () => {
   })
 
   test('单条 glob', async () => {
-    const expected = ['src/a.js']
+    const expected = ['src/a.js'].map(getPath)
 
     const result = await walker(['src/*.js'], undefined, baseDir)
 
@@ -37,7 +40,7 @@ describe('Walker local 测试', () => {
   })
 
   test('单条 glob, deep', async () => {
-    const expected = ['src/a.js', 'src/lib/b.js']
+    const expected = ['src/a.js', 'src/lib/b.js'].map(getPath)
 
     const result = await walker(['src/**/*.js'], undefined, baseDir)
 
@@ -45,7 +48,12 @@ describe('Walker local 测试', () => {
   })
 
   test('单条 glob, deep', async () => {
-    const expected = ['src/a.css', 'src/a.js', 'src/index.html', 'src/lib/b.js']
+    const expected = [
+      'src/a.css',
+      'src/a.js',
+      'src/index.html',
+      'src/lib/b.js'
+    ].map(getPath)
 
     const result = await walker(['src/**/*'], undefined, baseDir)
 
@@ -53,7 +61,7 @@ describe('Walker local 测试', () => {
   })
 
   test('多条 glob', async () => {
-    const expected = ['src/a.css', 'src/a.js']
+    const expected = ['src/a.css', 'src/a.js'].map(getPath)
 
     const result = await walker(['src/*.js', 'src/*.css'], undefined, baseDir)
 
@@ -73,7 +81,7 @@ describe('Walker local 测试', () => {
   })
 
   test('多条 glob, deep', async () => {
-    const expected = ['src/a.css', 'src/a.js', 'src/lib/b.js']
+    const expected = ['src/a.css', 'src/a.js', 'src/lib/b.js'].map(getPath)
 
     const result = await walker(
       ['src/**/*.js', 'src/**/*.css'],

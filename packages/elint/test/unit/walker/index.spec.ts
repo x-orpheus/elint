@@ -14,9 +14,7 @@ describe('Walker 测试', () => {
   beforeEach(() => {
     unmock = mock()
     baseDir = getBaseDir()
-    getPath = (p) => {
-      return path.join(p)
-    }
+    getPath = (p: string) => path.join(baseDir, p)
   })
 
   afterEach(() => {
@@ -48,7 +46,7 @@ describe('Walker 测试', () => {
     })
 
     test('git 环境：可以匹配到', async () => {
-      const result = [getPath('src/a.js'), getPath('src/lib/b.js')]
+      const result = ['src/a.js', 'src/lib/b.js'].map(getPath)
 
       await gitInit()
 
@@ -63,11 +61,7 @@ describe('Walker 测试', () => {
 
   describe('Ignore 功能测试', () => {
     test('开启忽略规则', async () => {
-      const result = [
-        getPath('app/c.js'),
-        getPath('src/a.js'),
-        getPath('src/lib/b.js')
-      ]
+      const result = ['app/c.js', 'src/a.js', 'src/lib/b.js'].map(getPath)
 
       const expected = await walker(['**/*.js'], { cwd: baseDir })
 
@@ -76,22 +70,22 @@ describe('Walker 测试', () => {
 
     test('关闭忽略规则', async () => {
       const result = [
-        getPath('app/c.js'),
-        getPath('src/a.js'),
-        getPath('src/lib/b.js'),
-        getPath('node_modules/elint-preset-node/index.js'),
-        getPath('node_modules/elint-preset-node/.eslintrc.js'),
-        getPath('node_modules/elint-preset-node/.stylelintrc.js'),
-        getPath('node_modules/elint-preset-normal/index.js'),
-        getPath('node_modules/elint-preset-normal/.eslintrc.js'),
-        getPath('node_modules/elint-preset-normal/.stylelintrc.js'),
-        getPath('node_modules/@scope/elint-preset-scope/index.js'),
-        getPath('node_modules/@scope/elint-preset-scope/.eslintrc.js'),
-        getPath('node_modules/@scope/elint-preset-scope/.stylelintrc.js'),
-        getPath('node_modules/elint-plugin-esm/index.js'),
-        getPath('node_modules/elint-plugin-cjs/index.js'),
-        getPath('bower_components/a.js')
-      ]
+        'app/c.js',
+        'src/a.js',
+        'src/lib/b.js',
+        'node_modules/elint-preset-node/index.js',
+        'node_modules/elint-preset-node/.eslintrc.js',
+        'node_modules/elint-preset-node/.stylelintrc.js',
+        'node_modules/elint-preset-normal/index.js',
+        'node_modules/elint-preset-normal/.eslintrc.js',
+        'node_modules/elint-preset-normal/.stylelintrc.js',
+        'node_modules/@scope/elint-preset-scope/index.js',
+        'node_modules/@scope/elint-preset-scope/.eslintrc.js',
+        'node_modules/@scope/elint-preset-scope/.stylelintrc.js',
+        'node_modules/elint-plugin-esm/index.js',
+        'node_modules/elint-plugin-cjs/index.js',
+        'bower_components/a.js'
+      ].map(getPath)
 
       const expected = await walker(['**/*.js'], {
         noIgnore: true,
@@ -105,14 +99,14 @@ describe('Walker 测试', () => {
   describe('staged file 测试', () => {
     test('包含 staged file', async () => {
       const fileName = 'src/lib/b.js'
-      const absFileName = path.join(baseDir, fileName)
+      const absFileName = getPath(fileName)
 
       await gitInit()
 
       const result = [
         getPath('src/a.js'),
         {
-          filePath: fileName,
+          filePath: absFileName,
           fileContent: fs.readFileSync(absFileName).toString()
         }
       ]
@@ -130,20 +124,21 @@ describe('Walker 测试', () => {
 
     test('包含多个 staged file', async () => {
       const fileName1 = 'src/lib/b.js'
-      const absFileName1 = path.join(baseDir, fileName1)
+      const absFileName1 = getPath(fileName1)
+
       const fileName2 = 'src/a.css'
-      const absFileName2 = path.join(baseDir, fileName2)
+      const absFileName2 = getPath(fileName2)
 
       await gitInit()
 
       const result = [
         getPath('src/a.js'),
         {
-          filePath: fileName1,
+          filePath: absFileName1,
           fileContent: fs.readFileSync(absFileName1).toString()
         },
         {
-          filePath: fileName2,
+          filePath: absFileName2,
           fileContent: fs.readFileSync(absFileName2).toString()
         }
       ]
