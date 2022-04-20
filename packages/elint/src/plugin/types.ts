@@ -41,6 +41,9 @@ export interface ElintPluginOptions {
   filePath?: string
   /**
    * 文件源码
+   *
+   * 与 execute 函数的第一个参数的区别：
+   * 这个值是文件原始内容，而那个值可能是经过其他 plugin 处理后的文本
    */
   source: string
   /**
@@ -133,5 +136,5 @@ export function isElintPlugin(value: unknown): value is ElintPlugin<unknown> {
  */
 export interface ElintPluginTestResult<T> {
   version: ElintPluginVersion
-  result: ElintPluginResult<T>
+  result: ElintPluginResultWithPluginData<T>
 }

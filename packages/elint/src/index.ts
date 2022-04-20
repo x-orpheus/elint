@@ -11,7 +11,7 @@ import type {
   ElintPluginActivateConfig,
   ElintPluginTestResult
 } from './plugin/types.js'
-import { testElintPlugin } from './plugin/execute.js'
+import { testElintPlugin } from './plugin/test.js'
 
 import type { ElintPreset } from './preset/types.js'
 

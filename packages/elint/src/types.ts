@@ -28,7 +28,7 @@ export interface ElintBaseResult {
 /**
  * elint lint 结果结构
  */
-export interface ElintResult extends ElintBaseResult {
+export interface ElintResult<T = unknown> extends ElintBaseResult {
   /**
    * 是否命中缓存
    */
@@ -36,7 +36,7 @@ export interface ElintResult extends ElintBaseResult {
   /**
    * 各个 plugin 结果
    */
-  pluginResults: ElintPluginResultWithPluginData<unknown>[]
+  pluginResults: ElintPluginResultWithPluginData<T>[]
 }
 
 /**

@@ -1,11 +1,6 @@
 import path from 'path'
 import type { ElintResult } from '../types.js'
-import {
-  type ElintPlugin,
-  type ElintPluginOptions,
-  type ElintPluginTestResult,
-  isElintPlugin
-} from './types.js'
+import { type ElintPlugin, type ElintPluginOptions } from './types.js'
 
 const checkElintPluginActivation = (
   plugin: ElintPlugin<unknown>,
@@ -15,12 +10,15 @@ const checkElintPluginActivation = (
     return plugin.activateConfig.activate(options)
   }
 
-  if (options.filePath && plugin.activateConfig.extensions?.length) {
-    if (
-      plugin.activateConfig.extensions.includes(path.extname(options.filePath))
-    ) {
-      return true
-    }
+  // 当 lint 的内容没有文件路径时，将会直接执行
+  if (!options.filePath) {
+    return true
+  }
+
+  if (
+    plugin.activateConfig.extensions?.includes(path.extname(options.filePath))
+  ) {
+    return true
   }
 
   return false
@@ -50,29 +48,4 @@ export const executeElintPlugin = async <T = unknown>(
     pluginId: plugin.id,
     pluginName: plugin.name
   })
-}
-
-export const testElintPlugin = async <T>(
-  source: string,
-  plugin: ElintPlugin<T>,
-  pluginOptions: ElintPluginOptions
-): Promise<ElintPluginTestResult<T> | null> => {
-  if (!isElintPlugin(plugin)) {
-    throw new Error('Current plugin is not an elint plugin.')
-  }
-
-  if (!checkElintPluginActivation(plugin, pluginOptions)) {
-    return null
-  }
-
-  await plugin.reset?.()
-
-  const version = plugin.getVersion()
-
-  const result = await plugin.execute(source, pluginOptions)
-
-  return {
-    version,
-    result
-  }
 }

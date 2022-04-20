@@ -29,7 +29,9 @@ import styleChecker from './plugin/built-in/style-checker.js'
 
 const debug = _debug('elint:main')
 
-function createElintResult(config?: Partial<ElintResult>): ElintResult {
+export function createElintResult<T>(
+  config?: Partial<ElintResult<T>>
+): ElintResult<T> {
   return {
     source: '',
     output: '',
