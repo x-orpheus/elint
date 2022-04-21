@@ -17,4 +17,3 @@ module.exports = {
 3. 添加配置文件
 
 https://eslint.org/docs/user-guide/configuring/
-

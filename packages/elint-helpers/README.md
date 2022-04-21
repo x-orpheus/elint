@@ -14,7 +14,7 @@ module.exports = {
 }
 ```
 
-### CLI参数
+### CLI 参数
 
 - `--preset <presetPath>`:
   preset 路径，默认为 `process.cwd()`
@@ -25,8 +25,11 @@ module.exports = {
 
 ```typescript
 export interface InstallOptions {
-    presetPath?: string;
-    projectPath?: string;
+  presetPath?: string
+  projectPath?: string
 }
-export declare function install({ presetPath, projectPath }?: InstallOptions): void;
+export declare function install({
+  presetPath,
+  projectPath
+}?: InstallOptions): void
 ```
