@@ -5,6 +5,11 @@
   "bin": {
     "elint-helpers": "./dist/cli.js"
   },
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc"
