@@ -5,7 +5,6 @@ import type { Ignore } from 'ignore'
 import prettier, { type Options } from 'prettier'
 import type { ElintPlugin, ElintPluginResult } from 'elint'
 
-const require = createRequire(import.meta.url)
 const { clearConfigCache, resolveConfig, format } = prettier
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -98,6 +97,8 @@ const elintPluginPrettier: ElintPlugin<never> = {
     return result
   },
   getVersion() {
+    const require = createRequire(import.meta.url)
+
     const { version } = require('../package.json')
     const prettierPackageJson = require('prettier/package.json')
 

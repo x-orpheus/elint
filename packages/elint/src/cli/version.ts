@@ -3,8 +3,6 @@ import { padEnd, fill } from 'lodash-es'
 import { loadPresetAndPlugins } from '../elint.js'
 import type { ElintPluginVersion } from '../plugin/types.js'
 
-const require = createRequire(import.meta.url)
-
 function printVersionBlock({
   blockName,
   versionMap,
@@ -59,6 +57,8 @@ function printVersionBlock({
  */
 async function version(cwd?: string): Promise<void> {
   const { internalPreset, loadedPlugins } = await loadPresetAndPlugins({ cwd })
+
+  const require = createRequire(import.meta.url)
 
   const { version: elintVersion } = require('../../package.json')
   const { version: huskyVersion } = require('husky/package.json')

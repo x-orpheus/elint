@@ -7,7 +7,6 @@ import fs from 'fs'
 import type { ElintPlugin, ElintPluginResult } from 'elint'
 
 const { format, load, lint, read } = commitlint
-const require = createRequire(import.meta.url)
 
 const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
   id: 'elint-plugin-commitlint',
@@ -58,6 +57,8 @@ const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
     return result
   },
   getVersion() {
+    const require = createRequire(import.meta.url)
+
     const { version } = require('../package.json')
     const commitlintPackageJson = require('@commitlint/core/package.json')
 
