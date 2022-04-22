@@ -1,7 +1,10 @@
 import { createRequire } from 'module'
 import { padEnd, fill } from 'lodash-es'
+import fs from 'fs-extra'
+import resolvePackagePath from 'resolve-package-path'
 import { loadPresetAndPlugins } from '../elint.js'
-import path from 'path'
+
+const { findUpPackagePath } = resolvePackagePath
 
 interface ElintPluginVersion {
   /**
@@ -89,31 +92,38 @@ async function version(cwd?: string): Promise<void> {
   presetVersionMap[internalPreset.name] = internalPreset.version
 
   internalPlugins.forEach((internalPlugin) => {
-    if (internalPlugin.path) {
-      const pluginPackageJsonPath = path.join(
-        internalPlugin.path,
-        '__placeholder__.js'
-      )
-      const pluginRequire = createRequire(pluginPackageJsonPath)
-      const pluginPackageJson = pluginRequire(pluginPackageJsonPath)
-      const versionConfig: ElintPluginVersion = {
-        version: pluginPackageJson,
-        dependencies: {}
-      }
+    const pluginPath = internalPlugin.path
+    if (pluginPath) {
+      const pluginPackageJsonPath = findUpPackagePath(pluginPath)
 
-      if (pluginPackageJson.dependencies) {
-        Object.keys(pluginPackageJson.dependencies).forEach(
-          (dependencyName: string) => {
-            const dependencyPackageJson = pluginRequire(
-              `${dependencyName}/package.json`
-            )
-            versionConfig.dependencies[dependencyName] =
-              dependencyPackageJson.version || 'unknown'
-          }
-        )
-      }
+      if (pluginPackageJsonPath) {
+        const pluginPackageJson = fs.readJsonSync(pluginPackageJsonPath)
 
-      pluginVersionMap[internalPlugin.name] = versionConfig
+        const versionConfig: ElintPluginVersion = {
+          version: pluginPackageJson.version,
+          dependencies: {}
+        }
+
+        if (pluginPackageJson.peerDependencies) {
+          Object.keys(pluginPackageJson.peerDependencies).forEach(
+            (dependencyName: string) => {
+              const dependencyPackageJsonPath = resolvePackagePath(
+                dependencyName,
+                pluginPath
+              )
+              if (dependencyPackageJsonPath) {
+                const dependencyPackageJson = fs.readJsonSync(
+                  dependencyPackageJsonPath
+                )
+                versionConfig.dependencies[dependencyName] =
+                  dependencyPackageJson.version
+              }
+            }
+          )
+        }
+
+        pluginVersionMap[internalPlugin.name] = versionConfig
+      }
     }
   })
 

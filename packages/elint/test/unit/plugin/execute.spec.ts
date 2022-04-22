@@ -27,7 +27,7 @@ describe('插件执行测试', () => {
     const plugins = await loadElintPlugins(['elint-plugin-esm'], {
       cwd: baseDir
     })
-    testPlugin = plugins[0]
+    testPlugin = plugins[0].plugin
   })
 
   afterAll(() => {

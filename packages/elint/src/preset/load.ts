@@ -1,6 +1,8 @@
 import { createRequire } from 'module'
 import path from 'path'
+import fs from 'fs-extra'
 import _debug from 'debug'
+import resolvePackagePath from 'resolve-package-path'
 import type { ElintContext } from '../types.js'
 import {
   type ElintPreset,
@@ -26,10 +28,13 @@ export const loadElintPreset = async (
     let presetPackageJson: { name: string; version: string } | undefined
 
     try {
-      presetPackagePath = path.dirname(
-        require.resolve(`${preset}/package.json`)
-      )
-      presetPackageJson = require(`${preset}/package.json`)
+      const presetPackageJsonPath = resolvePackagePath(preset, cwd)
+
+      if (presetPackageJsonPath) {
+        presetPackagePath = path.dirname(presetPackageJsonPath)
+
+        presetPackageJson = fs.readJsonSync(presetPackageJsonPath)
+      }
     } catch {
       debug(`Preset ${preset} doesn't have a package.json`)
     }
@@ -46,7 +51,7 @@ export const loadElintPreset = async (
     return {
       name: presetPackageJson?.name || preset,
       version: presetPackageJson?.version || 'unknown',
-      path: presetPackagePath,
+      path: presetPackagePath || path.dirname(presetPath),
       preset: presetConfig
     }
   }

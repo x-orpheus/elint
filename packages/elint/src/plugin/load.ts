@@ -1,7 +1,7 @@
 import { createRequire } from 'module'
 import path from 'path'
 import _debug from 'debug'
-
+import resolvePackagePath from 'resolve-package-path'
 import {
   type ElintPlugin,
   isElintPlugin,
@@ -29,9 +29,14 @@ const loadElintPlugin = async (
     let pluginPackagePath: string | undefined
 
     try {
-      pluginPackagePath = path.dirname(
-        require.resolve(`${plugin}/package.json`)
+      const pluginPackageJsonPath = resolvePackagePath(
+        plugin,
+        presetPath || cwd
       )
+
+      if (pluginPackageJsonPath) {
+        pluginPackagePath = path.dirname(pluginPackageJsonPath)
+      }
     } catch {
       debug(`Plugin ${plugin} doesn't have a package.json`)
     }

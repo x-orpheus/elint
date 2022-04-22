@@ -1,5 +1,5 @@
 import _debug from 'debug'
-import fs from 'fs'
+import fs from 'fs-extra'
 import path from 'path'
 import { findUp } from 'find-up'
 
@@ -32,7 +32,7 @@ async function detectPackageManager(
 
   if (packageJsonPath && fs.existsSync(packageJsonPath)) {
     try {
-      const pkg = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
+      const pkg = fs.readJsonSync(packageJsonPath)
       if (typeof pkg.packageManager === 'string') {
         const [name, version] = pkg.packageManager.split('@')
         if (name === 'yarn' && parseInt(version) > 1) {
