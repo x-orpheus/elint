@@ -6,38 +6,57 @@ let elintCache: ElintCache | undefined
 
 const ELINT_CACHE_FILENAME = '.elintcache'
 
-export function getElintCacheLocation(cwd: string): string {
-  let cacheLocation = path.join(cwd, 'node_modules')
+interface ElintCacheLocationOptions {
+  cwd: string
+  cacheLocation?: string
+}
 
-  if (fs.existsSync(cacheLocation)) {
-    cacheLocation = path.join(cacheLocation, '.cache')
+function getElintCachePath({
+  cwd,
+  cacheLocation
+}: ElintCacheLocationOptions): string {
+  let location = cacheLocation
+
+  if (!location) {
+    location = path.join(cwd, 'node_modules', '/')
+
+    if (fs.existsSync(location)) {
+      location = path.join(location, '.cache', '/')
+    } else {
+      location = path.join(cwd, '.cache', '/')
+    }
   } else {
-    cacheLocation = path.join(cwd, '.cache')
+    if (!path.isAbsolute(location)) {
+      location = path.join(cwd, location)
+    }
   }
 
-  return cacheLocation
+  if (location.slice(-1) === path.sep) {
+    location = path.join(location, ELINT_CACHE_FILENAME)
+  }
+
+  return location
 }
 
 export function getElintCache(
   cache: boolean,
-  cacheLocation: string
+  cacheLocationOptions: ElintCacheLocationOptions
 ): ElintCache | undefined {
   if (!cache) {
     return undefined
   }
 
   if (!elintCache) {
-    elintCache = new ElintCache(path.join(cacheLocation, ELINT_CACHE_FILENAME))
+    elintCache = new ElintCache(getElintCachePath(cacheLocationOptions))
   }
 
   return elintCache
 }
 
-export function resetElintCache(cacheLocation: string): void {
-  const elintCache = getElintCache(
-    true,
-    path.join(cacheLocation, ELINT_CACHE_FILENAME)
-  )
+export function resetElintCache(
+  cacheLocationOptions: ElintCacheLocationOptions
+): void {
+  const elintCache = getElintCache(true, cacheLocationOptions)
 
   elintCache?.delete()
 }

@@ -32,6 +32,7 @@ program
   .option('-f, --fix', 'Automatically fix problems')
   .option('-s, --style', 'Lint code style')
   .option('--cache', 'Cache results')
+  .option('--cache-location <cacheLocation>', 'Cache file location')
   .option('--preset <preset>', 'Set specific preset')
   .option('--no-ignore', 'Disable elint ignore patterns')
   .option('--no-notifier', 'Disable check preset updates')
@@ -63,7 +64,8 @@ program
       git: isGit,
       internalLoadedPrestAndPlugins,
       cwd,
-      cache: options.cache
+      cache: options.cache,
+      cacheLocation: options.cacheLocation
     }
 
     try {
