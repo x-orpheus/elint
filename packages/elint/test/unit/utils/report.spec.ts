@@ -13,8 +13,8 @@ describe('report 测试', () => {
         warningCount: 0,
         pluginResults: [
           {
-            pluginId: 'test',
-            pluginName: 'name',
+            pluginName: 'test',
+            pluginTitle: 'name',
             errorCount: 0,
             source: '',
             output: '',
@@ -22,8 +22,8 @@ describe('report 测试', () => {
             message: 'output1\n'
           },
           {
-            pluginId: 'test',
-            pluginName: 'name2',
+            pluginName: 'test',
+            pluginTitle: 'name2',
             errorCount: 0,
             source: '',
             output: '',
@@ -39,8 +39,8 @@ describe('report 测试', () => {
         warningCount: 0,
         pluginResults: [
           {
-            pluginId: 'test',
-            pluginName: 'name',
+            pluginName: 'test',
+            pluginTitle: 'name',
             errorCount: 0,
             source: '',
             output: '',

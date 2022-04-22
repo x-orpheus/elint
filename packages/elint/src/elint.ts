@@ -78,12 +78,12 @@ export async function loadPresetAndPlugins({
     const overridePluginConfig = internalPreset.preset.overridePluginConfig
 
     loadedPlugins.forEach((plugin) => {
-      if (overridePluginConfig[plugin.id]) {
-        Object.keys(overridePluginConfig[plugin.id]).forEach((key) => {
-          debug(`overriding config of ${plugin.id}: ${key}`)
+      if (overridePluginConfig[plugin.name]) {
+        Object.keys(overridePluginConfig[plugin.name]).forEach((key) => {
+          debug(`overriding config of ${plugin.name}: ${key}`)
 
           const currentKey = key as ElintPluginOverridableKey
-          const currentValue = overridePluginConfig[plugin.id][currentKey]
+          const currentValue = overridePluginConfig[plugin.name][currentKey]
           if (
             !(['activateConfig'] as ElintPluginOverridableKey[]).includes(
               currentKey
@@ -336,8 +336,8 @@ export async function reset({
     try {
       await plugin.reset?.()
     } catch (e) {
-      errorMap[plugin.id] = e
-      debug(`elint plugin ${plugin.id} reset error %o`, e)
+      errorMap[plugin.name] = e
+      debug(`elint plugin ${plugin.name} reset error %o`, e)
     }
   }
 

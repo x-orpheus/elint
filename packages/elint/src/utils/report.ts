@@ -33,7 +33,7 @@ interface ReportResult {
   /**
    * 段落名
    */
-  name: string
+  title: string
   /**
    * 段落内容
    */
@@ -57,7 +57,7 @@ function formatReportResults(results: ReportResult[]): string {
 
   // 将 name 相同的 result 合并成一个
   const mergedResults = results.reduce<ReportResult[]>((pv, cv) => {
-    const itemIndex = pv.findIndex((item) => item.name === cv.name)
+    const itemIndex = pv.findIndex((item) => item.title === cv.title)
     if (itemIndex !== -1) {
       pv[itemIndex].success = pv[itemIndex].success && cv.success
       pv[itemIndex].output += cv.output
@@ -67,12 +67,12 @@ function formatReportResults(results: ReportResult[]): string {
   }, [])
 
   mergedResults.forEach((result) => {
-    const name = result.name
+    const title = result.title
     const output = result.output
     const success = result.success
 
     arr.push('\n')
-    arr.push(`${chalk.bold(`> ${name}:`)}\n`)
+    arr.push(`${chalk.bold(`> ${title}:`)}\n`)
     arr.push('\n')
 
     if (success && !output.trim()) {
@@ -101,7 +101,7 @@ function report(results: ElintResult[]): string {
     result.pluginResults.forEach((pluginResult) => {
       if (pluginResult.message) {
         reportResults.push({
-          name: pluginResult.pluginName,
+          title: pluginResult.pluginTitle,
           success: pluginResult.errorCount === 0,
           output: pluginResult.message
         })
@@ -111,7 +111,7 @@ function report(results: ElintResult[]): string {
 
   if (errorCount > 0 || warningCount > 0) {
     reportResults.push({
-      name: 'elint',
+      title: 'elint',
       success: errorCount === 0,
       output: chalk[errorCount > 0 ? 'red' : 'yellow'](
         `${figures.cross} ${errorCount + warningCount} ${pluralize(
@@ -125,7 +125,7 @@ function report(results: ElintResult[]): string {
     })
   } else {
     reportResults.push({
-      name: 'elint',
+      title: 'elint',
       success: true,
       output: ''
     })

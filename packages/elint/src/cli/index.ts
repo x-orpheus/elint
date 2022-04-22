@@ -76,7 +76,7 @@ program
         if (type === 'commit') {
           const isContainCommitlint =
             internalLoadedPrestAndPlugins.loadedPlugins.some(
-              (plugin) => plugin.id === 'elint-plugin-commitlint'
+              (plugin) => plugin.name === 'elint-plugin-commitlint'
             )
 
           if (!isContainCommitlint) {

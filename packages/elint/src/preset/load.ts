@@ -40,12 +40,10 @@ export const loadElintPreset = async (
       throw new Error(`'${preset}' is not an available elint preset`)
     }
 
-    debug(
-      `loaded preset ${presetPackageJson?.name || 'anonymous'} in ${presetPath}`
-    )
+    debug(`loaded preset ${presetPackageJson?.name || preset} in ${presetPath}`)
 
     return {
-      name: presetPackageJson?.name || 'anonymous',
+      name: presetPackageJson?.name || preset,
       version: presetPackageJson?.version || 'unknown',
       path: presetPath,
       preset: presetConfig

@@ -5,8 +5,8 @@ import type { ElintPlugin, ElintPluginResult } from 'elint'
 const { lint, formatters } = stylelint
 
 const elintPluginStylelint: ElintPlugin<LinterResult> = {
-  id: 'elint-plugin-stylelint',
-  name: 'Stylelint',
+  name: 'elint-plugin-stylelint',
+  title: 'Stylelint',
   type: 'linter',
   activateConfig: {
     extensions: ['.less', '.sass', '.scss', '.css']

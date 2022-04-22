@@ -45,14 +45,14 @@ describe('插件加载测试', () => {
       cwd: baseDir
     })
 
-    expect(plugins.map((plugin) => plugin.id)).toEqual(pluginIdList)
+    expect(plugins.map((plugin) => plugin.name)).toEqual(pluginIdList)
   })
 
   test('plugin 对象直接返回', async () => {
     const pluginList: ElintPlugin<unknown>[] = [
       {
-        id: 'elint-plugin-local',
-        name: 'local',
+        name: 'elint-plugin-local',
+        title: 'local',
         type: 'linter',
         activateConfig: {
           extensions: []
@@ -77,6 +77,6 @@ describe('插件加载测试', () => {
       cwd: baseDir
     })
 
-    expect(plugins.map((plugin) => plugin.id)).toEqual(['elint-plugin-local'])
+    expect(plugins.map((plugin) => plugin.name)).toEqual(['elint-plugin-local'])
   })
 })

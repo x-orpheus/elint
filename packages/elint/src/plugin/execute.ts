@@ -45,7 +45,7 @@ export const executeElintPlugin = async <T = unknown>(
   elintResult.warningCount += pluginResult.warningCount
   elintResult.pluginResults.push({
     ...pluginResult,
-    pluginId: plugin.id,
-    pluginName: plugin.name
+    pluginName: plugin.name,
+    pluginTitle: plugin.title
   })
 }

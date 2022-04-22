@@ -75,7 +75,7 @@ async function version(cwd?: string): Promise<void> {
 
   loadedPlugins.forEach((plugin) => {
     const versionConfig = plugin.getVersion()
-    pluginVersionMap[plugin.id] = versionConfig
+    pluginVersionMap[plugin.name] = versionConfig
   })
 
   const output = ['> elint version', '']

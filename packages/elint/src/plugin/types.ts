@@ -30,8 +30,8 @@ export interface ElintPluginResultWithPluginData<Result>
   /**
    * 插件标识
    */
-  pluginId: string
   pluginName: string
+  pluginTitle: string
 }
 
 export interface ElintPluginOptions {
@@ -90,11 +90,11 @@ export interface ElintPlugin<Result> {
   /**
    * plugin 名称(唯一)
    */
-  id: string
+  name: string
   /**
    * 可读名称，用于控制台输出
    */
-  name: string
+  title: string
   /**
    * 类型
    */
@@ -121,7 +121,7 @@ export function isElintPlugin(value: unknown): value is ElintPlugin<unknown> {
   if (
     value &&
     typeof value === 'object' &&
-    (value as ElintPlugin<unknown>).id &&
+    (value as ElintPlugin<unknown>).name &&
     (['formatter', 'linter', 'common'] as ElintPluginType[]).indexOf(
       (value as ElintPlugin<unknown>).type
     ) !== -1
