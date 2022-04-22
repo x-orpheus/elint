@@ -60,19 +60,6 @@ export interface ElintPluginOptions {
   cwd: string
 }
 
-export interface ElintPluginVersion {
-  /**
-   * 插件版本号
-   */
-  version: string
-  /**
-   * 需要展示 version 的依赖
-   */
-  dependencies?: {
-    [name: string]: string
-  }
-}
-
 export interface ElintPluginActivateConfig {
   /**
    * 支持的扩展名
@@ -110,11 +97,24 @@ export interface ElintPlugin<Result> {
     text: string,
     options: ElintPluginOptions
   ): Promise<ElintPluginResult<Result>>
-  getVersion(): ElintPluginVersion
   /**
    * 重置操作（例如清理配置缓存）
    */
   reset?(): void | Promise<void>
+}
+
+/**
+ * 内部使用的 plugin 结构
+ */
+export interface InternalPlugin {
+  name: string
+  /**
+   * 插件 package.json 所在路径
+   *
+   * 当 package.json 不存在时这个值为 undefined
+   */
+  path?: string
+  plugin: ElintPlugin<unknown>
 }
 
 export function isElintPlugin(value: unknown): value is ElintPlugin<unknown> {
@@ -129,12 +129,4 @@ export function isElintPlugin(value: unknown): value is ElintPlugin<unknown> {
     return true
   }
   return false
-}
-
-/**
- * 测试插件结果
- */
-export interface ElintPluginTestResult<Result> {
-  version: ElintPluginVersion
-  result: ElintPluginResultWithPluginData<Result>
 }

@@ -1,6 +1,5 @@
 import path from 'path'
 import chalk from 'chalk'
-import { createRequire } from 'module'
 import type { Ignore } from 'ignore'
 import prettier, { type Options } from 'prettier'
 import type { ElintPlugin, ElintPluginResult } from 'elint'
@@ -95,19 +94,6 @@ const elintPluginPrettier: ElintPlugin<never> = {
     }
 
     return result
-  },
-  getVersion() {
-    const require = createRequire(import.meta.url)
-
-    const { version } = require('../package.json')
-    const prettierPackageJson = require('prettier/package.json')
-
-    return {
-      version,
-      dependencies: {
-        prettier: prettierPackageJson.version
-      }
-    }
   },
   reset() {
     ignorerMap = {}

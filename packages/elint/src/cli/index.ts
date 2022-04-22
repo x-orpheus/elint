@@ -75,7 +75,7 @@ program
         debug('run common lint...')
         if (type === 'commit') {
           const isContainCommitlint =
-            internalLoadedPrestAndPlugins.loadedPlugins.some(
+            internalLoadedPrestAndPlugins.internalPlugins.some(
               (plugin) => plugin.name === 'elint-plugin-commitlint'
             )
 

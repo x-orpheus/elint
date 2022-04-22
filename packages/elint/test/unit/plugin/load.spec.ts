@@ -64,11 +64,6 @@ describe('插件加载测试', () => {
             source: '',
             output: ''
           }
-        },
-        getVersion() {
-          return {
-            version: 'unknown'
-          }
         }
       }
     ]

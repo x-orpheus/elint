@@ -1,7 +1,20 @@
 import { createRequire } from 'module'
 import { padEnd, fill } from 'lodash-es'
 import { loadPresetAndPlugins } from '../elint.js'
-import type { ElintPluginVersion } from '../plugin/types.js'
+import path from 'path'
+
+interface ElintPluginVersion {
+  /**
+   * 插件版本号
+   */
+  version: string
+  /**
+   * 需要展示 version 的依赖
+   */
+  dependencies: {
+    [name: string]: string
+  }
+}
 
 function printVersionBlock({
   blockName,
@@ -56,7 +69,9 @@ function printVersionBlock({
  * 输出 version
  */
 async function version(cwd?: string): Promise<void> {
-  const { internalPreset, loadedPlugins } = await loadPresetAndPlugins({ cwd })
+  const { internalPreset, internalPlugins } = await loadPresetAndPlugins({
+    cwd
+  })
 
   const require = createRequire(import.meta.url)
 
@@ -73,9 +88,33 @@ async function version(cwd?: string): Promise<void> {
 
   presetVersionMap[internalPreset.name] = internalPreset.version
 
-  loadedPlugins.forEach((plugin) => {
-    const versionConfig = plugin.getVersion()
-    pluginVersionMap[plugin.name] = versionConfig
+  internalPlugins.forEach((internalPlugin) => {
+    if (internalPlugin.path) {
+      const pluginPackageJsonPath = path.join(
+        internalPlugin.path,
+        '__placeholder__.js'
+      )
+      const pluginRequire = createRequire(pluginPackageJsonPath)
+      const pluginPackageJson = pluginRequire(pluginPackageJsonPath)
+      const versionConfig: ElintPluginVersion = {
+        version: pluginPackageJson,
+        dependencies: {}
+      }
+
+      if (pluginPackageJson.dependencies) {
+        Object.keys(pluginPackageJson.dependencies).forEach(
+          (dependencyName: string) => {
+            const dependencyPackageJson = pluginRequire(
+              `${dependencyName}/package.json`
+            )
+            versionConfig.dependencies[dependencyName] =
+              dependencyPackageJson.version || 'unknown'
+          }
+        )
+      }
+
+      pluginVersionMap[internalPlugin.name] = versionConfig
+    }
   })
 
   const output = ['> elint version', '']

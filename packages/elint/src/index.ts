@@ -7,9 +7,7 @@ import type {
   ElintPlugin,
   ElintPluginResult,
   ElintPluginOptions,
-  ElintPluginVersion,
-  ElintPluginActivateConfig,
-  ElintPluginTestResult
+  ElintPluginActivateConfig
 } from './plugin/types.js'
 import { testElintPlugin } from './plugin/test.js'
 
@@ -24,8 +22,6 @@ export type {
   ElintPluginResult,
   ElintPluginOptions,
   ElintPluginType,
-  ElintPluginVersion,
   ElintPluginActivateConfig,
-  ElintPluginTestResult,
   ElintPreset
 }

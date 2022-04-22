@@ -1,4 +1,3 @@
-import { createRequire } from 'module'
 import commitlint from '@commitlint/core'
 import type { LintOptions, LintOutcome } from '@commitlint/types/lib/lint'
 import type { ParserOptions } from '@commitlint/types/lib/parse'
@@ -55,19 +54,6 @@ const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
     result.message = formatted
 
     return result
-  },
-  getVersion() {
-    const require = createRequire(import.meta.url)
-
-    const { version } = require('../package.json')
-    const commitlintPackageJson = require('@commitlint/core/package.json')
-
-    return {
-      version,
-      dependencies: {
-        commitlint: commitlintPackageJson.version
-      }
-    }
   }
 }
 

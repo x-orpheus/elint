@@ -63,12 +63,12 @@ export async function loadPresetAndPlugins({
 
   const pendingPlugins = internalPreset.preset.plugins || []
 
-  const loadedPlugins = await loadElintPlugins(pendingPlugins, {
+  const internalPlugins = await loadElintPlugins(pendingPlugins, {
     cwd,
     presetPath: internalPreset.path
   })
 
-  if (!loadedPlugins.length) {
+  if (!internalPlugins.length) {
     throw new Error(
       `'${internalPreset.name}' doesn't contain available elint plugins`
     )
@@ -77,7 +77,7 @@ export async function loadPresetAndPlugins({
   if (internalPreset.preset.overridePluginConfig) {
     const overridePluginConfig = internalPreset.preset.overridePluginConfig
 
-    loadedPlugins.forEach((plugin) => {
+    internalPlugins.forEach(({ plugin }) => {
       if (overridePluginConfig[plugin.name]) {
         Object.keys(overridePluginConfig[plugin.name]).forEach((key) => {
           debug(`overriding config of ${plugin.name}: ${key}`)
@@ -101,9 +101,9 @@ export async function loadPresetAndPlugins({
 
   return {
     internalPreset,
-    loadedPlugins,
-    loadedPluginGroup: groupBy(
-      loadedPlugins,
+    internalPlugins,
+    pluginGroup: groupBy(
+      internalPlugins.map(({ plugin }) => plugin),
       (plugin) => plugin.type
     ) as Record<ElintPluginType, ElintPlugin<unknown>[]>
   }
@@ -121,11 +121,11 @@ export async function lintCommon({
 }: ElintBasicOptions = {}): Promise<ElintResult> {
   const elintResult = createElintResult()
 
-  const { loadedPluginGroup } =
+  const { pluginGroup } =
     optionInternalLoadedPresetAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))
 
-  for (const commonPlugin of loadedPluginGroup.common || []) {
+  for (const commonPlugin of pluginGroup.common || []) {
     await executeElintPlugin(elintResult, commonPlugin, {
       fix,
       cwd,
@@ -155,7 +155,7 @@ export async function lintText(
     output: text
   })
 
-  const { loadedPluginGroup } =
+  const { pluginGroup } =
     optionInternalLoadedPresetAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))
 
@@ -168,12 +168,12 @@ export async function lintText(
   }
 
   if (style) {
-    for (const formatterPlugin of loadedPluginGroup.formatter || []) {
+    for (const formatterPlugin of pluginGroup.formatter || []) {
       await executeElintPlugin(elintResult, formatterPlugin, pluginOptions)
     }
   }
 
-  for (const linterPlugin of loadedPluginGroup.linter || []) {
+  for (const linterPlugin of pluginGroup.linter || []) {
     await executeElintPlugin(elintResult, linterPlugin, {
       ...pluginOptions,
       // 当需要检查格式化时，lint 将自动执行 fix 操作
@@ -324,7 +324,7 @@ export async function reset({
   cwd = getBaseDir(),
   internalLoadedPrestAndPlugins
 }: ElintBasicOptions = {}): Promise<Record<string, unknown>> {
-  const { loadedPlugins } =
+  const { internalPlugins } =
     internalLoadedPrestAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))
 
@@ -332,12 +332,12 @@ export async function reset({
 
   resetElintCache({ cwd })
 
-  for (const plugin of loadedPlugins) {
+  for (const internalPlugin of internalPlugins) {
     try {
-      await plugin.reset?.()
+      await internalPlugin.plugin.reset?.()
     } catch (e) {
-      errorMap[plugin.name] = e
-      debug(`elint plugin ${plugin.name} reset error %o`, e)
+      errorMap[internalPlugin.name] = e
+      debug(`elint plugin ${internalPlugin.name} reset error %o`, e)
     }
   }
 

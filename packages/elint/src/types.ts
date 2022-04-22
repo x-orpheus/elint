@@ -1,7 +1,8 @@
 import type {
   ElintPlugin,
   ElintPluginResultWithPluginData,
-  ElintPluginType
+  ElintPluginType,
+  InternalPlugin
 } from './plugin/types.js'
 import type { ElintPreset, InternalPreset } from './preset/types.js'
 
@@ -44,8 +45,8 @@ export interface ElintResult<T = unknown> extends ElintBaseResult {
  */
 export interface InternalLoadedPresetAndPlugins {
   internalPreset: InternalPreset
-  loadedPlugins: ElintPlugin<unknown>[]
-  loadedPluginGroup: Record<ElintPluginType, ElintPlugin<unknown>[]>
+  internalPlugins: InternalPlugin[]
+  pluginGroup: Record<ElintPluginType, ElintPlugin<unknown>[]>
 }
 
 /**

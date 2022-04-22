@@ -3,8 +3,8 @@ import { executeElintPlugin } from './execute.js'
 import {
   type ElintPlugin,
   type ElintPluginOptions,
-  type ElintPluginTestResult,
-  isElintPlugin
+  isElintPlugin,
+  type ElintPluginResultWithPluginData
 } from './types.js'
 
 /**
@@ -14,7 +14,7 @@ export const testElintPlugin = async <T>(
   text: string,
   plugin: ElintPlugin<T>,
   pluginOptions: ElintPluginOptions
-): Promise<ElintPluginTestResult<T> | null> => {
+): Promise<ElintPluginResultWithPluginData<T> | undefined> => {
   if (!isElintPlugin(plugin)) {
     throw new Error('Current plugin is not an elint plugin.')
   }
@@ -25,10 +25,5 @@ export const testElintPlugin = async <T>(
 
   await plugin.reset?.()
 
-  const version = plugin.getVersion()
-
-  return {
-    version,
-    result: elintResult.pluginResults?.[0]
-  }
+  return elintResult.pluginResults[0]
 }

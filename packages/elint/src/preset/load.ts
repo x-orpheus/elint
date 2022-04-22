@@ -22,13 +22,14 @@ export const loadElintPreset = async (
 
     const presetPath = require.resolve(preset)
 
+    let presetPackagePath: string | undefined
     let presetPackageJson: { name: string; version: string } | undefined
 
     try {
-      presetPackageJson = require(path.join(
-        path.dirname(presetPath),
-        'package.json'
-      ))
+      presetPackagePath = path.dirname(
+        require.resolve(`${preset}/package.json`)
+      )
+      presetPackageJson = require(`${preset}/package.json`)
     } catch {
       debug(`Preset ${preset} doesn't have a package.json`)
     }
@@ -45,7 +46,7 @@ export const loadElintPreset = async (
     return {
       name: presetPackageJson?.name || preset,
       version: presetPackageJson?.version || 'unknown',
-      path: presetPath,
+      path: presetPackagePath,
       preset: presetConfig
     }
   }
@@ -56,7 +57,6 @@ export const loadElintPreset = async (
     return {
       name: 'anonymous',
       version: 'unknown',
-      path: cwd,
       preset
     }
   }

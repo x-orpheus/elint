@@ -31,11 +31,6 @@ const styleChecker: ElintPlugin<never> = {
           }${chalk.red.bold('!')} Not formatted\n\n`
         : undefined
     }
-  },
-  getVersion() {
-    return {
-      version: 'builtIn'
-    }
   }
 }
 
