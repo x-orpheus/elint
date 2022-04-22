@@ -246,6 +246,10 @@ export async function lintFiles(
     const task = async (): Promise<void> => {
       let source: string
       let filePath: string
+      /**
+       * 在拿文件内容的情况下跳过缓存
+       */
+      let skipCache = false
 
       if (typeof fileItem === 'string') {
         filePath = fileItem
@@ -253,6 +257,7 @@ export async function lintFiles(
       } else {
         filePath = fileItem.filePath
         source = fileItem.fileContent
+        skipCache = true
       }
 
       let elintResult = createElintResult({
@@ -261,17 +266,19 @@ export async function lintFiles(
         output: source
       })
 
-      const cacheResult = elintCache?.getFileCache(filePath, {
-        fix,
-        style,
-        internalLoadedPrestAndPlugins: currentInternalLoadedPrestAndPlugins,
-        write
-      })
+      if (!skipCache) {
+        const cacheResult = elintCache?.getFileCache(filePath, {
+          fix,
+          style,
+          internalLoadedPrestAndPlugins: currentInternalLoadedPrestAndPlugins,
+          write
+        })
 
-      if (cacheResult) {
-        elintResult.fromCache = true
-        elintResultList.push(elintResult)
-        return
+        if (cacheResult) {
+          elintResult.fromCache = true
+          elintResultList.push(elintResult)
+          return
+        }
       }
 
       elintResult = await lintText(elintResult.source, {
@@ -290,12 +297,14 @@ export async function lintFiles(
         })
       }
 
-      elintCache?.setFileCache(elintResult, {
-        fix,
-        style,
-        internalLoadedPrestAndPlugins: currentInternalLoadedPrestAndPlugins,
-        write
-      })
+      if (!skipCache) {
+        elintCache?.setFileCache(elintResult, {
+          fix,
+          style,
+          internalLoadedPrestAndPlugins: currentInternalLoadedPrestAndPlugins,
+          write
+        })
+      }
 
       elintResultList.push(elintResult)
     }
