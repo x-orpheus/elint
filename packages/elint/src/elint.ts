@@ -117,23 +117,21 @@ export async function lintCommon({
   style = false,
   preset,
   cwd = getBaseDir(),
-  internalLoadedPrestAndPlugins
+  internalLoadedPrestAndPlugins: optionInternalLoadedPresetAndPlugins
 }: ElintBasicOptions = {}): Promise<ElintResult> {
   const elintResult = createElintResult()
 
   const { loadedPluginGroup } =
-    internalLoadedPrestAndPlugins ||
+    optionInternalLoadedPresetAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))
 
-  if (loadedPluginGroup.common) {
-    for (const commonPlugin of loadedPluginGroup.common) {
-      await executeElintPlugin(elintResult, commonPlugin, {
-        fix,
-        cwd,
-        style,
-        source: elintResult.source
-      })
-    }
+  for (const commonPlugin of loadedPluginGroup.common || []) {
+    await executeElintPlugin(elintResult, commonPlugin, {
+      fix,
+      cwd,
+      style,
+      source: elintResult.source
+    })
   }
 
   return elintResult
@@ -147,7 +145,7 @@ export async function lintText(
     preset,
     cwd = getBaseDir(),
     filePath,
-    internalLoadedPrestAndPlugins
+    internalLoadedPrestAndPlugins: optionInternalLoadedPresetAndPlugins
   }: ElintBasicOptions & { filePath?: string } = {}
 ): Promise<ElintResult> {
   debug(`┌─ lint text ${filePath ? `(${filePath})` : ''} start`)
@@ -158,7 +156,7 @@ export async function lintText(
   })
 
   const { loadedPluginGroup } =
-    internalLoadedPrestAndPlugins ||
+    optionInternalLoadedPresetAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))
 
   const pluginOptions: ElintPluginOptions = {
@@ -169,22 +167,21 @@ export async function lintText(
     source: elintResult.source
   }
 
-  if (style && loadedPluginGroup.formatter) {
-    for (const formatterPlugin of loadedPluginGroup.formatter) {
+  if (style) {
+    for (const formatterPlugin of loadedPluginGroup.formatter || []) {
       await executeElintPlugin(elintResult, formatterPlugin, pluginOptions)
     }
   }
 
-  if (loadedPluginGroup.linter) {
-    for (const linterPlugin of loadedPluginGroup.linter) {
-      await executeElintPlugin(elintResult, linterPlugin, {
-        ...pluginOptions,
-        // 当需要检查格式化时，lint 将自动执行 fix 操作
-        fix: style || fix
-      })
-    }
+  for (const linterPlugin of loadedPluginGroup.linter || []) {
+    await executeElintPlugin(elintResult, linterPlugin, {
+      ...pluginOptions,
+      // 当需要检查格式化时，lint 将自动执行 fix 操作
+      fix: style || fix
+    })
   }
 
+  // 格式化检查
   await executeElintPlugin(elintResult, styleChecker, pluginOptions)
 
   debug(`└─ lint text ${filePath ? `(${filePath})` : ''} finish`)
@@ -207,7 +204,7 @@ export async function lintFiles(
     git = false,
     preset,
     cwd = getBaseDir(),
-    internalLoadedPrestAndPlugins,
+    internalLoadedPrestAndPlugins: optionInternalLoadedPresetAndPlugins,
     cache = false,
     cacheLocation
   }: ElintOptions
@@ -223,15 +220,14 @@ export async function lintFiles(
     cwd
   })
 
-  const elintResultList: ElintResult[] = []
-
-  // 没有匹配到任何文件进行提示
   if (!fileList.length) {
     return []
   }
 
-  const currentInternalLoadedPrestAndPlugins =
-    internalLoadedPrestAndPlugins ||
+  const elintResultList: ElintResult[] = []
+
+  const internalLoadedPrestAndPlugins =
+    optionInternalLoadedPresetAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))
 
   const tasks: (() => Promise<void>)[] = []
@@ -243,7 +239,7 @@ export async function lintFiles(
       let source: string
       let filePath: string
       /**
-       * 在拿文件内容的情况下跳过缓存
+       * 在 git 缓存区获取文件内容的情况下跳过缓存
        */
       let skipCache = false
 
@@ -266,7 +262,7 @@ export async function lintFiles(
         const cacheResult = elintCache?.getFileCache(filePath, {
           fix,
           style,
-          internalLoadedPrestAndPlugins: currentInternalLoadedPrestAndPlugins,
+          internalLoadedPrestAndPlugins,
           write
         })
 
@@ -282,7 +278,7 @@ export async function lintFiles(
         style,
         cwd,
         filePath: elintResult.filePath,
-        internalLoadedPrestAndPlugins: currentInternalLoadedPrestAndPlugins
+        internalLoadedPrestAndPlugins
       })
 
       const isModified = elintResult.output !== elintResult.source
@@ -297,7 +293,7 @@ export async function lintFiles(
         elintCache?.setFileCache(elintResult, {
           fix,
           style,
-          internalLoadedPrestAndPlugins: currentInternalLoadedPrestAndPlugins,
+          internalLoadedPrestAndPlugins,
           write
         })
       }

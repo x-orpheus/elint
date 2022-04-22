@@ -1,10 +1,9 @@
 import fs from 'fs-extra'
 import path from 'path'
+import { CACHE_FILENAME } from '../config.js'
 import ElintCache from './elint-cache.js'
 
 let elintCache: ElintCache | undefined
-
-const ELINT_CACHE_FILENAME = '.elintcache'
 
 interface ElintCacheLocationOptions {
   cwd: string
@@ -32,7 +31,7 @@ function getElintCachePath({
   }
 
   if (location.slice(-1) === path.sep) {
-    location = path.join(location, ELINT_CACHE_FILENAME)
+    location = path.join(location, CACHE_FILENAME)
   }
 
   return location
