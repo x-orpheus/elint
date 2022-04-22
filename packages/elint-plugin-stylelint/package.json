@@ -16,7 +16,7 @@
     "build": "tsc"
   },
   "peerDependencies": {
-    "stylelint": ">=14.0.0"
+    "stylelint": "^14.0.0"
   },
   "devDependencies": {
     "elint": "workspace:*",
