@@ -10,10 +10,6 @@ import type { ElintPreset, InternalPreset } from './preset/types.js'
  */
 export interface ElintBaseResult {
   /**
-   * 文件路径
-   */
-  filePath?: string
-  /**
    * 输入源码
    */
   source: string
@@ -29,6 +25,10 @@ export interface ElintBaseResult {
  * elint lint 结果结构
  */
 export interface ElintResult<T = unknown> extends ElintBaseResult {
+  /**
+   * 文件路径
+   */
+  filePath?: string
   /**
    * 是否命中缓存
    */
