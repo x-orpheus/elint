@@ -15,9 +15,9 @@
     "elint-plugin-prettier": "workspace:*",
     "elint-plugin-stylelint": "workspace:*",
     "eslint": "^8.13.0",
-    "eslint-config-standard": "^17.0.0-1",
+    "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^14.0.0",
+    "eslint-plugin-n": "^15.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "prettier": "^2.6.2",
     "stylelint": "^14.7.1"

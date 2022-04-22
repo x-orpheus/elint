@@ -147,9 +147,9 @@ importers:
       elint-plugin-prettier: workspace:*
       elint-plugin-stylelint: workspace:*
       eslint: ^8.13.0
-      eslint-config-standard: ^17.0.0-1
+      eslint-config-standard: ^17.0.0
       eslint-plugin-import: ^2.26.0
-      eslint-plugin-n: ^14.0.0
+      eslint-plugin-n: ^15.1.0
       eslint-plugin-promise: ^6.0.0
       prettier: ^2.6.2
       stylelint: ^14.7.1
@@ -163,9 +163,9 @@ importers:
       elint-plugin-prettier: link:../elint-plugin-prettier
       elint-plugin-stylelint: link:../elint-plugin-stylelint
       eslint: 8.13.0
-      eslint-config-standard: 17.0.0-1_68ff1ef19781f4b088d8227a9cf7f8ef
+      eslint-config-standard: 17.0.0_dc19839e011c6dcd66ff2ec979bc96a1
       eslint-plugin-import: 2.26.0_eslint@8.13.0
-      eslint-plugin-n: 14.0.0_eslint@8.13.0
+      eslint-plugin-n: 15.1.0_eslint@8.13.0
       eslint-plugin-promise: 6.0.0_eslint@8.13.0
       prettier: 2.6.2
       stylelint: 14.7.1
@@ -1947,6 +1947,12 @@ packages:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
     dev: true
 
+  /builtins/4.1.0:
+    resolution: {integrity: sha512-1bPRZQtmKaO6h7qV1YHXNtr6nCK28k0Zo95KM4dXfILcZZwoHJBN1m3lfLv9LPkcOZlrSr+J1bzMaZFO98Yq0w==}
+    dependencies:
+      semver: 7.3.7
+    dev: false
+
   /bytes/3.0.0:
     resolution: {integrity: sha512-pMhOfFDPiv9t5jjIXkHosWmkSyQbvsgEVNkz0ERHbuLh2T/7j4Mqqpz523Fe8MVY89KC6Sh/QfS2sM+SjgFDcw==}
     engines: {node: '>= 0.8'}
@@ -2723,17 +2729,17 @@ packages:
       source-map: 0.6.1
     dev: true
 
-  /eslint-config-standard/17.0.0-1_68ff1ef19781f4b088d8227a9cf7f8ef:
-    resolution: {integrity: sha512-aqRG58dqoBNfOLN+PsitasxmW+W9Os4oQrx081B16T4E4WogsSbpUL6hnKSnyv35sSRYA2XjBtKMOrUboL6jgw==}
+  /eslint-config-standard/17.0.0_dc19839e011c6dcd66ff2ec979bc96a1:
+    resolution: {integrity: sha512-/2ks1GKyqSOkH7JFvXJicu0iMpoojkwB+f5Du/1SC0PtBL+s8v30k9njRZ21pm2drKYm2342jFnGWzttxPmZVg==}
     peerDependencies:
       eslint: ^8.0.1
       eslint-plugin-import: ^2.25.2
-      eslint-plugin-n: ^14.0.0
+      eslint-plugin-n: ^15.0.0
       eslint-plugin-promise: ^6.0.0
     dependencies:
       eslint: 8.13.0
       eslint-plugin-import: 2.26.0_eslint@8.13.0
-      eslint-plugin-n: 14.0.0_eslint@8.13.0
+      eslint-plugin-n: 15.1.0_eslint@8.13.0
       eslint-plugin-promise: 6.0.0_eslint@8.13.0
     dev: false
 
@@ -2784,12 +2790,13 @@ packages:
       tsconfig-paths: 3.14.1
     dev: false
 
-  /eslint-plugin-n/14.0.0_eslint@8.13.0:
-    resolution: {integrity: sha512-mNwplPLsbaKhHyA0fa/cy8j+oF6bF6l81hzBTWa6JOvPcMNAuIogk2ih6d9tYvWYzyUG+7ZFeChqbzdFpg2QrQ==}
+  /eslint-plugin-n/15.1.0_eslint@8.13.0:
+    resolution: {integrity: sha512-Tgx4Z58QXv2Ha7Qzp0u4wavnZNZ3AOievZMxrAxi7nvDbzD5B/JqOD80LHYcGHFZc2HD9jDmM/+KWMPov46a4A==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       eslint: '>=7.0.0'
     dependencies:
+      builtins: 4.1.0
       eslint: 8.13.0
       eslint-plugin-es: 4.1.0_eslint@8.13.0
       eslint-utils: 3.0.0_eslint@8.13.0
