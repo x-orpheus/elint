@@ -1,7 +1,6 @@
 import type {
   ElintPlugin,
-  ElintPluginActivateConfig,
-  ElintPluginOptions
+  ElintPluginActivateConfig
 } from '../../../src/plugin/types.js'
 import { loadElintPlugins } from '../../../src/plugin/load.js'
 import { executeElintPlugin } from '../../../src/plugin/execute.js'
@@ -9,7 +8,7 @@ import { createElintResult } from '../../../src/elint.js'
 import { getBaseDir } from '../../../src/env.js'
 import mock from '../mock/env.js'
 
-const activateConfigFunction: ElintPluginActivateConfig<ElintPluginOptions> = {
+const activateConfigFunction: ElintPluginActivateConfig = {
   activate: ({ source }) => {
     const value = JSON.parse(source)
 

@@ -14,7 +14,7 @@ export type ElintPluginType = 'linter' | 'formatter' | 'common'
  */
 export type ElintPluginOverridableKey = 'activateConfig'
 
-export interface ElintPluginResult<T> extends ElintBaseResult {
+export interface ElintPluginResult<Result> extends ElintBaseResult {
   /**
    * 经过格式化，可以在命令行输出的消息
    */
@@ -22,11 +22,11 @@ export interface ElintPluginResult<T> extends ElintBaseResult {
   /**
    * 执行结果
    */
-  result?: T
+  result?: Result
 }
 
-export interface ElintPluginResultWithPluginData<T>
-  extends ElintPluginResult<T> {
+export interface ElintPluginResultWithPluginData<Result>
+  extends ElintPluginResult<Result> {
   /**
    * 插件标识
    */
@@ -73,7 +73,7 @@ export interface ElintPluginVersion {
   }
 }
 
-export interface ElintPluginActivateConfig<Options extends ElintPluginOptions> {
+export interface ElintPluginActivateConfig {
   /**
    * 支持的扩展名
    */
@@ -83,13 +83,10 @@ export interface ElintPluginActivateConfig<Options extends ElintPluginOptions> {
    *
    * type 非 file 只有传入 activate 才有可能激活
    */
-  activate?(options: Options): boolean
+  activate?(options: ElintPluginOptions): boolean
 }
 
-export interface ElintPlugin<
-  Result,
-  Options extends ElintPluginOptions = ElintPluginOptions
-> {
+export interface ElintPlugin<Result> {
   /**
    * plugin 名称(唯一)
    */
@@ -105,11 +102,14 @@ export interface ElintPlugin<
   /**
    * 激活配置
    */
-  activateConfig: ElintPluginActivateConfig<Options>
+  activateConfig: ElintPluginActivateConfig
   /**
    * 执行函数
    */
-  execute(text: string, options: Options): Promise<ElintPluginResult<Result>>
+  execute(
+    text: string,
+    options: ElintPluginOptions
+  ): Promise<ElintPluginResult<Result>>
   getVersion(): ElintPluginVersion
   /**
    * 重置操作（例如清理配置缓存）
@@ -134,7 +134,7 @@ export function isElintPlugin(value: unknown): value is ElintPlugin<unknown> {
 /**
  * 测试插件结果
  */
-export interface ElintPluginTestResult<T> {
+export interface ElintPluginTestResult<Result> {
   version: ElintPluginVersion
-  result: ElintPluginResultWithPluginData<T>
+  result: ElintPluginResultWithPluginData<Result>
 }
