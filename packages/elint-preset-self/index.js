@@ -5,5 +5,7 @@ module.exports = {
     'elint-plugin-prettier',
     'elint-plugin-commitlint'
   ],
-  eslint: require.resolve('./configs/eslint')
+  configs: {
+    eslint: require.resolve('./configs/eslint')
+  }
 }
