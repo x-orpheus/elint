@@ -5,7 +5,6 @@ const debug = _debug('elint:utils:is-git-hooks')
 
 const huskyLegacyCmdReg = /node_modules(\/|\\)husky/
 const huskyCmdReg = /\.husky(\/|\\)/
-const gitReg = /git/i
 
 /**
  * 根据 pid 判断是否由 husky 调用
@@ -20,14 +19,10 @@ async function isRunByHusky(pid: number): Promise<boolean> {
     return false
   }
 
-  const { cmd, ppid, name } = currentProcess
+  const { cmd, ppid } = currentProcess
 
+  /* istanbul ignore next */
   if (!cmd || typeof ppid === 'undefined') {
-    return false
-  }
-
-  // 如果已经到
-  if (gitReg.test(name)) {
     return false
   }
 
@@ -50,6 +45,7 @@ async function isGitHooks(): Promise<boolean> {
 
     return isRunByHusky(ppid)
   } catch (err) {
+    /* istanbul ignore next */
     debug('error: %o', err)
     return false
   }
