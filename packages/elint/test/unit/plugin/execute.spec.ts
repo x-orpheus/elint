@@ -21,7 +21,7 @@ describe('插件执行测试', () => {
   let baseDir: string
   let testPlugin: ElintPlugin<unknown>
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     unmock = mock()
     baseDir = getBaseDir()
     const plugins = await loadElintPlugins(['elint-plugin-esm'], {
@@ -30,7 +30,7 @@ describe('插件执行测试', () => {
     testPlugin = plugins[0].plugin
   })
 
-  afterAll(() => {
+  afterEach(() => {
     unmock()
   })
 

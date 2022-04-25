@@ -7,12 +7,12 @@ describe('插件加载测试', () => {
   let unmock: () => void
   let baseDir: string
 
-  beforeAll(() => {
+  beforeEach(() => {
     unmock = mock()
     baseDir = getBaseDir()
   })
 
-  afterAll(() => {
+  afterEach(() => {
     unmock()
   })
 
