@@ -13,22 +13,28 @@ describe('report 测试', () => {
         warningCount: 0,
         pluginResults: [
           {
-            pluginName: 'test',
-            pluginTitle: 'name',
             errorCount: 0,
             source: '',
             output: '',
             warningCount: 0,
-            message: 'output1\n'
+            message: 'output1\n',
+            pluginData: {
+              name: 'test',
+              title: 'name',
+              type: 'linter'
+            }
           },
           {
-            pluginName: 'test',
-            pluginTitle: 'name2',
             errorCount: 0,
             source: '',
             output: '',
             warningCount: 0,
-            message: 'output2\n'
+            message: 'output2\n',
+            pluginData: {
+              name: 'test',
+              title: 'name2',
+              type: 'linter'
+            }
           }
         ]
       },
@@ -39,13 +45,16 @@ describe('report 测试', () => {
         warningCount: 0,
         pluginResults: [
           {
-            pluginName: 'test',
-            pluginTitle: 'name',
             errorCount: 0,
             source: '',
             output: '',
             warningCount: 0,
-            message: 'output3\n'
+            message: 'output3\n',
+            pluginData: {
+              name: 'test',
+              title: 'name',
+              type: 'linter'
+            }
           }
         ]
       }

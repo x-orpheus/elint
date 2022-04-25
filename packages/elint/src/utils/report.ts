@@ -101,7 +101,7 @@ function report(results: ElintResult[]): string {
     result.pluginResults.forEach((pluginResult) => {
       if (pluginResult.message) {
         reportResults.push({
-          title: pluginResult.pluginTitle,
+          title: pluginResult.pluginData.title,
           success: pluginResult.errorCount === 0,
           output: pluginResult.message
         })

@@ -25,15 +25,6 @@ export interface ElintPluginResult<Result> extends ElintBaseResult {
   result?: Result
 }
 
-export interface ElintPluginResultWithPluginData<Result>
-  extends ElintPluginResult<Result> {
-  /**
-   * 插件标识
-   */
-  pluginName: string
-  pluginTitle: string
-}
-
 export interface ElintPluginOptions {
   /**
    * 文件路径
@@ -101,6 +92,11 @@ export interface ElintPlugin<Result> {
    * 重置操作（例如清理配置缓存）
    */
   reset?(): void | Promise<void>
+}
+
+export interface ElintPluginResultWithPluginData<Result>
+  extends ElintPluginResult<Result> {
+  pluginData: Pick<ElintPlugin<unknown>, 'name' | 'title' | 'type'>
 }
 
 /**
