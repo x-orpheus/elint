@@ -16,10 +16,11 @@
     "build": "tsc"
   },
   "peerDependencies": {
-    "@commitlint/core": "^16.0.0"
+    "@commitlint/core": "^17.0.0"
   },
   "devDependencies": {
-    "@commitlint/core": "^16.2.3",
+    "@commitlint/core": "^17.0.0",
+    "@commitlint/types": "^17.0.0",
     "elint": "workspace:*"
   }
 }
