@@ -76,7 +76,7 @@
   "devDependencies": {
     "@types/configstore": "^5.0.1",
     "@types/micromatch": "^4.0.2",
-    "verdaccio": "^5.9.0"
+    "verdaccio": "^5.10.2"
   },
   "ava": {
     "files": [
