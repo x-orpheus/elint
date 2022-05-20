@@ -28,7 +28,6 @@ describe('插件执行测试', () => {
         filePath: 'test.js',
         source: '',
         fix: false,
-        style: false,
         cwd: baseDir
       })
     }).rejects.toThrow()
@@ -39,7 +38,6 @@ describe('插件执行测试', () => {
       filePath: 'test.js',
       source: '',
       fix: false,
-      style: false,
       cwd: baseDir
     })
 

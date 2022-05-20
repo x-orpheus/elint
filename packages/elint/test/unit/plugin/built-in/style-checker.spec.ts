@@ -3,21 +3,9 @@ import styleChecker from '../../../../src/plugin/built-in/style-checker.js'
 import { testElintPlugin } from '../../../../src/plugin/test.js'
 
 describe('样式检查插件测试', () => {
-  test('跳过样式检查', async () => {
-    const result = await testElintPlugin('test1', styleChecker, {
-      fix: false,
-      style: false,
-      source: 'test1',
-      cwd: ''
-    })
-
-    expect(result).toBeUndefined()
-  })
-
   test('代码一致', async () => {
     const result = await testElintPlugin('test1', styleChecker, {
       fix: false,
-      style: true,
       source: 'test1',
       cwd: ''
     })
@@ -29,7 +17,6 @@ describe('样式检查插件测试', () => {
   test('代码不一致', async () => {
     const result = await testElintPlugin('test1', styleChecker, {
       fix: false,
-      style: true,
       source: 'test2',
       cwd: ''
     })
@@ -41,7 +28,6 @@ describe('样式检查插件测试', () => {
   test('代码不一致，传入 filePath', async () => {
     const result = await testElintPlugin('test1', styleChecker, {
       fix: false,
-      style: true,
       source: 'test2',
       cwd: '',
       filePath: 'filePath'
@@ -57,7 +43,6 @@ describe('样式检查插件测试', () => {
   test('fix 模式代码不一致', async () => {
     const result = await testElintPlugin('test1', styleChecker, {
       fix: true,
-      style: true,
       source: 'test2',
       cwd: ''
     })
