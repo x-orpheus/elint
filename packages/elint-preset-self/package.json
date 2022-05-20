@@ -6,7 +6,7 @@
     "postinstall": "elint-helpers install"
   },
   "dependencies": {
-    "@commitlint/core": "^16.2.3",
+    "@commitlint/core": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
     "elint-helpers": "workspace:*",

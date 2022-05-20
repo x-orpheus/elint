@@ -16,7 +16,7 @@
     "build": "tsc"
   },
   "peerDependencies": {
-    "@commitlint/core": "^17.0.0"
+    "@commitlint/core": ">=16.0.0"
   },
   "devDependencies": {
     "@commitlint/core": "^17.0.0",
