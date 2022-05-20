@@ -16,10 +16,6 @@ beforeEach(async () => {
   await run('git config user.email "zhangsan@gmail.com"', tmpDir)
   await run('git commit --allow-empty -m "build: initial empty commit"', tmpDir)
 
-  /**
-   * 这里需要手动安装一次，因为 husky 的 postinstall 检查是 ci 环境，不执行安装
-   * 手动安装的时候，已经有了配置文件，配置文件 skipCI = false
-   */
   await run('npm run hooks-install', tmpDir)
 })
 

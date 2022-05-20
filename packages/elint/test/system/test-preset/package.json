@@ -5,6 +5,11 @@
   "scripts": {
     "postinstall": "elint-helpers install"
   },
+  "publishConfig": {
+    "executableFiles": [
+      ".husky/commit-msg"
+    ]
+  },
   "dependencies": {
     "@commitlint/core": "^16.2.3",
     "elint-helpers": "*",

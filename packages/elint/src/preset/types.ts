@@ -5,7 +5,7 @@ import type { ElintPlugin, ElintPluginOverridableKey } from '../plugin/types.js'
  */
 export interface ElintPreset {
   /**
-   * 需要移动到根目录的的配置文件
+   * 需要移动到根目录的的配置文件或文件夹
    *
    * 例如 `.eslintrc`, `.prettierrc`
    */
