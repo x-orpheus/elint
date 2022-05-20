@@ -2,4 +2,4 @@
 . "$(dirname "$0")/_/husky.sh"
 
 pnpm elint lint commit
-pnpm elint lint \"packages/**/*\" \"!**/test-preset\" -s --cache
+pnpm elint lint \"packages/**/*\" \"!**/test-preset\" --cache

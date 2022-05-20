@@ -58,10 +58,6 @@ export interface ElintBasicOptions {
    */
   fix?: boolean
   /**
-   * 是否检查格式
-   */
-  style?: boolean
-  /**
    * 预设
    */
   preset?: string | ElintPreset

@@ -9,19 +9,10 @@ import type {
 const debug = _debug('elint:cache')
 
 export type ElintCacheOptions = Required<
-  Pick<
-    ElintOptions,
-    'fix' | 'style' | 'internalLoadedPrestAndPlugins' | 'write'
-  >
+  Pick<ElintOptions, 'fix' | 'internalLoadedPrestAndPlugins' | 'write'>
 >
 
-interface CacheMetaResult {
-  style: boolean
-  /**
-   * `${presetName}@${presetVersion}`
-   */
-  presetString: string
-}
+export type ElintCachePresetString = `${string}@${string}`
 
 class ElintCache {
   cacheFilePath?: string
@@ -38,13 +29,13 @@ class ElintCache {
 
   static getPresetString(
     internalLoadedPrestAndPlugins: InternalLoadedPresetAndPlugins
-  ): string {
+  ): ElintCachePresetString {
     return `${internalLoadedPrestAndPlugins.internalPreset.name}@${internalLoadedPrestAndPlugins.internalPreset.version}`
   }
 
   getFileCache(
     filePath: string,
-    { style, internalLoadedPrestAndPlugins }: ElintCacheOptions
+    { internalLoadedPrestAndPlugins }: ElintCacheOptions
   ): boolean {
     const fileDescriptor = this.fileEntryCache.getFileDescriptor(filePath)
 
@@ -59,25 +50,17 @@ class ElintCache {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const cacheMetaResult: CacheMetaResult = (fileDescriptor as any).meta
-      ?.result
+    const cachePresetString: ElintCachePresetString = (fileDescriptor as any)
+      .meta?.presetString
 
-    if (!cacheMetaResult) {
+    if (!cachePresetString) {
       debug(`Cache missed: ${filePath}`)
 
       return false
     }
 
-    if (cacheMetaResult.style !== style) {
-      debug(
-        `Cache style changed(before=${cacheMetaResult.style}, after=${style}): ${filePath}`
-      )
-
-      return false
-    }
-
     if (
-      cacheMetaResult.presetString !==
+      cachePresetString !==
       ElintCache.getPresetString(internalLoadedPrestAndPlugins)
     ) {
       debug(`Preset changed: ${filePath}`)
@@ -92,7 +75,7 @@ class ElintCache {
 
   setFileCache(
     result: ElintResult,
-    { fix, style, internalLoadedPrestAndPlugins, write }: ElintCacheOptions
+    { fix, internalLoadedPrestAndPlugins, write }: ElintCacheOptions
   ) {
     const filePath = result.filePath
 
@@ -119,12 +102,11 @@ class ElintCache {
 
       debug(`Updating cache result: ${filePath}`)
 
-      const cacheMetaResult: CacheMetaResult = {
-        style,
-        presetString: ElintCache.getPresetString(internalLoadedPrestAndPlugins)
-      }
+      const cachePresetString: ElintCachePresetString =
+        ElintCache.getPresetString(internalLoadedPrestAndPlugins)
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(fileDescriptor as any).meta.result = cacheMetaResult
+      ;(fileDescriptor as any).meta.presetString = cachePresetString
     }
   }
 

@@ -11,8 +11,8 @@ const styleChecker: ElintPlugin<never> = {
   title: 'elint - formatter',
   type: 'linter',
   activateConfig: {
-    activate({ style }) {
-      return style
+    activate() {
+      return true
     }
   },
   async execute(text, { fix, source, filePath }) {

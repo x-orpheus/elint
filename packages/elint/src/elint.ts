@@ -114,7 +114,6 @@ export async function loadPresetAndPlugins({
  */
 export async function lintCommon({
   fix = false,
-  style = false,
   preset,
   cwd = getBaseDir(),
   internalLoadedPrestAndPlugins: optionInternalLoadedPresetAndPlugins
@@ -129,7 +128,6 @@ export async function lintCommon({
     await executeElintPlugin(elintResult, commonPlugin, {
       fix,
       cwd,
-      style,
       source: elintResult.source
     })
   }
@@ -141,7 +139,6 @@ export async function lintText(
   text: string,
   {
     fix = false,
-    style = false,
     preset,
     cwd = getBaseDir(),
     filePath,
@@ -161,28 +158,26 @@ export async function lintText(
 
   const pluginOptions: ElintPluginOptions = {
     fix,
-    style,
     cwd,
     filePath,
     source: elintResult.source
   }
 
-  if (style) {
-    for (const formatterPlugin of pluginGroup.formatter || []) {
-      await executeElintPlugin(elintResult, formatterPlugin, pluginOptions)
-    }
+  for (const formatterPlugin of pluginGroup.formatter || []) {
+    await executeElintPlugin(elintResult, formatterPlugin, pluginOptions)
   }
 
   for (const linterPlugin of pluginGroup.linter || []) {
     await executeElintPlugin(elintResult, linterPlugin, {
       ...pluginOptions,
-      // 当需要检查格式化时，lint 将自动执行 fix 操作
-      fix: style || fix
+      fix
     })
   }
 
-  // 格式化检查
-  await executeElintPlugin(elintResult, styleChecker, pluginOptions)
+  if (pluginGroup.formatter.length) {
+    // 格式化检查
+    await executeElintPlugin(elintResult, styleChecker, pluginOptions)
+  }
 
   debug(`└─ lint text ${filePath ? `(${filePath})` : ''} finish`)
 
@@ -199,7 +194,6 @@ export async function lintFiles(
   {
     fix: optionFix = false,
     write = true,
-    style = false,
     noIgnore = false,
     git = false,
     preset,
@@ -261,7 +255,6 @@ export async function lintFiles(
       if (!skipCache) {
         const cacheResult = elintCache?.getFileCache(filePath, {
           fix,
-          style,
           internalLoadedPrestAndPlugins,
           write
         })
@@ -275,7 +268,6 @@ export async function lintFiles(
 
       elintResult = await lintText(elintResult.source, {
         fix,
-        style,
         cwd,
         filePath: elintResult.filePath,
         internalLoadedPrestAndPlugins
@@ -292,7 +284,6 @@ export async function lintFiles(
       if (!skipCache) {
         elintCache?.setFileCache(elintResult, {
           fix,
-          style,
           internalLoadedPrestAndPlugins,
           write
         })

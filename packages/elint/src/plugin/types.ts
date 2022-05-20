@@ -42,10 +42,6 @@ export interface ElintPluginOptions {
    */
   fix: boolean
   /**
-   * 是否检查格式
-   */
-  style: boolean
-  /**
    * cwd
    */
   cwd: string

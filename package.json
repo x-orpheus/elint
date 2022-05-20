@@ -6,8 +6,8 @@
     "prepare": "elint hooks install && elint-helpers install --preset=./packages/elint-preset-self --project=.",
     "preinstall": "npx only-allow pnpm",
     "commit": "elint lint commit && pnpm run lint",
-    "lint": "elint lint \"packages/**/*\" \"!**/test-preset\" -s --no-notifier --cache",
-    "start": "ts-node packages/elint/src/cli/index.ts lint \"packages/**/*\" \"!**/test-preset\" -s --no-notifier --cache",
+    "lint": "elint lint \"packages/**/*\" \"!**/test-preset\" --no-notifier --cache",
+    "start": "ts-node packages/elint/src/cli/index.ts lint \"packages/**/*\" \"!**/test-preset\" --no-notifier --cache",
     "test": "pnpm -r run test:unit --workspace-concurrency=1 && pnpm --filter=elint run test:system"
   },
   "devDependencies": {

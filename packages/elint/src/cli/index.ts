@@ -30,7 +30,6 @@ program
   .alias('l')
   .description('run lint, type: file, commit, common')
   .option('-f, --fix', 'Automatically fix problems')
-  .option('-s, --style', 'Lint code style')
   .option('--cache', 'Cache results')
   .option('--cache-location <cacheLocation>', 'Cache file location')
   .option('--preset <preset>', 'Set specific preset')
@@ -59,7 +58,6 @@ program
 
     const elintOptions: ElintOptions = {
       fix: options.fix,
-      style: options.style,
       noIgnore: !options.ignore,
       git: isGit,
       internalLoadedPrestAndPlugins,
