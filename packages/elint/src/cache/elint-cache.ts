@@ -1,6 +1,10 @@
 import _debug from 'debug'
 import fileEntryCache, { type FileEntryCache } from 'file-entry-cache'
-import type { ElintOptions, ElintResult } from '../types.js'
+import type {
+  ElintOptions,
+  ElintResult,
+  InternalLoadedPresetAndPlugins
+} from '../types.js'
 
 const debug = _debug('elint:cache')
 
@@ -13,9 +17,10 @@ export type ElintCacheOptions = Required<
 
 interface CacheMetaResult {
   style: boolean
-  // 扁平结构会减少缓存文件存储量
-  presetName: string
-  presetVersion: string
+  /**
+   * `${presetName}@${presetVersion}`
+   */
+  presetString: string
 }
 
 class ElintCache {
@@ -29,6 +34,12 @@ class ElintCache {
     debug(`Initial cache in ${cacheFilePath}`)
 
     this.fileEntryCache = fileEntryCache.create(cacheFilePath)
+  }
+
+  static getPresetString(
+    internalLoadedPrestAndPlugins: InternalLoadedPresetAndPlugins
+  ): string {
+    return `${internalLoadedPrestAndPlugins.internalPreset.name}@${internalLoadedPrestAndPlugins.internalPreset.version}`
   }
 
   getFileCache(
@@ -66,10 +77,8 @@ class ElintCache {
     }
 
     if (
-      cacheMetaResult.presetName !==
-        internalLoadedPrestAndPlugins.internalPreset.name ||
-      cacheMetaResult.presetVersion !==
-        internalLoadedPrestAndPlugins.internalPreset.version
+      cacheMetaResult.presetString !==
+      ElintCache.getPresetString(internalLoadedPrestAndPlugins)
     ) {
       debug(`Preset changed: ${filePath}`)
 
@@ -112,8 +121,7 @@ class ElintCache {
 
       const cacheMetaResult: CacheMetaResult = {
         style,
-        presetName: internalLoadedPrestAndPlugins.internalPreset.name,
-        presetVersion: internalLoadedPrestAndPlugins.internalPreset.version
+        presetString: ElintCache.getPresetString(internalLoadedPrestAndPlugins)
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(fileDescriptor as any).meta.result = cacheMetaResult
