@@ -87,21 +87,6 @@ test('lint stage files(error)', async () => {
   ).toReject()
 })
 
-/**
- * 在 git hooks 中执行 lint + prettier，lint 的文件不符合规范
- */
-test('lint stage files with prettier(error)', async () => {
-  // 添加所有 src 目录下的文件
-  await run('git add src', tmpDir)
-
-  await initHusky('npm run elint lint "src/**/*" -- --style', tmpDir)
-
-  // 报错
-  await expect(
-    run('git commit -m "build: lint stage files with prettier(error)"', tmpDir)
-  ).toReject()
-})
-
 test('lint stage files(fix)', async () => {
   // 添加所有 src 目录下的文件
   await run('git add src', tmpDir)
@@ -111,17 +96,5 @@ test('lint stage files(fix)', async () => {
   // 报错，因为 fix 在 git hooks 中无效
   await expect(
     run('git commit -m "build: lint stage files(fix)"', tmpDir)
-  ).toReject()
-})
-
-test('lint stage files with prettier(fix)', async () => {
-  // 添加所有 src 目录下的文件
-  await run('git add src', tmpDir)
-
-  await initHusky('npm run elint lint "src/**/*" --fix --style', tmpDir)
-
-  // 报错，因为 fix 在 git hooks 中无效
-  await expect(
-    run('git commit -m "build: lint stage files with prettier(fix)"', tmpDir)
   ).toReject()
 })
