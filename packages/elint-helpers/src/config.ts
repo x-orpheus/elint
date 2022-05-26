@@ -18,7 +18,6 @@ export const defaultConfigFiles = [
   '.stylelintignore',
 
   // husky v7
-  '.huskyrc',
   '.husky',
 
   // husky legacy
