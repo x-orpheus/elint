@@ -44,6 +44,7 @@
       - [2.4.1. 安装 git hooks](#241-安装-git-hooks)
       - [2.4.2. npm test](#242-npm-test)
       - [2.4.3. npm beforecommit](#243-npm-beforecommit)
+    - [2.5. 本地 preset](#25-本地-preset)
   - [3. ELint CLI](#3-elint-cli)
     - [3.1. lint](#31-lint)
     - [3.2. hooks](#32-hooks)
@@ -128,7 +129,9 @@ elint-preset-<name>
 
 > 在 `package.json` 中添加关键字 `elint-preset` 会方便大家找到。[这里](https://npms.io/search?q=keywords%3Aelint-preset)可以查找现有的 preset。
 
-> eslint, stylelint, commitlint, husky 等配置文件的语法规则，请阅读[参考](#6-参考)一节提供的文档。
+> eslint, stylelint, commitlint, husky 等配置文件的语法规则，请阅读[参考](#7-参考)一节提供的文档。
+
+> 如果仅为了测试或不方便发布 npm 包，可以参考 [本地 preset](#25-本地-preset) 的方法。
 
 ## 2. 使用指南
 
@@ -459,6 +462,12 @@ npm install elint-preset-test --save-dev
 按照上面的写法，commit 之前会执行校验代码和 commit message。至此，elint 已经成功添加到项目中，执行 `npm test` 会校验代码，在 commit 前会校验代码和 commit message
 
 > 当 lint 运行在 git hooks 中时，文件的范围限定在 **git 暂存区**，也就是你将要提交的文件（详见 [ELint CLI](#31-lint)）。
+
+### 2.5. 本地 preset
+
+如果为了测试 elint 或迁移之前没有使用 elint 的项目，可以采用本地 preset 的方案。
+
+在项目中创建一个 JS 文件作为 preset 配置，参考 2.2.3 - 2.2.8 完成对应的操作。在执行 lint 操作时，传入 `--preset` 参数指定本地的 preset 配置文件即可。
 
 ## 3. ELint CLI
 
