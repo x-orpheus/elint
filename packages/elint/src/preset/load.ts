@@ -72,7 +72,7 @@ export const loadElintPreset = async (
 /**
  * try to find a preset and load it
  */
-export const tryLoadElintPreset = (
+export const tryLoadElintPreset = async (
   pattern: RegExp,
   { cwd }: ElintContext
 ): Promise<InternalPreset> => {

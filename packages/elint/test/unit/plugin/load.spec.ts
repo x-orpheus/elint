@@ -23,19 +23,19 @@ describe('插件加载测试', () => {
   })
 
   test('加载不存在的插件', async () => {
-    await expect(async () => {
-      await loadElintPlugins(['elint-plugin-unknown'], {
+    await expect(
+      loadElintPlugins(['elint-plugin-unknown'], {
         cwd: baseDir
       })
-    }).rejects.toThrow()
+    ).toReject()
   })
 
   test('加载非插件', async () => {
-    await expect(async () => {
-      await loadElintPlugins(['elint-preset-node'], {
+    await expect(
+      loadElintPlugins(['elint-preset-node'], {
         cwd: baseDir
       })
-    }).rejects.toThrow()
+    ).toReject()
   })
 
   test('通过插件名加载插件', async () => {

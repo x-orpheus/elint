@@ -7,15 +7,10 @@ import mock from '../mock/env.js'
 describe('插件执行测试', () => {
   let unmock: () => void
   let baseDir: string
-  let testPlugin: ElintPlugin<unknown>
 
-  beforeEach(async () => {
+  beforeEach(() => {
     unmock = mock()
     baseDir = getBaseDir()
-    const plugins = await loadElintPlugins(['elint-plugin-esm'], {
-      cwd: baseDir
-    })
-    testPlugin = plugins[0].plugin
   })
 
   afterEach(() => {
@@ -23,17 +18,23 @@ describe('插件执行测试', () => {
   })
 
   test('插件不存在或错误', async () => {
-    expect(async () => {
-      await testElintPlugin('test', {} as ElintPlugin<never>, {
+    await expect(
+      testElintPlugin('test', {} as ElintPlugin<never>, {
         filePath: 'test.js',
         source: '',
         fix: false,
         cwd: baseDir
       })
-    }).rejects.toThrow()
+    ).toReject()
   })
 
   test('插件正常执行', async () => {
+    const plugins = await loadElintPlugins(['elint-plugin-esm'], {
+      cwd: baseDir
+    })
+
+    const testPlugin = plugins[0].plugin
+
     const result = await testElintPlugin('test1', testPlugin, {
       filePath: 'test.js',
       source: '',

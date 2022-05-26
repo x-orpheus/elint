@@ -19,27 +19,27 @@ describe('preset 加载测试', () => {
   })
 
   test('无 preset 加载', async () => {
-    expect(async () => {
-      await loadElintPreset(undefined as unknown as string, {
+    await expect(
+      loadElintPreset(undefined as unknown as string, {
         cwd: baseDir
       })
-    }).rejects.toThrow()
+    ).toReject()
   })
 
   test('加载不存在的 preset', async () => {
-    await expect(async () => {
-      await loadElintPreset('elint-preset-unknown', {
+    await expect(
+      loadElintPreset('elint-preset-unknown', {
         cwd: baseDir
       })
-    }).rejects.toThrow()
+    ).toReject()
   })
 
   test('加载非 preset', async () => {
-    await expect(async () => {
-      await loadElintPreset('elint-plugin-esm', {
+    await expect(
+      loadElintPreset('elint-plugin-esm', {
         cwd: baseDir
       })
-    }).rejects.toThrow()
+    ).toReject()
   })
 
   test('正常加载 preset', async () => {
@@ -51,11 +51,11 @@ describe('preset 加载测试', () => {
   })
 
   test('尝试加载多个 preset', async () => {
-    await expect(async () => {
-      await tryLoadElintPreset(/elint-preset-/, {
+    await expect(
+      tryLoadElintPreset(/elint-preset-/, {
         cwd: baseDir
       })
-    }).rejects.toThrow()
+    ).toReject()
   })
 
   test('尝试加载一个 preset', async () => {
@@ -67,11 +67,11 @@ describe('preset 加载测试', () => {
   })
 
   test('尝试加载不存在的 preset', async () => {
-    await expect(async () => {
-      await tryLoadElintPreset(/elint-preset-unknown/, {
+    await expect(
+      tryLoadElintPreset(/elint-preset-unknown/, {
         cwd: baseDir
       })
-    }).rejects.toThrow()
+    ).toReject()
   })
 
   test('加载匿名 preset', async () => {
