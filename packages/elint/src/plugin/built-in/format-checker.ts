@@ -6,8 +6,8 @@ import type { ElintPlugin } from '../types.js'
  *
  * 内部使用的插件
  */
-const styleChecker: ElintPlugin<never> = {
-  name: 'builtIn:style-checker',
+const formatChecker: ElintPlugin<never> = {
+  name: 'builtIn:format-checker',
   title: 'elint - formatter',
   type: 'linter',
   activateConfig: {
@@ -34,4 +34,4 @@ const styleChecker: ElintPlugin<never> = {
   }
 }
 
-export default styleChecker
+export default formatChecker

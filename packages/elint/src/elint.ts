@@ -21,7 +21,7 @@ import type {
 } from './types.js'
 import log from './utils/log.js'
 import { getElintCache, resetElintCache } from './cache/index.js'
-import styleChecker from './plugin/built-in/style-checker.js'
+import formatChecker from './plugin/built-in/format-checker.js'
 import { PRESET_PATTERN } from './config.js'
 
 const debug = _debug('elint:main')
@@ -176,7 +176,7 @@ export async function lintText(
 
   if (pluginGroup.formatter.length) {
     // 格式化检查
-    await executeElintPlugin(elintResult, styleChecker, pluginOptions)
+    await executeElintPlugin(elintResult, formatChecker, pluginOptions)
   }
 
   debug(`└─ lint text ${filePath ? `(${filePath})` : ''} finish`)
