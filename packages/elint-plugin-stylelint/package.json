@@ -11,6 +11,15 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x-orpheus/elint.git"
+  },
+  "keywords": [
+    "elint",
+    "elint-plugin",
+    "stylelint"
+  ],
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc"

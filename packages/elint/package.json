@@ -23,12 +23,9 @@
   },
   "keywords": [
     "eslint",
-    "eslintplugin",
-    "eslintconfig",
     "stylelint",
     "commitlint",
-    "standard",
-    "jshint",
+    "prettier",
     "lint",
     "linter",
     "husky",

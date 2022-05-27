@@ -17,6 +17,13 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x-orpheus/elint.git"
+  },
+  "keywords": [
+    "elint"
+  ],
   "engines": {
     "node": "^14.13.1 || >=16.0.0"
   },
