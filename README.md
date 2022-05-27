@@ -49,6 +49,7 @@
     - [3.1. lint](#31-lint)
     - [3.2. hooks](#32-hooks)
     - [3.3. version](#33-version)
+    - [3.4. reset](#34-reset)
   - [4. 插件](#4-插件)
     - [4.1. 插件类型](#41-插件类型)
     - [4.2. 编写一个插件](#42-编写一个插件)
@@ -485,7 +486,7 @@ type 可选的值：
 - commit: 检测提交信息
 - common: 检测所有 common 类型的插件
 
-如果不指定 type，默认执行 eslint 和 stylelint
+如果不指定 type，默认执行检测文件
 
 options 可选的值：
 
@@ -510,11 +511,9 @@ $ elint lint "**/*.js" "**/*.scss" --fix
 
 # 校验 js
 $ elint lint "**/*.js"
-$ elint lint es "**/*.js"
 
 # 校验 less
 $ elint lint "**/*.less"
-$ elint lint style "**/*.js"
 
 # 校验 commit message
 $ elint lint commit
@@ -570,6 +569,10 @@ $ elint -v
     elint-plugin-commitlint : 3.0.0
       @commitlint/core      : 17.0.0
 ```
+
+### 3.4. reset
+
+`reset` 用于重置缓存，执行此命令将会清空 elint 缓存，同时如果插件配置了 `reset` 方法，也会同时执行。
 
 ## 4. 插件
 
