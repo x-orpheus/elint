@@ -25,8 +25,8 @@ jobs:
 
       - name: Setup git config
         run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "<>"
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "<>"
 
       - name: use Node.js ${{ matrix.node_version }}
         uses: actions/setup-node@v2
