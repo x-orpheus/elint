@@ -63,7 +63,10 @@
     - [6.4. 某些文件没有被校验到](#64-某些文件没有被校验到)
     - [6.5. 为什么添加了 fix 选项还是有问题输出](#65-为什么添加了-fix-选项还是有问题输出)
     - [6.6. 如何禁用颜色输出](#66-如何禁用颜色输出)
-  - [7. 参考](#7-参考)
+  - [7. 从 v2.x 升级到 v3](#7-从-v2x-升级到-v3)
+    - [7.1. Preset 维护者](#71-preset-维护者)
+    - [7.2. elint 使用者](#72-elint-使用者)
+  - [8. 参考](#8-参考)
 
 <!-- /TOC -->
 
@@ -728,7 +731,28 @@ const defaultIgnore = [
 $ FORCE_COLOR=0 elint lint "src/**/*.js"
 ```
 
-## 7. 参考
+## 7. 从 v2.x 升级到 v3
+
+v2.x 到 v3 有很多 BREAKING CHANGE，可以按照以下流程进行升级
+
+### 7.1. Preset 维护者
+
+1. 修改 `package.json` 中的 `peerDependencies` `elint` 为 `^3.0.0`
+2. 升级依赖 `elint-helpers` 为 `^3.0.0`
+3. 创建入口文件 `index.js`，并将 `package.json` 中的 `main` 指向该文件
+4. 按需安装插件 `elint-plugin-eslint`，`elint-plugin-stylelint`，`elint-plugin-prettier`，`elint-plugin-commitlint` 并安装插件对应的依赖（即 `eslint`，`stylelint`，`prettier`，`@commitlint/core`）
+5. 参考 [2.2.3.](#223-配置入口文件) - [2.2.11](#2211-覆盖插件配置) 添加对应配置
+6. 调整由于升级 lint 库而失效或者新增的规则
+7. 调整 `husky` 配置，可以参考 [Migrate from v4 to v8](https://typicode.github.io/husky/#/?id=migrate-from-v4-to-v8)
+
+### 7.2. elint 使用者
+
+1. 不再支持 `elint lint es` 和 `elint lint style` 命令，如果在 lint 时需要区分文件类型，将自行通过 glob 语法匹配。
+2. 参考 [安装 git hooks](#241-安装-git-hooks) 在 `package.json` 的 `script` 里添加 `"prepare": "elint hooks install"` 命令。
+3. lint 命令不再支持 `--prettier` 参数，是否检查格式化的行为将由 preset 决定，如果 preset 内部包含 formatter，格式化检查就会被执行。
+4. 根据需求，可以添加 `--cache` 参数配置缓存，用来提升 lint 速度
+
+## 8. 参考
 
 - eslint: [Github](https://github.com/eslint/eslint) | [文档](http://eslint.org)
 - stylelint: [Github](https://github.com/stylelint/stylelint) | [文档](https://stylelint.io)
