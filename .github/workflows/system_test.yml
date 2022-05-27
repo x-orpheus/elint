@@ -23,6 +23,12 @@ jobs:
         with:
           version: 7.0.0
 
+      - name: Setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+
+
       - name: Use Node.js ${{ matrix.node_version }}
         uses: actions/setup-node@v2
         with:
