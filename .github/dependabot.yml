@@ -8,15 +8,3 @@ updates:
     assignees:
       - keenwon
     versioning-strategy: increase
-    ignore:
-      # husky 3 以上对 git 版本有要求
-      - dependency-name: husky
-        versions: ">=3"
-
-      # fs-extra 10+ 要求 nodejs 12
-      - dependency-name: fs-extra
-        versions: ">=10"
-
-      # configstore 6+ 要求 nodejs 12
-      - dependency-name: configstore
-        versions: ">=6"

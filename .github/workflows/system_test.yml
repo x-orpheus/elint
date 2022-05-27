@@ -14,35 +14,23 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node_version: ['10', '16']
+        node_version: ['14', '16']
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.0.0
 
       - name: Use Node.js ${{ matrix.node_version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node_version }}
+          cache: 'pnpm'
 
-      - name: get npm cache directory
-        id: npm-cache
-        run: |
-          echo "::set-output name=dir::$(npm config get cache)"
+      - name: Install dependencies ignore scripts
+        run: pnpm install --ignore-scripts
 
-      - name: cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.npm-cache.outputs.dir }}
-          key: ${{ runner.os }}-system-test-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-system-test
-
-      - name: npm ci
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
-
-      - name: install yarn # 全局安装 yarn
-        run: npm install -g yarn
-
-      - name: npm run test:system
-        run: npm run test:system
+      - name: Run system test
+        run: pnpm --filter elint run test:system
