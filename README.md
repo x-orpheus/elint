@@ -66,7 +66,8 @@
   - [7. 从 v2.x 升级到 v3](#7-从-v2x-升级到-v3)
     - [7.1. Preset 维护者](#71-preset-维护者)
     - [7.2. elint 使用者](#72-elint-使用者)
-  - [8. 参考](#8-参考)
+  - [8. 贡献代码](#8-贡献代码)
+  - [9. 参考](#9-参考)
 
 <!-- /TOC -->
 
@@ -752,7 +753,11 @@ v2.x 到 v3 有很多 BREAKING CHANGE，可以按照以下流程进行升级
 3. lint 命令不再支持 `--prettier` 参数，是否检查格式化的行为将由 preset 决定，如果 preset 内部包含 formatter，格式化检查就会被执行。
 4. 根据需求，可以添加 `--cache` 参数配置缓存，用来提升 lint 速度
 
-## 8. 参考
+## 8. 贡献代码
+
+参考 [CONTRIBUTING](./CONTRIBUTING.md)。
+
+## 9. 参考
 
 - eslint: [Github](https://github.com/eslint/eslint) | [文档](http://eslint.org)
 - stylelint: [Github](https://github.com/stylelint/stylelint) | [文档](https://stylelint.io)
