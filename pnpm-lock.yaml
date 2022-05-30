@@ -65,6 +65,7 @@ importers:
       semver: ^7.3.7
       staged-git-files: ^1.3.0
       verdaccio: ^5.10.2
+      verdaccio-auth-memory: ^10.2.0
     dependencies:
       '@types/file-entry-cache': 5.0.2
       boxen: 6.2.1
@@ -90,6 +91,7 @@ importers:
       '@types/micromatch': 4.0.2
       '@types/semver': 7.3.9
       verdaccio: 5.10.2
+      verdaccio-auth-memory: 10.2.0
 
   packages/elint-helpers:
     specifiers:
@@ -1896,8 +1898,6 @@ packages:
       qs: 6.9.7
       raw-body: 2.4.3
       type-is: 1.6.18
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /body-parser/1.20.0:
@@ -1916,8 +1916,6 @@ packages:
       raw-body: 2.5.1
       type-is: 1.6.18
       unpipe: 1.0.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /boxen/6.2.1:
@@ -2198,8 +2196,6 @@ packages:
       on-headers: 1.0.2
       safe-buffer: 5.1.2
       vary: 1.1.2
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /concat-map/0.0.1:
@@ -2424,21 +2420,11 @@ packages:
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
     dependencies:
       ms: 2.0.0
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
     dependencies:
       ms: 2.1.3
 
@@ -2767,8 +2753,6 @@ packages:
     dependencies:
       debug: 3.2.7
       resolve: 1.22.0
-    transitivePeerDependencies:
-      - supports-color
 
   /eslint-module-utils/2.7.3_zhgf6mw2wzy6dnrak3ta47vb3m:
     resolution: {integrity: sha512-088JEC7O3lDZM9xGe0RerkOMd0EjFl+Yvd1jPWIkMT5u3H9+HC34mWWPnqPrN13gieT9pBOO+Qt07Nb/6TresQ==}
@@ -3090,8 +3074,6 @@ packages:
       type-is: 1.6.18
       utils-merge: 1.0.1
       vary: 1.1.2
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /express/4.18.1:
@@ -3129,8 +3111,6 @@ packages:
       type-is: 1.6.18
       utils-merge: 1.0.1
       vary: 1.1.2
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /ext/1.6.0:
@@ -3234,8 +3214,6 @@ packages:
       parseurl: 1.3.3
       statuses: 1.5.0
       unpipe: 1.0.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /finalhandler/1.2.0:
@@ -3249,8 +3227,6 @@ packages:
       parseurl: 1.3.3
       statuses: 2.0.1
       unpipe: 1.0.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /find-process/1.4.7:
@@ -5804,8 +5780,6 @@ packages:
       on-finished: 2.3.0
       range-parser: 1.2.1
       statuses: 1.5.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /send/0.18.0:
@@ -5825,8 +5799,6 @@ packages:
       on-finished: 2.4.1
       range-parser: 1.2.1
       statuses: 2.0.1
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /serve-static/1.14.2:
@@ -5837,8 +5809,6 @@ packages:
       escape-html: 1.0.3
       parseurl: 1.3.3
       send: 0.17.2
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /serve-static/1.15.0:
@@ -5849,8 +5819,6 @@ packages:
       escape-html: 1.0.3
       parseurl: 1.3.3
       send: 0.18.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /set-blocking/2.0.0:
@@ -6682,6 +6650,13 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
+    dev: true
+
+  /verdaccio-auth-memory/10.2.0:
+    resolution: {integrity: sha512-HP8LHdNpHVFO4isL7VR8pNPoRzBlJUKQlNqma5xBPtSRKvKEc9Co3D6Sg2y9NofD8Yr1Q3dMBDDRtx8dxs9xZQ==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@verdaccio/commons-api': 10.2.0
     dev: true
 
   /verdaccio-htpasswd/10.3.0:

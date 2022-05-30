@@ -19,15 +19,25 @@ export const startUpLocalRegistry = async () => {
     startServer(
       {
         storage: verdaccioDir,
+        auth: {
+          'auth-memory': {
+            users: {
+              foo: {
+                name: 'test',
+                password: 'test'
+              }
+            }
+          }
+        },
         middlewares: {
           audit: { enabled: true }
         },
         uplinks: { npmjs: { url: 'https://registry.npmjs.org/' } },
         packages: {
-          '@*/*': { access: '$all', publish: '$anonymous', proxy: 'npmjs' },
+          '@*/*': { access: '$all', publish: '$all', proxy: 'npmjs' },
           '**': {
             access: '$all',
-            publish: '$anonymous',
+            publish: '$all',
             proxy: 'npmjs'
           }
         },
