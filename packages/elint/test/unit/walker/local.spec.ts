@@ -1,17 +1,15 @@
 import mock from '../mock/env.js'
 import walker from '../../../src/walker/local.js'
 import { getBaseDir } from '../../../src/env.js'
-import path from 'path'
+import getPath from '../mock/get-path.js'
 
 describe('Walker local 测试', () => {
   let unmock: () => void
   let baseDir: string
-  let getPath: (p: string) => string
 
   beforeEach(() => {
     unmock = mock()
     baseDir = getBaseDir()
-    getPath = (p: string) => path.join(baseDir, p)
   })
 
   afterEach(() => {

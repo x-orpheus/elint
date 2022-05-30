@@ -1,6 +1,6 @@
-import path from 'path'
 import fs from 'fs-extra'
 import mock from '../mock/env.js'
+import getPath from '../mock/get-path.js'
 import { getBaseDir } from '../../../src/env.js'
 import walker from '../../../src/walker/index.js'
 import gitInit from '../mock/git-init.js'
@@ -9,12 +9,10 @@ import appendFile from '../mock/append-file.js'
 describe('Walker 测试', () => {
   let unmock: () => void
   let baseDir: string
-  let getPath: (p: string) => string
 
   beforeEach(() => {
     unmock = mock()
     baseDir = getBaseDir()
-    getPath = (p: string) => path.join(baseDir, p)
   })
 
   afterEach(() => {

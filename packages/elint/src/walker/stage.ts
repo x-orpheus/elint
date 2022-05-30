@@ -1,6 +1,7 @@
 import _debug from 'debug'
 import fs from 'fs-extra'
 import mm from 'micromatch'
+import normalize from 'normalize-path'
 import sgf from 'staged-git-files'
 import path from 'path'
 import { intersection, without } from 'lodash-es'
@@ -63,6 +64,8 @@ function getStagedFileList(
 ): Promise<string[]> {
   // 如果 baseDir 根本不存在 sgf 会抛出异常
   if (!cwd || !fs.existsSync(cwd)) {
+    debug([])
+
     return Promise.resolve([])
   }
 
@@ -80,6 +83,8 @@ function getStagedFileList(
         .filter((item) => item.status !== 'Deleted') // 过滤已删除的文件
         .filter((item) => match(item.filename, patterns, ignorePatterns))
         .map((item) => item.filename)
+
+      debug(fileList)
 
       resolve(fileList)
     })
@@ -110,7 +115,7 @@ async function stagedFiles(
   const pureStagedFileList = without(stagedFileList, ...notStagedFileList)
 
   const pureStagedAbsoluteFileList = pureStagedFileList.map((filePath) =>
-    path.join(cwd, filePath)
+    normalize(path.join(cwd, filePath))
   )
 
   if (!needGetContentFileList.length) {
@@ -125,7 +130,7 @@ async function stagedFiles(
 
     if (fileContent !== null) {
       fileList.push({
-        filePath: path.join(cwd, filePath),
+        filePath: normalize(path.join(cwd, filePath)),
         fileContent
       })
     }
