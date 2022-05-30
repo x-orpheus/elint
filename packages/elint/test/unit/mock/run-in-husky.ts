@@ -1,3 +1,4 @@
+import { pathToFileURL } from 'url'
 import { createRequire } from 'module'
 import fs from 'fs-extra'
 import path from 'path'
@@ -6,10 +7,7 @@ import { getBaseDir } from '../../../src/env.js'
 
 const require = createRequire(import.meta.url)
 const execaPath = require.resolve('execa')
-const tsNodeBinPath = path.join(
-  path.dirname(require.resolve('ts-node')),
-  'bin.js'
-)
+const tsNodeBinPath = require.resolve('ts-node/dist/bin-transpile')
 const tsConfigPath = require.resolve('../../../../../tsconfig.json')
 
 /**
@@ -25,7 +23,7 @@ async function run(tmpl: string): Promise<string> {
   const huskyFilePath = path.join(baseDir, 'node_modules/husky/index.mjs')
 
   const huskyFileContent = `
-    import { execaNode } from '${execaPath}'
+    import { execaNode } from '${pathToFileURL(execaPath).toString()}'
 
     execaNode('${tsNodeBinPath}', ['--project','${tsConfigPath}','${execFilePath}']).then(result => {
       process.stdout.write(JSON.stringify(result.stdout))

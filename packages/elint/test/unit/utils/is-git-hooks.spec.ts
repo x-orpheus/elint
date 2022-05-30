@@ -1,3 +1,4 @@
+import { pathToFileURL } from 'url'
 import { createRequire } from 'module'
 import mock from '../mock/env.js'
 import runInHusky from '../mock/run-in-husky.js'
@@ -26,7 +27,7 @@ describe('is-git-hooks 测试', () => {
 
   test('husky 环境', async () => {
     const tmpl = `
-      import isGitHooks from '${isGitHooksPath}';
+      import isGitHooks from '${pathToFileURL(isGitHooksPath).toString()}';
 
       isGitHooks().then(result => {
         process.stdout.write(JSON.stringify(result));
