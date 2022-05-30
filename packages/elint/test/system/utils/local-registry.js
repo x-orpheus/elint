@@ -2,7 +2,11 @@ import path from 'path'
 import fs from 'fs-extra'
 import run from './run.js'
 import verdaccio from 'verdaccio'
-import { verdaccioPort, verdaccioDir } from './variable.js'
+import {
+  verdaccioPort,
+  verdaccioDir,
+  tempTestPresetDir
+} from './variable.js'
 
 const startServer = verdaccio.default
 
@@ -12,6 +16,13 @@ export const cleanLocalRegistry = async (packageName) => {
     dir = path.resolve(dir, packageName)
   }
   return fs.remove(dir)
+}
+
+export const loginLocalRegistry = async () => {
+  await run(
+    `pnpm npm-auth-to-token -u test -p test -e test@test.com -r http://localhost:${verdaccioPort}`,
+    tempTestPresetDir
+  )
 }
 
 export const startUpLocalRegistry = async () => {
@@ -75,8 +86,13 @@ export const startUpLocalRegistry = async () => {
 
 export const publishToLocalRegistry = async (packageDir) => {
   await run(
-    `pnpm publish --registry=http://localhost:${verdaccioPort} --no-git-checks`,
-    packageDir
+    `pnpm publish --registry=http://localhost:${verdaccioPort} --no-git-check`,
+    packageDir,
+    {
+      customEnv: {
+        npm_config_userconfig: `http://localhost:${verdaccioPort}`
+      }
+    }
   )
 }
 

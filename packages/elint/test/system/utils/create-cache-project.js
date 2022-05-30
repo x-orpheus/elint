@@ -2,6 +2,7 @@ import fs from 'fs-extra'
 import {
   bumpPackageVersion,
   cleanLocalRegistry,
+  loginLocalRegistry,
   publishToLocalRegistry
 } from './local-registry.js'
 import run from './run.js'
@@ -35,6 +36,9 @@ async function createCacheProject(skipPreparation = false) {
 
   if (!skipPreparation) {
     await run('pnpm run build', projectDir)
+
+    // 登录本地 registry
+    await loginLocalRegistry()
 
     // verdaccio 不支持同版本号覆盖
     await Promise.all(

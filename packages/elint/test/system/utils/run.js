@@ -1,7 +1,11 @@
 import { execa } from 'execa'
 
 // 执行命令
-function run(command, cwd, { stdio = 'inherit', disableNotifier = true } = {}) {
+function run(
+  command,
+  cwd,
+  { stdio = 'inherit', disableNotifier = true, customEnv } = {}
+) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const strs = command.match(/(?:[^\s"]+|"[^"]*")+/g)
 
@@ -27,7 +31,8 @@ function run(command, cwd, { stdio = 'inherit', disableNotifier = true } = {}) {
     env: {
       INIT_CWD: cwd,
       FORCE_COLOR: true,
-      ELINT_DISABLE_UPDATE_NOTIFIER: disableNotifier
+      ELINT_DISABLE_UPDATE_NOTIFIER: disableNotifier,
+      ...customEnv
     }
   })
 }

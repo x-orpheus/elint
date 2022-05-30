@@ -76,6 +76,7 @@
     "@types/micromatch": "^4.0.2",
     "@types/normalize-path": "^3.0.0",
     "@types/semver": "^7.3.9",
+    "npm-auth-to-token": "1.0.0",
     "verdaccio": "^5.10.2",
     "verdaccio-auth-memory": "^10.2.0"
   },
