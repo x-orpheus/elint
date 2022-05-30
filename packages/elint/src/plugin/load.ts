@@ -1,3 +1,4 @@
+import { pathToFileURL } from 'url'
 import { createRequire } from 'module'
 import path from 'path'
 import _debug from 'debug'
@@ -24,7 +25,7 @@ const loadElintPlugin = async (
 
     const pluginPath = require.resolve(plugin)
 
-    const pluginModule = await import(pluginPath)
+    const pluginModule = await import(pathToFileURL(pluginPath).toString())
 
     let pluginPackagePath: string | undefined
 

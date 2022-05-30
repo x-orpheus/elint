@@ -1,3 +1,4 @@
+import { pathToFileURL } from 'url'
 import { createRequire } from 'module'
 import path from 'path'
 import fs from 'fs-extra'
@@ -39,7 +40,7 @@ export const loadElintPreset = async (
       debug(`Preset ${preset} doesn't have a package.json`)
     }
 
-    const presetModule = await import(presetPath)
+    const presetModule = await import(pathToFileURL(presetPath).toString())
     const presetConfig = presetModule.default || presetModule
 
     if (!isElintPreset(presetConfig)) {
