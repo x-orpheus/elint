@@ -2,11 +2,7 @@ import path from 'path'
 import fs from 'fs-extra'
 import run from './run.js'
 import verdaccio from 'verdaccio'
-import {
-  verdaccioPort,
-  verdaccioDir,
-  tempTestPresetDir
-} from './variable.js'
+import { verdaccioPort, verdaccioDir, tempTestPresetDir } from './variable.js'
 
 const startServer = verdaccio.default
 
@@ -90,7 +86,7 @@ export const publishToLocalRegistry = async (packageDir) => {
     packageDir,
     {
       customEnv: {
-        npm_config_userconfig: `http://localhost:${verdaccioPort}`
+        npm_config_userconfig: path.join(tempTestPresetDir, '.npmrc')
       }
     }
   )
