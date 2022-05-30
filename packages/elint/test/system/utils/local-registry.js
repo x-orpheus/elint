@@ -82,7 +82,7 @@ export const startUpLocalRegistry = async () => {
 
 export const publishToLocalRegistry = async (packageDir) => {
   await run(
-    `pnpm publish --registry=http://localhost:${verdaccioPort} --no-git-check`,
+    `pnpm publish --registry=http://localhost:${verdaccioPort} --no-git-check --silent`,
     packageDir,
     {
       customEnv: {
