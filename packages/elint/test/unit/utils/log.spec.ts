@@ -10,7 +10,9 @@ let spy: jest.SpyInstance
 describe('log 测试', () => {
   describe('error 方法测试', () => {
     beforeEach(() => {
-      spy = jest.spyOn(global.console, 'log') as jest.SpyInstance
+      spy = jest.spyOn(global.console, 'log').mockImplementation(() => {
+        // empty
+      }) as jest.SpyInstance
     })
 
     afterEach(() => {
