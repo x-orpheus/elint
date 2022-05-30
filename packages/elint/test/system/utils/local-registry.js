@@ -24,10 +24,10 @@ export const startUpLocalRegistry = async () => {
         },
         uplinks: { npmjs: { url: 'https://registry.npmjs.org/' } },
         packages: {
-          '@*/*': { access: '$all', publish: '$all', proxy: 'npmjs' },
+          '@*/*': { access: '$all', publish: '$anonymous', proxy: 'npmjs' },
           '**': {
             access: '$all',
-            publish: '$all',
+            publish: '$anonymous',
             proxy: 'npmjs'
           }
         },
