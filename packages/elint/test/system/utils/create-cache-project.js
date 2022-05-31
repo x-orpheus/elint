@@ -54,7 +54,7 @@ async function createCacheProject(skipPreparation = false) {
     }
 
     await run(
-      `npm install --registry=http://localhost:${verdaccioPort}`,
+      `npm install --registry=http://localhost:${verdaccioPort} --verbose`,
       cacheDir
     )
   }
