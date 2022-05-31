@@ -19,6 +19,10 @@ beforeEach(async () => {
   await run('npm run hooks-install', tmpDir)
 })
 
+afterEach(async () => {
+  await run('npm run hooks-uninstall', tmpDir)
+})
+
 /**
  * 不合法的 git commit message
  */

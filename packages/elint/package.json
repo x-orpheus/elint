@@ -59,7 +59,6 @@
     "execa": "^6.1.0",
     "figures": "^4.0.1",
     "file-entry-cache": "^6.0.1",
-    "find-process": "^1.4.7",
     "find-up": "^6.3.0",
     "fs-extra": "^10.1.0",
     "globby": "^13.1.1",
