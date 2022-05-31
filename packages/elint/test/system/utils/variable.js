@@ -17,7 +17,6 @@ export const backupDir = path.join(systemTestTempDir, 'backup')
 
 export const projectDir = path.join(__dirname, '../../../../..')
 
-export const verdaccioDir = path.join(projectDir, 'verdaccio')
 export const verdaccioPort = 4873
 
 export const testPresetName = 'elint-preset-system-test'

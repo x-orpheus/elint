@@ -2,17 +2,9 @@ import path from 'path'
 import fs from 'fs-extra'
 import run from './run.js'
 import verdaccio from 'verdaccio'
-import { verdaccioPort, verdaccioDir, tempTestPresetDir } from './variable.js'
+import { verdaccioPort, tempTestPresetDir } from './variable.js'
 
 const startServer = verdaccio.default
-
-export const cleanLocalRegistry = async (packageName) => {
-  let dir = verdaccioDir
-  if (packageName) {
-    dir = path.resolve(dir, packageName)
-  }
-  return fs.remove(dir)
-}
 
 export const loginLocalRegistry = async () => {
   await run(
@@ -25,7 +17,11 @@ export const startUpLocalRegistry = async () => {
   return new Promise((resolve, reject) => {
     startServer(
       {
-        storage: verdaccioDir,
+        store: {
+          memory: {
+            limit: 1000
+          }
+        },
         auth: {
           'auth-memory': {
             users: {
@@ -40,8 +36,18 @@ export const startUpLocalRegistry = async () => {
           audit: { enabled: true }
         },
         uplinks: { npmjs: { url: 'https://registry.npmjs.org/' } },
+        publish: {
+          allow_offline: true
+        },
         packages: {
-          '@*/*': { access: '$all', publish: '$all', proxy: 'npmjs' },
+          elint: {
+            access: '$all',
+            publish: '$all'
+          },
+          'elint-*': {
+            access: '$all',
+            publish: '$all'
+          },
           '**': {
             access: '$all',
             publish: '$all',

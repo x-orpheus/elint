@@ -6,6 +6,10 @@ import fs from 'fs-extra'
 import { systemTestTempDir } from './utils/variable.js'
 
 const teardown = async () => {
+  if (global.closeVerdaccio) {
+    await global.closeVerdaccio()
+  }
+
   // CI 下不用执行清理
   if (process.env.CI) {
     return

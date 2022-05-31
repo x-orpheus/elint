@@ -1,7 +1,6 @@
 import fs from 'fs-extra'
 import {
   bumpPackageVersion,
-  cleanLocalRegistry,
   loginLocalRegistry,
   publishToLocalRegistry
 } from './local-registry.js'
@@ -13,8 +12,6 @@ import {
   verdaccioPort,
   testPresetDir,
   tempTestPresetDir,
-  publishPackageList,
-  testPresetName,
   publishPackagePathList,
   projectDir
 } from './variable.js'
@@ -39,13 +36,6 @@ async function createCacheProject(skipPreparation = false) {
 
     // 登录本地 registry
     await loginLocalRegistry()
-
-    // verdaccio 不支持同版本号覆盖
-    await Promise.all(
-      publishPackageList.map((packageName) => cleanLocalRegistry(packageName))
-    )
-
-    await cleanLocalRegistry(testPresetName)
 
     await Promise.all(
       publishPackagePathList.map((packagePath) =>

@@ -50,10 +50,6 @@ async function getPackageInfo(
       .replace('{}', packageName)
       .split(' ')
 
-    if (process.env.ELINT_SYSTEM_TEST && packageManager === 'npm') {
-      commands.push('--prefer-offline')
-    }
-
     const getPackageInfoProcess = execa(commands[0], commands.slice(1), {
       cwd
     })

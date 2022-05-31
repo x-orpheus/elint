@@ -13,14 +13,12 @@ const init = async () => {
   console.log(`Memory: ${Math.ceil(os.totalmem() / 1024 / 1024 / 1024)}G`)
   console.log()
 
-  process.env.ELINT_SYSTEM_TEST = true
-
   const closeVerdaccio = await startUpLocalRegistry()
+
+  global.closeVerdaccio = closeVerdaccio
 
   // 创建缓存项目
   await createCacheProject()
-
-  await closeVerdaccio()
 }
 
 export default init
