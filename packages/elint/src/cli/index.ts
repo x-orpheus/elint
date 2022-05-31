@@ -36,6 +36,8 @@ program
   .option('--no-ignore', 'Disable elint ignore patterns')
   .option('--no-notifier', 'Disable check preset updates')
   .option('--force-notifier', 'Force check preset updates')
+  .option('--git', 'Force use git mode')
+  .option('--no-git', 'Disable auto detect git mode')
   .action(async (type: string, files: string[], options) => {
     if (!files || !type) {
       return
@@ -52,7 +54,13 @@ program
       preset: options.preset
     })
 
-    const isGit = await isGitHooks()
+    let isGit: boolean
+
+    if (typeof options.git === 'undefined') {
+      isGit = await isGitHooks()
+    } else {
+      isGit = !!options.git
+    }
 
     debug(`is in git: ${isGit}`)
 
