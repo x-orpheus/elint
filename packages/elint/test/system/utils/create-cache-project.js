@@ -1,4 +1,5 @@
 import fs from 'fs-extra'
+import path from 'path'
 import {
   bumpPackageVersion,
   loginLocalRegistry,
@@ -50,11 +51,11 @@ async function createCacheProject(skipPreparation = false) {
     await publishToLocalRegistry(tempTestPresetDir)
 
     if (process.env.CI) {
-      await run('npm cache clean --force', cacheDir)
+      fs.removeSync(path.join(cacheDir, 'node_modules'))
     }
 
     await run(
-      `npm install --registry=http://localhost:${verdaccioPort} --verbose`,
+      `npm install --registry=http://localhost:${verdaccioPort}`,
       cacheDir
     )
   }
