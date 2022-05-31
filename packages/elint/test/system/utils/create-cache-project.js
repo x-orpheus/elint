@@ -52,10 +52,16 @@ async function createCacheProject(skipPreparation = false) {
 
     if (process.env.CI) {
       const cacheNodeModulesDir = path.join(cacheDir, 'node_modules')
+      const packageLockPath = path.join(cacheDir, 'package-lock.json')
 
       if (fs.existsSync(cacheNodeModulesDir)) {
         console.log(`删除缓存的依赖目录 ${cacheNodeModulesDir}`)
         fs.removeSync(cacheNodeModulesDir)
+      }
+
+      if (fs.existsSync(packageLockPath)) {
+        console.log(`删除缓存的 lock 文件 ${packageLockPath}`)
+        fs.removeSync(packageLockPath)
       }
 
       await run('npm cache clean --force', cacheDir)
