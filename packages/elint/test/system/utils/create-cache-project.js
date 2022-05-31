@@ -51,9 +51,16 @@ async function createCacheProject(skipPreparation = false) {
     await publishToLocalRegistry(tempTestPresetDir)
 
     if (process.env.CI) {
-      fs.removeSync(path.join(cacheDir, 'node_modules'))
+      const cacheNodeModulesDir = path.join(cacheDir, 'node_modules')
+
+      if (fs.existsSync(cacheNodeModulesDir)) {
+        console.log(`删除缓存的依赖目录 ${cacheNodeModulesDir}`)
+        fs.removeSync(cacheNodeModulesDir)
+      }
 
       await run('npm cache clean --force', cacheDir)
+
+      await run('npm cache verify', cacheDir)
     }
 
     await run(
