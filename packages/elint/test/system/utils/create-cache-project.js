@@ -50,7 +50,7 @@ async function createCacheProject(skipPreparation = false) {
     await publishToLocalRegistry(tempTestPresetDir)
 
     await run(
-      `npm install --registry=http://localhost:${verdaccioPort}`,
+      `npm install --registry=http://localhost:${verdaccioPort} --prefer-online`,
       cacheDir
     )
   }
