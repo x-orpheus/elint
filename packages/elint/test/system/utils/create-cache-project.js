@@ -52,6 +52,8 @@ async function createCacheProject(skipPreparation = false) {
 
     if (process.env.CI) {
       fs.removeSync(path.join(cacheDir, 'node_modules'))
+
+      await run('npm cache clean --force', cacheDir)
     }
 
     await run(
