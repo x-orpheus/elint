@@ -50,10 +50,7 @@ async function createCacheProject(skipPreparation = false) {
     await publishToLocalRegistry(tempTestPresetDir)
 
     if (process.env.CI) {
-      await run(
-        `npm cache verify --registry=http://localhost:${verdaccioPort}`,
-        cacheDir
-      )
+      await run('npm cache clean --force', cacheDir)
     }
 
     await run(
