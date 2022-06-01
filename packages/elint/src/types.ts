@@ -67,7 +67,7 @@ export interface ElintBasicOptions {
    *
    * 内部使用参数
    */
-  internalLoadedPrestAndPlugins?: InternalLoadedPresetAndPlugins
+  internalLoadedPresetAndPlugins?: InternalLoadedPresetAndPlugins
 }
 
 export interface ElintOptions extends ElintBasicOptions {

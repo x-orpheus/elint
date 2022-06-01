@@ -5,12 +5,12 @@ import ElintCache from './elint-cache.js'
 
 let elintCache: ElintCache | undefined
 
-interface ElintCacheLocationOptions {
+export interface ElintCacheLocationOptions {
   cwd: string
   cacheLocation?: string
 }
 
-function getElintCachePath({
+export function getElintCachePath({
   cwd,
   cacheLocation
 }: ElintCacheLocationOptions): string {
@@ -38,13 +38,8 @@ function getElintCachePath({
 }
 
 export function getElintCache(
-  cache: boolean,
   cacheLocationOptions: ElintCacheLocationOptions
-): ElintCache | undefined {
-  if (!cache) {
-    return undefined
-  }
-
+): ElintCache {
   if (!elintCache) {
     elintCache = new ElintCache(getElintCachePath(cacheLocationOptions))
   }
@@ -55,7 +50,7 @@ export function getElintCache(
 export function resetElintCache(
   cacheLocationOptions: ElintCacheLocationOptions
 ): void {
-  const elintCache = getElintCache(true, cacheLocationOptions)
+  const elintCache = getElintCache(cacheLocationOptions)
 
-  elintCache?.delete()
+  elintCache.delete()
 }

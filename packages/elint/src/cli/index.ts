@@ -49,7 +49,7 @@ program
 
     debug(`run lint in ${cwd}`)
 
-    const internalLoadedPrestAndPlugins = await loadPresetAndPlugins({
+    const internalLoadedPresetAndPlugins = await loadPresetAndPlugins({
       cwd,
       preset: options.preset
     })
@@ -68,7 +68,7 @@ program
       fix: options.fix,
       noIgnore: !options.ignore,
       git: isGit,
-      internalLoadedPrestAndPlugins,
+      internalLoadedPresetAndPlugins,
       cwd,
       cache: options.cache,
       cacheLocation: options.cacheLocation
@@ -81,7 +81,7 @@ program
         debug('run common lint...')
         if (type === 'commit') {
           const isContainCommitlint =
-            internalLoadedPrestAndPlugins.internalPlugins.some(
+            internalLoadedPresetAndPlugins.internalPlugins.some(
               (plugin) => plugin.name === 'elint-plugin-commitlint'
             )
 
@@ -110,7 +110,7 @@ program
         debug('start notifier')
 
         const notifyMessage = await notify(
-          internalLoadedPrestAndPlugins,
+          internalLoadedPresetAndPlugins,
           cwd,
           options.forceNotifier
         )
@@ -162,8 +162,13 @@ program
 program
   .command('reset')
   .description('reset plugin cache & elint cache')
-  .action(async () => {
-    const errorMap = await reset()
+  .option('--cache-location <cacheLocation>', 'Cache file location')
+  .option('--preset <preset>', 'Set specific preset')
+  .action(async (options) => {
+    const errorMap = await reset({
+      preset: options.preset,
+      cacheLocation: options.cacheLocation
+    })
 
     if (Object.keys(errorMap).length === 0) {
       log.success('elint reset successfully')

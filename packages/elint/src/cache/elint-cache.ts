@@ -9,7 +9,7 @@ import type {
 const debug = _debug('elint:cache')
 
 export type ElintCacheOptions = Required<
-  Pick<ElintOptions, 'fix' | 'internalLoadedPrestAndPlugins' | 'write'>
+  Pick<ElintOptions, 'fix' | 'internalLoadedPresetAndPlugins' | 'write'>
 >
 
 export type ElintCachePresetString = `${string}@${string}`
@@ -28,14 +28,14 @@ class ElintCache {
   }
 
   static getPresetString(
-    internalLoadedPrestAndPlugins: InternalLoadedPresetAndPlugins
+    internalLoadedPresetAndPlugins: InternalLoadedPresetAndPlugins
   ): ElintCachePresetString {
-    return `${internalLoadedPrestAndPlugins.internalPreset.name}@${internalLoadedPrestAndPlugins.internalPreset.version}`
+    return `${internalLoadedPresetAndPlugins.internalPreset.name}@${internalLoadedPresetAndPlugins.internalPreset.version}`
   }
 
   getFileCache(
     filePath: string,
-    { internalLoadedPrestAndPlugins }: ElintCacheOptions
+    { internalLoadedPresetAndPlugins }: ElintCacheOptions
   ): boolean {
     const fileDescriptor = this.fileEntryCache.getFileDescriptor(filePath)
 
@@ -61,7 +61,7 @@ class ElintCache {
 
     if (
       cachePresetString !==
-      ElintCache.getPresetString(internalLoadedPrestAndPlugins)
+      ElintCache.getPresetString(internalLoadedPresetAndPlugins)
     ) {
       debug(`Preset changed: ${filePath}`)
 
@@ -75,7 +75,7 @@ class ElintCache {
 
   setFileCache(
     result: ElintResult,
-    { fix, internalLoadedPrestAndPlugins, write }: ElintCacheOptions
+    { fix, internalLoadedPresetAndPlugins, write }: ElintCacheOptions
   ) {
     const filePath = result.filePath
 
@@ -103,7 +103,7 @@ class ElintCache {
       debug(`Updating cache result: ${filePath}`)
 
       const cachePresetString: ElintCachePresetString =
-        ElintCache.getPresetString(internalLoadedPrestAndPlugins)
+        ElintCache.getPresetString(internalLoadedPresetAndPlugins)
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(fileDescriptor as any).meta.presetString = cachePresetString

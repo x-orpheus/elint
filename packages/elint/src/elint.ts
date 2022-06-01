@@ -116,7 +116,7 @@ export async function lintCommon({
   fix = false,
   preset,
   cwd = getBaseDir(),
-  internalLoadedPrestAndPlugins: optionInternalLoadedPresetAndPlugins
+  internalLoadedPresetAndPlugins: optionInternalLoadedPresetAndPlugins
 }: ElintBasicOptions = {}): Promise<ElintResult> {
   const elintResult = createElintResult()
 
@@ -142,7 +142,7 @@ export async function lintText(
     preset,
     cwd = getBaseDir(),
     filePath,
-    internalLoadedPrestAndPlugins: optionInternalLoadedPresetAndPlugins
+    internalLoadedPresetAndPlugins: optionInternalLoadedPresetAndPlugins
   }: ElintBasicOptions & { filePath?: string } = {}
 ): Promise<ElintResult> {
   debug(`┌─ lint text ${filePath ? `(${filePath})` : ''} start`)
@@ -198,7 +198,7 @@ export async function lintFiles(
     git = false,
     preset,
     cwd = getBaseDir(),
-    internalLoadedPrestAndPlugins: optionInternalLoadedPresetAndPlugins,
+    internalLoadedPresetAndPlugins: optionInternalLoadedPresetAndPlugins,
     cache = false,
     cacheLocation
   }: ElintOptions
@@ -220,13 +220,13 @@ export async function lintFiles(
 
   const elintResultList: ElintResult[] = []
 
-  const internalLoadedPrestAndPlugins =
+  const internalLoadedPresetAndPlugins =
     optionInternalLoadedPresetAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))
 
   const tasks: (() => Promise<void>)[] = []
 
-  const elintCache = getElintCache(cache, { cwd, cacheLocation })
+  const elintCache = cache ? getElintCache({ cwd, cacheLocation }) : undefined
 
   fileList.forEach((fileItem) => {
     const task = async (): Promise<void> => {
@@ -255,7 +255,7 @@ export async function lintFiles(
       if (!skipCache) {
         const cacheResult = elintCache?.getFileCache(filePath, {
           fix,
-          internalLoadedPrestAndPlugins,
+          internalLoadedPresetAndPlugins,
           write
         })
 
@@ -270,7 +270,7 @@ export async function lintFiles(
         fix,
         cwd,
         filePath: elintResult.filePath,
-        internalLoadedPrestAndPlugins
+        internalLoadedPresetAndPlugins
       })
 
       const isModified = elintResult.output !== elintResult.source
@@ -284,7 +284,7 @@ export async function lintFiles(
       if (!skipCache) {
         elintCache?.setFileCache(elintResult, {
           fix,
-          internalLoadedPrestAndPlugins,
+          internalLoadedPresetAndPlugins,
           write
         })
       }
@@ -313,15 +313,16 @@ export async function lintFiles(
 export async function reset({
   preset,
   cwd = getBaseDir(),
-  internalLoadedPrestAndPlugins
-}: ElintBasicOptions = {}): Promise<Record<string, unknown>> {
+  cacheLocation,
+  internalLoadedPresetAndPlugins
+}: ElintOptions = {}): Promise<Record<string, unknown>> {
   const { internalPlugins } =
-    internalLoadedPrestAndPlugins ||
+    internalLoadedPresetAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))
 
   const errorMap: Record<string, unknown> = {}
 
-  resetElintCache({ cwd })
+  resetElintCache({ cwd, cacheLocation })
 
   for (const internalPlugin of internalPlugins) {
     try {
