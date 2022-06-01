@@ -46,7 +46,7 @@ export interface ElintResult<T = unknown> extends ElintBaseResult {
 export interface InternalLoadedPresetAndPlugins {
   internalPreset: InternalPreset
   internalPlugins: InternalPlugin[]
-  pluginGroup: Record<ElintPluginType, ElintPlugin<unknown>[]>
+  pluginGroup: Partial<Record<ElintPluginType, ElintPlugin<unknown>[]>>
 }
 
 /**

@@ -5,10 +5,8 @@ import walker from './walker/index.js'
 import { loadElintPlugins } from './plugin/load.js'
 import { executeElintPlugin } from './plugin/execute.js'
 import type {
-  ElintPlugin,
   ElintPluginOptions,
-  ElintPluginOverridableKey,
-  ElintPluginType
+  ElintPluginOverridableKey
 } from './plugin/types.js'
 import { getBaseDir } from './env.js'
 import type { InternalPreset } from './preset/types.js'
@@ -107,7 +105,7 @@ export async function loadPresetAndPlugins({
     pluginGroup: groupBy(
       internalPlugins.map(({ plugin }) => plugin),
       (plugin) => plugin.type
-    ) as Record<ElintPluginType, ElintPlugin<unknown>[]>
+    ) as InternalLoadedPresetAndPlugins['pluginGroup']
   }
 }
 
@@ -176,7 +174,7 @@ export async function lintText(
     })
   }
 
-  if (pluginGroup.formatter.length) {
+  if (pluginGroup.formatter?.length) {
     // 格式化检查
     await executeElintPlugin(elintResult, formatChecker, pluginOptions)
   }
@@ -329,7 +327,6 @@ export async function reset({
   for (const internalPlugin of internalPlugins) {
     try {
       await internalPlugin.plugin.reset?.()
-      /* istanbul ignore next */
     } catch (e) {
       errorMap[internalPlugin.name] = e
       debug(`elint plugin ${internalPlugin.name} reset error %o`, e)
