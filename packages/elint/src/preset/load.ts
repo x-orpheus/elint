@@ -37,6 +37,7 @@ export const loadElintPreset = async (
         presetPackageJson = fs.readJsonSync(presetPackageJsonPath)
       }
     } catch {
+      /* istanbul ignore next */
       debug(`Preset ${preset} doesn't have a package.json`)
     }
 
@@ -50,7 +51,7 @@ export const loadElintPreset = async (
     debug(`loaded preset ${presetPackageJson?.name || preset} in ${presetPath}`)
 
     return {
-      name: presetPackageJson?.name || preset,
+      name: presetPackageJson?.name || 'anonymous',
       version: presetPackageJson?.version || 'unknown',
       path: presetPackagePath || path.dirname(presetPath),
       preset: presetConfig

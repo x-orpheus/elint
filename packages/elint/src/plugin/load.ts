@@ -39,6 +39,7 @@ const loadElintPlugin = async (
         pluginPackagePath = path.dirname(pluginPackageJsonPath)
       }
     } catch {
+      /* istanbul ignore next */
       debug(`Plugin ${plugin} doesn't have a package.json`)
     }
 
@@ -66,6 +67,7 @@ const loadElintPlugin = async (
     }
   }
 
+  /* istanbul ignore next */
   throw new Error('Unknown elint plugin')
 }
 

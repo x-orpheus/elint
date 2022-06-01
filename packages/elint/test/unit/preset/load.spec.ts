@@ -1,3 +1,4 @@
+import path from 'path'
 import mock from '../mock/env.js'
 import { getBaseDir } from '../../../src/env.js'
 import {
@@ -83,5 +84,27 @@ describe('preset 加载测试', () => {
     )
 
     expect(preset.name).toEqual('anonymous')
+  })
+
+  test('加载文件匿名 preset', async () => {
+    const preset = await loadElintPreset(
+      path.join(baseDir, 'bower_components', 'anonymous-preset.cjs'),
+      {
+        cwd: baseDir
+      }
+    )
+
+    expect(preset.name).toEqual('anonymous')
+  })
+
+  test('加载文件不是 preset', async () => {
+    await expect(
+      loadElintPreset(
+        path.join(baseDir, 'bower_components', 'not-preset.cjs'),
+        {
+          cwd: baseDir
+        }
+      )
+    ).toReject()
   })
 })
