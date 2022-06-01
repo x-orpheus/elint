@@ -5,18 +5,32 @@ export const mockElintPlugin: ElintPlugin<unknown> = {
   title: 'mock',
   type: 'linter',
   activateConfig: {
-    extensions: []
+    extensions: ['.js']
   },
-  async execute() {
+  async execute(text) {
     return {
       errorCount: 0,
       warningCount: 0,
-      source: '',
-      output: ''
+      source: text,
+      output: text
     }
+  },
+  reset() {
+    // empty
   }
 }
 
 export const mockElintPreset: ElintPreset = {
   plugins: [mockElintPlugin]
+}
+
+export const mockElintPresetWithOverridePluginConfig: ElintPreset = {
+  plugins: [mockElintPlugin],
+  overridePluginConfig: {
+    'elint-plugin-mock': {
+      activateConfig: {
+        extensions: ['.ts']
+      }
+    }
+  }
 }

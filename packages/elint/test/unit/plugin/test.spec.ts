@@ -1,19 +1,19 @@
 import type { ElintPlugin } from '../../../src/plugin/types.js'
-import { loadElintPlugins } from '../../../src/plugin/load.js'
 import { testElintPlugin } from '../../../src/plugin/test.js'
 import { getBaseDir } from '../../../src/env.js'
 import mock from '../mock/env.js'
+import { mockElintPlugin } from '../mock/mocks.js'
 
 describe('插件执行测试', () => {
   let unmock: () => void
   let baseDir: string
 
-  beforeEach(() => {
+  beforeAll(() => {
     unmock = mock()
     baseDir = getBaseDir()
   })
 
-  afterEach(() => {
+  afterAll(() => {
     unmock()
   })
 
@@ -29,13 +29,7 @@ describe('插件执行测试', () => {
   })
 
   test('插件正常执行', async () => {
-    const plugins = await loadElintPlugins(['elint-plugin-esm'], {
-      cwd: baseDir
-    })
-
-    const testPlugin = plugins[0].plugin
-
-    const result = await testElintPlugin('test1', testPlugin, {
+    const result = await testElintPlugin('test1', mockElintPlugin, {
       filePath: 'test.js',
       source: '',
       fix: false,

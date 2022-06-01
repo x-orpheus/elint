@@ -7,12 +7,12 @@ describe('Walker local 测试', () => {
   let unmock: () => void
   let baseDir: string
 
-  beforeEach(() => {
+  beforeAll(() => {
     unmock = mock()
     baseDir = getBaseDir()
   })
 
-  afterEach(() => {
+  afterAll(() => {
     unmock()
   })
 
