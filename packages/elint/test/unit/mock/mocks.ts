@@ -34,3 +34,26 @@ export const mockElintPresetWithOverridePluginConfig: ElintPreset = {
     }
   }
 }
+
+export const mockElintPresetWithAllTypePlugins: ElintPreset = {
+  plugins: [
+    {
+      ...mockElintPlugin,
+      name: 'elint-plugin-mock-formatter',
+      title: 'mock-formatter',
+      type: 'formatter'
+    },
+    {
+      ...mockElintPlugin,
+      name: 'elint-plugin-mock-linter',
+      title: 'mock-linter',
+      type: 'linter'
+    },
+    {
+      ...mockElintPlugin,
+      name: 'elint-plugin-mock-common',
+      title: 'mock-common',
+      type: 'common'
+    }
+  ]
+}
