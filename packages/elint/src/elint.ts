@@ -84,6 +84,8 @@ export async function loadPresetAndPlugins({
 
           const currentKey = key as ElintPluginOverridableKey
           const currentValue = overridePluginConfig[plugin.name][currentKey]
+
+          /* istanbul ignore next */
           if (
             !(['activateConfig'] as ElintPluginOverridableKey[]).includes(
               currentKey
@@ -116,12 +118,12 @@ export async function lintCommon({
   fix = false,
   preset,
   cwd = getBaseDir(),
-  internalLoadedPresetAndPlugins: optionInternalLoadedPresetAndPlugins
+  internalLoadedPresetAndPlugins
 }: ElintBasicOptions = {}): Promise<ElintResult> {
   const elintResult = createElintResult()
 
   const { pluginGroup } =
-    optionInternalLoadedPresetAndPlugins ||
+    internalLoadedPresetAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))
 
   for (const commonPlugin of pluginGroup.common || []) {
@@ -142,7 +144,7 @@ export async function lintText(
     preset,
     cwd = getBaseDir(),
     filePath,
-    internalLoadedPresetAndPlugins: optionInternalLoadedPresetAndPlugins
+    internalLoadedPresetAndPlugins
   }: ElintBasicOptions & { filePath?: string } = {}
 ): Promise<ElintResult> {
   debug(`┌─ lint text ${filePath ? `(${filePath})` : ''} start`)
@@ -153,7 +155,7 @@ export async function lintText(
   })
 
   const { pluginGroup } =
-    optionInternalLoadedPresetAndPlugins ||
+    internalLoadedPresetAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))
 
   const pluginOptions: ElintPluginOptions = {
@@ -198,7 +200,7 @@ export async function lintFiles(
     git = false,
     preset,
     cwd = getBaseDir(),
-    internalLoadedPresetAndPlugins: optionInternalLoadedPresetAndPlugins,
+    internalLoadedPresetAndPlugins,
     cache = false,
     cacheLocation
   }: ElintOptions
@@ -220,8 +222,8 @@ export async function lintFiles(
 
   const elintResultList: ElintResult[] = []
 
-  const internalLoadedPresetAndPlugins =
-    optionInternalLoadedPresetAndPlugins ||
+  const currentInternalLoadedPresetAndPlugins =
+    internalLoadedPresetAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))
 
   const tasks: (() => Promise<void>)[] = []
@@ -255,7 +257,7 @@ export async function lintFiles(
       if (!skipCache) {
         const cacheResult = elintCache?.getFileCache(filePath, {
           fix,
-          internalLoadedPresetAndPlugins,
+          internalLoadedPresetAndPlugins: currentInternalLoadedPresetAndPlugins,
           write
         })
 
@@ -270,7 +272,7 @@ export async function lintFiles(
         fix,
         cwd,
         filePath: elintResult.filePath,
-        internalLoadedPresetAndPlugins
+        internalLoadedPresetAndPlugins: currentInternalLoadedPresetAndPlugins
       })
 
       const isModified = elintResult.output !== elintResult.source
@@ -284,7 +286,7 @@ export async function lintFiles(
       if (!skipCache) {
         elintCache?.setFileCache(elintResult, {
           fix,
-          internalLoadedPresetAndPlugins,
+          internalLoadedPresetAndPlugins: currentInternalLoadedPresetAndPlugins,
           write
         })
       }
@@ -327,6 +329,7 @@ export async function reset({
   for (const internalPlugin of internalPlugins) {
     try {
       await internalPlugin.plugin.reset?.()
+      /* istanbul ignore next */
     } catch (e) {
       errorMap[internalPlugin.name] = e
       debug(`elint plugin ${internalPlugin.name} reset error %o`, e)

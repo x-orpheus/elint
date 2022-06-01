@@ -55,6 +55,8 @@ export interface InternalLoadedPresetAndPlugins {
 export interface ElintBasicOptions {
   /**
    * 是否自动修复
+   *
+   * @default false
    */
   fix?: boolean
   /**
@@ -74,11 +76,13 @@ export interface ElintOptions extends ElintBasicOptions {
   /**
    * 是否将自动修复写入文件
    *
-   * @default `true`
+   * @default true
    */
   write?: boolean
   /**
    * 是否禁用默认忽略规则
+   *
+   * @default false
    */
   noIgnore?: boolean
   /**
@@ -88,12 +92,14 @@ export interface ElintOptions extends ElintBasicOptions {
    *
    * 1. 仅会获取暂存区内满足传入参数的文件和内容
    * 2. fix 参数将强制改为 false，不进行自动修复
+   *
+   * @default false
    */
   git?: boolean
   /**
    * 是否开启缓存
    *
-   * 当项目中没有 preset 时不进行缓存
+   * @default false
    */
   cache?: boolean
   /**
