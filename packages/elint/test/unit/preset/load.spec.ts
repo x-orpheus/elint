@@ -5,6 +5,7 @@ import {
   loadElintPreset,
   tryLoadElintPreset
 } from '../../../src/preset/load.js'
+import { mockElintPreset } from '../mock/mocks.js'
 
 describe('preset 加载测试', () => {
   let unmock: () => void
@@ -76,12 +77,9 @@ describe('preset 加载测试', () => {
   })
 
   test('加载匿名 preset', async () => {
-    const preset = await loadElintPreset(
-      { plugins: [] },
-      {
-        cwd: baseDir
-      }
-    )
+    const preset = await loadElintPreset(mockElintPreset, {
+      cwd: baseDir
+    })
 
     expect(preset.name).toEqual('anonymous')
   })

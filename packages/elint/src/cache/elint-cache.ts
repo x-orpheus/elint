@@ -53,6 +53,7 @@ class ElintCache {
     const cachePresetString: ElintCachePresetString = (fileDescriptor as any)
       .meta?.presetString
 
+    /* istanbul ignore next */
     if (!cachePresetString) {
       debug(`Cache missed: ${filePath}`)
 
@@ -79,6 +80,7 @@ class ElintCache {
   ) {
     const filePath = result.filePath
 
+    /* istanbul ignore next */
     if (!filePath) {
       return
     }

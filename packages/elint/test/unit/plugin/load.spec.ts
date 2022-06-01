@@ -2,6 +2,7 @@ import mock from '../mock/env.js'
 import { getBaseDir } from '../../../src/env.js'
 import { loadElintPlugins } from '../../../src/plugin/load.js'
 import type { ElintPlugin } from '../../../src/index.js'
+import { mockElintPlugin } from '../mock/mocks.js'
 
 describe('插件加载测试', () => {
   let unmock: () => void
@@ -49,29 +50,12 @@ describe('插件加载测试', () => {
   })
 
   test('plugin 对象直接返回', async () => {
-    const pluginList: ElintPlugin<unknown>[] = [
-      {
-        name: 'elint-plugin-local',
-        title: 'local',
-        type: 'linter',
-        activateConfig: {
-          extensions: []
-        },
-        async execute() {
-          return {
-            errorCount: 0,
-            warningCount: 0,
-            source: '',
-            output: ''
-          }
-        }
-      }
-    ]
+    const pluginList: ElintPlugin<unknown>[] = [mockElintPlugin]
 
     const plugins = await loadElintPlugins(pluginList, {
       cwd: baseDir
     })
 
-    expect(plugins.map((plugin) => plugin.name)).toEqual(['elint-plugin-local'])
+    expect(plugins.map((plugin) => plugin.name)).toEqual(['elint-plugin-mock'])
   })
 })
