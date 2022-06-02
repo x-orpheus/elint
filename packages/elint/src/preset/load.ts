@@ -4,6 +4,7 @@ import path from 'path'
 import fs from 'fs-extra'
 import _debug from 'debug'
 import resolvePackagePath from 'resolve-package-path'
+import { cloneDeep } from 'lodash-es'
 import type { ElintContext } from '../types.js'
 import {
   type ElintPreset,
@@ -54,7 +55,7 @@ export const loadElintPreset = async (
       name: presetPackageJson?.name || 'anonymous',
       version: presetPackageJson?.version || 'unknown',
       path: presetPackagePath || path.dirname(presetPath),
-      preset: presetConfig
+      preset: cloneDeep(presetConfig)
     }
   }
 
@@ -64,7 +65,7 @@ export const loadElintPreset = async (
     return {
       name: 'anonymous',
       version: 'unknown',
-      preset
+      preset: cloneDeep(preset)
     }
   }
 

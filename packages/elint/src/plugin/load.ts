@@ -3,6 +3,7 @@ import { createRequire } from 'module'
 import path from 'path'
 import _debug from 'debug'
 import resolvePackagePath from 'resolve-package-path'
+import { cloneDeep } from 'lodash-es'
 import {
   type ElintPlugin,
   isElintPlugin,
@@ -54,7 +55,7 @@ const loadElintPlugin = async (
     return {
       name: pluginConfig.name,
       path: pluginPackagePath,
-      plugin: pluginConfig
+      plugin: cloneDeep(pluginConfig)
     }
   }
 
@@ -63,7 +64,7 @@ const loadElintPlugin = async (
 
     return {
       name: plugin.name,
-      plugin
+      plugin: cloneDeep(plugin)
     }
   }
 
