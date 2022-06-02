@@ -44,6 +44,7 @@ const loadElintPlugin = async (
       debug(`Plugin ${plugin} doesn't have a package.json`)
     }
 
+    /* istanbul ignore next */
     const pluginConfig = pluginModule.default || pluginModule
 
     if (!isElintPlugin(pluginConfig) || pluginConfig.name !== plugin) {

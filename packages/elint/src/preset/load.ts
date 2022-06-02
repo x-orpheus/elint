@@ -43,6 +43,8 @@ export const loadElintPreset = async (
     }
 
     const presetModule = await import(pathToFileURL(presetPath).toString())
+
+    /* istanbul ignore next */
     const presetConfig = presetModule.default || presetModule
 
     if (!isElintPreset(presetConfig)) {

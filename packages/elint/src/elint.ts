@@ -59,7 +59,7 @@ export async function loadPresetAndPlugins({
     internalPreset = await tryLoadElintPreset(PRESET_PATTERN, { cwd })
   }
 
-  const pendingPlugins = internalPreset.preset.plugins || []
+  const pendingPlugins = internalPreset.preset.plugins
 
   const internalPlugins = await loadElintPlugins(pendingPlugins, {
     cwd,

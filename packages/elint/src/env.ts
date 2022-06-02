@@ -24,6 +24,7 @@ export const getBaseDir = (): string => {
 /**
  * 项目的 node_modules 目录
  */
+/* istanbul ignore next */
 export const getNodeModulesDir = (baseDir?: string): string => {
   const nodeModulesDir = path.join(baseDir || getBaseDir(), 'node_modules')
 
