@@ -8,7 +8,9 @@
     "commit": "elint lint commit && pnpm run lint",
     "lint": "elint lint \"packages/**/*\" \"!**/test-preset\" --no-notifier --cache",
     "start": "ts-node packages/elint/src/cli/index.ts lint \"packages/**/*\" \"!**/test-preset\" --no-notifier --cache",
-    "test": "pnpm -r run test:unit --workspace-concurrency=1 && pnpm --filter=elint run test:system"
+    "test:unit:elint": "pnpm --filter elint run test:unit",
+    "test:system": "pnpm --filter elint run test:system",
+    "test": "pnpm -r run test:unit && pnpm run test:system"
   },
   "devDependencies": {
     "@changesets/cli": "^2.22.0",
