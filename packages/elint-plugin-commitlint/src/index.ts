@@ -1,6 +1,5 @@
 import commitlint from '@commitlint/core'
-import type { LintOptions, LintOutcome } from '@commitlint/types/lib/lint'
-import type { ParserOptions } from '@commitlint/types/lib/parse'
+import type { LintOptions, LintOutcome, ParserOptions } from '@commitlint/types'
 import path from 'path'
 import fs from 'fs'
 import type { ElintPlugin, ElintPluginResult } from 'elint'

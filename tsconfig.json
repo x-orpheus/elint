@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
+    "module": "NodeNext",
     "baseUrl": ".",
     "target": "ESNext",
     "lib": ["ESNext"],
@@ -10,7 +10,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "noUnusedLocals": true,
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "forceConsistentCasingInFileNames": true,
