@@ -5,6 +5,14 @@ import type { ElintPlugin, ElintPluginOverridableKey } from '../plugin/types.js'
  */
 export interface ElintPreset {
   /**
+   * 插件版本
+   *
+   * 用于缓存判断
+   *
+   * 当 preset 以 npm 包发布时，会忽略此参数
+   */
+  version?: string
+  /**
    * 需要移动到根目录的的配置文件或文件夹
    *
    * 例如 `.eslintrc`, `.prettierrc`

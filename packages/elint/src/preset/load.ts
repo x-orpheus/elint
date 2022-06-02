@@ -64,7 +64,7 @@ export const loadElintPreset = async (
 
     return {
       name: 'anonymous',
-      version: 'unknown',
+      version: preset.version || 'unknown',
       preset: cloneDeep(preset)
     }
   }
