@@ -1,8 +1,11 @@
+import path from 'path'
+import fs from 'fs-extra'
 import {
   lintCommon,
   loadPresetAndPlugins,
   reset,
-  lintText
+  lintText,
+  lintFiles
 } from '../../src/elint.js'
 import { getBaseDir } from '../../src/env.js'
 import mock from './mock/env.js'
@@ -63,13 +66,8 @@ describe('elint core', () => {
 
   describe('lintCommon', () => {
     test('有 common 类型插件', async () => {
-      const internalLoadedPresetAndPlugins = await loadPresetAndPlugins({
-        preset: mockElintPresetWithAllTypePlugins,
-        cwd: baseDir
-      })
-
       const result = await lintCommon({
-        internalLoadedPresetAndPlugins,
+        preset: mockElintPresetWithAllTypePlugins,
         cwd: baseDir
       })
 
@@ -80,13 +78,8 @@ describe('elint core', () => {
 
   describe('lintText', () => {
     test('文本检测流程', async () => {
-      const internalLoadedPresetAndPlugins = await loadPresetAndPlugins({
-        preset: mockElintPresetWithAllTypePlugins,
-        cwd: baseDir
-      })
-
       const result = await lintText('input', {
-        internalLoadedPresetAndPlugins,
+        preset: mockElintPresetWithAllTypePlugins,
         cwd: baseDir
       })
 
@@ -96,16 +89,11 @@ describe('elint core', () => {
     })
 
     test('没有 formatter 时不检查格式', async () => {
-      const internalLoadedPresetAndPlugins = await loadPresetAndPlugins({
+      const result = await lintText('input', {
         preset: {
           ...mockElintPresetWithAllTypePlugins,
           plugins: mockElintPresetWithAllTypePlugins.plugins.slice(1)
         },
-        cwd: baseDir
-      })
-
-      const result = await lintText('input', {
-        internalLoadedPresetAndPlugins,
         cwd: baseDir
       })
 
@@ -115,23 +103,88 @@ describe('elint core', () => {
     })
   })
 
-  describe('reset', () => {
-    test('reset', async () => {
-      const internalLoadedPresetAndPlugins = await loadPresetAndPlugins({
-        preset: mockElintPreset,
-        cwd: baseDir
+  describe('lintFiles', () => {
+    test('文件检测流程', async () => {
+      const result = await lintFiles(['src/a.js'], {
+        cwd: baseDir,
+        preset: mockElintPresetWithAllTypePlugins
       })
 
+      expect(result).toHaveLength(1)
+    })
+
+    test('命中缓存', async () => {
+      const result = await lintFiles(['src/a.js'], {
+        cwd: baseDir,
+        preset: mockElintPresetWithAllTypePlugins,
+        cache: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0].fromCache).not.toBeTrue()
+
+      const resultWithCache = await lintFiles(['src/a.js'], {
+        cwd: baseDir,
+        preset: mockElintPresetWithAllTypePlugins,
+        cache: true
+      })
+
+      expect(resultWithCache).toHaveLength(1)
+      expect(resultWithCache[0].fromCache).toBeTrue()
+    })
+
+    test('未找到文件', async () => {
+      const result = await lintFiles(['xxx/xxx.js'], {
+        cwd: baseDir,
+        preset: mockElintPresetWithAllTypePlugins
+      })
+
+      expect(result).toBeEmpty()
+    })
+
+    test('fix 写入', async () => {
+      await lintFiles(['src/a.js'], {
+        cwd: baseDir,
+        preset: {
+          ...mockElintPresetWithAllTypePlugins,
+          plugins: [
+            ...mockElintPresetWithAllTypePlugins.plugins,
+            {
+              ...mockElintPlugin,
+              name: 'elint-plugin-mock-custom',
+              async execute(text) {
+                return {
+                  errorCount: 0,
+                  warningCount: 0,
+                  source: text,
+                  output: 'test'
+                }
+              }
+            }
+          ]
+        },
+        fix: true
+      })
+
+      const filePath = path.join(baseDir, 'src/a.js')
+
+      expect(fs.readFileSync(filePath, 'utf-8')).toBe('test')
+    })
+  })
+
+  describe('reset', () => {
+    test('reset', async () => {
       const errorMap = await reset({
         cwd: baseDir,
-        internalLoadedPresetAndPlugins
+        preset: mockElintPreset
       })
 
       expect(errorMap).toBeEmpty()
     })
 
     test('reset with error', async () => {
-      const internalLoadedPresetAndPlugins = await loadPresetAndPlugins({
+      const errorMap = await reset({
+        cwd: baseDir,
         preset: {
           plugins: [
             {
@@ -141,13 +194,7 @@ describe('elint core', () => {
               }
             }
           ]
-        },
-        cwd: baseDir
-      })
-
-      const errorMap = await reset({
-        cwd: baseDir,
-        internalLoadedPresetAndPlugins
+        }
       })
 
       expect(errorMap[mockElintPlugin.name]).not.toBeUndefined()
