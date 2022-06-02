@@ -9,11 +9,16 @@ import type {
   ElintPluginOptions,
   ElintPluginActivateConfig
 } from './plugin/types.js'
-import { testElintPlugin } from './plugin/test.js'
+import { testPlugin } from './plugin/test.js'
 
 import type { ElintPreset } from './preset/types.js'
 
-export { lintFiles, lintText, reset, testElintPlugin }
+export { lintFiles, lintText, reset, testPlugin }
+
+export type ElintLintFiles = typeof lintFiles
+export type ElintLintText = typeof lintText
+export type ElintReset = typeof reset
+export type ElintTestPlugin = typeof testPlugin
 
 export type {
   ElintOptions,

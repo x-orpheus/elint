@@ -10,7 +10,7 @@ import {
 /**
  * 插件开发者测试插件的函数
  */
-export const testElintPlugin = async <T>(
+export const testPlugin = async <T>(
   text: string,
   plugin: ElintPlugin<T>,
   pluginOptions: ElintPluginOptions
