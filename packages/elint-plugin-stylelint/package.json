@@ -29,6 +29,6 @@
   },
   "devDependencies": {
     "elint": "workspace:*",
-    "stylelint": "^14.8.5"
+    "stylelint": "^14.9.0"
   }
 }

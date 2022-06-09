@@ -7,25 +7,25 @@
   },
   "dependencies": {
     "@commitlint/core": "^17.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.27.0",
-    "@typescript-eslint/parser": "^5.27.0",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1",
     "elint-helpers": "workspace:*",
     "elint-plugin-commitlint": "workspace:*",
     "elint-plugin-eslint": "workspace:*",
     "elint-plugin-prettier": "workspace:*",
     "elint-plugin-stylelint": "workspace:*",
-    "eslint": "^8.16.0",
+    "eslint": "^8.17.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.2.1",
+    "eslint-plugin-n": "^15.2.2",
     "eslint-plugin-promise": "^6.0.0",
     "prettier": "^2.6.2",
-    "stylelint": "^14.8.5"
+    "stylelint": "^14.9.0"
   },
   "peerDependencies": {
     "typescript": "*"
   },
   "devDependencies": {
-    "typescript": "^4.7.2"
+    "typescript": "^4.7.3"
   }
 }
