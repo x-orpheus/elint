@@ -62,17 +62,25 @@ export function install({ presetPath, projectPath }: InstallOptions = {}) {
     return
   }
 
-  const require = createRequire(currentPresetPath)
+  let configFiles: string[] = defaultConfigFiles
 
-  const packageJson = require(path.join(currentPresetPath, 'package.json'))
+  try {
+    const require = createRequire(currentPresetPath)
 
-  debug(`preset name: ${packageJson.name}`)
+    const packageJson = require(path.join(currentPresetPath, 'package.json'))
 
-  const configModule = require(currentPresetPath)
+    debug(`preset name: ${packageJson.name}`)
 
-  const config = configModule?.default ?? configModule
+    const configModule = require(currentPresetPath)
 
-  const configFiles: string[] = config.configFiles || defaultConfigFiles
+    const config = configModule?.default ?? configModule
+
+    if (config.configFiles) {
+      configFiles = config.configFiles
+    }
+  } catch (e) {
+    debug('read preset config error: %o', e)
+  }
 
   configFiles.forEach((fileName) => {
     const from = path.join(currentPresetPath, fileName)
