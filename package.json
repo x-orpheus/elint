@@ -10,7 +10,8 @@
     "start": "ts-node packages/elint/src/cli/index.ts lint \"packages/**/*\" \"!**/test-preset\" --no-notifier --cache",
     "test:unit:elint": "pnpm --filter elint run test:unit",
     "test:system": "pnpm --filter elint run test:system",
-    "test": "pnpm -r run test:unit && pnpm run test:system"
+    "test": "pnpm -r run test:unit && pnpm run test:system",
+    "prepublishOnly": "pnpm run clean && pnpm run build"
   },
   "devDependencies": {
     "@changesets/cli": "^2.23.0",
