@@ -1,16 +1,16 @@
-# elint-plugin-prettier
+# @elint/plugin-prettier
 
 elint 的 [Prettier](https://prettier.io/) 插件
 
 ## 配置 preset
 
-1. 安装依赖 `elint-plugin-prettier`、`prettier`
+1. 安装依赖 `@elint/plugin-prettier`、`prettier`
 
 2. 配置 `index.js`
 
 ```javascript
 module.exports = {
-  plugins: ['elint-plugin-prettier']
+  plugins: ['@elint/plugin-prettier']
 }
 ```
 

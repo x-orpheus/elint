@@ -46,7 +46,7 @@ const handlePrettierError = (error: any) => {
 }
 
 const elintPluginPrettier: ElintPlugin<never> = {
-  name: 'elint-plugin-prettier',
+  name: '@elint/plugin-prettier',
   title: 'Prettier',
   type: 'formatter',
   activateConfig: {

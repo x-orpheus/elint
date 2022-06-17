@@ -1,5 +1,5 @@
 {
-  "name": "elint-plugin-prettier",
+  "name": "@elint/plugin-prettier",
   "version": "3.0.0-beta.0",
   "description": "elint plugin for Prettier",
   "exports": {

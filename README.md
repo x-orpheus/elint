@@ -92,10 +92,10 @@ ELint 3.0 后不再内部依赖 ESLint、Stylelint 等 lint 工具，对于这�
 
 | 名称                      | 依赖                             | 描述                                         |
 | ------------------------- | -------------------------------- | -------------------------------------------- |
-| `elint-plugin-commitlint` | `"@commitlint/core": ">=16.0.0"` | commitlint 插件，支持校验 git commit message |
-| `elint-plugin-eslint`     | `"eslint": ">=8.0.0"`            | eslint 插件                                  |
-| `elint-plugin-prettier`   | `"prettier": ">=2.0.0"`          | prettier 插件，检查代码格式                  |
-| `elint-plugin-stylelint`  | `"stylelint": ">=14.0.0"`        | stylelint 插件                               |
+| `@elint/plugin-commitlint` | `"@commitlint/core": ">=16.0.0"` | commitlint 插件，支持校验 git commit message |
+| `@elint/plugin-eslint`     | `"eslint": ">=8.0.0"`            | eslint 插件                                  |
+| `@elint/plugin-prettier`   | `"prettier": ">=2.0.0"`          | prettier 插件，检查代码格式                  |
+| `@elint/plugin-stylelint`  | `"stylelint": ">=14.0.0"`        | stylelint 插件                               |
 
 ### 1.3. Preset
 
@@ -216,17 +216,17 @@ module.exports = {
 
 > 这步是可选的，如果你不需要校验 js 文件，可以直接跳过（下同）
 
-首先安装 `elint-plugin-eslint` 和插件的依赖 `eslint`：
+首先安装 `@elint/plugin-eslint` 和插件的依赖 `eslint`：
 
 ```shell
-npm i elint-plugin-eslint eslint
+npm i @elint/plugin-eslint eslint
 ```
 
 之后在入口文件 `index.js` 中添加插件名称：
 
 ```javascript
 module.exports = {
-  plugins: ['elint-plugin-eslint']
+  plugins: ['@elint/plugin-eslint']
 }
 ```
 
@@ -255,17 +255,17 @@ module.exports = {
 
 #### 2.2.5. 配置 stylelint （可选）
 
-首先安装 `elint-plugin-stylelint` 和插件的依赖 `stylelint`：
+首先安装 `@elint/plugin-stylelint` 和插件的依赖 `stylelint`：
 
 ```shell
-npm i elint-plugin-stylelint stylelint
+npm i @elint/plugin-stylelint stylelint
 ```
 
 之后在入口文件 `index.js` 中添加插件名称：
 
 ```javascript
 module.exports = {
-  plugins: ['elint-plugin-stylelint']
+  plugins: ['@elint/plugin-stylelint']
 }
 ```
 
@@ -273,17 +273,17 @@ module.exports = {
 
 #### 2.2.6. 配置 prettier （可选）
 
-首先安装 `elint-plugin-prettier` 和插件的依赖 `prettier`：
+首先安装 `@elint/plugin-prettier` 和插件的依赖 `prettier`：
 
 ```shell
-npm i elint-plugin-prettier prettier
+npm i @elint/plugin-prettier prettier
 ```
 
 之后在入口文件 `index.js` 中添加插件名称：
 
 ```javascript
 module.exports = {
-  plugins: ['elint-plugin-prettier']
+  plugins: ['@elint/plugin-prettier']
 }
 ```
 
@@ -291,17 +291,17 @@ module.exports = {
 
 #### 2.2.7. 配置 commitlint（可选）
 
-首先安装 `elint-plugin-commitlint` 和插件的依赖 `@commitlint/core`：
+首先安装 `@elint/plugin-commitlint` 和插件的依赖 `@commitlint/core`：
 
 ```shell
-npm i elint-plugin-commitlint @commitlint/core
+npm i @elint/plugin-commitlint @commitlint/core
 ```
 
 之后在入口文件 `index.js` 中添加插件名称：
 
 ```javascript
 module.exports = {
-  plugins: ['elint-plugin-commitlint']
+  plugins: ['@elint/plugin-commitlint']
 }
 ```
 
@@ -371,9 +371,9 @@ elint 各个插件内部有一个默认的扩展名支持列表，但是这个�
 
 ```javascript
 module.exports = {
-  plugins: ['elint-plugin-stylelint'],
+  plugins: ['@elint/plugin-stylelint'],
   overridePluginConfig: {
-    'elint-plugin-stylelint': {
+    '@elint/plugin-stylelint': {
       activateConfig: {
         extensions: ['.js']
       }
@@ -564,13 +564,13 @@ $ elint -v
 
   Plugins:
 
-    elint-plugin-eslint     : 3.0.0
+    @elint/plugin-eslint     : 3.0.0
       eslint                : 8.16.0
-    elint-plugin-stylelint  : 3.0.0
+    @elint/plugin-stylelint  : 3.0.0
       stylelint             : 14.8.5
-    elint-plugin-prettier   : 3.0.0
+    @elint/plugin-prettier   : 3.0.0
       prettier              : 2.6.2
-    elint-plugin-commitlint : 3.0.0
+    @elint/plugin-commitlint : 3.0.0
       @commitlint/core      : 17.0.0
 ```
 
@@ -741,7 +741,7 @@ v2.x 到 v3 有很多 BREAKING CHANGE，可以按照以下流程进行升级
 1. 修改 `package.json` 中的 `peerDependencies` `elint` 为 `^3.0.0`
 2. 升级依赖 `elint-helpers` 为 `^3.0.0`
 3. 创建入口文件 `index.js`，并将 `package.json` 中的 `main` 指向该文件
-4. 按需安装插件 `elint-plugin-eslint`，`elint-plugin-stylelint`，`elint-plugin-prettier`，`elint-plugin-commitlint` 并安装插件对应的依赖（即 `eslint`，`stylelint`，`prettier`，`@commitlint/core`）
+4. 按需安装插件 `@elint/plugin-eslint`，`@elint/plugin-stylelint`，`@elint/plugin-prettier`，`@elint/plugin-commitlint` 并安装插件对应的依赖（即 `eslint`，`stylelint`，`prettier`，`@commitlint/core`）
 5. 参考 [2.2.3.](#223-配置入口文件) - [2.2.11](#2211-覆盖插件配置) 添加对应配置
 6. 调整由于升级 lint 库而失效或者新增的规则
 7. 调整 `husky` 配置，可以参考 [Migrate from v4 to v8](https://typicode.github.io/husky/#/?id=migrate-from-v4-to-v8)

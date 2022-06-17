@@ -1,4 +1,4 @@
-# elint-plugin-stylelint
+# @elint/plugin-stylelint
 
 ## 3.0.0-beta.0
 

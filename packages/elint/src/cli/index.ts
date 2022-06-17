@@ -82,13 +82,13 @@ program
         if (type === 'commit') {
           const isContainCommitlint =
             internalLoadedPresetAndPlugins.internalPlugins.some(
-              (plugin) => plugin.name === 'elint-plugin-commitlint'
+              (plugin) => plugin.name === '@elint/plugin-commitlint'
             )
 
           if (!isContainCommitlint) {
             log.warn(
               `\n[elint] Current preset does not contain ${chalk.underline(
-                'elint-plugin-commitlint'
+                '@elint/plugin-commitlint'
               )}\n`
             )
           }

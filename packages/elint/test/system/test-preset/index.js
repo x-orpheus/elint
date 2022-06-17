@@ -8,10 +8,10 @@ module.exports = {
     '.stylelintrc.js'
   ],
   plugins: [
-    'elint-plugin-eslint',
-    'elint-plugin-stylelint',
-    'elint-plugin-prettier',
-    'elint-plugin-commitlint'
+    '@elint/plugin-eslint',
+    '@elint/plugin-stylelint',
+    '@elint/plugin-prettier',
+    '@elint/plugin-commitlint'
   ],
   configs: {
     eslint: require.resolve('./configs/eslint')

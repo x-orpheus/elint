@@ -7,7 +7,7 @@ import type { ElintPlugin, ElintPluginResult } from 'elint'
 const { format, load, lint, read } = commitlint
 
 const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
-  name: 'elint-plugin-commitlint',
+  name: '@elint/plugin-commitlint',
   title: 'commitlint',
   type: 'common',
   activateConfig: {

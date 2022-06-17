@@ -13,10 +13,10 @@
   "dependencies": {
     "@commitlint/core": "^16.2.3",
     "elint-helpers": "*",
-    "elint-plugin-commitlint": "*",
-    "elint-plugin-eslint": "*",
-    "elint-plugin-prettier": "*",
-    "elint-plugin-stylelint": "*",
+    "@elint/plugin-commitlint": "*",
+    "@elint/plugin-eslint": "*",
+    "@elint/plugin-prettier": "*",
+    "@elint/plugin-stylelint": "*",
     "eslint": "^8.11.0",
     "prettier": "^2.6.0",
     "stylelint": "^14.6.0"

@@ -33,7 +33,7 @@ const getEsLintByOptions = async ({
 }
 
 const elintPluginEsLint: ElintPlugin<ESLint.LintResult> = {
-  name: 'elint-plugin-eslint',
+  name: '@elint/plugin-eslint',
   title: 'ESLint',
   type: 'linter',
   activateConfig: {

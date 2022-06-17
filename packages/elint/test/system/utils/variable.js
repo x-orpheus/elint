@@ -28,10 +28,10 @@ export const testPresetDir = path.join(__dirname, '../test-preset')
 export const publishPackageList = [
   'elint',
   'elint-helpers',
-  'elint-plugin-commitlint',
-  'elint-plugin-eslint',
-  'elint-plugin-prettier',
-  'elint-plugin-stylelint'
+  'plugin-commitlint',
+  'plugin-eslint',
+  'plugin-prettier',
+  'plugin-stylelint'
 ]
 
 // 需要发布的包

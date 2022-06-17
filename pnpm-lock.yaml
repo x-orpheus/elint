@@ -109,7 +109,44 @@ importers:
       debug: 4.3.4
       fs-extra: 10.1.0
 
-  packages/elint-plugin-commitlint:
+  packages/elint-preset-self:
+    specifiers:
+      '@commitlint/core': ^17.0.0
+      '@elint/plugin-commitlint': workspace:*
+      '@elint/plugin-eslint': workspace:*
+      '@elint/plugin-prettier': workspace:*
+      '@elint/plugin-stylelint': workspace:*
+      '@typescript-eslint/eslint-plugin': ^5.28.0
+      '@typescript-eslint/parser': ^5.28.0
+      elint-helpers: workspace:*
+      eslint: ^8.17.0
+      eslint-config-standard: ^17.0.0
+      eslint-plugin-import: ^2.26.0
+      eslint-plugin-n: ^15.2.3
+      eslint-plugin-promise: ^6.0.0
+      prettier: ^2.7.1
+      stylelint: ^14.9.1
+      typescript: ^4.7.3
+    dependencies:
+      '@commitlint/core': 17.0.0
+      '@elint/plugin-commitlint': link:../plugin-commitlint
+      '@elint/plugin-eslint': link:../plugin-eslint
+      '@elint/plugin-prettier': link:../plugin-prettier
+      '@elint/plugin-stylelint': link:../plugin-stylelint
+      '@typescript-eslint/eslint-plugin': 5.28.0_7yumg2qjgbp7maccqlfhx2vudu
+      '@typescript-eslint/parser': 5.28.0_ud6rd4xtew5bv4yhvkvu24pzm4
+      elint-helpers: link:../elint-helpers
+      eslint: 8.17.0
+      eslint-config-standard: 17.0.0_6pyynqgudywpgf6ecxqave4k3q
+      eslint-plugin-import: 2.26.0_wyrfqmvemfacbroyi3ypviy7f4
+      eslint-plugin-n: 15.2.3_eslint@8.17.0
+      eslint-plugin-promise: 6.0.0_eslint@8.17.0
+      prettier: 2.7.1
+      stylelint: 14.9.1
+    devDependencies:
+      typescript: 4.7.3
+
+  packages/plugin-commitlint:
     specifiers:
       '@commitlint/core': ^17.0.0
       '@commitlint/types': ^17.0.0
@@ -119,7 +156,7 @@ importers:
       '@commitlint/types': 17.0.0
       elint: link:../elint
 
-  packages/elint-plugin-eslint:
+  packages/plugin-eslint:
     specifiers:
       '@types/eslint': ^8.4.3
       elint: workspace:*
@@ -129,7 +166,7 @@ importers:
       elint: link:../elint
       eslint: 8.17.0
 
-  packages/elint-plugin-prettier:
+  packages/plugin-prettier:
     specifiers:
       chalk: ^5.0.1
       elint: workspace:*
@@ -142,50 +179,13 @@ importers:
       ignore: 5.2.0
       prettier: 2.7.1
 
-  packages/elint-plugin-stylelint:
+  packages/plugin-stylelint:
     specifiers:
       elint: workspace:*
       stylelint: ^14.9.1
     devDependencies:
       elint: link:../elint
       stylelint: 14.9.1
-
-  packages/elint-preset-self:
-    specifiers:
-      '@commitlint/core': ^17.0.0
-      '@typescript-eslint/eslint-plugin': ^5.28.0
-      '@typescript-eslint/parser': ^5.28.0
-      elint-helpers: workspace:*
-      elint-plugin-commitlint: workspace:*
-      elint-plugin-eslint: workspace:*
-      elint-plugin-prettier: workspace:*
-      elint-plugin-stylelint: workspace:*
-      eslint: ^8.17.0
-      eslint-config-standard: ^17.0.0
-      eslint-plugin-import: ^2.26.0
-      eslint-plugin-n: ^15.2.3
-      eslint-plugin-promise: ^6.0.0
-      prettier: ^2.7.1
-      stylelint: ^14.9.1
-      typescript: ^4.7.3
-    dependencies:
-      '@commitlint/core': 17.0.0
-      '@typescript-eslint/eslint-plugin': 5.28.0_7yumg2qjgbp7maccqlfhx2vudu
-      '@typescript-eslint/parser': 5.28.0_ud6rd4xtew5bv4yhvkvu24pzm4
-      elint-helpers: link:../elint-helpers
-      elint-plugin-commitlint: link:../elint-plugin-commitlint
-      elint-plugin-eslint: link:../elint-plugin-eslint
-      elint-plugin-prettier: link:../elint-plugin-prettier
-      elint-plugin-stylelint: link:../elint-plugin-stylelint
-      eslint: 8.17.0
-      eslint-config-standard: 17.0.0_6pyynqgudywpgf6ecxqave4k3q
-      eslint-plugin-import: 2.26.0_wyrfqmvemfacbroyi3ypviy7f4
-      eslint-plugin-n: 15.2.3_eslint@8.17.0
-      eslint-plugin-promise: 6.0.0_eslint@8.17.0
-      prettier: 2.7.1
-      stylelint: 14.9.1
-    devDependencies:
-      typescript: 4.7.3
 
 packages:
 

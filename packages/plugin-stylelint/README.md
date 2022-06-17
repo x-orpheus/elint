@@ -1,16 +1,16 @@
-# elint-plugin-stylelint
+# @elint/plugin-stylelint
 
 elint 的 [Stylelint](https://stylelint.io/) 插件
 
 ## 配置 preset
 
-1. 安装依赖 `elint-plugin-stylelint`、`stylelint`
+1. 安装依赖 `@elint/plugin-stylelint`、`stylelint`
 
 2. 配置 `index.js`
 
 ```javascript
 module.exports = {
-  plugins: ['elint-plugin-stylelint']
+  plugins: ['@elint/plugin-stylelint']
 }
 ```
 
@@ -30,9 +30,9 @@ https://stylelint.io/user-guide/configure
 
 ```javascript
 module.exports = {
-  plugins: ['elint-plugin-stylelint'],
+  plugins: ['@elint/plugin-stylelint'],
   overridePluginConfig: {
-    'elint-plugin-stylelint': {
+    '@elint/plugin-stylelint': {
       activateConfig: {
         extensions: ['.jsx', '.tsx']
       }

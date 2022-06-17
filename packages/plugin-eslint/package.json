@@ -1,7 +1,7 @@
 {
-  "name": "elint-plugin-commitlint",
+  "name": "@elint/plugin-eslint",
   "version": "3.0.0-beta.0",
-  "description": "elint plugin for commitlint",
+  "description": "elint plugin for ESLint",
   "exports": {
     ".": "./dist/index.js",
     "./package.json": "./package.json"
@@ -18,7 +18,7 @@
   "keywords": [
     "elint",
     "elint-plugin",
-    "commitlint"
+    "eslint"
   ],
   "homepage": "https://github.com/x-orpheus/elint",
   "scripts": {
@@ -26,11 +26,11 @@
     "build": "tsc"
   },
   "peerDependencies": {
-    "@commitlint/core": ">=16.0.0"
+    "eslint": ">=8.0.0"
   },
   "devDependencies": {
-    "@commitlint/core": "^17.0.0",
-    "@commitlint/types": "^17.0.0",
-    "elint": "workspace:*"
+    "@types/eslint": "^8.4.3",
+    "elint": "workspace:*",
+    "eslint": "^8.17.0"
   }
 }

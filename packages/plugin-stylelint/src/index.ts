@@ -4,7 +4,7 @@ import type { ElintPlugin, ElintPluginResult } from 'elint'
 const { lint, formatters } = stylelint
 
 const elintPluginStylelint: ElintPlugin<LinterResult> = {
-  name: 'elint-plugin-stylelint',
+  name: '@elint/plugin-stylelint',
   title: 'Stylelint',
   type: 'linter',
   activateConfig: {

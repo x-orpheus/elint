@@ -1,5 +1,5 @@
 {
-  "name": "elint-plugin-stylelint",
+  "name": "@elint/plugin-stylelint",
   "version": "3.0.0-beta.0",
   "description": "elint plugin for Stylelint",
   "exports": {
