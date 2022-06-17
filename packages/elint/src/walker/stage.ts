@@ -1,6 +1,6 @@
 import _debug from 'debug'
 import fs from 'fs-extra'
-import mm from 'micromatch'
+import micromatch from 'micromatch'
 import normalize from 'normalize-path'
 import sgf from 'staged-git-files'
 import path from 'path'
@@ -11,7 +11,7 @@ import type { FileItem } from './index.js'
 
 const debug = _debug('elint:walker:stage')
 
-const mmOptions: mm.Options = {
+const micromatchOptions: micromatch.Options = {
   dot: true,
   contains: true
 }
@@ -31,9 +31,7 @@ function match(
   ignorePatterns: string[]
 ): boolean {
   function isMatch(ps: string[]) {
-    return ps.some((p) => {
-      return mm.isMatch(filename, p, mmOptions)
-    })
+    return micromatch([filename], ps, micromatchOptions).length > 0
   }
 
   let isIgnore = false
