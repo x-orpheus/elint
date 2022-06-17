@@ -13,13 +13,13 @@
     "test": "pnpm -r run test:unit && pnpm run test:system"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.22.0",
+    "@changesets/cli": "^2.23.0",
     "@jest/globals": "^28.1.1",
     "@types/debug": "^4.1.7",
     "@types/fs-extra": "^9.0.13",
     "@types/jest": "^28.1.1",
     "@types/lodash-es": "^4.17.6",
-    "@types/node": "^17.0.41",
+    "@types/node": "^18.0.0",
     "cross-env": "^7.0.3",
     "elint": "workspace:*",
     "elint-helpers": "workspace:*",
@@ -27,7 +27,7 @@
     "jest": "^28.1.1",
     "jest-extended": "^2.0.0",
     "rimraf": "^3.0.2",
-    "ts-jest": "^28.0.4",
+    "ts-jest": "^28.0.5",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.3"
   }
