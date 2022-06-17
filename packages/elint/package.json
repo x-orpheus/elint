@@ -1,6 +1,6 @@
 {
   "name": "elint",
-  "version": "3.0.0",
+  "version": "3.0.0-beta.0",
   "description": "A easy way to lint your code.",
   "exports": {
     ".": "./dist/index.js",
