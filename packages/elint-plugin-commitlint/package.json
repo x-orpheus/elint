@@ -20,6 +20,7 @@
     "elint-plugin",
     "commitlint"
   ],
+  "homepage": "https://github.com/x-orpheus/elint",
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc"

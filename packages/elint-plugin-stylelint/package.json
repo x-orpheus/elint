@@ -20,6 +20,7 @@
     "elint-plugin",
     "stylelint"
   ],
+  "homepage": "https://github.com/x-orpheus/elint",
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc"

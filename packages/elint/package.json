@@ -44,7 +44,7 @@
   "bugs": {
     "url": "https://github.com/x-orpheus/elint/issues"
   },
-  "homepage": "https://github.com/x-orpheus/elint#readme",
+  "homepage": "https://github.com/x-orpheus/elint",
   "engines": {
     "node": "^14.13.1 || >=16.0.0"
   },

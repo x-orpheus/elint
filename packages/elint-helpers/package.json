@@ -21,6 +21,7 @@
     "type": "git",
     "url": "git+https://github.com/x-orpheus/elint.git"
   },
+  "homepage": "https://github.com/x-orpheus/elint",
   "keywords": [
     "elint"
   ],
