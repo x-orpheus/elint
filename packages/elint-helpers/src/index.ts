@@ -54,8 +54,8 @@ export function install({ presetPath, projectPath }: InstallOptions = {}) {
 
   const projectName = path.basename(currentProjectPath)
 
-  // 在 preset 开发时跳过安装过程
-  if (/^elint-preset-.*/.test(projectName)) {
+  // 在 preset 开发时跳过安装过程，如果强行指定了 projectPath 则跳过名称检测
+  if (!projectPath && /^elint-preset-.*/.test(projectName)) {
     console.log(
       `  find elint preset directory: ${projectName}, skip preset installation`
     )
