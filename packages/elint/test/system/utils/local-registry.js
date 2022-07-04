@@ -48,6 +48,10 @@ export const startUpLocalRegistry = async () => {
             access: '$all',
             publish: '$all'
           },
+          '@elint/*': {
+            access: '$all',
+            publish: '$all'
+          },
           '**': {
             access: '$all',
             publish: '$all',
