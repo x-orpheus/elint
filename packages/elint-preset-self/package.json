@@ -7,26 +7,23 @@
     "postinstall": "elint-helpers install"
   },
   "dependencies": {
-    "@commitlint/core": "^17.0.0",
+    "@commitlint/core": "^17.0.3",
     "@elint/plugin-commitlint": "workspace:*",
     "@elint/plugin-eslint": "workspace:*",
     "@elint/plugin-prettier": "workspace:*",
     "@elint/plugin-stylelint": "workspace:*",
-    "@typescript-eslint/eslint-plugin": "^5.28.0",
-    "@typescript-eslint/parser": "^5.28.0",
+    "@typescript-eslint/eslint-plugin": "^5.30.4",
+    "@typescript-eslint/parser": "^5.30.4",
     "elint-helpers": "workspace:*",
-    "eslint": "^8.17.0",
+    "eslint": "^8.19.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.2.3",
+    "eslint-plugin-n": "^15.2.4",
     "eslint-plugin-promise": "^6.0.0",
     "prettier": "^2.7.1",
     "stylelint": "^14.9.1"
   },
-  "peerDependencies": {
-    "typescript": "*"
-  },
   "devDependencies": {
-    "typescript": "^4.7.3"
+    "typescript": "^4.7.4"
   }
 }
