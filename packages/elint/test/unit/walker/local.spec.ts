@@ -50,7 +50,8 @@ describe('Walker local 测试', () => {
       'src/a.css',
       'src/a.js',
       'src/index.html',
-      'src/lib/b.js'
+      'src/lib/b.js',
+      'src/a.png'
     ].map(getPath)
 
     const result = await walker(['src/**/*'], undefined, baseDir)

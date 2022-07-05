@@ -1,6 +1,7 @@
 import _debug from 'debug'
 import fs from 'fs-extra'
 import { groupBy } from 'lodash-es'
+import { isBinaryFileSync } from 'isbinaryfile'
 import walker from './walker/index.js'
 import { loadElintPlugins } from './plugin/load.js'
 import { executeElintPlugin } from './plugin/execute.js'
@@ -142,14 +143,16 @@ export async function lintText(
     preset,
     cwd = getBaseDir(),
     filePath,
+    isBinary,
     internalLoadedPresetAndPlugins
-  }: ElintBasicOptions & { filePath?: string } = {}
+  }: ElintBasicOptions & { filePath?: string; isBinary?: boolean } = {}
 ): Promise<ElintResult> {
   debug(`┌─ lint text ${filePath ? `(${filePath})` : ''} start`)
   const elintResult = createElintResult({
     filePath,
     source: text,
-    output: text
+    output: text,
+    isBinary
   })
 
   const { pluginGroup } =
@@ -174,7 +177,7 @@ export async function lintText(
     })
   }
 
-  if (pluginGroup.formatter?.length) {
+  if (!isBinary && pluginGroup.formatter?.length) {
     // 格式化检查
     await executeElintPlugin(elintResult, formatChecker, pluginOptions)
   }
@@ -230,16 +233,23 @@ export async function lintFiles(
 
   fileList.forEach((fileItem) => {
     const task = async (): Promise<void> => {
-      let source: string
+      let source = ''
       let filePath: string
       /**
        * 在 git 缓存区获取文件内容的情况下跳过缓存
        */
       let skipCache = false
 
+      let isBinary = false
+
       if (typeof fileItem === 'string') {
         filePath = fileItem
-        source = fs.readFileSync(fileItem, 'utf-8')
+
+        if (isBinaryFileSync(filePath)) {
+          isBinary = true
+        } else {
+          source = fs.readFileSync(fileItem, 'utf-8')
+        }
       } else {
         filePath = fileItem.filePath
         source = fileItem.fileContent
@@ -249,7 +259,8 @@ export async function lintFiles(
       let elintResult = createElintResult({
         filePath,
         source,
-        output: source
+        output: source,
+        isBinary
       })
 
       if (!skipCache) {
@@ -270,6 +281,7 @@ export async function lintFiles(
         fix,
         cwd,
         filePath: elintResult.filePath,
+        isBinary,
         internalLoadedPresetAndPlugins: currentInternalLoadedPresetAndPlugins
       })
 

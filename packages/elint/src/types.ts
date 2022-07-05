@@ -31,6 +31,10 @@ export interface ElintResult<T = unknown> extends ElintBaseResult {
    */
   filePath?: string
   /**
+   * 是否为二进制文件，如果是的话 source 和 output 均为空字符串
+   */
+  isBinary?: boolean
+  /**
    * 是否命中缓存
    */
   fromCache?: boolean

@@ -177,6 +177,17 @@ describe('lintFiles', () => {
     expect(result).toHaveLength(1)
   })
 
+  test('二进制文件检测时不读取文件内容', async () => {
+    const result = await lintFiles(['src/a.png'], {
+      preset: mockElintPresetWithAllTypePlugins
+    })
+
+    expect(result).toHaveLength(1)
+    expect(result[0].pluginResults).toHaveLength(0)
+    expect(result[0].isBinary).toBe(true)
+    expect(result[0].source).toBe('')
+  })
+
   test('命中缓存', async () => {
     const result = await lintFiles(['src/a.js'], {
       cwd: baseDir,

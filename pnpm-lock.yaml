@@ -59,6 +59,7 @@ importers:
       fs-extra: ^10.1.0
       globby: ^13.1.2
       husky: ^8.0.1
+      isbinaryfile: ^5.0.0
       lodash-es: ^4.17.21
       micromatch: ^4.0.5
       normalize-path: ^3.0.0
@@ -82,6 +83,7 @@ importers:
       fs-extra: 10.1.0
       globby: 13.1.2
       husky: 8.0.1
+      isbinaryfile: 5.0.0
       lodash-es: 4.17.21
       micromatch: 4.0.5
       normalize-path: 3.0.0
@@ -3886,6 +3888,11 @@ packages:
   /isarray/1.0.0:
     resolution: {integrity: sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==}
     dev: true
+
+  /isbinaryfile/5.0.0:
+    resolution: {integrity: sha512-UDdnyGvMajJUWCkib7Cei/dvyJrrvo4FIrsvSFWdPpXSUorzXrDJ0S+X5Q4ZlasfPjca4yqCNNsjbCeiy8FFeg==}
+    engines: {node: '>= 14.0.0'}
+    dev: false
 
   /isexe/2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
