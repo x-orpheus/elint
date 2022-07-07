@@ -91,6 +91,8 @@ const elintPluginPrettier: ElintPlugin<never> = {
       result.message = `${
         filePath ? `${chalk.underline(filePath)}\n  ` : ''
       }${handlePrettierError(e)}`
+
+      result.errorCount = 1
     }
 
     return result
