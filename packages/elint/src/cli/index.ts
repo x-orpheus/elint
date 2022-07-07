@@ -87,7 +87,7 @@ program
 
           if (!isContainCommitlint) {
             log.warn(
-              `\n[elint] Current preset does not contain ${chalk.underline(
+              `[elint] Current preset does not contain ${chalk.underline(
                 '@elint/plugin-commitlint'
               )}\n`
             )
