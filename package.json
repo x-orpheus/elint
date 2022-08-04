@@ -14,22 +14,22 @@
     "prepublishOnly": "pnpm run clean && pnpm run build"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.23.0",
-    "@jest/globals": "^28.1.2",
+    "@changesets/cli": "^2.24.1",
+    "@jest/globals": "^28.1.3",
     "@types/debug": "^4.1.7",
     "@types/fs-extra": "^9.0.13",
-    "@types/jest": "^28.1.4",
+    "@types/jest": "^28.1.6",
     "@types/lodash-es": "^4.17.6",
-    "@types/node": "^18.0.3",
+    "@types/node": "^18.6.3",
     "cross-env": "^7.0.3",
     "elint": "workspace:*",
     "elint-helpers": "workspace:*",
     "elint-preset-self": "workspace:*",
-    "jest": "^28.1.2",
-    "jest-extended": "^2.0.0",
+    "jest": "^28.1.3",
+    "jest-extended": "^3.0.2",
     "rimraf": "^3.0.2",
-    "ts-jest": "^28.0.5",
-    "ts-node": "^10.8.2",
+    "ts-jest": "^28.0.7",
+    "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
   }
 }
