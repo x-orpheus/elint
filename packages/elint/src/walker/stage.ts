@@ -12,8 +12,7 @@ import type { FileItem } from './index.js'
 const debug = _debug('elint:walker:stage')
 
 const micromatchOptions: micromatch.Options = {
-  dot: true,
-  contains: true
+  dot: true
 }
 
 /**

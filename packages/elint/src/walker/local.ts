@@ -19,6 +19,7 @@ export default function walker(
     ignore: ignorePatterns,
     dot: true,
     onlyFiles: true,
-    absolute: true
+    absolute: true,
+    expandDirectories: false
   })
 }
