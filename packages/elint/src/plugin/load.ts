@@ -1,5 +1,3 @@
-import { pathToFileURL } from 'url'
-import { createRequire } from 'module'
 import path from 'path'
 import _debug from 'debug'
 import resolvePackagePath from 'resolve-package-path'
@@ -9,6 +7,7 @@ import {
   isElintPlugin,
   type InternalPlugin
 } from './types.js'
+import importFromPath from '../utils/import-from-path.js'
 import type { ElintContext } from '../types.js'
 
 const debug = _debug('elint:plugin:load')
@@ -17,16 +16,12 @@ const loadElintPlugin = async (
   plugin: string | ElintPlugin<unknown>,
   { cwd, presetPath }: ElintContext
 ): Promise<InternalPlugin> => {
+  const importFromPreset = (id: string) => importFromPath(id, presetPath || cwd)
+
   if (typeof plugin === 'string') {
     debug(`start load plugin: ${plugin}`)
 
-    const require = createRequire(
-      path.join(presetPath || cwd, '__placeholder__.js')
-    )
-
-    const pluginPath = require.resolve(plugin)
-
-    const pluginModule = await import(pathToFileURL(pluginPath).toString())
+    const pluginModule = await importFromPath(plugin, presetPath || cwd)
 
     let pluginPackagePath: string | undefined
 
@@ -53,19 +48,27 @@ const loadElintPlugin = async (
 
     debug(`loaded plugin: ${plugin}`)
 
+    const elintPlugin = cloneDeep(pluginConfig)
+
+    await elintPlugin.load?.({ cwd, presetPath }, importFromPreset)
+
     return {
       name: pluginConfig.name,
       path: pluginPackagePath,
-      plugin: cloneDeep(pluginConfig)
+      plugin: elintPlugin
     }
   }
 
   if (isElintPlugin(plugin)) {
     debug(`loaded custom plugin: ${plugin.name}`)
 
+    const elintPlugin = cloneDeep(plugin)
+
+    await elintPlugin.load?.({ cwd, presetPath }, importFromPreset)
+
     return {
       name: plugin.name,
-      plugin: cloneDeep(plugin)
+      plugin: elintPlugin
     }
   }
 

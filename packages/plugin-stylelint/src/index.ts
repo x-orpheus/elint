@@ -1,7 +1,8 @@
-import stylelint, { type LinterResult } from 'stylelint'
+import type stylelintNamespace from 'stylelint'
+import type { LinterResult } from 'stylelint'
 import type { ElintPlugin, ElintPluginResult } from 'elint'
 
-const { lint, formatters } = stylelint
+let stylelint: typeof stylelintNamespace
 
 const elintPluginStylelint: ElintPlugin<LinterResult> = {
   name: '@elint/plugin-stylelint',
@@ -10,7 +11,14 @@ const elintPluginStylelint: ElintPlugin<LinterResult> = {
   activateConfig: {
     extensions: ['.less', '.sass', '.scss', '.css']
   },
+  async load(ctx, importFromPreset) {
+    const stylelintModule = await importFromPreset('stylelint')
+
+    stylelint = stylelintModule.default || stylelintModule
+  },
   async execute(text, { fix, cwd, filePath }) {
+    const { lint, formatters } = stylelint
+
     const result: ElintPluginResult<LinterResult> = {
       source: text,
       output: text,

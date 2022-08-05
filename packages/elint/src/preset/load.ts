@@ -1,4 +1,3 @@
-import { pathToFileURL } from 'url'
 import { createRequire } from 'module'
 import path from 'path'
 import fs from 'fs-extra'
@@ -12,6 +11,7 @@ import {
   isElintPreset
 } from './types.js'
 import tryRequire from '../utils/try-require.js'
+import importFromPath from '../utils/import-from-path.js'
 
 const debug = _debug('elint:preset:load')
 
@@ -42,7 +42,7 @@ export const loadElintPreset = async (
       debug(`Preset ${preset} doesn't have a package.json`)
     }
 
-    const presetModule = await import(pathToFileURL(presetPath).toString())
+    const presetModule = await importFromPath(preset, cwd)
 
     /* istanbul ignore next */
     const presetConfig = presetModule.default || presetModule

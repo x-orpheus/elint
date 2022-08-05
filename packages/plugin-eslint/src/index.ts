@@ -1,5 +1,7 @@
-import { ESLint } from 'eslint'
+import type { ESLint } from 'eslint'
 import type { ElintPlugin, ElintPluginOptions, ElintPluginResult } from 'elint'
+
+let ESLintClass: typeof ESLint
 
 const esLintInstanceMap = new Map<string, ESLint>()
 const esLintFormatterMap = new Map<ESLint, ESLint.Formatter>()
@@ -15,7 +17,7 @@ const getEsLintByOptions = async ({
   let esLint = esLintInstanceMap.get(key)
 
   if (!esLint) {
-    esLint = new ESLint({ fix, cwd })
+    esLint = new ESLintClass({ fix, cwd })
     esLintInstanceMap.set(key, esLint)
   }
 
@@ -38,6 +40,10 @@ const elintPluginEsLint: ElintPlugin<ESLint.LintResult> = {
   type: 'linter',
   activateConfig: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs']
+  },
+  async load(ctx, importFromPreset) {
+    const eslintModule = await importFromPreset('eslint')
+    ESLintClass = eslintModule.ESLint
   },
   async execute(text, options) {
     const { filePath } = options

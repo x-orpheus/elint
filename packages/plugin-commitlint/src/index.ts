@@ -1,10 +1,10 @@
-import commitlint from '@commitlint/core'
+import type commitlintNamespace from '@commitlint/core'
 import type { LintOptions, LintOutcome, ParserOptions } from '@commitlint/types'
 import path from 'path'
 import fs from 'fs'
 import type { ElintPlugin, ElintPluginResult } from 'elint'
 
-const { format, load, lint, read } = commitlint
+let commitlint: typeof commitlintNamespace
 
 const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
   name: '@elint/plugin-commitlint',
@@ -15,7 +15,14 @@ const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
       return true
     }
   },
+  async load(ctx, importFromPreset) {
+    const commitlintModule = await importFromPreset('@commitlint/core')
+
+    commitlint = commitlintModule.default || commitlintModule
+  },
   async execute(_, { cwd }) {
+    const { format, load, lint, read } = commitlint
+
     const result: ElintPluginResult<LintOutcome> = {
       errorCount: 0,
       warningCount: 0,

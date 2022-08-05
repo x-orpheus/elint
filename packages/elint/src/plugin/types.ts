@@ -1,4 +1,4 @@
-import type { ElintBaseResult } from '../types.js'
+import type { ElintBaseResult, ElintContext } from '../types.js'
 
 /**
  * elint 插件类型
@@ -77,6 +77,18 @@ export interface ElintPlugin<Result> {
    * 激活配置
    */
   activateConfig: ElintPluginActivateConfig
+  /**
+   * 加载函数，用于加载依赖
+   *
+   * 因为 elint 推荐将 plugin 的 peerDependencies 安装在 preset 里，
+   * 如果项目中存在多个版本的依赖（例如 eslint），可能会导致 plugin 中导入的不是正确的版本，
+   * 因此可以通过 load 函数控制依赖加载的位置
+   */
+  load?(
+    ctx: ElintContext,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    importFromPreset: (id: string) => Promise<any>
+  ): Promise<void>
   /**
    * 执行函数
    */

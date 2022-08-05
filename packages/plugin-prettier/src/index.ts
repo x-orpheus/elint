@@ -1,14 +1,11 @@
 import path from 'path'
 import chalk from 'chalk'
 import type { Ignore } from 'ignore'
-import prettier, { type Options } from 'prettier'
+import type prettierNamespace from 'prettier'
+import type { Options } from 'prettier'
 import type { ElintPlugin, ElintPluginResult } from 'elint'
 
-const { clearConfigCache, resolveConfig, format } = prettier
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const { createIgnorer } = prettier.__internal
+let prettier: typeof prettierNamespace
 
 let ignorerMap: Record<string, Ignore> = {}
 
@@ -16,6 +13,10 @@ const getIgnorer = (cwd: string) => {
   let ignorer = ignorerMap[cwd]
 
   if (!ignorer) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const { createIgnorer } = prettier.__internal
+
     ignorer = createIgnorer.sync(path.join(cwd, '.prettierignore'))
     ignorerMap[cwd] = ignorer
   }
@@ -25,6 +26,8 @@ const getIgnorer = (cwd: string) => {
 
 // 使用 prettier 的方法获取当前文件的格式化配置
 const getOptionsForFile = (filePath: string) => {
+  const { resolveConfig } = prettier
+
   const options: Options = {
     endOfLine: 'auto',
     ...resolveConfig.sync(filePath, { editorconfig: false }),
@@ -67,7 +70,14 @@ const elintPluginPrettier: ElintPlugin<never> = {
       '.yml'
     ]
   },
+  async load(ctx, importFromPreset) {
+    const prettierModule = await importFromPreset('prettier')
+
+    prettier = prettierModule.default || prettierModule
+  },
   async execute(text, { cwd, filePath }) {
+    const { format } = prettier
+
     const result: ElintPluginResult<never> = {
       source: text,
       output: text,
@@ -98,6 +108,8 @@ const elintPluginPrettier: ElintPlugin<never> = {
     return result
   },
   reset() {
+    const { clearConfigCache } = prettier
+
     ignorerMap = {}
     clearConfigCache()
   }
