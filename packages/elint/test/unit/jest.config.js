@@ -3,14 +3,17 @@ import { createRequire } from 'module'
 
 const require = createRequire(import.meta.url)
 
+/** @type {import('ts-jest').InitialOptionsTsJest} */
 export default {
   rootDir: '../..',
-  preset: 'ts-jest',
   extensionsToTreatAsEsm: ['.ts'],
-  globals: {
-    'ts-jest': {
-      useESM: true
-    }
+  transform: {
+    '^.+.[tj]sx?$': [
+      'ts-jest',
+      {
+        useESM: true
+      }
+    ]
   },
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',

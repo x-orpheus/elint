@@ -5,13 +5,13 @@ import log from '../../../src/utils/log.js'
 
 const { error, success, info, warn } = log
 
-let spy: jest.SpyInstance
+let spy: jest.MockedFunction<typeof global.console.log>
 
 describe('log 测试', () => {
   beforeEach(() => {
     spy = jest.spyOn(global.console, 'log').mockImplementation(() => {
       // empty
-    }) as jest.SpyInstance
+    }) as jest.MockedFunction<typeof global.console.log>
   })
 
   afterEach(() => {
