@@ -56,7 +56,7 @@ const elintPluginStylelint: ElintPlugin<LinterResult> = {
     }
 
     const stringFormatter = formatters.string
-    result.message = stringFormatter(linterResult.results)
+    result.message = stringFormatter(linterResult.results, linterResult)
 
     return result
   }
