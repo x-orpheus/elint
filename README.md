@@ -63,6 +63,7 @@
     - [6.4. 某些文件没有被校验到](#64-某些文件没有被校验到)
     - [6.5. 为什么添加了 fix 选项还是有问题输出](#65-为什么添加了-fix-选项还是有问题输出)
     - [6.6. 如何禁用颜色输出](#66-如何禁用颜色输出)
+    - [6.7. 为什么 fix 以后通过的代码，再次 lint 还会有问题](#67-为什么-fix-以后通过的代码再次-lint-还会有问题)
   - [7. 从 v2.x 升级到 v3](#7-从-v2x-升级到-v3)
     - [7.1. Preset 维护者](#71-preset-维护者)
     - [7.2. elint 使用者](#72-elint-使用者)
@@ -739,6 +740,16 @@ const defaultIgnore = [
 ```shell
 $ FORCE_COLOR=0 elint lint "src/**/*.js"
 ```
+
+### 6.7. 为什么 fix 以后通过的代码，再次 lint 还会有问题
+
+代码经过 fix 以后，有可能会在修复了现有问题的同时引入新的问题。
+
+eslint 为此会对 fix 后的代码重新执行 fix，以确保最终代码里的错误尽可能被修复，可以参考 [Applying Fixes](https://eslint.org/docs/latest/developer-guide/working-with-rules#applying-fixes)。
+
+但是 stylelint 一直没有实现这个功能，因此可能出现 fix 后的代码依然存在问题。可以通过这个 [issue](https://github.com/stylelint/stylelint/issues/3853) 追踪此问题解决状态。
+
+如果在开启缓存后执行了 fix 命令，但是代码中依然有问题且无法被 lint 出来，可以通过 `elint reset` 来重置缓存。
 
 ## 7. 从 v2.x 升级到 v3
 
