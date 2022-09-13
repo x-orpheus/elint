@@ -17,7 +17,8 @@
     "elint-help": "elint --help",
     "elint-version": "elint -v",
     "elint-invalid-command": "elint xxxx",
-    "elint-invalid-option": "elint --xxxx"
+    "elint-invalid-option": "elint --xxxx",
+    "prepare": "elint install && elint hooks install"
   },
   "keywords": [],
   "author": "",

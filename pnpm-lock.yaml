@@ -52,6 +52,7 @@ importers:
       commander: ^9.4.0
       configstore: ^6.0.0
       debug: ^4.3.4
+      elint-helpers: workspace:*
       execa: ^6.1.0
       figures: ^5.0.0
       file-entry-cache: ^6.0.1
@@ -76,6 +77,7 @@ importers:
       commander: 9.4.0
       configstore: 6.0.0
       debug: 4.3.4
+      elint-helpers: link:../elint-helpers
       execa: 6.1.0
       figures: 5.0.0
       file-entry-cache: 6.0.1
@@ -120,7 +122,6 @@ importers:
       '@elint/plugin-stylelint': workspace:*
       '@typescript-eslint/eslint-plugin': ^5.37.0
       '@typescript-eslint/parser': ^5.37.0
-      elint-helpers: workspace:*
       eslint: ^8.23.1
       eslint-config-standard: ^17.0.0
       eslint-plugin-import: ^2.26.0
@@ -137,7 +138,6 @@ importers:
       '@elint/plugin-stylelint': link:../plugin-stylelint
       '@typescript-eslint/eslint-plugin': 5.37.0_22c5fnooleyfkzrkkgdmel5kmi
       '@typescript-eslint/parser': 5.37.0_irgkl5vooow2ydyo6aokmferha
-      elint-helpers: link:../elint-helpers
       eslint: 8.23.1
       eslint-config-standard: 17.0.0_4nulviyjkaspo7v2xlghuwxbf4
       eslint-plugin-import: 2.26.0_uzffwd2kxyy6gwinwkcp25zmz4

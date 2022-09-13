@@ -3,7 +3,7 @@
   "scripts": {
     "clean": "pnpm -r run clean",
     "build": "pnpm --filter=elint run build && pnpm -r --filter=!elint run build",
-    "prepare": "elint hooks install && elint-helpers install --preset=./packages/elint-preset-self --project=.",
+    "prepare": "elint install && elint hooks install",
     "preinstall": "npx only-allow pnpm",
     "commit": "elint lint commit && pnpm run lint",
     "lint": "elint lint \"packages/**/*\" \"!**/test-preset\" --no-notifier --cache",

@@ -43,9 +43,11 @@ export interface InternalPreset {
   name: string
   version: string
   /**
-   * preset package.json 所在的路径
+   * preset 所在的路径
    *
-   * 当 package.json 不存在时这个值为 undefined
+   * 当 preset 为依赖时，为 package.json 路径；
+   * 当 preset 为指定文件时，为文件所在路径；
+   * 否则将为 undefined
    */
   path?: string
   preset: ElintPreset

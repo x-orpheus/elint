@@ -3,9 +3,6 @@
   "main": "index.js",
   "version": "0.0.1",
   "private": true,
-  "scripts": {
-    "postinstall": "elint-helpers install"
-  },
   "dependencies": {
     "@commitlint/core": "^17.1.2",
     "@elint/plugin-commitlint": "workspace:*",
@@ -14,7 +11,6 @@
     "@elint/plugin-stylelint": "workspace:*",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
     "@typescript-eslint/parser": "^5.37.0",
-    "elint-helpers": "workspace:*",
     "eslint": "^8.23.1",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",

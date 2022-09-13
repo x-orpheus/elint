@@ -2,9 +2,6 @@
   "name": "elint-preset-system-test",
   "main": "index.js",
   "version": "1.0.0",
-  "scripts": {
-    "postinstall": "elint-helpers install"
-  },
   "publishConfig": {
     "executableFiles": [
       ".husky/commit-msg"
@@ -12,7 +9,6 @@
   },
   "dependencies": {
     "@commitlint/core": "^16.2.3",
-    "elint-helpers": "*",
     "@elint/plugin-commitlint": "*",
     "@elint/plugin-eslint": "*",
     "@elint/plugin-prettier": "*",

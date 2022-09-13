@@ -28,20 +28,19 @@
     - [2.1. 安装 elint](#21-安装-elint)
     - [2.2. 编写 preset](#22-编写-preset)
       - [2.2.1. 新建一个 npm package](#221-新建一个-npm-package)
-      - [2.2.2. 安装 elint-helpers](#222-安装-elint-helpers)
-      - [2.2.3. 配置入口文件](#223-配置入口文件)
-      - [2.2.4. 配置 eslint（可选）](#224-配置-eslint可选)
-      - [2.2.5. 配置 stylelint （可选）](#225-配置-stylelint-可选)
-      - [2.2.6. 配置 prettier （可选）](#226-配置-prettier-可选)
-      - [2.2.7. 配置 commitlint（可选）](#227-配置-commitlint可选)
-      - [2.2.8. 支持 git hooks（可选）](#228-支持-git-hooks可选)
-      - [2.2.9. 设置更新检测周期（可选）](#229-设置更新检测周期可选)
-      - [2.2.10. 自定义配置文件复制列表](#2210-自定义配置文件复制列表)
-      - [2.2.11. 覆盖插件配置](#2211-覆盖插件配置)
-      - [2.2.12. 发布 npm package](#2212-发布-npm-package)
+      - [2.2.2. 配置入口文件](#222-配置入口文件)
+      - [2.2.3. 配置 eslint（可选）](#223-配置-eslint可选)
+      - [2.2.4. 配置 stylelint （可选）](#224-配置-stylelint-可选)
+      - [2.2.5. 配置 prettier （可选）](#225-配置-prettier-可选)
+      - [2.2.6. 配置 commitlint（可选）](#226-配置-commitlint可选)
+      - [2.2.7. 支持 git hooks（可选）](#227-支持-git-hooks可选)
+      - [2.2.8. 设置更新检测周期（可选）](#228-设置更新检测周期可选)
+      - [2.2.9. 自定义配置文件复制列表](#229-自定义配置文件复制列表)
+      - [2.2.10. 覆盖插件配置](#2210-覆盖插件配置)
+      - [2.2.11. 发布 npm package](#2211-发布-npm-package)
     - [2.3. 安装 preset](#23-安装-preset)
     - [2.4. 定义 npm scripts](#24-定义-npm-scripts)
-      - [2.4.1. 安装 git hooks](#241-安装-git-hooks)
+      - [2.4.1. 安装 preset 和 git hooks](#241-安装-preset-和-git-hooks)
       - [2.4.2. npm test](#242-npm-test)
       - [2.4.3. npm beforecommit](#243-npm-beforecommit)
     - [2.5. 本地 preset](#25-本地-preset)
@@ -126,8 +125,7 @@ elint-preset-<name>
 1. npm package name 需要以 `elint-preset-` 开头，如： `elint-preset-<name>` 或 `@team/elint-preset-<name>`。
 2. 入口文件需要默认导出 preset 配置
 3. preset 配置中需要配置启用的插件列表，并将插件和插件的依赖定义在 `dependencies` 中
-4. preset 需要安装依赖 `elint-helpers` 并添加 postinstall scripts: `elint-helpers install`
-5. lint 工具配置的依赖（例如 eslint-plugin-react），必须明确定义在 `package.json` 的 `dependencies` 中。
+4. lint 工具配置的依赖（例如 eslint-plugin-react），必须明确定义在 `package.json` 的 `dependencies` 中。
 
 满足以上要求的 npm package 就是一个合法的 elint preset。
 
@@ -183,23 +181,7 @@ cd elint-preset-test
 npm init -y
 ```
 
-#### 2.2.2. 安装 elint-helpers
-
-preset 包需要安装 `elint-helpers`, 并添加 npm scripts 以完成初始化工作：
-
-```shell
-npm i elint-helpers
-```
-
-```json
-{
-  "scripts": {
-    "postinstall": "elint-helpers install"
-  }
-}
-```
-
-#### 2.2.3. 配置入口文件
+#### 2.2.2. 配置入口文件
 
 默认入口文件为 `index.js`
 
@@ -213,7 +195,7 @@ module.exports = {
 }
 ```
 
-#### 2.2.4. 配置 eslint（可选）
+#### 2.2.3. 配置 eslint（可选）
 
 > 这步是可选的，如果你不需要校验 js 文件，可以直接跳过（下同）
 
@@ -262,7 +244,7 @@ require('@rushstack/eslint-patch/modern-module-resolution')
 
 > 为什么 `elint` 项目本身没有使用 `@rushstack/eslint-patch` 却没有问题呢，因为 `pnpm` 会默认将 `eslint` 相关的依赖都自动提升，可以参考 [public-hoist-pattern](https://pnpm.io/npmrc#public-hoist-pattern)
 
-#### 2.2.5. 配置 stylelint （可选）
+#### 2.2.4. 配置 stylelint （可选）
 
 首先安装 `@elint/plugin-stylelint` 和插件的依赖 `stylelint`：
 
@@ -280,7 +262,7 @@ module.exports = {
 
 添加对应的 stylelint 配置
 
-#### 2.2.6. 配置 prettier （可选）
+#### 2.2.5. 配置 prettier （可选）
 
 首先安装 `@elint/plugin-prettier` 和插件的依赖 `prettier`：
 
@@ -298,7 +280,7 @@ module.exports = {
 
 添加对应的 prettier 配置
 
-#### 2.2.7. 配置 commitlint（可选）
+#### 2.2.6. 配置 commitlint（可选）
 
 首先安装 `@elint/plugin-commitlint` 和插件的依赖 `@commitlint/core`：
 
@@ -333,7 +315,7 @@ module.exports = {
 }
 ```
 
-#### 2.2.8. 支持 git hooks（可选）
+#### 2.2.7. 支持 git hooks（可选）
 
 通过命令添加 commit 信息校验 hook
 
@@ -343,7 +325,7 @@ npx husky add .husky/commit-msg "npm run beforecommit"
 
 > 更多使用方式可以参考 `husky` 官方文档 [Create a hook](https://typicode.github.io/husky/#/?id=create-a-hook)，创建对应的 hooks
 
-#### 2.2.9. 设置更新检测周期（可选）
+#### 2.2.8. 设置更新检测周期（可选）
 
 从 1.10.0 版本开始，elint 支持更新检测功能，提示用户更新到新版本的 preset。
 
@@ -359,7 +341,7 @@ npx husky add .husky/commit-msg "npm run beforecommit"
 
 上述配置会让 elint 每三天检测一次是否有新版本 preset。
 
-#### 2.2.10. 自定义配置文件复制列表
+#### 2.2.9. 自定义配置文件复制列表
 
 如果 preset 中使用了非官方支持的插件，需要将其配置文件移动到项目目录，可以配置入口文件：
 
@@ -374,7 +356,7 @@ module.exports = {
 
 这样在安装 preset 时就会将 `xxx.js` 移动到项目目录
 
-#### 2.2.11. 覆盖插件配置
+#### 2.2.10. 覆盖插件配置
 
 elint 各个插件内部有一个默认的扩展名支持列表，但是这个列表不一定能满足各种场景（例如使用 `stylelint` 检测 JS 文件中的内联样式）。这种情况下可以配置 `overridePluginConfig`，用以覆盖某个插件的具体配置
 
@@ -391,7 +373,7 @@ module.exports = {
 }
 ```
 
-#### 2.2.12. 发布 npm package
+#### 2.2.11. 发布 npm package
 
 发布 npm package，执行：
 
@@ -414,21 +396,29 @@ cd test-project
 npm install elint-preset-test --save-dev
 ```
 
-安装完成后，你会发现刚才定义在 preset 中的各种配置文件（`.eslintrc.js` 等），都拷贝到了项目的根目录，这是为了兼容各种 IDE 和 build 工具（如 webpack），elint 与他们是可以共存的。
-
 ### 2.4. 定义 npm scripts
 
-#### 2.4.1. 安装 git hooks
+#### 2.4.1. 安装 preset 和 git hooks
 
-`husky` 不再支持自动配置 git hooks，因此需要我们在项目的 `package.json` 中添加 `prepare` 定义
+preset 安装完成后，还有一个重要的步骤，就是将 preset 内的各种配置文件复制到项目目录里，这是为了兼容各种 IDE 和 build 工具（如 webpack）。
+同时，我们也需要将 git hooks 进行初始化。
+
+在项目的 `package.json` 中添加 `prepare` 定义：
 
 ```json
 {
   "scripts": {
-    "prepare": "elint hooks install"
+    "prepare": "elint install && elint hooks install"
   }
 }
 ```
+
+> 如果你用过旧版本的 `elint`，可以知道以前配置文件的复制过程是由 preset 配置的 `postinstall` 命令完成的，但是从 v3 版本开始，elint 不再推荐使用这种方法，而是推荐在项目中主动配置安装命令。为什么要做这样的改动呢？
+>
+> 1. `postinstall` 不总是能够成功运行，且其输出会被包管理工具隐藏，难以发现一些问题；
+> 2. 新版本 `husky` 移除了自动安装功能，也需要主动配置安装命令。可以参考 [Why husky doesn't autoinstall anymore](https://blog.typicode.com/husky-git-hooks-autoinstall/)
+>
+> 因此 elint 也推荐主动配置安装命令来完成 preset 初始化的流程。
 
 注意：`Yarn 2` 不支持 `prepare` 生命周期，可以参考 [Yarn 2 | husky](https://typicode.github.io/husky/#/?id=yarn-2) 进行修改
 
@@ -758,17 +748,17 @@ v2.x 到 v3 有很多 BREAKING CHANGE，可以按照以下流程进行升级
 ### 7.1. Preset 维护者
 
 1. 修改 `package.json` 中的 `peerDependencies` `elint` 为 `^3.0.0`
-2. 升级依赖 `elint-helpers` 为 `^3.0.0`
+2. 移除依赖 `elint-helpers`
 3. 创建入口文件 `index.js`，并将 `package.json` 中的 `main` 指向该文件
 4. 按需安装插件 `@elint/plugin-eslint`，`@elint/plugin-stylelint`，`@elint/plugin-prettier`，`@elint/plugin-commitlint` 并安装插件对应的依赖（即 `eslint`，`stylelint`，`prettier`，`@commitlint/core`）
-5. 参考 [2.2.3.](#223-配置入口文件) - [2.2.11](#2211-覆盖插件配置) 添加对应配置
+5. 参考 [2.2.2](#222-配置入口文件) - [2.2.10](#2210-覆盖插件配置) 添加对应配置
 6. 调整由于升级 lint 库而失效或者新增的规则
 7. 调整 `husky` 配置，可以参考 [Migrate from v4 to v8](https://typicode.github.io/husky/#/?id=migrate-from-v4-to-v8)
 
 ### 7.2. elint 使用者
 
 1. 不再支持 `elint lint es` 和 `elint lint style` 命令，如果在 lint 时需要区分文件类型，将自行通过 glob 语法匹配。
-2. 参考 [安装 git hooks](#241-安装-git-hooks) 在 `package.json` 的 `script` 里添加 `"prepare": "elint hooks install"` 命令。
+2. 参考 [安装 preset 和 git hooks](#241-安装-preset-和-git-hooks) 在 `package.json` 的 `script` 里添加 `"prepare": "elint install && elint hooks install"` 命令。
 3. lint 命令不再支持 `--prettier` 参数，是否检查格式化的行为将由 preset 决定，如果 preset 内部包含 formatter，格式化检查就会被执行。
 4. 根据需求，可以添加 `--cache` 参数配置缓存，用来提升 lint 速度
 

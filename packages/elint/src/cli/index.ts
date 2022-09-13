@@ -5,6 +5,7 @@ import { createRequire } from 'module'
 import chalk from 'chalk'
 import { program } from 'commander'
 import { install as huskyInstall, uninstall as huskyUninstall } from 'husky'
+import { install as elintHelpersInstall } from 'elint-helpers'
 import version from './version.js'
 import log from '../utils/log.js'
 import isGitHooks from '../utils/is-git-hooks.js'
@@ -156,6 +157,47 @@ program
     } catch (e) {
       log.error(`[elint] husky hooks ${action} error`)
       console.log(e)
+    }
+  })
+
+/**
+ * install preset
+ */
+program
+  .command('install')
+  .alias('i')
+  .description('install preset')
+  .option('--preset <presetPath>', 'Preset path')
+  .option('--project <projectPath>', 'Project path')
+  .action(async (options) => {
+    debug('run elint preset install...')
+
+    const cwd = getBaseDir()
+
+    const preset = await loadPresetAndPlugins({ preset: options.preset, cwd })
+
+    const projectPath = options.project || cwd
+
+    if (
+      preset.internalPreset.path &&
+      preset.internalPreset.path !== projectPath
+    ) {
+      debug(
+        `install preset ${preset.internalPreset.name} from ${preset.internalPreset.path}`
+      )
+
+      log.info(`[elint] preset ${preset.internalPreset.name} installing`)
+
+      elintHelpersInstall({
+        presetPath: preset.internalPreset.path,
+        projectPath
+      })
+
+      log.success(`[elint] preset ${preset.internalPreset.name} installed`)
+    } else {
+      debug(`skip install preset ${preset.internalPreset.name}`)
+
+      log.info(`[elint] skip install preset ${preset.internalPreset.name}`)
     }
   })
 
