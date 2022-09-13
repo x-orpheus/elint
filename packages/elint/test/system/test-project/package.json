@@ -23,7 +23,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "eslint": "^6.8.0",
     "elint": "*",
     "elint-preset-system-test": "1.0.0"
   }
