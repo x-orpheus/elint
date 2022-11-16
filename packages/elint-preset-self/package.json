@@ -4,20 +4,20 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@commitlint/core": "^17.1.2",
+    "@commitlint/core": "^17.2.0",
     "@elint/plugin-commitlint": "workspace:*",
     "@elint/plugin-eslint": "workspace:*",
     "@elint/plugin-prettier": "workspace:*",
     "@elint/plugin-stylelint": "workspace:*",
-    "@typescript-eslint/eslint-plugin": "^5.40.0",
-    "@typescript-eslint/parser": "^5.40.0",
-    "eslint": "^8.25.0",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.43.0",
+    "eslint": "^8.27.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.3.0",
-    "eslint-plugin-promise": "^6.1.0",
+    "eslint-plugin-n": "^15.5.1",
+    "eslint-plugin-promise": "^6.1.1",
     "prettier": "^2.7.1",
-    "stylelint": "^14.13.0"
+    "stylelint": "^14.15.0"
   },
   "devDependencies": {
     "typescript": "^4.8.4"
