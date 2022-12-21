@@ -3,7 +3,7 @@
   "scripts": {
     "clean": "pnpm -r run clean",
     "build": "pnpm --workspace-concurrency=1 --filter=elint-helpers --filter=elint run build && pnpm -r --filter=!elint --filter=!elint-helpers run build",
-    "prepare": "elint install && elint hooks install",
+    "prepare": "elint prepare",
     "preinstall": "npx only-allow pnpm",
     "commit": "elint lint commit && pnpm run lint",
     "lint": "elint lint \"packages/**/*\" \"!**/test-preset\" --no-notifier --cache",

@@ -140,7 +140,7 @@ program
 program
   .command('hooks [action]')
   .alias('h')
-  .description('install & uninstall hooks')
+  .description('install & uninstall husky hooks')
   .action((action: string) => {
     debug(`run ${action} hooks...`)
     if (['install', 'uninstall'].indexOf(action) === -1) {
@@ -161,16 +161,17 @@ program
   })
 
 /**
- * install preset
+ * prepare preset
  */
 program
-  .command('install')
-  .alias('i')
-  .description('install preset')
+  .command('prepare')
+  .alias('p')
+  .description('prepare elint preset & hooks')
   .option('--preset <presetPath>', 'Preset path')
   .option('--project <projectPath>', 'Project path')
+  .option('--no-install-hooks', 'Disable install husky hooks')
   .action(async (options) => {
-    debug('run elint preset install...')
+    debug('prepare elint...')
 
     const cwd = getBaseDir()
 
@@ -198,6 +199,15 @@ program
       debug(`skip install preset ${preset.internalPreset.name}`)
 
       log.info(`[elint] skip install preset ${preset.internalPreset.name}`)
+    }
+
+    if (options.installHooks) {
+      try {
+        huskyInstall()
+      } catch (e) {
+        log.error('[elint] husky hooks install error')
+        console.log(e)
+      }
     }
   })
 
