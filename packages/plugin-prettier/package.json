@@ -30,10 +30,10 @@
   },
   "devDependencies": {
     "elint": "workspace:*",
-    "ignore": "^5.2.0",
-    "prettier": "^2.7.1"
+    "ignore": "^5.2.4",
+    "prettier": "^2.8.1"
   },
   "dependencies": {
-    "chalk": "^5.1.2"
+    "chalk": "^5.2.0"
   }
 }
