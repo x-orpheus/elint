@@ -1,0 +1,36 @@
+{
+  "name": "@elint/plugin-eslint",
+  "version": "3.0.0-beta.1",
+  "description": "elint plugin for ESLint",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x-orpheus/elint.git"
+  },
+  "keywords": [
+    "elint",
+    "elint-plugin",
+    "eslint"
+  ],
+  "homepage": "https://github.com/x-orpheus/elint",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "eslint": ">=8.0.0"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.4.10",
+    "elint": "workspace:*",
+    "eslint": "^8.30.0"
+  }
+}

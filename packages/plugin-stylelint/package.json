@@ -1,0 +1,35 @@
+{
+  "name": "@elint/plugin-stylelint",
+  "version": "3.0.0-beta.1",
+  "description": "elint plugin for Stylelint",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x-orpheus/elint.git"
+  },
+  "keywords": [
+    "elint",
+    "elint-plugin",
+    "stylelint"
+  ],
+  "homepage": "https://github.com/x-orpheus/elint",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "stylelint": ">=14.0.0"
+  },
+  "devDependencies": {
+    "elint": "workspace:*",
+    "stylelint": "^14.16.0"
+  }
+}

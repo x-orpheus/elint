@@ -14,41 +14,43 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node_version: ['10', '16']
+        node_version: ['16', '18']
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.0.0
+
+      - name: Setup git config
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "<>"
 
       - name: use Node.js ${{ matrix.node_version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node_version }}
+          cache: 'pnpm'
 
-      - name: get npm cache directory
-        id: npm-cache
-        run: |
-          echo "::set-output name=dir::$(npm config get cache)"
+      - name: Install dependencies ignore scripts
+        run: pnpm install --ignore-scripts
 
-      - name: cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.npm-cache.outputs.dir }}
-          key: ${{ runner.os }}-unit-test-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-unit-test
+      - name: Build
+        run: pnpm run build
 
-      - name: npm ci
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+      - name: Install dependencies
+        run: pnpm install
 
-      - name: npm run test:lint
-        run: npm run test:lint
+      - name: Run lint
+        run: pnpm run lint
 
-      - name: npm run test:unit
-        run: npm run test:unit
+      - name: Run unit test
+        run: pnpm --filter elint run test:unit
 
       - name: Upload coverage to Codecov
-        if: matrix.node_version == 10 && matrix.os == 'ubuntu-latest'
+        if: matrix.node_version == 16 && matrix.os == 'ubuntu-latest'
         uses: codecov/codecov-action@v2
         with:
           token: ${{secrets.CODECOV_TOKEN}}

@@ -1,0 +1,39 @@
+{
+  "name": "@elint/plugin-prettier",
+  "version": "3.0.0-beta.1",
+  "description": "elint plugin for Prettier",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x-orpheus/elint.git"
+  },
+  "keywords": [
+    "elint",
+    "elint-plugin",
+    "prettier"
+  ],
+  "homepage": "https://github.com/x-orpheus/elint",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "prettier": "^2.0.0"
+  },
+  "devDependencies": {
+    "elint": "workspace:*",
+    "ignore": "^5.2.4",
+    "prettier": "^2.8.1"
+  },
+  "dependencies": {
+    "chalk": "^5.2.0"
+  }
+}

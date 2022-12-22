@@ -1,0 +1,30 @@
+{
+  "name": "test-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint-without-fix": "elint lint \"src/**/*\"",
+    "lint-fix": "elint lint \"src/**/*\" --fix",
+    "lint-only-js": "elint lint \"src/**/*.js\" --fix",
+    "lint-only-js-without-fix": "elint lint \"src/**/*.js\"",
+    "lint-only-css": "elint lint \"src/**/*.css\" --fix",
+    "lint-only-css-without-fix": "elint lint \"src/**/*.css\"",
+    "lint-no-ignore": "elint lint \"src/standard.js\" --no-ignore",
+    "hooks-install": "elint hooks install",
+    "hooks-uninstall": "elint hooks uninstall",
+    "elint": "elint",
+    "elint-help": "elint --help",
+    "elint-version": "elint -v",
+    "elint-invalid-command": "elint xxxx",
+    "elint-invalid-option": "elint --xxxx",
+    "prepare": "elint prepare"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "elint": "*",
+    "elint-preset-system-test": "1.0.0"
+  }
+}

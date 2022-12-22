@@ -1,0 +1,16 @@
+.DS_Store
+.idea/
+.vscode/
+node_modules/
+npm-debug.log
+!test/unit/test-project/node_modules/
+coverage/
+.nyc_output/
+**/*.tgz
+
+/.husky
+/.eslintrc.js
+/.eslintignore
+/.prettierrc.js
+/.commitlintrc.js
+/.stylelintrc.js

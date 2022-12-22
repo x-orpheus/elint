@@ -1,0 +1,93 @@
+{
+  "name": "elint",
+  "version": "3.0.0-beta.3",
+  "description": "A easy way to lint your code.",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "elint": "./dist/cli/index.js"
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsc -p tsconfig-build.json",
+    "test": "npm run test:unit && npm run test:system",
+    "test:unit": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config test/unit/jest.config.js",
+    "test:system": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config test/system/jest.config.js --runInBand"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x-orpheus/elint.git"
+  },
+  "keywords": [
+    "eslint",
+    "stylelint",
+    "commitlint",
+    "prettier",
+    "lint",
+    "linter",
+    "husky",
+    "hooks",
+    "git hooks"
+  ],
+  "author": {
+    "name": "keenwon",
+    "email": "semanwmj@gmail.com",
+    "url": "http://keenwon.com"
+  },
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "bugs": {
+    "url": "https://github.com/x-orpheus/elint/issues"
+  },
+  "homepage": "https://github.com/x-orpheus/elint",
+  "engines": {
+    "node": "^14.13.1 || >=16.0.0"
+  },
+  "type": "module",
+  "dependencies": {
+    "boxen": "^7.0.1",
+    "chalk": "^5.2.0",
+    "commander": "^9.4.1",
+    "configstore": "^6.0.0",
+    "debug": "^4.3.4",
+    "elint-helpers": "workspace:*",
+    "execa": "^6.1.0",
+    "figures": "^5.0.0",
+    "file-entry-cache": "^6.0.1",
+    "find-up": "^6.3.0",
+    "fs-extra": "^11.1.0",
+    "globby": "^13.1.3",
+    "husky": "^8.0.2",
+    "isbinaryfile": "^5.0.0",
+    "lodash-es": "^4.17.21",
+    "micromatch": "^4.0.5",
+    "normalize-path": "^3.0.0",
+    "resolve-package-path": "^4.0.3",
+    "semver": "^7.3.8",
+    "staged-git-files": "^1.3.0"
+  },
+  "devDependencies": {
+    "@types/configstore": "^6.0.0",
+    "@types/file-entry-cache": "^5.0.2",
+    "@types/micromatch": "^4.0.2",
+    "@types/normalize-path": "^3.0.0",
+    "@types/semver": "^7.3.13",
+    "npm-auth-to-token": "1.0.0",
+    "verdaccio": "^5.18.0",
+    "verdaccio-auth-memory": "^10.2.0",
+    "verdaccio-memory": "^10.3.0"
+  },
+  "ava": {
+    "files": [
+      "test/system/**/*.spec.js"
+    ],
+    "timeout": "600s",
+    "failFast": true,
+    "verbose": true
+  }
+}
