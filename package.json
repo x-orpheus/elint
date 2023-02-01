@@ -25,7 +25,7 @@
     "elint": "workspace:*",
     "elint-helpers": "workspace:*",
     "elint-preset-self": "workspace:*",
-    "jest": "^29.3.1",
+    "jest": "^29.4.1",
     "jest-extended": "^3.2.0",
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.3",
