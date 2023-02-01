@@ -17,7 +17,7 @@
     "@changesets/cli": "^2.26.0",
     "@jest/globals": "^29.3.1",
     "@types/debug": "^4.1.7",
-    "@types/fs-extra": "^9.0.13",
+    "@types/fs-extra": "^11.0.1",
     "@types/jest": "^29.2.4",
     "@types/lodash-es": "^4.17.6",
     "@types/node": "^18.11.17",
