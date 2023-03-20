@@ -9,15 +9,15 @@
     "@elint/plugin-eslint": "workspace:*",
     "@elint/plugin-prettier": "workspace:*",
     "@elint/plugin-stylelint": "workspace:*",
-    "@typescript-eslint/eslint-plugin": "^5.54.0",
-    "@typescript-eslint/parser": "^5.54.0",
-    "eslint": "^8.35.0",
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
+    "eslint": "^8.36.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.6.1",
     "eslint-plugin-promise": "^6.1.1",
     "prettier": "^2.8.4",
-    "stylelint": "^15.2.0"
+    "stylelint": "^15.3.0"
   },
   "devDependencies": {
     "typescript": "^4.9.5"
