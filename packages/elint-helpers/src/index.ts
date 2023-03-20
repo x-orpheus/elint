@@ -90,7 +90,7 @@ export function install({ presetPath, projectPath }: InstallOptions = {}) {
       return
     }
 
-    fs.copySync(from, to, { overwrite: true, recursive: true })
+    fs.copySync(from, to, { overwrite: true })
 
     console.log(`  move: from "${from}"`)
     console.log(`          to "${to}"`)
