@@ -31,7 +31,7 @@
   "devDependencies": {
     "elint": "workspace:*",
     "ignore": "^5.2.4",
-    "prettier": "^2.8.4"
+    "prettier": "^2.8.7"
   },
   "dependencies": {
     "chalk": "^5.2.0"
