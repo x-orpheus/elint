@@ -47,6 +47,7 @@ importers:
       '@types/micromatch': ^4.0.2
       '@types/normalize-path': ^3.0.0
       '@types/semver': ^7.3.13
+      '@verdaccio/types': ^10.8.0
       boxen: ^7.0.2
       chalk: ^5.2.0
       commander: ^10.0.0
@@ -98,6 +99,7 @@ importers:
       '@types/micromatch': 4.0.2
       '@types/normalize-path': 3.0.0
       '@types/semver': 7.3.13
+      '@verdaccio/types': 10.8.0
       npm-auth-to-token: 1.0.0
       verdaccio: 5.23.1
       verdaccio-auth-memory: 10.2.1
@@ -1766,6 +1768,10 @@ packages:
       lodash: 4.17.21
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@verdaccio/types/10.8.0:
+    resolution: {integrity: sha512-FuJyCRFPdy+gqCi0v29dE1xKn99Ztq6fuY9fb7ezeP1SRbUL/hgDaNkpjYvSIMCyb+dLFKOFBeZPyIUBLOSdlA==}
     dev: true
 
   /@verdaccio/ui-theme/6.0.0-6-next.67:

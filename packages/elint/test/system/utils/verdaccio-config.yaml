@@ -1,0 +1,35 @@
+store:
+  memory:
+    limit: 1000
+auth:
+  auth-memory:
+    users:
+      foo:
+        name: test
+        password: test
+middlewares:
+  audit:
+    enabled: true
+uplinks:
+  npmjs:
+    url: https://registry.npmjs.org/
+publish:
+  allow_offline: true
+packages:
+  elint:
+    access: $all
+    publish: $all
+  elint-*:
+    access: $all
+    publish: $all
+  "@elint/*":
+    access: $all
+    publish: $all
+  "**":
+    access: $all
+    publish: $all
+    proxy: npmjs
+logs:
+  type: stdout
+  format: pretty
+  level: error
