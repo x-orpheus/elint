@@ -7,7 +7,7 @@ const debug = _debug('elint:notifier:')
 
 const PACKAGE_MANAGERS = ['pnpm', 'yarn', 'yarn@berry', 'npm'] as const
 
-export type PackageManager = typeof PACKAGE_MANAGERS[number]
+export type PackageManager = (typeof PACKAGE_MANAGERS)[number]
 
 const PACKAGE_MANAGER_LOCKS: Record<string, PackageManager> = {
   'pnpm-lock.yaml': 'pnpm',
