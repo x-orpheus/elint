@@ -15,7 +15,8 @@
     "strictFunctionTypes": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
-    "noImplicitThis": true
+    "noImplicitThis": true,
+    "verbatimModuleSyntax": false
   },
   "include": ["packages"],
   "exclude": ["dist", "node_modules"],
