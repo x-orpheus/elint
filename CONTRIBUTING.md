@@ -2,7 +2,7 @@
 
 ## 依赖安装
 
-使用 `pnpm` v7 安装依赖
+使用 `pnpm` v8 安装依赖
 
 ```bash
 # 第一次安装时忽略 scripts，因为 prepare 钩子会调用 elint 的方法
