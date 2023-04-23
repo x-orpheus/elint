@@ -8,13 +8,13 @@
     ]
   },
   "dependencies": {
-    "@commitlint/core": "^16.2.3",
+    "@commitlint/core": "^17.6.1",
     "@elint/plugin-commitlint": "*",
     "@elint/plugin-eslint": "*",
     "@elint/plugin-prettier": "*",
     "@elint/plugin-stylelint": "*",
-    "eslint": "^8.11.0",
-    "prettier": "^2.6.0",
-    "stylelint": "^14.6.0"
+    "eslint": "^8.39.0",
+    "prettier": "^2.8.7",
+    "stylelint": "^15.6.0"
   }
 }
