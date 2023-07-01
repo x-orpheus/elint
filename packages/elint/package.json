@@ -56,7 +56,7 @@
     "configstore": "^6.0.0",
     "debug": "^4.3.4",
     "elint-helpers": "workspace:*",
-    "execa": "^6.1.0",
+    "execa": "^7.1.1",
     "figures": "^5.0.0",
     "file-entry-cache": "^6.0.1",
     "find-up": "^6.3.0",
