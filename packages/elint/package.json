@@ -79,7 +79,7 @@
     "@types/semver": "^7.3.13",
     "npm-auth-to-token": "1.0.0",
     "verdaccio": "^5.18.0",
-    "verdaccio-auth-memory": "^10.2.0",
+    "verdaccio-auth-memory": "^10.2.2",
     "verdaccio-memory": "^10.3.0"
   },
   "ava": {
