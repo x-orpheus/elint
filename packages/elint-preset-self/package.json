@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@commitlint/core": "^17.3.0",
+    "@commitlint/core": "^17.6.7",
     "@elint/plugin-commitlint": "workspace:*",
     "@elint/plugin-eslint": "workspace:*",
     "@elint/plugin-prettier": "workspace:*",
