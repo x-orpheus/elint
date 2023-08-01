@@ -50,7 +50,7 @@
   },
   "type": "module",
   "dependencies": {
-    "boxen": "^7.0.1",
+    "boxen": "^7.1.1",
     "chalk": "^5.2.0",
     "commander": "^9.4.1",
     "configstore": "^6.0.0",
