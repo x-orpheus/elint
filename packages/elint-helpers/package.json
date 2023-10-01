@@ -30,7 +30,7 @@
   },
   "type": "module",
   "dependencies": {
-    "commander": "^9.4.1",
+    "commander": "^11.0.0",
     "debug": "^4.3.4",
     "fs-extra": "^11.1.0"
   }
