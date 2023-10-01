@@ -29,8 +29,8 @@
     "eslint": ">=8.0.0"
   },
   "devDependencies": {
-    "@types/eslint": "^8.4.10",
+    "@types/eslint": "^8.44.3",
     "elint": "workspace:*",
-    "eslint": "^8.30.0"
+    "eslint": "^8.50.0"
   }
 }
