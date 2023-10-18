@@ -1,10 +1,12 @@
-version: 2
-updates:
-  - package-ecosystem: npm
-    directory: "/"
-    schedule:
-      interval: monthly
-    open-pull-requests-limit: 10
-    assignees:
-      - keenwon
-    versioning-strategy: increase
+# 暂时禁用 dependabot
+
+# version: 2
+# updates:
+#   - package-ecosystem: npm
+#     directory: "/"
+#     schedule:
+#       interval: monthly
+#     open-pull-requests-limit: 10
+#     assignees:
+#       - keenwon
+#     versioning-strategy: increase
