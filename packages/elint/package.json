@@ -57,7 +57,7 @@
     "debug": "^4.3.4",
     "elint-helpers": "workspace:*",
     "execa": "^6.1.0",
-    "figures": "^5.0.0",
+    "figures": "^6.0.1",
     "file-entry-cache": "^6.0.1",
     "find-up": "^6.3.0",
     "fs-extra": "^11.1.0",
