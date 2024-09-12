@@ -50,8 +50,12 @@ async function getPackageInfo(
       .replace('{}', packageName)
       .split(' ')
 
+    const abortController = new AbortController()
+    const cancelSignal = abortController.signal
+
     const getPackageInfoProcess = execa(commands[0], commands.slice(1), {
-      cwd
+      cwd,
+      cancelSignal
     })
 
     const { stdout } = await Promise.race([
@@ -59,7 +63,7 @@ async function getPackageInfo(
       // 当 registry 无法连接时，npm 和 pnpm 会长时间挂起
       new Promise<never>((resolve, reject) => {
         setTimeout(() => {
-          getPackageInfoProcess.cancel()
+          abortController.abort()
           reject(new Error('timeout'))
         }, 3000)
       })
