@@ -1,7 +1,5 @@
 import type {
-  ElintPlugin,
   ElintPluginResultWithPluginData,
-  ElintPluginType,
   InternalPlugin
 } from './plugin/types.js'
 import type { ElintPreset, InternalPreset } from './preset/types.js'
@@ -29,15 +27,15 @@ export interface ElintResult<T = unknown> extends ElintBaseResult {
   /**
    * 文件路径
    */
-  filePath?: string
+  filePath: string
   /**
    * 是否为二进制文件，如果是的话 source 和 output 均为空字符串
    */
-  isBinary?: boolean
+  isBinary: boolean
   /**
    * 是否命中缓存
    */
-  fromCache?: boolean
+  fromCache: boolean
   /**
    * 各个 plugin 结果
    */
@@ -49,8 +47,10 @@ export interface ElintResult<T = unknown> extends ElintBaseResult {
  */
 export interface InternalLoadedPresetAndPlugins {
   internalPreset: InternalPreset
+  /**
+   * 插件列表（已按照 type 从小到达排序）
+   */
   internalPlugins: InternalPlugin[]
-  pluginGroup: Partial<Record<ElintPluginType, ElintPlugin<unknown>[]>>
 }
 
 /**

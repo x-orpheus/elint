@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import type { ElintPlugin } from '../types.js'
+import { ElintPluginType, type ElintPlugin } from '../types.js'
 
 /**
  * 检查源码是否发生变化
@@ -9,10 +9,10 @@ import type { ElintPlugin } from '../types.js'
 const formatChecker: ElintPlugin<never> = {
   name: 'builtIn:format-checker',
   title: 'elint - formatter',
-  type: 'linter',
+  type: ElintPluginType.Formatter,
   activateConfig: {
-    activate() {
-      return true
+    activate({ isBinary }) {
+      return !isBinary
     }
   },
   async execute(text, { fix, source, filePath }) {

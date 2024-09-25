@@ -1,13 +1,13 @@
 import _debug from 'debug'
 import fs from 'fs-extra'
-import { groupBy } from 'lodash-es'
 import { isBinaryFileSync } from 'isbinaryfile'
 import walker from './walker/index.js'
 import { loadElintPlugins } from './plugin/load.js'
 import { executeElintPlugin } from './plugin/execute.js'
-import type {
-  ElintPluginOptions,
-  ElintPluginOverridableKey
+import {
+  ElintPluginType,
+  type ElintPluginOptions,
+  type ElintPluginOverridableKey
 } from './plugin/types.js'
 import { getBaseDir } from './env.js'
 import type { InternalPreset } from './preset/types.js'
@@ -31,6 +31,9 @@ export function createElintResult<T>(
   return {
     source: '',
     output: '',
+    filePath: '',
+    isBinary: false,
+    fromCache: false,
     errorCount: 0,
     warningCount: 0,
     pluginResults: [],
@@ -98,15 +101,15 @@ export async function loadPresetAndPlugins({
     })
   }
 
+  internalPlugins.sort((a, b) => {
+    return a.plugin.type <= b.plugin.type ? -1 : 1
+  })
+
   debug('loaded preset and plugins')
 
   return {
     internalPreset,
-    internalPlugins,
-    pluginGroup: groupBy(
-      internalPlugins.map(({ plugin }) => plugin),
-      (plugin) => plugin.type
-    ) as InternalLoadedPresetAndPlugins['pluginGroup']
+    internalPlugins
   }
 }
 
@@ -121,15 +124,20 @@ export async function lintCommon({
 }: ElintBasicOptions = {}): Promise<ElintResult> {
   const elintResult = createElintResult()
 
-  const { pluginGroup } =
+  const { internalPlugins } =
     internalLoadedPresetAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))
 
-  for (const commonPlugin of pluginGroup.common || []) {
+  const commonInternalPlugins = internalPlugins.filter(
+    ({ plugin }) => plugin.type <= 0
+  )
+
+  for (const { plugin: commonPlugin } of commonInternalPlugins || []) {
     await executeElintPlugin(elintResult, commonPlugin, {
       fix,
       cwd,
-      source: elintResult.source
+      source: elintResult.source,
+      isBinary: elintResult.isBinary
     })
   }
 
@@ -138,14 +146,13 @@ export async function lintCommon({
 
 export async function lintText(
   text: string,
+  { filePath, isBinary }: { filePath: string; isBinary: boolean },
   {
     fix = false,
     preset,
     cwd = getBaseDir(),
-    filePath,
-    isBinary,
     internalLoadedPresetAndPlugins
-  }: ElintBasicOptions & { filePath?: string; isBinary?: boolean } = {}
+  }: ElintBasicOptions = {}
 ): Promise<ElintResult> {
   debug(`┌─ lint text ${filePath ? `(${filePath})` : ''} start`)
   const elintResult = createElintResult({
@@ -155,7 +162,7 @@ export async function lintText(
     isBinary
   })
 
-  const { pluginGroup } =
+  const { internalPlugins } =
     internalLoadedPresetAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))
 
@@ -163,21 +170,21 @@ export async function lintText(
     fix,
     cwd,
     filePath,
-    source: elintResult.source
+    source: elintResult.source,
+    isBinary
   }
 
-  for (const formatterPlugin of pluginGroup.formatter || []) {
-    await executeElintPlugin(elintResult, formatterPlugin, pluginOptions)
+  let needFormatChecker = false
+
+  for (const { plugin } of internalPlugins || []) {
+    await executeElintPlugin(elintResult, plugin, pluginOptions)
+
+    if (plugin.needFormatChecker || plugin.type === ElintPluginType.Formatter) {
+      needFormatChecker = true
+    }
   }
 
-  for (const linterPlugin of pluginGroup.linter || []) {
-    await executeElintPlugin(elintResult, linterPlugin, {
-      ...pluginOptions,
-      fix
-    })
-  }
-
-  if (!isBinary && pluginGroup.formatter?.length) {
+  if (needFormatChecker) {
     // 格式化检查
     await executeElintPlugin(elintResult, formatChecker, pluginOptions)
   }
@@ -277,13 +284,18 @@ export async function lintFiles(
         }
       }
 
-      elintResult = await lintText(elintResult.source, {
-        fix,
-        cwd,
-        filePath: elintResult.filePath,
-        isBinary,
-        internalLoadedPresetAndPlugins: currentInternalLoadedPresetAndPlugins
-      })
+      elintResult = await lintText(
+        elintResult.source,
+        {
+          filePath: elintResult.filePath,
+          isBinary
+        },
+        {
+          fix,
+          cwd,
+          internalLoadedPresetAndPlugins: currentInternalLoadedPresetAndPlugins
+        }
+      )
 
       const isModified = elintResult.output !== elintResult.source
 

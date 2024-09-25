@@ -3,11 +3,15 @@ import type { ElintBaseResult, ElintContext } from '../types.js'
 /**
  * elint 插件类型
  *
- * - `linter` lint 检查工具
- * - `formatter` 格式化工具
- * - `common` 公共检查工具
+ * - `Linter` lint 检查工具
+ * - `Formatter` 格式化工具
+ * - `Common` 公共检查工具
  */
-export type ElintPluginType = 'linter' | 'formatter' | 'common'
+export enum ElintPluginType {
+  Common = 0,
+  Linter = 9,
+  Formatter = 99
+}
 
 /**
  * 支持 preset 覆盖的配置参数
@@ -45,6 +49,10 @@ export interface ElintPluginOptions {
    * cwd
    */
   cwd: string
+  /**
+   * 是否二进制文件，如果是二进制文件，则 text 和 source 均为空字符串，读取文件需要插件内部自行处理
+   */
+  isBinary?: boolean
 }
 
 export interface ElintPluginActivateConfig {
@@ -53,9 +61,9 @@ export interface ElintPluginActivateConfig {
    */
   extensions?: string[]
   /**
-   * 是否使用当前 plugin
+   * 是否激活当前 plugin
    *
-   * type 非 file 只有传入 activate 才有可能激活
+   * 如果传入 extensions 会在判断扩展名后执行此函数
    */
   activate?(options: ElintPluginOptions): boolean
 }
@@ -70,9 +78,23 @@ export interface ElintPlugin<Result> {
    */
   title: string
   /**
-   * 类型
+   * 插件类型，是一个数字
+   *
+   * 大于 0 的插件会对每个文件执行，数值越小的越先执行
+   *
+   * 小于等于 0 的插件是通用插件，不会对文件执行
    */
-  type: ElintPluginType
+  type: ElintPluginType | number
+  /**
+   * 是否需要格式检查器
+   *
+   * 格式化检查器会对所有插件执行前和执行后的文本进行比较，如果不一致，则提示文本未格式化
+   *
+   * 如果某个文件执行的插件列表中包含 Formatter，将会自动开启此检查
+   *
+   * 格式化检查器仅对非二进制文本文件生效
+   */
+  needFormatChecker?: boolean
   /**
    * 激活配置
    */
@@ -126,9 +148,7 @@ export function isElintPlugin(value: unknown): value is ElintPlugin<unknown> {
     value &&
     typeof value === 'object' &&
     (value as ElintPlugin<unknown>).name &&
-    (['formatter', 'linter', 'common'] as ElintPluginType[]).indexOf(
-      (value as ElintPlugin<unknown>).type
-    ) !== -1
+    typeof (value as ElintPlugin<unknown>).type === 'number'
   ) {
     return true
   }
