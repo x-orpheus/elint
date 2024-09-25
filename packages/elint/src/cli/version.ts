@@ -79,11 +79,9 @@ async function version(cwd?: string): Promise<void> {
   const require = createRequire(import.meta.url)
 
   const { version: elintVersion } = require('../../package.json')
-  const { version: huskyVersion } = require('husky/package.json')
 
   const main: Record<string, ElintPluginVersion> = {
-    elint: elintVersion,
-    'husky(builtIn)': huskyVersion
+    elint: elintVersion
   }
 
   const presetVersionMap: Record<string, string> = {}

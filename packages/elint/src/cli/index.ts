@@ -4,7 +4,6 @@ import _debug from 'debug'
 import { createRequire } from 'module'
 import chalk from 'chalk'
 import { program } from 'commander'
-import { install as huskyInstall, uninstall as huskyUninstall } from 'husky'
 import { install as elintHelpersInstall } from 'elint-helpers'
 import version from './version.js'
 import log from '../utils/log.js'
@@ -135,41 +134,14 @@ program
   })
 
 /**
- * install & uninstall hooks
- */
-program
-  .command('hooks [action]')
-  .alias('h')
-  .description('install & uninstall husky hooks')
-  .action((action: string) => {
-    debug(`run ${action} hooks...`)
-    if (['install', 'uninstall'].indexOf(action) === -1) {
-      log.error(`[elint] hooks 不支持的 action: ${action}`)
-      process.exit(1)
-    }
-
-    try {
-      if (action === 'install') {
-        huskyInstall()
-      } else {
-        huskyUninstall()
-      }
-    } catch (e) {
-      log.error(`[elint] husky hooks ${action} error`)
-      console.log(e)
-    }
-  })
-
-/**
  * prepare preset
  */
 program
   .command('prepare')
   .alias('p')
-  .description('prepare elint preset & hooks')
+  .description('prepare elint preset')
   .option('--preset <presetPath>', 'Preset path')
   .option('--project <projectPath>', 'Project path')
-  .option('--no-install-hooks', 'Disable install husky hooks')
   .action(async (options) => {
     debug('prepare elint...')
 
@@ -199,15 +171,6 @@ program
       debug(`skip install preset ${preset.internalPreset.name}`)
 
       log.info(`[elint] skip install preset ${preset.internalPreset.name}`)
-    }
-
-    if (options.installHooks) {
-      try {
-        huskyInstall()
-      } catch (e) {
-        log.error('[elint] husky hooks install error')
-        console.log(e)
-      }
     }
   })
 

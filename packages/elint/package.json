@@ -28,7 +28,6 @@
     "prettier",
     "lint",
     "linter",
-    "husky",
     "hooks",
     "git hooks"
   ],
@@ -62,7 +61,6 @@
     "find-up": "^7.0.0",
     "fs-extra": "^11.2.0",
     "globby": "^14.0.2",
-    "husky": "^8.0.3",
     "isbinaryfile": "^5.0.2",
     "lodash-es": "^4.17.21",
     "micromatch": "^4.0.8",
