@@ -1,0 +1,35 @@
+{
+  "name": "@elint/plugin-husky",
+  "version": "3.0.0-beta.1",
+  "description": "elint plugin for Husky",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x-orpheus/elint.git"
+  },
+  "keywords": [
+    "elint",
+    "elint-plugin",
+    "husky"
+  ],
+  "homepage": "https://github.com/x-orpheus/elint",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "husky": ">=9.1.1"
+  },
+  "devDependencies": {
+    "elint": "workspace:*",
+    "husky": "^9.1.6"
+  }
+}
