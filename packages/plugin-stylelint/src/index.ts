@@ -1,13 +1,27 @@
 import type stylelintNamespace from 'stylelint'
 import type { LinterResult } from 'stylelint'
-import type { ElintPlugin, ElintPluginResult } from 'elint'
+import {
+  ElintPluginType,
+  type ElintPlugin,
+  type ElintPluginResult
+} from 'elint'
 
 let stylelint: typeof stylelintNamespace
 
 const elintPluginStylelint: ElintPlugin<LinterResult> = {
   name: '@elint/plugin-stylelint',
   title: 'Stylelint',
-  type: 'linter',
+  type: ElintPluginType.Linter,
+  configFiles: [
+    '.stylelintrc.js',
+    '.stylelintrc.cjs',
+    '.stylelintrc.yaml',
+    '.stylelintrc.yml',
+    '.stylelintrc.json',
+    'stylelint.config.js',
+    'stylelint.config.cjs',
+    '.stylelintignore'
+  ],
   activateConfig: {
     extensions: ['.less', '.sass', '.scss', '.css']
   },

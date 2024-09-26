@@ -1,5 +1,10 @@
 import type { ESLint } from 'eslint'
-import type { ElintPlugin, ElintPluginOptions, ElintPluginResult } from 'elint'
+import {
+  ElintPluginType,
+  type ElintPlugin,
+  type ElintPluginOptions,
+  type ElintPluginResult
+} from 'elint'
 
 let ESLintClass: typeof ESLint
 
@@ -37,7 +42,15 @@ const getEsLintByOptions = async ({
 const elintPluginEsLint: ElintPlugin<ESLint.LintResult> = {
   name: '@elint/plugin-eslint',
   title: 'ESLint',
-  type: 'linter',
+  type: ElintPluginType.Linter,
+  configFiles: [
+    '.eslintrc.js',
+    '.eslintrc.cjs',
+    '.eslintrc.yaml',
+    '.eslintrc.yml',
+    '.eslintrc.json',
+    '.eslintignore'
+  ],
   activateConfig: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs']
   },

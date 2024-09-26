@@ -3,7 +3,11 @@ import chalk from 'chalk'
 import type { Ignore } from 'ignore'
 import type prettierNamespace from 'prettier'
 import type { Options } from 'prettier'
-import type { ElintPlugin, ElintPluginResult } from 'elint'
+import {
+  ElintPluginType,
+  type ElintPlugin,
+  type ElintPluginResult
+} from 'elint'
 
 let prettier: typeof prettierNamespace
 
@@ -51,7 +55,17 @@ const handlePrettierError = (error: any) => {
 const elintPluginPrettier: ElintPlugin<never> = {
   name: '@elint/plugin-prettier',
   title: 'Prettier',
-  type: 'formatter',
+  type: ElintPluginType.Formatter,
+  configFiles: [
+    '.prettierrc.js',
+    '.prettierrc.cjs',
+    '.prettierrc.yaml',
+    '.prettierrc.yml',
+    '.prettierrc.json',
+    'prettierrc.config.js',
+    'prettierrc.config.cjs',
+    '.prettierignore'
+  ],
   activateConfig: {
     extensions: [
       '.js',
