@@ -100,6 +100,26 @@ export interface ElintPlugin<Result> {
    */
   activateConfig: ElintPluginActivateConfig
   /**
+   * 配置文件列表
+   *
+   * 在 elint prepare 时，会将 preset 中的配置文件拷贝到项目目录中
+   *
+   * 如果 preset 配置了全局的 configFiles，此时这个配置项将被忽略
+   */
+  configFiles?: string[]
+  /**
+   * 准备操作
+   *
+   * 此函数仅在执行 elint prepare 时被调用，一般用于做一些准备操作
+   *
+   * 例如 husky 插件会在这一步来安装 husky 自己
+   */
+  prepare?: (
+    ctx: ElintContext,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    importFromPreset: (id: string) => Promise<any>
+  ) => Promise<void>
+  /**
    * 加载函数，用于加载依赖
    *
    * 因为 elint 推荐将 plugin 的 peerDependencies 安装在 preset 里，
@@ -153,4 +173,10 @@ export function isElintPlugin(value: unknown): value is ElintPlugin<unknown> {
     return true
   }
   return false
+}
+
+export function defineElintPlugin<Result>(
+  plugin: ElintPlugin<Result>
+): ElintPlugin<Result> {
+  return plugin
 }

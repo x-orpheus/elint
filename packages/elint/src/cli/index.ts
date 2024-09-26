@@ -8,7 +8,13 @@ import { install as elintHelpersInstall } from 'elint-helpers'
 import version from './version.js'
 import log from '../utils/log.js'
 import isGitHooks from '../utils/is-git-hooks.js'
-import { lintFiles, lintCommon, loadPresetAndPlugins, reset } from '../elint.js'
+import {
+  lintFiles,
+  lintCommon,
+  loadPresetAndPlugins,
+  reset,
+  prepare
+} from '../elint.js'
 import type { ElintOptions, ElintResult } from '../types.js'
 import report from '../utils/report.js'
 import notify from '../notifier/index.js'
@@ -166,7 +172,21 @@ program
         projectPath
       })
 
-      log.success(`[elint] preset ${preset.internalPreset.name} installed`)
+      const errorMap = await prepare({
+        internalLoadedPresetAndPlugins: preset,
+        cwd
+      })
+
+      if (Object.keys(errorMap).length === 0) {
+        log.success(`[elint] preset ${preset.internalPreset.name} prepared successfully`)
+      } else {
+        Object.entries(errorMap).forEach(([pluginId, error]) => {
+          log.error(`[elint] preset ${preset.internalPreset.name} prepared with error`)
+          log.error(`[elint] ${pluginId} error: `, error)
+        })
+
+        process.exit(1)
+      }
     } else {
       debug(`skip install preset ${preset.internalPreset.name}`)
 

@@ -16,6 +16,8 @@ export interface ElintPreset {
    * 需要移动到根目录的的配置文件或文件夹
    *
    * 例如 `.eslintrc`, `.prettierrc`
+   *
+   * 设置了这个项目后，将会忽略所有 plugin 默认的配置文件列表
    */
   configFiles?: string[]
   /**

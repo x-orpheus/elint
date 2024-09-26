@@ -22,6 +22,7 @@ import log from './utils/log.js'
 import { getElintCache, resetElintCache } from './cache/index.js'
 import formatChecker from './plugin/built-in/format-checker.js'
 import { PRESET_PATTERN } from './config.js'
+import importFromPath from './utils/import-from-path.js'
 
 const debug = _debug('elint:main')
 
@@ -354,6 +355,35 @@ export async function reset({
     } catch (e) {
       errorMap[internalPlugin.name] = e
       debug(`elint plugin ${internalPlugin.name} reset error %o`, e)
+    }
+  }
+
+  return errorMap
+}
+
+export async function prepare({
+  preset,
+  cwd = getBaseDir(),
+  internalLoadedPresetAndPlugins
+}: ElintOptions = {}): Promise<Record<string, unknown>> {
+  const { internalPlugins, internalPreset } =
+    internalLoadedPresetAndPlugins ||
+    (await loadPresetAndPlugins({ preset, cwd }))
+
+  const importFromPreset = (id: string) =>
+    importFromPath(id, internalPreset.path || cwd)
+
+  const errorMap: Record<string, unknown> = {}
+
+  for (const internalPlugin of internalPlugins) {
+    try {
+      await internalPlugin.plugin.prepare?.(
+        { cwd, presetPath: internalPlugin.path },
+        importFromPreset
+      )
+    } catch (e) {
+      errorMap[internalPlugin.name] = e
+      debug(`elint plugin ${internalPlugin.name} prepare error %o`, e)
     }
   }
 
