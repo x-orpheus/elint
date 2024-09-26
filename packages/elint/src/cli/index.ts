@@ -178,10 +178,14 @@ program
       })
 
       if (Object.keys(errorMap).length === 0) {
-        log.success(`[elint] preset ${preset.internalPreset.name} prepared successfully`)
+        log.success(
+          `[elint] preset ${preset.internalPreset.name} prepared successfully`
+        )
       } else {
         Object.entries(errorMap).forEach(([pluginId, error]) => {
-          log.error(`[elint] preset ${preset.internalPreset.name} prepared with error`)
+          log.error(
+            `[elint] preset ${preset.internalPreset.name} prepared with error`
+          )
           log.error(`[elint] ${pluginId} error: `, error)
         })
 

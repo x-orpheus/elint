@@ -13,7 +13,7 @@ let commitlint: typeof commitlintNamespace
 const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
   name: '@elint/plugin-commitlint',
   title: 'commitlint',
-  type: ElintPluginType.Linter,
+  type: ElintPluginType.Common,
   configFiles: [
     '.commitlintrc.js',
     '.commitlintrc.cjs',

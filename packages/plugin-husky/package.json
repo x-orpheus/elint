@@ -26,6 +26,7 @@
     "build": "tsc"
   },
   "peerDependencies": {
+    "elint": "workspace:*",
     "husky": ">=9.1.1"
   },
   "devDependencies": {

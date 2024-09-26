@@ -177,7 +177,11 @@ export async function lintText(
 
   let needFormatChecker = false
 
-  for (const { plugin } of internalPlugins || []) {
+  const textInternalPlugins = internalPlugins.filter(
+    ({ plugin }) => plugin.type > 0
+  )
+
+  for (const { plugin } of textInternalPlugins || []) {
     await executeElintPlugin(elintResult, plugin, pluginOptions)
 
     if (plugin.needFormatChecker || plugin.type === ElintPluginType.Formatter) {

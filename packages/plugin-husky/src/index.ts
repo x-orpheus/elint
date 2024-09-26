@@ -1,6 +1,5 @@
 import type Husky from 'husky'
-import { defineElintPlugin } from 'elint'
-import { ElintPluginType } from 'packages/elint/src/index.js'
+import { defineElintPlugin, ElintPluginType } from 'elint'
 
 let husky: typeof Husky | undefined
 
