@@ -15,10 +15,13 @@ const elintPluginStylelint: ElintPlugin<LinterResult> = {
   configFiles: [
     '.stylelintrc.js',
     '.stylelintrc.cjs',
+    '.stylelintrc.mjs',
     '.stylelintrc.yaml',
     '.stylelintrc.yml',
     '.stylelintrc.json',
+    '.stylelintrc',
     'stylelint.config.js',
+    'stylelint.config.mjs',
     'stylelint.config.cjs',
     '.stylelintignore'
   ],
@@ -44,7 +47,8 @@ const elintPluginStylelint: ElintPlugin<LinterResult> = {
       code: text,
       codeFilename: filePath,
       fix,
-      cwd
+      cwd,
+      formatter: 'json'
     })
 
     linterResult.results.forEach((lintResult) => {
@@ -59,17 +63,24 @@ const elintPluginStylelint: ElintPlugin<LinterResult> = {
 
     result.result = linterResult
 
-    // stylelint 当 fix 不为 true 时，output 会返回一个 json
-    if (fix && linterResult.output) {
-      if (linterResult.output === '[]' && linterResult.results.length === 0) {
-        // 当文件被 stylelint ignore 命中时，返回值会成为 '[]'
-        // 因此这种状态下 output 需要被忽略
-      } else {
-        result.output = linterResult.output
+    if (linterResult.report) {
+      // v16
+      if (fix && typeof linterResult.code !== 'undefined') {
+        result.output = linterResult.code
+      }
+    } else {
+      // stylelint 当 fix 不为 true 时，output 会返回一个 json
+      if (fix && linterResult.output) {
+        if (linterResult.output === '[]' && linterResult.results.length === 0) {
+          // 当文件被 stylelint ignore 命中时，返回值会成为 '[]'
+          // 因此这种状态下 output 需要被忽略
+        } else {
+          result.output = linterResult.output
+        }
       }
     }
 
-    const stringFormatter = formatters.string
+    const stringFormatter = await formatters.string
     result.message = stringFormatter(linterResult.results, linterResult)
 
     return result

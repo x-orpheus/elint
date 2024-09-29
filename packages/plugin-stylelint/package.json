@@ -26,10 +26,10 @@
     "build": "tsc"
   },
   "peerDependencies": {
-    "stylelint": ">=14.0.0"
+    "stylelint": ">=14"
   },
   "devDependencies": {
     "elint": "workspace:*",
-    "stylelint": "^15.6.0"
+    "stylelint": "^16.9.0"
   }
 }
