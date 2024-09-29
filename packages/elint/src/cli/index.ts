@@ -229,7 +229,9 @@ program
   .option('-v, --version', 'output the version number')
   .action(async (options) => {
     if (options.version) {
-      await version()
+      const cwd = getBaseDir()
+
+      await version(cwd)
 
       process.exit(0)
     }

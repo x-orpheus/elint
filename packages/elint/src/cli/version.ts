@@ -71,7 +71,7 @@ function printVersionBlock({
 /**
  * 输出 version
  */
-async function version(cwd?: string): Promise<void> {
+async function version(cwd: string): Promise<void> {
   const { internalPreset, internalPlugins } = await loadPresetAndPlugins({
     cwd
   })
@@ -107,7 +107,7 @@ async function version(cwd?: string): Promise<void> {
             (dependencyName: string) => {
               const dependencyPackageJsonPath = resolvePackagePath(
                 dependencyName,
-                pluginPath
+                internalPreset.path || cwd
               )
               if (dependencyPackageJsonPath) {
                 const dependencyPackageJson = fs.readJsonSync(
