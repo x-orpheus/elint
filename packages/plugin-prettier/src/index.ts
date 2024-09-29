@@ -1,6 +1,5 @@
 import path from 'path'
 import chalk from 'chalk'
-import type { Ignore } from 'ignore'
 import type prettierNamespace from 'prettier'
 import type { Options } from 'prettier'
 import {
@@ -8,33 +7,55 @@ import {
   type ElintPlugin,
   type ElintPluginResult
 } from 'elint'
+import { createIsIgnoredFunction } from './ignore.js'
 
 let prettier: typeof prettierNamespace
 
-let ignorerMap: Record<string, Ignore> = {}
+type IsIgnored = (filePath: string) => boolean
 
-const getIgnorer = (cwd: string) => {
-  let ignorer = ignorerMap[cwd]
+const isIgnoredMap = new Map<string, IsIgnored>()
 
-  if (!ignorer) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const { createIgnorer } = prettier.__internal
+const getIsIgnored = async (cwd: string) => {
+  let isIgnored = isIgnoredMap.get(cwd)
 
-    ignorer = createIgnorer.sync(path.join(cwd, '.prettierignore'))
-    ignorerMap[cwd] = ignorer
+  if (!isIgnored) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const prettierInternal = (prettier as any).__internal
+
+    if (prettierInternal && prettierInternal.createIgnorer) {
+      // v2
+
+      const ignorer = prettierInternal.createIgnorer.sync(
+        path.join(cwd, '.prettierignore')
+      )
+
+      isIgnored = ignorer.ignores.bind(ignorer)
+    } else {
+      // v3
+
+      isIgnored = (await createIsIgnoredFunction(
+        ['.gitignore', '.prettierignore'].map((item) => path.join(cwd, item)),
+        false
+      )) as IsIgnored
+    }
+
+    if (isIgnored) {
+      isIgnoredMap.set(cwd, isIgnored)
+    }
   }
 
-  return ignorer
+  return isIgnored
 }
 
 // 使用 prettier 的方法获取当前文件的格式化配置
-const getOptionsForFile = (filePath: string) => {
+const getOptionsForFile = async (filePath: string) => {
   const { resolveConfig } = prettier
+
+  const config = await resolveConfig(filePath, { editorconfig: false })
 
   const options: Options = {
     endOfLine: 'auto',
-    ...resolveConfig.sync(filePath, { editorconfig: false }),
+    ...config,
     filepath: filePath
   }
   return options
@@ -99,16 +120,16 @@ const elintPluginPrettier: ElintPlugin<never> = {
       warningCount: 0
     }
 
-    const ignorer = getIgnorer(cwd)
+    const isIgnored = await getIsIgnored(cwd)
 
-    if (filePath && ignorer.ignores(filePath)) {
+    if (filePath && isIgnored && isIgnored(filePath)) {
       return result
     }
 
-    const options = getOptionsForFile(filePath || cwd)
+    const options = await getOptionsForFile(filePath || cwd)
 
     try {
-      const formatted = format(text, options)
+      const formatted = await format(text, options)
 
       result.output = formatted ?? result.output
     } catch (e) {
@@ -121,11 +142,12 @@ const elintPluginPrettier: ElintPlugin<never> = {
 
     return result
   },
-  reset() {
+  async reset() {
     const { clearConfigCache } = prettier
 
-    ignorerMap = {}
-    clearConfigCache()
+    isIgnoredMap.clear()
+
+    await clearConfigCache()
   }
 }
 

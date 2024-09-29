@@ -110,7 +110,7 @@ export interface ElintPlugin<Result> {
   /**
    * 准备操作
    *
-   * 此函数仅在执行 elint prepare 时被调用，一般用于做一些准备操作
+   * 此函数仅在执行 elint prepare 时被调用，一般用于做一些准备操作，不会在插件执行前调用
    *
    * 例如 husky 插件会在这一步来安装 husky 自己
    */
@@ -121,6 +121,8 @@ export interface ElintPlugin<Result> {
   ) => Promise<void>
   /**
    * 加载函数，用于加载依赖
+   *
+   * 此函数会在所有插件行为前调用，也可以做一些初始化操作
    *
    * 因为 elint 推荐将 plugin 的 peerDependencies 安装在 preset 里，
    * 如果项目中存在多个版本的依赖（例如 eslint），可能会导致 plugin 中导入的不是正确的版本，
@@ -133,6 +135,8 @@ export interface ElintPlugin<Result> {
   ): Promise<void>
   /**
    * 执行函数
+   *
+   * 会对每个文件/文本执行
    */
   execute(
     text: string,
@@ -140,6 +144,8 @@ export interface ElintPlugin<Result> {
   ): Promise<ElintPluginResult<Result>>
   /**
    * 重置操作（例如清理配置缓存）
+   *
+   * 此函数仅在执行 elint reset 时被调用，不会在插件执行时调用
    */
   reset?(): void | Promise<void>
 }
