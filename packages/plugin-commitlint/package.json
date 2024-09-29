@@ -29,8 +29,8 @@
     "@commitlint/core": ">=16.0.0"
   },
   "devDependencies": {
-    "@commitlint/core": "^17.6.1",
-    "@commitlint/types": "^17.4.4",
+    "@commitlint/core": "^19.5.0",
+    "@commitlint/types": "^19.5.0",
     "elint": "workspace:*"
   }
 }

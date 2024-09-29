@@ -1,5 +1,5 @@
-import type commitlintNamespace from '@commitlint/core'
-import type { LintOptions, LintOutcome, ParserOptions } from '@commitlint/types'
+import type { format, load, lint, read } from '@commitlint/core'
+import type { LintOptions, LintOutcome } from '@commitlint/types'
 import path from 'path'
 import fs from 'fs'
 import {
@@ -8,20 +8,34 @@ import {
   type ElintPluginResult
 } from 'elint'
 
-let commitlint: typeof commitlintNamespace
+type CommitlintNamespace = {
+  format: typeof format
+  load: typeof load
+  lint: typeof lint
+  read: typeof read
+}
+
+let commitlint: CommitlintNamespace
 
 const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
   name: '@elint/plugin-commitlint',
   title: 'commitlint',
   type: ElintPluginType.Common,
   configFiles: [
+    '.commitlintrc',
     '.commitlintrc.js',
     '.commitlintrc.cjs',
+    '.commitlintrc.mjs',
     '.commitlintrc.yaml',
     '.commitlintrc.yml',
     '.commitlintrc.json',
+    '.commitlintrc.ts',
+    '.commitlintrc.cts',
     'commitlintrc.config.js',
-    'commitlintrc.config.cjs'
+    'commitlintrc.config.cjs',
+    'commitlint.config.mjs',
+    'commitlint.config.ts',
+    'commitlint.config.cts'
   ],
   activateConfig: {
     activate() {
@@ -61,7 +75,7 @@ const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
 
     const rules = config.rules
     const options: LintOptions = {
-      parserOpts: config.parserPreset?.parserOpts as ParserOptions
+      parserOpts: config.parserPreset?.parserOpts as LintOptions['parserOpts']
     }
     const report = await lint(message[0], rules, options)
     const formatted = format({
