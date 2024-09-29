@@ -49,10 +49,17 @@ const elintPluginEsLint: ElintPlugin<ESLint.LintResult> = {
     '.eslintrc.yaml',
     '.eslintrc.yml',
     '.eslintrc.json',
-    '.eslintignore'
+    '.eslintignore',
+    // v9
+    'eslint.config.js',
+    'eslint.config.mjs',
+    'eslint.config.cjs',
+    'eslint.config.ts',
+    'eslint.config.mts',
+    'eslint.config.cts'
   ],
   activateConfig: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs']
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.mts']
   },
   async load(ctx, importFromPreset) {
     const eslintModule = await importFromPreset('eslint')
