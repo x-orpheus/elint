@@ -62,7 +62,9 @@ const elintPluginEsLint: ElintPlugin<ESLint.LintResult> = {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.mts']
   },
   async load(ctx, importFromPreset) {
-    const eslintModule = await importFromPreset('eslint')
+    const eslintModule = await importFromPreset<{ ESLint: typeof ESLint }>(
+      'eslint'
+    )
     ESLintClass = eslintModule.ESLint
   },
   async execute(text, options) {
@@ -78,7 +80,8 @@ const elintPluginEsLint: ElintPlugin<ESLint.LintResult> = {
     }
 
     const lintResults = await esLint.lintText(text, {
-      filePath
+      filePath,
+      warnIgnored: false
     })
 
     const lintResult = lintResults[0]
