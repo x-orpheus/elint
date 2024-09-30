@@ -66,3 +66,7 @@ export function isElintPreset(value: unknown): value is ElintPreset {
 
   return false
 }
+
+export function defineElintPreset(preset: ElintPreset): ElintPreset {
+  return preset
+}

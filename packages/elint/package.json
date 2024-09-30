@@ -54,7 +54,6 @@
     "commander": "^12.1.0",
     "configstore": "^7.0.0",
     "debug": "^4.3.7",
-    "elint-helpers": "workspace:*",
     "execa": "^9.3.1",
     "figures": "^6.1.0",
     "file-entry-cache": "^9.1.0",

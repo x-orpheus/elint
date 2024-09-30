@@ -1,4 +1,4 @@
-import { createElintResult } from '../elint.js'
+import { createElintResult } from '../core/result.js'
 import { executeElintPlugin } from './execute.js'
 import {
   type ElintPlugin,

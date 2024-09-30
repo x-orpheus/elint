@@ -2,118 +2,16 @@ import _debug from 'debug'
 import fs from 'fs-extra'
 import { isBinaryFileSync } from 'isbinaryfile'
 import walker from './walker/index.js'
-import { loadElintPlugins } from './plugin/load.js'
 import { executeElintPlugin } from './plugin/execute.js'
-import {
-  ElintPluginType,
-  type ElintPluginOptions,
-  type ElintPluginOverridableKey
-} from './plugin/types.js'
+import { ElintPluginType, type ElintPluginOptions } from './plugin/types.js'
 import { getBaseDir } from './env.js'
-import type { InternalPreset } from './preset/types.js'
-import { loadElintPreset, tryLoadElintPreset } from './preset/load.js'
-import type {
-  ElintBasicOptions,
-  InternalLoadedPresetAndPlugins,
-  ElintOptions,
-  ElintResult
-} from './types.js'
-import log from './utils/log.js'
-import { getElintCache, resetElintCache } from './cache/index.js'
+import type { ElintBasicOptions, ElintOptions, ElintResult } from './types.js'
+import { getElintCache } from './cache/index.js'
 import formatChecker from './plugin/built-in/format-checker.js'
-import { PRESET_PATTERN } from './config.js'
+import { createElintResult } from './core/result.js'
+import { loadPresetAndPlugins } from './core/load.js'
 
 const debug = _debug('elint:main')
-
-export function createElintResult<T>(
-  config?: Partial<ElintResult<T>>
-): ElintResult<T> {
-  return {
-    source: '',
-    output: '',
-    filePath: '',
-    isBinary: false,
-    fromCache: false,
-    errorCount: 0,
-    warningCount: 0,
-    pluginResults: [],
-    ...config
-  }
-}
-
-/**
- * 加载 preset 和 plugins
- */
-export async function loadPresetAndPlugins({
-  preset,
-  cwd = getBaseDir()
-}: Pick<
-  ElintBasicOptions,
-  'preset' | 'cwd'
-> = {}): Promise<InternalLoadedPresetAndPlugins> {
-  let internalPreset: InternalPreset
-
-  if (preset) {
-    debug(
-      `start load preset: ${typeof preset === 'string' ? preset : 'local preset'}`
-    )
-
-    internalPreset = await loadElintPreset(preset, { cwd })
-  } else {
-    debug('start load preset in node_modules')
-
-    internalPreset = await tryLoadElintPreset(PRESET_PATTERN, { cwd })
-  }
-
-  const pendingPlugins = internalPreset.preset.plugins
-
-  const internalPlugins = await loadElintPlugins(pendingPlugins, {
-    cwd,
-    presetPath: internalPreset.path
-  })
-
-  if (!internalPlugins.length) {
-    throw new Error(
-      `'${internalPreset.name}' doesn't contain available elint plugins`
-    )
-  }
-
-  if (internalPreset.preset.overridePluginConfig) {
-    const overridePluginConfig = internalPreset.preset.overridePluginConfig
-
-    internalPlugins.forEach(({ plugin }) => {
-      if (overridePluginConfig[plugin.name]) {
-        Object.keys(overridePluginConfig[plugin.name]).forEach((key) => {
-          debug(`overriding config of ${plugin.name}: ${key}`)
-
-          const currentKey = key as ElintPluginOverridableKey
-          const currentValue = overridePluginConfig[plugin.name][currentKey]
-
-          /* istanbul ignore next */
-          if (
-            !(['activateConfig'] as ElintPluginOverridableKey[]).includes(
-              currentKey
-            )
-          ) {
-            log.warn(`${currentKey} is not in ElintPluginOverridableKey`)
-          }
-          plugin[currentKey] = currentValue
-        })
-      }
-    })
-  }
-
-  internalPlugins.sort((a, b) => {
-    return a.plugin.type <= b.plugin.type ? -1 : 1
-  })
-
-  debug('loaded preset and plugins')
-
-  return {
-    internalPreset,
-    internalPlugins
-  }
-}
 
 /**
  * 执行全部 type 为 common 的 plugin
@@ -338,60 +236,4 @@ export async function lintFiles(
   debug(`elint lint files in: ${Date.now() - startTime}ms`)
 
   return elintResultList
-}
-
-export async function reset({
-  preset,
-  cwd = getBaseDir(),
-  cacheLocation,
-  internalLoadedPresetAndPlugins
-}: ElintOptions = {}): Promise<Record<string, unknown>> {
-  const { internalPlugins } =
-    internalLoadedPresetAndPlugins ||
-    (await loadPresetAndPlugins({ preset, cwd }))
-
-  const errorMap: Record<string, unknown> = {}
-
-  resetElintCache({ cwd, cacheLocation })
-
-  for (const internalPlugin of internalPlugins) {
-    try {
-      debug(`elint plugin ${internalPlugin.name} reset`)
-
-      await internalPlugin.plugin.reset?.()
-    } catch (e) {
-      errorMap[internalPlugin.name] = e
-      debug(`elint plugin ${internalPlugin.name} reset error %o`, e)
-    }
-  }
-
-  return errorMap
-}
-
-export async function prepare({
-  preset,
-  cwd = getBaseDir(),
-  internalLoadedPresetAndPlugins
-}: ElintOptions = {}): Promise<Record<string, unknown>> {
-  const { internalPlugins } =
-    internalLoadedPresetAndPlugins ||
-    (await loadPresetAndPlugins({ preset, cwd }))
-
-  const errorMap: Record<string, unknown> = {}
-
-  for (const internalPlugin of internalPlugins) {
-    try {
-      debug(`elint plugin ${internalPlugin.name} prepare`)
-
-      await internalPlugin.plugin.prepare?.({
-        cwd,
-        presetPath: internalPlugin.path
-      })
-    } catch (e) {
-      errorMap[internalPlugin.name] = e
-      debug(`elint plugin ${internalPlugin.name} prepare error %o`, e)
-    }
-  }
-
-  return errorMap
 }

@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "clean": "pnpm -r run clean",
-    "build": "pnpm --workspace-concurrency=1 --filter=elint-helpers --filter=elint run build && pnpm -r --filter=!elint --filter=!elint-helpers run build",
+    "build": "pnpm --workspace-concurrency=1 --filter=elint run build && pnpm -r --filter=!elint run build",
     "prepare": "elint prepare",
     "preinstall": "npx only-allow pnpm",
     "commit": "elint lint commit && pnpm run lint",
@@ -23,7 +23,6 @@
     "@types/node": "^18.19.50",
     "cross-env": "^7.0.3",
     "elint": "workspace:*",
-    "elint-helpers": "workspace:*",
     "elint-preset-self": "workspace:*",
     "jest": "^29.7.0",
     "jest-extended": "^4.0.2",

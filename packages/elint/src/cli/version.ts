@@ -2,8 +2,8 @@ import { createRequire } from 'module'
 import { padEnd, fill } from 'lodash-es'
 import fs from 'fs-extra'
 import resolvePackagePath from 'resolve-package-path'
-import { loadPresetAndPlugins } from '../elint.js'
 import type { PackageJson } from '../types.js'
+import { loadPresetAndPlugins } from '../core/load.js'
 
 const { findUpPackagePath } = resolvePackagePath
 

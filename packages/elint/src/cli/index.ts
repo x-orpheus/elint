@@ -4,17 +4,10 @@ import _debug from 'debug'
 import { createRequire } from 'module'
 import chalk from 'chalk'
 import { program } from 'commander'
-import { install as elintHelpersInstall } from 'elint-helpers'
 import version from './version.js'
 import log from '../utils/log.js'
 import isGitHooks from '../utils/is-git-hooks.js'
-import {
-  lintFiles,
-  lintCommon,
-  loadPresetAndPlugins,
-  reset,
-  prepare
-} from '../elint.js'
+import { lintFiles, lintCommon } from '../elint.js'
 import type { ElintOptions, ElintResult, PackageJson } from '../types.js'
 import report from '../utils/report.js'
 import notify from '../notifier/index.js'
@@ -25,6 +18,11 @@ import type {
   ElintCliPrepareOptions,
   ElintCliResetOptions
 } from './types.js'
+import { loadPresetAndPlugins } from '../core/load.js'
+import { prepare } from '../core/prepare.js'
+import { reset } from '../core/reset.js'
+import { install } from '../core/install.js'
+import { logErrorMap } from './utils.js'
 
 const { description } = createRequire(import.meta.url)(
   '../../package.json'
@@ -178,32 +176,21 @@ program
         `install preset ${preset.internalPreset.name} from ${preset.internalPreset.path}`
       )
 
-      log.info(`[elint] preset ${preset.internalPreset.name} installing`)
+      log.info(`[elint] preset ${preset.internalPreset.name} preparing`)
 
-      elintHelpersInstall({
+      const installErrorMap = await install({
         presetPath: preset.internalPreset.path,
         projectPath
       })
 
-      const errorMap = await prepare({
+      logErrorMap(installErrorMap, preset.internalPreset.name, 'installed')
+
+      const prepareErrorMap = await prepare({
         internalLoadedPresetAndPlugins: preset,
         cwd
       })
 
-      if (Object.keys(errorMap).length === 0) {
-        log.success(
-          `[elint] preset ${preset.internalPreset.name} prepared successfully`
-        )
-      } else {
-        Object.entries(errorMap).forEach(([pluginId, error]) => {
-          log.error(
-            `[elint] preset ${preset.internalPreset.name} prepared with error`
-          )
-          log.error(`[elint] ${pluginId} error: `, error)
-        })
-
-        process.exit(1)
-      }
+      logErrorMap(prepareErrorMap, preset.internalPreset.name, 'prepared')
     } else {
       debug(`skip install preset ${preset.internalPreset.name}`)
 
@@ -217,21 +204,14 @@ program
   .option('--cache-location <cacheLocation>', 'Cache file location')
   .option('--preset <preset>', 'Set specific preset')
   .action(async (options: ElintCliResetOptions) => {
+    const preset = await loadPresetAndPlugins({ preset: options.preset })
+
     const errorMap = await reset({
-      preset: options.preset,
-      cacheLocation: options.cacheLocation
+      cacheLocation: options.cacheLocation,
+      internalLoadedPresetAndPlugins: preset
     })
 
-    if (Object.keys(errorMap).length === 0) {
-      log.success('elint reset successfully')
-      process.exit(0)
-    }
-
-    Object.entries(errorMap).forEach(([pluginId, error]) => {
-      log.error(`${pluginId} error: `, error)
-    })
-
-    process.exit(1)
+    logErrorMap(errorMap, preset.internalPreset.name, 'reset')
   })
 
 /**
@@ -267,9 +247,6 @@ program.on('--help', () => {
   console.log('')
   console.log('    lint files')
   console.log('    $ elint lint "**/*.js" "**/*.css"')
-  console.log('')
-  console.log('    install git hooks')
-  console.log('    $ elint hooks install')
   console.log('')
 })
 

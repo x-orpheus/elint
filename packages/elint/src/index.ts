@@ -1,6 +1,10 @@
-import { lintFiles, lintText, reset, prepare } from './elint.js'
+import { lintFiles, lintText } from './elint.js'
 
-import type { ElintOptions, ElintResult } from './types.js'
+import type { ElintOptions, ElintResult, ElintInstallOptions } from './types.js'
+
+import { install } from './core/install.js'
+import { reset } from './core/reset.js'
+import { prepare } from './core/prepare.js'
 
 import type {
   ElintPlugin,
@@ -8,25 +12,29 @@ import type {
   ElintPluginOptions,
   ElintPluginActivateConfig
 } from './plugin/types.js'
-import { defineElintPlugin, ElintPluginType } from './plugin/types.js'
+import {
+  defineElintPlugin,
+  ElintPluginType,
+  isElintPlugin
+} from './plugin/types.js'
 import { testPlugin } from './plugin/test.js'
 
 import type { ElintPreset } from './preset/types.js'
+import { defineElintPreset, isElintPreset } from './preset/types.js'
 
 export {
   lintFiles,
   lintText,
   reset,
-  testPlugin,
   prepare,
+  install,
+  testPlugin,
+  defineElintPreset,
+  isElintPreset,
   defineElintPlugin,
+  isElintPlugin,
   ElintPluginType
 }
-
-export type ElintLintFiles = typeof lintFiles
-export type ElintLintText = typeof lintText
-export type ElintReset = typeof reset
-export type ElintTestPlugin = typeof testPlugin
 
 export type {
   ElintOptions,
@@ -35,5 +43,6 @@ export type {
   ElintPluginResult,
   ElintPluginOptions,
   ElintPluginActivateConfig,
-  ElintPreset
+  ElintPreset,
+  ElintInstallOptions
 }

@@ -35,9 +35,6 @@ importers:
       elint:
         specifier: workspace:*
         version: link:packages/elint
-      elint-helpers:
-        specifier: workspace:*
-        version: link:packages/elint-helpers
       elint-preset-self:
         specifier: workspace:*
         version: link:packages/elint-preset-self
@@ -77,9 +74,6 @@ importers:
       debug:
         specifier: ^4.3.7
         version: 4.3.7
-      elint-helpers:
-        specifier: workspace:*
-        version: link:../elint-helpers
       execa:
         specifier: ^9.3.1
         version: 9.3.1
@@ -150,18 +144,6 @@ importers:
       verdaccio-memory:
         specifier: ^10.3.2
         version: 10.3.2
-
-  packages/elint-helpers:
-    dependencies:
-      commander:
-        specifier: ^12.1.0
-        version: 12.1.0
-      debug:
-        specifier: ^4.3.7
-        version: 4.3.7
-      fs-extra:
-        specifier: ^11.2.0
-        version: 11.2.0
 
   packages/elint-preset-self:
     dependencies:

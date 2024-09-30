@@ -127,3 +127,11 @@ export interface ElintContext {
   cwd: string
   presetPath?: string
 }
+
+/**
+ * elint 安装配置
+ */
+export interface ElintInstallOptions {
+  presetPath?: string
+  projectPath?: string
+}
