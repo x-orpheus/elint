@@ -1,4 +1,5 @@
 import type Husky from 'husky'
+import path from 'node:path'
 import { defineElintPlugin, ElintPluginType } from 'elint'
 
 let husky: typeof Husky | undefined
@@ -22,7 +23,7 @@ const elintPluginHusky = defineElintPlugin<null>({
   },
   prepare(ctx) {
     if (husky) {
-      const result = husky(ctx.cwd)
+      const result = husky(path.resolve(ctx.cwd, '.husky'))
 
       if (result) {
         throw new Error(result)
