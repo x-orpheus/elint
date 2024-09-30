@@ -1,6 +1,6 @@
 import _debug from 'debug'
-import path from 'path'
-import fs from 'fs'
+import path from 'node:path'
+import fs from 'node:fs'
 import { getNodeModulesDir } from '../env.js'
 
 const debug = _debug('elint:utils:try-require')

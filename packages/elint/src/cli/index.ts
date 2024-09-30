@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import _debug from 'debug'
-import { createRequire } from 'module'
+import { createRequire } from 'node:module'
 import chalk from 'chalk'
 import { program } from 'commander'
 import version from './version.js'

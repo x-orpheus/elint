@@ -37,7 +37,13 @@ export default tseslint.config(
         'error',
         { prefer: 'type-imports' }
       ],
-      '@typescript-eslint/no-unsafe-enum-comparison': 'off'
+      '@typescript-eslint/no-unsafe-enum-comparison': 'off',
+      'n/prefer-node-protocol': [
+        'error',
+        {
+          version: '>=16.0.0'
+        }
+      ]
     }
   },
   {

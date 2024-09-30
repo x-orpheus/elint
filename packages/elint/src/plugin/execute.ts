@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'node:path'
 import type { ElintResult } from '../types.js'
 import { type ElintPlugin, type ElintPluginOptions } from './types.js'
 

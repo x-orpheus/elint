@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'node:path'
 import _debug from 'debug'
 import resolvePackagePath from 'resolve-package-path'
 import { cloneDeep } from 'lodash-es'

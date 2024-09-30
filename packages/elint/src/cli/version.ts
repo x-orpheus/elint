@@ -1,4 +1,4 @@
-import { createRequire } from 'module'
+import { createRequire } from 'node:module'
 import { padEnd, fill } from 'lodash-es'
 import fs from 'fs-extra'
 import resolvePackagePath from 'resolve-package-path'

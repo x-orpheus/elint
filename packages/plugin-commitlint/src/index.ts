@@ -1,7 +1,7 @@
 import type { format, load, lint, read } from '@commitlint/core'
 import type { LintOptions, LintOutcome } from '@commitlint/types'
-import path from 'path'
-import fs from 'fs'
+import path from 'node:path'
+import fs from 'node:fs'
 import {
   ElintPluginType,
   type ElintPlugin,

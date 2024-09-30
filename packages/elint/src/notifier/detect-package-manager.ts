@@ -1,6 +1,6 @@
 import _debug from 'debug'
 import fs from 'fs-extra'
-import path from 'path'
+import path from 'node:path'
 import { findUp } from 'find-up'
 import type { PackageJson } from '../types.js'
 
