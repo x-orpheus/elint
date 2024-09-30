@@ -22,7 +22,11 @@ const elintPluginHusky = defineElintPlugin<null>({
   },
   prepare(ctx) {
     if (husky) {
-      husky(ctx.cwd)
+      const result = husky(ctx.cwd)
+
+      if (result) {
+        throw new Error(result)
+      }
     } else {
       throw new Error('husky is not installed')
     }

@@ -356,6 +356,8 @@ export async function reset({
 
   for (const internalPlugin of internalPlugins) {
     try {
+      debug(`elint plugin ${internalPlugin.name} reset`)
+
       await internalPlugin.plugin.reset?.()
     } catch (e) {
       errorMap[internalPlugin.name] = e
@@ -379,6 +381,8 @@ export async function prepare({
 
   for (const internalPlugin of internalPlugins) {
     try {
+      debug(`elint plugin ${internalPlugin.name} prepare`)
+
       await internalPlugin.plugin.prepare?.({
         cwd,
         presetPath: internalPlugin.path
