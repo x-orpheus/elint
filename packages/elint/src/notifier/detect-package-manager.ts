@@ -2,6 +2,7 @@ import _debug from 'debug'
 import fs from 'fs-extra'
 import path from 'path'
 import { findUp } from 'find-up'
+import type { PackageJson } from '../types.js'
 
 const debug = _debug('elint:notifier:')
 
@@ -32,13 +33,13 @@ async function detectPackageManager(
 
   if (packageJsonPath && fs.existsSync(packageJsonPath)) {
     try {
-      const pkg = fs.readJsonSync(packageJsonPath)
+      const pkg = fs.readJsonSync(packageJsonPath) as PackageJson
       if (typeof pkg.packageManager === 'string') {
         const [name, version] = pkg.packageManager.split('@')
         if (name === 'yarn' && parseInt(version) > 1) {
           packageManager = 'yarn@berry'
         } else if (name in PACKAGE_MANAGERS) {
-          packageManager = name
+          packageManager = name as (typeof PACKAGE_MANAGERS)[number]
         }
       }
     } catch {}

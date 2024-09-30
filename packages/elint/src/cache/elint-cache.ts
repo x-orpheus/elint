@@ -49,9 +49,10 @@ class ElintCache {
       return false
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const cachePresetString: ElintCachePresetString = (fileDescriptor as any)
-      .meta?.presetString
+    const cachePresetString =
+      // eslint-disable-next-line max-len
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+      (fileDescriptor.meta as any)?.presetString as ElintCachePresetString
 
     /* istanbul ignore next */
     if (!cachePresetString) {
@@ -107,7 +108,8 @@ class ElintCache {
       const cachePresetString: ElintCachePresetString =
         ElintCache.getPresetString(internalLoadedPresetAndPlugins)
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line max-len
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
       ;(fileDescriptor as any).meta.presetString = cachePresetString
     }
   }

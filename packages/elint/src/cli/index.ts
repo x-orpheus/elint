@@ -15,17 +15,28 @@ import {
   reset,
   prepare
 } from '../elint.js'
-import type { ElintOptions, ElintResult } from '../types.js'
+import type { ElintOptions, ElintResult, PackageJson } from '../types.js'
 import report from '../utils/report.js'
 import notify from '../notifier/index.js'
 import { getBaseDir } from '../env.js'
+import type {
+  ElintCliInvalidOptions,
+  ElintCliLintOptions,
+  ElintCliPrepareOptions,
+  ElintCliResetOptions
+} from './types.js'
 
-const { description } = createRequire(import.meta.url)('../../package.json')
+const { description } = createRequire(import.meta.url)(
+  '../../package.json'
+) as PackageJson
 const debug = _debug('elint:cli')
 
 debug('process.argv: %o', process.argv)
 
-program.name('elint').usage('[command] [options]').description(description)
+program
+  .name('elint')
+  .usage('[command] [options]')
+  .description(description || '')
 
 /**
  * 执行 lint
@@ -44,100 +55,102 @@ program
   .option('--force-notifier', 'Force check preset updates')
   .option('--git', 'Force use git mode')
   .option('--no-git', 'Disable auto detect git mode')
-  .action(async (type: string, files: string[], options) => {
-    if (!files || !type) {
-      return
-    }
+  .action(
+    async (type: string, files: string[], options: ElintCliLintOptions) => {
+      if (!files || !type) {
+        return
+      }
 
-    const startTime = Date.now()
+      const startTime = Date.now()
 
-    const cwd = getBaseDir()
+      const cwd = getBaseDir()
 
-    debug(`run lint in ${cwd}`)
+      debug(`run lint in ${cwd}`)
 
-    const internalLoadedPresetAndPlugins = await loadPresetAndPlugins({
-      cwd,
-      preset: options.preset
-    })
+      const internalLoadedPresetAndPlugins = await loadPresetAndPlugins({
+        cwd,
+        preset: options.preset
+      })
 
-    let isGit: boolean
+      let isGit: boolean
 
-    if (typeof options.git === 'undefined') {
-      isGit = await isGitHooks()
-    } else {
-      isGit = !!options.git
-    }
+      if (typeof options.git === 'undefined') {
+        isGit = isGitHooks()
+      } else {
+        isGit = !!options.git
+      }
 
-    debug(`is in git: ${isGit}`)
+      debug(`is in git: ${isGit}`)
 
-    const elintOptions: ElintOptions = {
-      fix: options.fix,
-      noIgnore: !options.ignore,
-      git: isGit,
-      internalLoadedPresetAndPlugins,
-      cwd,
-      cache: options.cache,
-      cacheLocation: options.cacheLocation
-    }
+      const elintOptions: ElintOptions = {
+        fix: options.fix,
+        noIgnore: !options.ignore,
+        git: isGit,
+        internalLoadedPresetAndPlugins,
+        cwd,
+        cache: options.cache,
+        cacheLocation: options.cacheLocation
+      }
 
-    try {
-      const results: ElintResult[] = []
+      try {
+        const results: ElintResult[] = []
 
-      if (type === 'commit' || type === 'common') {
-        debug('run common lint...')
-        if (type === 'commit') {
-          const isContainCommitlint =
-            internalLoadedPresetAndPlugins.internalPlugins.some(
-              (plugin) => plugin.name === '@elint/plugin-commitlint'
-            )
+        if (type === 'commit' || type === 'common') {
+          debug('run common lint...')
+          if (type === 'commit') {
+            const isContainCommitlint =
+              internalLoadedPresetAndPlugins.internalPlugins.some(
+                (plugin) => plugin.name === '@elint/plugin-commitlint'
+              )
 
-          if (!isContainCommitlint) {
-            log.warn(
-              `[elint] Current preset does not contain ${chalk.underline(
-                '@elint/plugin-commitlint'
-              )}\n`
-            )
+            if (!isContainCommitlint) {
+              log.warn(
+                `[elint] Current preset does not contain ${chalk.underline(
+                  '@elint/plugin-commitlint'
+                )}\n`
+              )
+            }
           }
+          results.push(await lintCommon(elintOptions))
+        } else {
+          debug('run file lint...')
+
+          const fileList = type === 'file' ? files : [type, ...files]
+
+          results.push(...(await lintFiles(fileList, elintOptions)))
         }
-        results.push(await lintCommon(elintOptions))
-      } else {
-        debug('run file lint...')
 
-        const fileList = type === 'file' ? files : [type, ...files]
+        console.log(report(results))
 
-        results.push(...(await lintFiles(fileList, elintOptions)))
-      }
+        debug(`lint complete in: ${Date.now() - startTime}ms`)
 
-      console.log(report(results))
+        if (!isGit && options.notifier) {
+          debug('start notifier')
 
-      debug(`lint complete in: ${Date.now() - startTime}ms`)
-
-      if (!isGit && options.notifier) {
-        debug('start notifier')
-
-        const notifyMessage = await notify(
-          internalLoadedPresetAndPlugins,
-          cwd,
-          options.forceNotifier
-        )
-        if (notifyMessage) {
-          console.log(notifyMessage)
+          const notifyMessage = await notify(
+            internalLoadedPresetAndPlugins,
+            cwd,
+            options.forceNotifier
+          )
+          if (notifyMessage) {
+            console.log(notifyMessage)
+          }
+        } else {
+          debug('disable notifier')
         }
-      } else {
-        debug('disable notifier')
+
+        const success = !results.some((result) => result.errorCount > 0)
+
+        debug(`elint finished in: ${Date.now() - startTime}ms`)
+
+        process.exit(success ? 0 : 1)
+      } catch (e) {
+        console.log(e)
+
+        process.exit(1)
       }
-
-      const success = !results.some((result) => result.errorCount > 0)
-
-      debug(`elint finished in: ${Date.now() - startTime}ms`)
-
-      process.exit(success ? 0 : 1)
-    } catch (e) {
-      console.log(e)
-
-      process.exit(1)
     }
-  })
+  )
 
 /**
  * prepare preset
@@ -148,7 +161,7 @@ program
   .description('prepare elint preset')
   .option('--preset <presetPath>', 'Preset path')
   .option('--project <projectPath>', 'Project path')
-  .action(async (options) => {
+  .action(async (options: ElintCliPrepareOptions) => {
     debug('prepare elint...')
 
     const cwd = getBaseDir()
@@ -203,7 +216,7 @@ program
   .description('reset plugin cache & elint cache')
   .option('--cache-location <cacheLocation>', 'Cache file location')
   .option('--preset <preset>', 'Set specific preset')
-  .action(async (options) => {
+  .action(async (options: ElintCliResetOptions) => {
     const errorMap = await reset({
       preset: options.preset,
       cacheLocation: options.cacheLocation
@@ -227,7 +240,7 @@ program
 program
   .command('invalid', { isDefault: true, hidden: true })
   .option('-v, --version', 'output the version number')
-  .action(async (options) => {
+  .action(async (options: ElintCliInvalidOptions) => {
     if (options.version) {
       const cwd = getBaseDir()
 

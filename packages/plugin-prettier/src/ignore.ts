@@ -14,13 +14,13 @@ async function readFile(file: string | URL): Promise<undefined | string> {
 
   try {
     return await fs.readFile(file, 'utf8')
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
+  } catch (error) {
+    const nodeError = error as NodeJS.ErrnoException
+    if (nodeError.code === 'ENOENT') {
       return
     }
 
-    throw new Error(`Unable to read '${file}': ${error.message}`)
+    throw new Error(`Unable to read '${file.toString()}': ${nodeError.message}`)
   }
 }
 
@@ -84,7 +84,6 @@ async function createIsIgnoredFunction(
     )
   ).filter(Boolean)
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return (file) => isIgnoredFunctions.some((isIgnored) => isIgnored!(file))
 }
 

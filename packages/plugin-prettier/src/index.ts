@@ -11,6 +11,12 @@ import { createIsIgnoredFunction } from './ignore.js'
 
 let prettier: typeof prettierNamespace
 
+interface Prettier2Internal {
+  createIgnorer: {
+    sync(ignorePath: string): { ignores: (filePath: string) => boolean }
+  }
+}
+
 type IsIgnored = (filePath: string) => boolean
 
 const isIgnoredMap = new Map<string, IsIgnored>()
@@ -19,8 +25,9 @@ const getIsIgnored = async (cwd: string) => {
   let isIgnored = isIgnoredMap.get(cwd)
 
   if (!isIgnored) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const prettierInternal = (prettier as any).__internal
+    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+    const prettierInternal: Prettier2Internal = (prettier as any).__internal
 
     if (prettierInternal && prettierInternal.createIgnorer) {
       // v2
@@ -62,9 +69,8 @@ const getOptionsForFile = async (filePath: string) => {
 }
 
 // prettier cli 的错误处理
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handlePrettierError = (error: any) => {
-  const isParseError = Boolean(error && error.loc)
+const handlePrettierError = (error: unknown) => {
+  const isParseError = Boolean(error && (error as { loc: number }).loc)
 
   if (isParseError) {
     return String(error)
@@ -106,9 +112,11 @@ const elintPluginPrettier: ElintPlugin<never> = {
     ]
   },
   async load(ctx, importFromPreset) {
-    const prettierModule = await importFromPreset('prettier')
+    const prettierModule = await importFromPreset<{
+      default: typeof prettierNamespace
+    }>('prettier')
 
-    prettier = prettierModule.default || prettierModule
+    prettier = prettierModule.default
   },
   async execute(text, { cwd, filePath }) {
     const { format } = prettier

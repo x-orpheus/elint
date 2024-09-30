@@ -63,11 +63,11 @@ function logCreator(type?: LogType): LogFunction {
 
     message.forEach((item, index) => {
       if (index === 0) {
-        output.push(`  ${icon} ${item}`)
+        output.push(`  ${icon} ${item as string}`)
         return
       }
 
-      output.push(`    ${item}`)
+      output.push(`    ${item as string}`)
     })
 
     output.push('')

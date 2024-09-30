@@ -43,9 +43,10 @@ const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
     }
   },
   async load(ctx, importFromPreset) {
-    const commitlintModule = await importFromPreset('@commitlint/core')
+    const commitlintModule =
+      await importFromPreset<CommitlintNamespace>('@commitlint/core')
 
-    commitlint = commitlintModule.default || commitlintModule
+    commitlint = commitlintModule
   },
   async execute(_, { cwd }) {
     const { format, load, lint, read } = commitlint

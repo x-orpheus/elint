@@ -36,15 +36,17 @@ export default tseslint.config(
       '@typescript-eslint/consistent-type-imports': [
         'error',
         { prefer: 'type-imports' }
-      ]
+      ],
+      '@typescript-eslint/no-unsafe-enum-comparison': 'off'
     }
   },
   {
     ignores: [
+      '**/elint-preset-self/',
       '**/test/unit/test-project/',
       '**/test/system/test-project/',
       '**/test/system/test-preset/',
-      'dist'
+      '**/dist/'
     ]
   }
 )

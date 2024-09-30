@@ -4,7 +4,7 @@ import fs from 'fs-extra'
 import _debug from 'debug'
 import resolvePackagePath from 'resolve-package-path'
 import { cloneDeep } from 'lodash-es'
-import type { ElintContext } from '../types.js'
+import type { ElintContext, PackageJson } from '../types.js'
 import {
   type ElintPreset,
   type InternalPreset,
@@ -27,7 +27,7 @@ export const loadElintPreset = async (
     const presetPath = require.resolve(preset)
 
     let presetPackagePath: string | undefined
-    let presetPackageJson: { name: string; version: string } | undefined
+    let presetPackageJson: PackageJson | undefined
 
     try {
       const presetPackageJsonPath = resolvePackagePath(preset, cwd)
@@ -35,17 +35,21 @@ export const loadElintPreset = async (
       if (presetPackageJsonPath) {
         presetPackagePath = path.dirname(presetPackageJsonPath)
 
-        presetPackageJson = fs.readJsonSync(presetPackageJsonPath)
+        presetPackageJson = fs.readJsonSync(
+          presetPackageJsonPath
+        ) as PackageJson
       }
     } catch {
       /* istanbul ignore next */
       debug(`Preset ${preset} doesn't have a package.json`)
     }
 
-    const presetModule = await importFromPath(preset, cwd)
+    const presetModule = await importFromPath<{ default: ElintPreset }>(
+      preset,
+      cwd
+    )
 
-    /* istanbul ignore next */
-    const presetConfig = presetModule.default || presetModule
+    const presetConfig = presetModule.default
 
     if (!isElintPreset(presetConfig)) {
       throw new Error(`'${preset}' is not an available elint preset`)

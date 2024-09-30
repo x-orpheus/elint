@@ -26,7 +26,8 @@ const conf = new Configstore('elint')
  * @returns 上次检测时间
  */
 export function getLastNotifyTime(presetName: string): number {
-  const lastNotifyTime: number = conf.get(`notifier.${presetName}`) || 0
+  const lastNotifyTime: number =
+    (conf.get(`notifier.${presetName}`) as number) || 0
 
   debug(`get last notify time: ${lastNotifyTime}`)
 

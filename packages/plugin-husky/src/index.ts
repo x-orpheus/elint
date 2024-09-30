@@ -14,18 +14,20 @@ const elintPluginHusky = defineElintPlugin<null>({
     }
   },
   async load(ctx, importFromPreset) {
-    const huskyModule = await importFromPreset('husky')
+    const huskyModule = await importFromPreset<{ default: typeof Husky }>(
+      'husky'
+    )
 
-    husky = huskyModule.default || huskyModule
+    husky = huskyModule.default
   },
-  async prepare(ctx) {
+  prepare(ctx) {
     if (husky) {
       husky(ctx.cwd)
     } else {
       throw new Error('husky is not installed')
     }
   },
-  async execute(text) {
+  execute(text) {
     return {
       source: text,
       output: text,

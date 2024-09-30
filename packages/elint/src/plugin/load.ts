@@ -21,7 +21,9 @@ const loadElintPlugin = async (
   if (typeof plugin === 'string') {
     debug(`start load plugin: ${plugin}`)
 
-    const pluginModule = await importFromPath(plugin, presetPath || cwd)
+    const pluginModule = await importFromPath<{
+      default: ElintPlugin<unknown>
+    }>(plugin, presetPath || cwd)
 
     let pluginPackagePath: string | undefined
 
@@ -39,8 +41,7 @@ const loadElintPlugin = async (
       debug(`Plugin ${plugin} doesn't have a package.json`)
     }
 
-    /* istanbul ignore next */
-    const pluginConfig = pluginModule.default || pluginModule
+    const pluginConfig = pluginModule.default
 
     if (!isElintPlugin(pluginConfig) || pluginConfig.name !== plugin) {
       throw new Error(`'${plugin}' is not an available elint plugin`)

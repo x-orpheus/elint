@@ -69,10 +69,11 @@ async function getPackageInfo(
       })
     ])
 
-    let info: PackageInfo = JSON.parse(stdout)
+    let info: PackageInfo = JSON.parse(stdout) as PackageInfo
 
     if (packageManager === 'yarn') {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line max-len
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
       info = (info as any).data
     }
 

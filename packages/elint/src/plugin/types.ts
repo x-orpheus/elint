@@ -108,18 +108,6 @@ export interface ElintPlugin<Result> {
    */
   configFiles?: string[]
   /**
-   * 准备操作
-   *
-   * 此函数仅在执行 elint prepare 时被调用，一般用于做一些准备操作，不会在插件执行前调用
-   *
-   * 例如 husky 插件会在这一步来安装 husky 自己
-   */
-  prepare?: (
-    ctx: ElintContext,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    importFromPreset: (id: string) => Promise<any>
-  ) => Promise<void>
-  /**
    * 加载函数，用于加载依赖
    *
    * 此函数会在所有插件行为前调用，也可以做一些初始化操作
@@ -131,8 +119,16 @@ export interface ElintPlugin<Result> {
   load?(
     ctx: ElintContext,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    importFromPreset: (id: string) => Promise<any>
-  ): Promise<void>
+    importFromPreset: <T = any>(id: string) => Promise<T>
+  ): Promise<void> | void
+  /**
+   * 准备操作
+   *
+   * 此函数仅在执行 elint prepare 时被调用，一般用于做一些准备操作，不会在插件执行前调用
+   *
+   * 例如 husky 插件会在这一步来安装 husky 自己
+   */
+  prepare?: (ctx: ElintContext) => Promise<void> | void
   /**
    * 执行函数
    *
@@ -141,13 +137,13 @@ export interface ElintPlugin<Result> {
   execute(
     text: string,
     options: ElintPluginOptions
-  ): Promise<ElintPluginResult<Result>>
+  ): Promise<ElintPluginResult<Result>> | ElintPluginResult<Result>
   /**
    * 重置操作（例如清理配置缓存）
    *
    * 此函数仅在执行 elint reset 时被调用，不会在插件执行时调用
    */
-  reset?(): void | Promise<void>
+  reset?(): Promise<void> | void
 }
 
 export interface ElintPluginResultWithPluginData<Result>

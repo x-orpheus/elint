@@ -15,7 +15,7 @@ const formatChecker: ElintPlugin<never> = {
       return !isBinary
     }
   },
-  async execute(text, { fix, source, filePath }) {
+  execute(text, { fix, source, filePath }) {
     // fix 模式下的代码必然通过格式检查
     const isModified = !fix && text !== source
 

@@ -3,6 +3,7 @@ import { padEnd, fill } from 'lodash-es'
 import fs from 'fs-extra'
 import resolvePackagePath from 'resolve-package-path'
 import { loadPresetAndPlugins } from '../elint.js'
+import type { PackageJson } from '../types.js'
 
 const { findUpPackagePath } = resolvePackagePath
 
@@ -19,6 +20,8 @@ interface ElintPluginVersion {
   }
 }
 
+type VersionMap = Record<string, string | ElintPluginVersion>
+
 function printVersionBlock({
   blockName,
   versionMap,
@@ -26,7 +29,7 @@ function printVersionBlock({
   parentLength = 0
 }: {
   blockName?: string
-  versionMap: Record<string, string | ElintPluginVersion>
+  versionMap: VersionMap
   indent?: number
   parentLength?: number
 }): string[] {
@@ -78,14 +81,14 @@ async function version(cwd: string): Promise<void> {
 
   const require = createRequire(import.meta.url)
 
-  const { version: elintVersion } = require('../../package.json')
+  const { version: elintVersion } = require('../../package.json') as PackageJson
 
-  const main: Record<string, ElintPluginVersion> = {
+  const main: VersionMap = {
     elint: elintVersion
   }
 
-  const presetVersionMap: Record<string, string> = {}
-  const pluginVersionMap: Record<string, ElintPluginVersion> = {}
+  const presetVersionMap: VersionMap = {}
+  const pluginVersionMap: VersionMap = {}
 
   presetVersionMap[internalPreset.name] = internalPreset.version
 
@@ -95,7 +98,9 @@ async function version(cwd: string): Promise<void> {
       const pluginPackageJsonPath = findUpPackagePath(pluginPath)
 
       if (pluginPackageJsonPath) {
-        const pluginPackageJson = fs.readJsonSync(pluginPackageJsonPath)
+        const pluginPackageJson = fs.readJsonSync(
+          pluginPackageJsonPath
+        ) as PackageJson
 
         const versionConfig: ElintPluginVersion = {
           version: pluginPackageJson.version,
@@ -112,7 +117,7 @@ async function version(cwd: string): Promise<void> {
               if (dependencyPackageJsonPath) {
                 const dependencyPackageJson = fs.readJsonSync(
                   dependencyPackageJsonPath
-                )
+                ) as PackageJson
                 versionConfig.dependencies[dependencyName] =
                   dependencyPackageJson.version
               }

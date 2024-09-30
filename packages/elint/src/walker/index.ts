@@ -26,7 +26,7 @@ async function walker(
   patterns: string[],
   options: WalkerOptions
 ): Promise<FileItem[]> {
-  debug(`input glob patterns: ${patterns}`)
+  debug(`input glob patterns: ${patterns.join(', ')}`)
   debug('input options: %o', options)
 
   if (!patterns || (Array.isArray(patterns) && !patterns.length)) {

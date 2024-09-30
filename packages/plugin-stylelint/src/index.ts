@@ -29,9 +29,11 @@ const elintPluginStylelint: ElintPlugin<LinterResult> = {
     extensions: ['.less', '.sass', '.scss', '.css']
   },
   async load(ctx, importFromPreset) {
-    const stylelintModule = await importFromPreset('stylelint')
+    const stylelintModule = await importFromPreset<{
+      default: typeof stylelintNamespace
+    }>('stylelint')
 
-    stylelint = stylelintModule.default || stylelintModule
+    stylelint = stylelintModule.default
   },
   async execute(text, { fix, cwd, filePath }) {
     const { lint, formatters } = stylelint

@@ -4,6 +4,14 @@ import type {
 } from './plugin/types.js'
 import type { ElintPreset, InternalPreset } from './preset/types.js'
 
+export interface PackageJson {
+  name: string
+  version: string
+  description?: string
+  packageManager?: string
+  peerDependencies?: Record<string, string>
+}
+
 /**
  * elint 基础结果结构
  */

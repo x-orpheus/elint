@@ -22,7 +22,6 @@ import log from './utils/log.js'
 import { getElintCache, resetElintCache } from './cache/index.js'
 import formatChecker from './plugin/built-in/format-checker.js'
 import { PRESET_PATTERN } from './config.js'
-import importFromPath from './utils/import-from-path.js'
 
 const debug = _debug('elint:main')
 
@@ -55,7 +54,9 @@ export async function loadPresetAndPlugins({
   let internalPreset: InternalPreset
 
   if (preset) {
-    debug(`start load preset: ${preset}`)
+    debug(
+      `start load preset: ${typeof preset === 'string' ? preset : 'local preset'}`
+    )
 
     internalPreset = await loadElintPreset(preset, { cwd })
   } else {
@@ -370,21 +371,18 @@ export async function prepare({
   cwd = getBaseDir(),
   internalLoadedPresetAndPlugins
 }: ElintOptions = {}): Promise<Record<string, unknown>> {
-  const { internalPlugins, internalPreset } =
+  const { internalPlugins } =
     internalLoadedPresetAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))
-
-  const importFromPreset = (id: string) =>
-    importFromPath(id, internalPreset.path || cwd)
 
   const errorMap: Record<string, unknown> = {}
 
   for (const internalPlugin of internalPlugins) {
     try {
-      await internalPlugin.plugin.prepare?.(
-        { cwd, presetPath: internalPlugin.path },
-        importFromPreset
-      )
+      await internalPlugin.plugin.prepare?.({
+        cwd,
+        presetPath: internalPlugin.path
+      })
     } catch (e) {
       errorMap[internalPlugin.name] = e
       debug(`elint plugin ${internalPlugin.name} prepare error %o`, e)
