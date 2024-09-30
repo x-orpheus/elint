@@ -11,10 +11,9 @@ dist
 verdaccio/
 
 /.husky
-/.eslintrc.js
-/.eslintignore
 /.prettierrc.js
 /.prettierignore
 /.commitlintrc.js
 /.stylelintrc.js
 /.stylelintignore
+/eslint.config.mjs

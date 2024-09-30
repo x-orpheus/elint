@@ -3,21 +3,26 @@
   "main": "index.js",
   "version": "0.0.1",
   "private": true,
+  "exports": {
+    ".": "./index.js",
+    "./eslint": "./configs/eslint.mjs"
+  },
   "dependencies": {
-    "@commitlint/core": "^17.5.1",
+    "@commitlint/core": "^19.5.0",
     "@elint/plugin-commitlint": "workspace:*",
     "@elint/plugin-eslint": "workspace:*",
+    "@elint/plugin-husky": "workspace:*",
     "@elint/plugin-prettier": "workspace:*",
     "@elint/plugin-stylelint": "workspace:*",
-    "@typescript-eslint/eslint-plugin": "^5.59.0",
-    "@typescript-eslint/parser": "^5.59.0",
-    "eslint": "^8.39.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-n": "^15.7.0",
-    "eslint-plugin-promise": "^6.1.1",
-    "prettier": "^2.8.7",
-    "stylelint": "^15.6.0"
+    "@eslint/eslintrc": "^3.1.0",
+    "eslint": "^9.11.1",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.30.0",
+    "eslint-plugin-n": "^17.10.3",
+    "eslint-plugin-promise": "^7.1.0",
+    "prettier": "^3.3.3",
+    "stylelint": "^16.9.0",
+    "typescript-eslint": "^8.7.0"
   },
   "devDependencies": {
     "typescript": "^5.6.2"
