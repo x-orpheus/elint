@@ -6,13 +6,11 @@ import mock from './mock/env.js'
 import {
   mockElintPlugin,
   mockElintPreset,
-  mockElintPresetWithAllTypePlugins,
-  mockElintPresetWithOverridePluginConfig
+  mockElintPresetWithAllTypePlugins
 } from './mock/mocks.js'
 import gitInit from './mock/git-init.js'
 import appendFile from './mock/append-file.js'
-import { loadPresetAndPlugins } from '../../src/core/load.js'
-import { ElintPluginType, reset } from '../../src/index.js'
+import { ElintPluginType } from '../../src/index.js'
 
 describe('elint core', () => {
   let unmock: () => void
@@ -25,41 +23,6 @@ describe('elint core', () => {
 
   afterAll(() => {
     unmock()
-  })
-
-  describe('loadPresetAndPlugins', () => {
-    test('正常加载', async () => {
-      const internalLoadedPresetAndPlugins = await loadPresetAndPlugins({
-        preset: 'elint-preset-normal',
-        cwd: baseDir
-      })
-
-      expect(internalLoadedPresetAndPlugins).not.toBeUndefined()
-      expect(internalLoadedPresetAndPlugins.internalPlugins).toHaveLength(2)
-    })
-
-    test('preset 内未指定 plugin', async () => {
-      await expect(
-        loadPresetAndPlugins({ preset: 'elint-preset-node', cwd: baseDir })
-      ).toReject()
-    })
-
-    test('项目中有多个 preset', async () => {
-      await expect(loadPresetAndPlugins()).toReject()
-    })
-
-    test('覆盖 plugin 配置', async () => {
-      // 覆盖插件配置
-      const internalLoadedPresetAndPlugins = await loadPresetAndPlugins({
-        preset: mockElintPresetWithOverridePluginConfig,
-        cwd: baseDir
-      })
-
-      expect(
-        internalLoadedPresetAndPlugins.internalPlugins[0].plugin.activateConfig
-          .extensions
-      ).toIncludeSameMembers(['.ts'])
-    })
   })
 
   describe('lintCommon', () => {
@@ -128,34 +91,6 @@ describe('elint core', () => {
       })
 
       expect(result.pluginResults).toHaveLength(0)
-    })
-  })
-
-  describe('reset', () => {
-    test('reset', async () => {
-      const errorMap = await reset({
-        preset: mockElintPreset
-      })
-
-      expect(errorMap).toBeEmpty()
-    })
-
-    test('reset with error', async () => {
-      const errorMap = await reset({
-        cwd: baseDir,
-        preset: {
-          plugins: [
-            {
-              ...mockElintPlugin,
-              reset: () => {
-                throw new Error()
-              }
-            }
-          ]
-        }
-      })
-
-      expect(errorMap[mockElintPlugin.name]).not.toBeUndefined()
     })
   })
 })

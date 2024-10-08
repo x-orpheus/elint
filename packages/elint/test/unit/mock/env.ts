@@ -23,7 +23,7 @@ function mock() {
   fs.copySync(testProjectDir, tempDir)
 
   /**
-   * moch env.js baseDir
+   * mock env.js baseDir
    */
   process.env.INIT_CWD = tempDir
 

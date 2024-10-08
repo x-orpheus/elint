@@ -37,7 +37,7 @@ export async function lintCommon({
     ({ plugin }) => plugin.type <= 0
   )
 
-  for (const { plugin: commonPlugin } of commonInternalPlugins || []) {
+  for (const { plugin: commonPlugin } of commonInternalPlugins) {
     await executeElintPlugin(elintResult, commonPlugin, {
       fix,
       cwd,
@@ -86,7 +86,7 @@ export async function lintText(
     ({ plugin }) => plugin.type > 0
   )
 
-  for (const { plugin } of textInternalPlugins || []) {
+  for (const { plugin } of textInternalPlugins) {
     await executeElintPlugin(elintResult, plugin, pluginOptions)
 
     if (plugin.needFormatChecker || plugin.type === ElintPluginType.Formatter) {

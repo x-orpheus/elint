@@ -1,16 +1,17 @@
 import {
-  ElintPluginType,
-  type ElintPlugin,
-  type ElintPreset
+  defineElintPlugin,
+  defineElintPreset,
+  ElintPluginType
 } from '../../../src/index.js'
 
-export const mockElintPlugin: ElintPlugin<unknown> = {
+export const mockElintPlugin = defineElintPlugin<unknown>({
   name: 'elint-plugin-mock',
   title: 'mock',
   type: ElintPluginType.Linter,
   activateConfig: {
     extensions: ['.js']
   },
+  prepare() {},
   execute(text) {
     return {
       errorCount: 0,
@@ -22,13 +23,13 @@ export const mockElintPlugin: ElintPlugin<unknown> = {
   reset() {
     // empty
   }
-}
+})
 
-export const mockElintPreset: ElintPreset = {
+export const mockElintPreset = defineElintPreset({
   plugins: [mockElintPlugin]
-}
+})
 
-export const mockElintPresetWithOverridePluginConfig: ElintPreset = {
+export const mockElintPresetWithOverridePluginConfig = defineElintPreset({
   plugins: [mockElintPlugin],
   overridePluginConfig: {
     'elint-plugin-mock': {
@@ -37,9 +38,9 @@ export const mockElintPresetWithOverridePluginConfig: ElintPreset = {
       }
     }
   }
-}
+})
 
-export const mockElintPresetWithAllTypePlugins: ElintPreset = {
+export const mockElintPresetWithAllTypePlugins = defineElintPreset({
   plugins: [
     {
       ...mockElintPlugin,
@@ -60,4 +61,4 @@ export const mockElintPresetWithAllTypePlugins: ElintPreset = {
       type: ElintPluginType.Common
     }
   ]
-}
+})

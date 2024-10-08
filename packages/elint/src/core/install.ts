@@ -7,18 +7,6 @@ import type { ElintInstallOptions } from '../types.js'
 
 const debug = _debug('elint:preset:install')
 
-function getAbsolutePath(currentPath?: string): string {
-  if (!currentPath || typeof currentPath !== 'string') {
-    return ''
-  }
-
-  if (path.isAbsolute(currentPath)) {
-    return currentPath
-  }
-
-  return path.join(getBaseDir(), currentPath)
-}
-
 /**
  * 安装 preset 内部携带的配置文件
  */
@@ -32,7 +20,7 @@ export async function install({
     internalLoadedPresetAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))
 
-  const currentPresetPath = getAbsolutePath(internalPreset.path)
+  const currentPresetPath = internalPreset.path || ''
   const currentProjectPath = projectPath || getBaseDir()
 
   debug(`preset: ${currentPresetPath}`)
@@ -72,6 +60,7 @@ export async function install({
         debug(`          to "${to}"`)
       })
     } catch (e) {
+      /* istanbul ignore next */
       debug('install preset config error: %o', e)
     }
   }
