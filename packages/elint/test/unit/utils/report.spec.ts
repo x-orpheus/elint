@@ -2,6 +2,7 @@ import chalk from 'chalk'
 import figures from 'figures'
 import type { ElintResult } from '../../../src/types.js'
 import report from '../../../src/utils/report.js'
+import { ElintPluginType } from '../../../src/index.js'
 
 describe('report 测试', () => {
   test('结果合并', () => {
@@ -11,6 +12,9 @@ describe('report 测试', () => {
         output: '',
         errorCount: 0,
         warningCount: 0,
+        isBinary: false,
+        filePath: '',
+        fromCache: false,
         pluginResults: [
           {
             errorCount: 0,
@@ -21,7 +25,7 @@ describe('report 测试', () => {
             pluginData: {
               name: 'test',
               title: 'name',
-              type: 'linter'
+              type: ElintPluginType.Linter
             }
           },
           {
@@ -33,7 +37,7 @@ describe('report 测试', () => {
             pluginData: {
               name: 'test',
               title: 'name2',
-              type: 'linter'
+              type: ElintPluginType.Linter
             }
           }
         ]
@@ -43,6 +47,9 @@ describe('report 测试', () => {
         output: '',
         errorCount: 0,
         warningCount: 0,
+        isBinary: false,
+        filePath: '',
+        fromCache: false,
         pluginResults: [
           {
             errorCount: 0,
@@ -53,7 +60,7 @@ describe('report 测试', () => {
             pluginData: {
               name: 'test',
               title: 'name',
-              type: 'linter'
+              type: ElintPluginType.Linter
             }
           }
         ]
@@ -91,6 +98,9 @@ describe('report 测试', () => {
         output: '',
         errorCount: 0,
         warningCount: 0,
+        isBinary: false,
+        filePath: '',
+        fromCache: false,
         pluginResults: []
       },
       {
@@ -98,6 +108,9 @@ describe('report 测试', () => {
         output: '',
         errorCount: 0,
         warningCount: 0,
+        isBinary: false,
+        filePath: '',
+        fromCache: false,
         pluginResults: []
       }
     ]
@@ -121,6 +134,9 @@ describe('report 测试', () => {
         output: '',
         errorCount: 0,
         warningCount: 2,
+        isBinary: false,
+        filePath: '',
+        fromCache: false,
         pluginResults: [
           {
             errorCount: 0,
@@ -131,7 +147,7 @@ describe('report 测试', () => {
             pluginData: {
               name: 'test',
               title: 'name',
-              type: 'linter'
+              type: ElintPluginType.Linter
             }
           }
         ]
@@ -163,6 +179,9 @@ describe('report 测试', () => {
         output: '',
         errorCount: 1,
         warningCount: 2,
+        isBinary: false,
+        filePath: '',
+        fromCache: false,
         pluginResults: [
           {
             errorCount: 1,
@@ -173,7 +192,7 @@ describe('report 测试', () => {
             pluginData: {
               name: 'test',
               title: 'name',
-              type: 'linter'
+              type: ElintPluginType.Linter
             }
           }
         ]

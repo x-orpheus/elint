@@ -1,13 +1,17 @@
-import type { ElintPlugin, ElintPreset } from '../../../src/index.js'
+import {
+  ElintPluginType,
+  type ElintPlugin,
+  type ElintPreset
+} from '../../../src/index.js'
 
 export const mockElintPlugin: ElintPlugin<unknown> = {
   name: 'elint-plugin-mock',
   title: 'mock',
-  type: 'linter',
+  type: ElintPluginType.Linter,
   activateConfig: {
     extensions: ['.js']
   },
-  async execute(text) {
+  execute(text) {
     return {
       errorCount: 0,
       warningCount: 0,
@@ -41,19 +45,19 @@ export const mockElintPresetWithAllTypePlugins: ElintPreset = {
       ...mockElintPlugin,
       name: 'elint-plugin-mock-formatter',
       title: 'mock-formatter',
-      type: 'formatter'
+      type: ElintPluginType.Formatter
     },
     {
       ...mockElintPlugin,
       name: 'elint-plugin-mock-linter',
       title: 'mock-linter',
-      type: 'linter'
+      type: ElintPluginType.Linter
     },
     {
       ...mockElintPlugin,
       name: 'elint-plugin-mock-common',
       title: 'mock-common',
-      type: 'common'
+      type: ElintPluginType.Common
     }
   ]
 }

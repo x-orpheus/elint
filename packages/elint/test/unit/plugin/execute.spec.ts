@@ -4,13 +4,17 @@ import type {
 } from '../../../src/plugin/types.js'
 import { loadElintPlugins } from '../../../src/plugin/load.js'
 import { executeElintPlugin } from '../../../src/plugin/execute.js'
-import { createElintResult } from '../../../src/elint.js'
 import { getBaseDir } from '../../../src/env.js'
 import mock from '../mock/env.js'
+import { createElintResult } from '../../../src/core/result.js'
+
+interface TestJson {
+  active: boolean
+}
 
 const activateConfigFunction: ElintPluginActivateConfig = {
   activate: ({ source }) => {
-    const value = JSON.parse(source)
+    const value = JSON.parse(source) as TestJson
 
     return value.active || false
   }

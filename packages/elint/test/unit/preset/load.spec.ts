@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'node:path'
 import mock from '../mock/env.js'
 import { getBaseDir } from '../../../src/env.js'
 import {

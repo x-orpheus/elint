@@ -1,5 +1,5 @@
 import fs from 'fs-extra'
-import path from 'path'
+import path from 'node:path'
 import mock from '../mock/env.js'
 import gitInit from '../mock/git-init.js'
 import getStagedFileContent from '../../../src/utils/get-staged-file-content.js'

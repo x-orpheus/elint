@@ -3,11 +3,11 @@ import { getElintCache } from '../../../src/cache/index.js'
 import ELintCache, {
   type ElintCacheOptions
 } from '../../../src/cache/elint-cache.js'
-import { loadPresetAndPlugins } from '../../../src/elint.js'
 import type { InternalLoadedPresetAndPlugins } from '../../../src/types.js'
 import { getBaseDir } from '../../../src/env.js'
 import { mockElintPreset } from '../mock/mocks.js'
-import path from 'path'
+import path from 'node:path'
+import { loadPresetAndPlugins } from '../../../src/core/load.js'
 
 describe('测试 elint cache 功能', () => {
   let unmock: () => void
@@ -33,7 +33,7 @@ describe('测试 elint cache 功能', () => {
     )
   })
 
-  test('测试无缓存状态', async () => {
+  test('测试无缓存状态', () => {
     const elintCache = getElintCache({ cwd: baseDir })
 
     const elintCacheOptions: ElintCacheOptions = {
@@ -73,6 +73,8 @@ describe('测试 elint cache 功能', () => {
         filePath,
         errorCount: 0,
         warningCount: 0,
+        isBinary: false,
+        fromCache: false,
         source: '',
         output: '',
         pluginResults: []
@@ -107,6 +109,8 @@ describe('测试 elint cache 功能', () => {
         filePath,
         errorCount: 0,
         warningCount: 0,
+        isBinary: false,
+        fromCache: false,
         source: '',
         output: '',
         pluginResults: []

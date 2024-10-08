@@ -1,12 +1,6 @@
-import path from 'path'
+import path from 'node:path'
 import fs from 'fs-extra'
-import {
-  lintCommon,
-  loadPresetAndPlugins,
-  reset,
-  lintText,
-  lintFiles
-} from '../../src/elint.js'
+import { lintCommon, lintText, lintFiles } from '../../src/elint.js'
 import { getBaseDir } from '../../src/env.js'
 import mock from './mock/env.js'
 import {
@@ -17,6 +11,8 @@ import {
 } from './mock/mocks.js'
 import gitInit from './mock/git-init.js'
 import appendFile from './mock/append-file.js'
+import { loadPresetAndPlugins } from '../../src/core/load.js'
+import { ElintPluginType, reset } from '../../src/index.js'
 
 describe('elint core', () => {
   let unmock: () => void
@@ -74,7 +70,9 @@ describe('elint core', () => {
       })
 
       expect(result.pluginResults).toHaveLength(1)
-      expect(result.pluginResults[0].pluginData.type).toBe('common')
+      expect(result.pluginResults[0].pluginData.type).toBe(
+        ElintPluginType.Common
+      )
     })
 
     test('无 common 类型插件', async () => {
@@ -95,7 +93,11 @@ describe('elint core', () => {
 
       expect(
         result.pluginResults.map((result) => result.pluginData.type)
-      ).toStrictEqual(['formatter', 'linter', 'linter'])
+      ).toStrictEqual([
+        ElintPluginType.Linter,
+        ElintPluginType.Formatter,
+        ElintPluginType.Formatter
+      ])
     })
 
     test('没有 formatter 时不检查格式', async () => {
@@ -109,7 +111,7 @@ describe('elint core', () => {
 
       expect(
         result.pluginResults.map((result) => result.pluginData.type)
-      ).toStrictEqual(['linter'])
+      ).toStrictEqual([ElintPluginType.Linter])
     })
 
     test('无 linter 或 formatter 检测', async () => {
@@ -117,7 +119,9 @@ describe('elint core', () => {
         preset: {
           ...mockElintPresetWithAllTypePlugins,
           plugins: mockElintPresetWithAllTypePlugins.plugins.filter((plugin) =>
-            typeof plugin === 'string' ? true : plugin.type === 'common'
+            typeof plugin === 'string'
+              ? true
+              : plugin.type === ElintPluginType.Common
           )
         },
         cwd: baseDir
@@ -227,7 +231,7 @@ describe('lintFiles', () => {
           {
             ...mockElintPlugin,
             name: 'elint-plugin-mock-custom',
-            async execute(text) {
+            execute(text) {
               return {
                 errorCount: 0,
                 warningCount: 0,
@@ -277,7 +281,7 @@ describe('lintFiles', () => {
 
     await gitInit()
 
-    appendFile(['src/a.js'])
+    await appendFile(['src/a.js'])
 
     const resultWithCache = await lintFiles(['src/a.js'], {
       cwd: baseDir,

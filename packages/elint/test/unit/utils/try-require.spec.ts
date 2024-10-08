@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'node:path'
 import fs from 'fs-extra'
 import mock from '../mock/env.js'
 import tryRequire from '../../../src/utils/try-require.js'
