@@ -5,7 +5,12 @@ import walker from './walker/index.js'
 import { executeElintPlugin } from './plugin/execute.js'
 import { ElintPluginType, type ElintPluginOptions } from './plugin/types.js'
 import { getBaseDir } from './env.js'
-import type { ElintBasicOptions, ElintOptions, ElintResult } from './types.js'
+import type {
+  ElintBasicOptions,
+  ElintLintTextOptions,
+  ElintOptions,
+  ElintResult
+} from './types.js'
 import { getElintCache } from './cache/index.js'
 import formatChecker from './plugin/built-in/format-checker.js'
 import { createElintResult } from './core/result.js'
@@ -46,13 +51,14 @@ export async function lintCommon({
 
 export async function lintText(
   text: string,
-  { filePath, isBinary }: { filePath: string; isBinary: boolean },
   {
+    filePath,
+    isBinary,
     fix = false,
     preset,
     cwd = getBaseDir(),
     internalLoadedPresetAndPlugins
-  }: ElintBasicOptions = {}
+  }: ElintLintTextOptions = {}
 ): Promise<ElintResult> {
   debug(`┌─ lint text ${filePath ? `(${filePath})` : ''} start`)
   const elintResult = createElintResult({
@@ -188,18 +194,13 @@ export async function lintFiles(
         }
       }
 
-      elintResult = await lintText(
-        elintResult.source,
-        {
-          filePath: elintResult.filePath,
-          isBinary
-        },
-        {
-          fix,
-          cwd,
-          internalLoadedPresetAndPlugins: currentInternalLoadedPresetAndPlugins
-        }
-      )
+      elintResult = await lintText(elintResult.source, {
+        filePath: elintResult.filePath,
+        isBinary,
+        fix,
+        cwd,
+        internalLoadedPresetAndPlugins: currentInternalLoadedPresetAndPlugins
+      })
 
       const isModified = elintResult.output !== elintResult.source
 

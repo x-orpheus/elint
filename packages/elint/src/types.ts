@@ -84,6 +84,11 @@ export interface ElintBasicOptions {
   internalLoadedPresetAndPlugins?: InternalLoadedPresetAndPlugins
 }
 
+export interface ElintLintTextOptions extends ElintBasicOptions {
+  filePath?: string
+  isBinary?: boolean
+}
+
 export interface ElintOptions extends ElintBasicOptions {
   /**
    * 是否将自动修复写入文件
