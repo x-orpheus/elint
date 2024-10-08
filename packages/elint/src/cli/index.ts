@@ -179,7 +179,7 @@ program
       log.info(`[elint] preset ${preset.internalPreset.name} preparing`)
 
       const installErrorMap = await install({
-        presetPath: preset.internalPreset.path,
+        internalLoadedPresetAndPlugins: preset,
         projectPath
       })
 

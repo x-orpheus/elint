@@ -1,6 +1,6 @@
 import _debug from 'debug'
 import { getBaseDir } from '../env.js'
-import type { ElintOptions } from '../types.js'
+import type { ElintBasicOptions } from '../types.js'
 import { loadPresetAndPlugins } from './load.js'
 
 const debug = _debug('elint:core:prepare')
@@ -9,7 +9,7 @@ export async function prepare({
   preset,
   cwd = getBaseDir(),
   internalLoadedPresetAndPlugins
-}: ElintOptions = {}): Promise<Record<string, unknown>> {
+}: ElintBasicOptions = {}): Promise<Record<string, unknown>> {
   const { internalPlugins } =
     internalLoadedPresetAndPlugins ||
     (await loadPresetAndPlugins({ preset, cwd }))

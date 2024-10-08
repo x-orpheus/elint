@@ -1,7 +1,6 @@
 import path from 'node:path'
 import fs from 'fs-extra'
 import _debug from 'debug'
-import log from '../utils/log.js'
 import { getBaseDir } from '../env.js'
 import { loadPresetAndPlugins } from './load.js'
 import type { ElintInstallOptions } from '../types.js'
@@ -20,25 +19,21 @@ function getAbsolutePath(currentPath?: string): string {
   return path.join(getBaseDir(), currentPath)
 }
 
+/**
+ * 安装 preset 内部携带的配置文件
+ */
 export async function install({
-  presetPath,
+  preset,
+  cwd = getBaseDir(),
+  internalLoadedPresetAndPlugins,
   projectPath
 }: ElintInstallOptions = {}) {
-  const currentPresetPath = getAbsolutePath(presetPath) || process.cwd()
+  const { internalPreset, internalPlugins } =
+    internalLoadedPresetAndPlugins ||
+    (await loadPresetAndPlugins({ preset, cwd }))
 
-  let currentProjectPath = getAbsolutePath(projectPath) || ''
-
-  if (!currentProjectPath) {
-    currentProjectPath = currentPresetPath.split(
-      `${path.sep}node_modules${path.sep}`
-    )[0]
-
-    if (process.versions.pnp) {
-      currentProjectPath = currentPresetPath.split(
-        `${path.sep}.yarn${path.sep}`
-      )[0]
-    }
-  }
+  const currentPresetPath = getAbsolutePath(internalPreset.path)
+  const currentProjectPath = projectPath || getBaseDir()
 
   debug(`preset: ${currentPresetPath}`)
   debug(`project: ${currentProjectPath}`)
@@ -51,22 +46,7 @@ export async function install({
   ) {
     throw new Error('no available preset or project.')
   }
-
-  const projectName = path.basename(currentProjectPath)
-
   const errorMap: Record<string, unknown> = {}
-
-  // 在 preset 开发时跳过安装过程，如果强行指定了 projectPath 则跳过名称检测
-  if (!projectPath && /^elint-preset-.*/.test(projectName)) {
-    log.warn(
-      `  find elint preset directory: ${projectName}, skip preset installation`
-    )
-    return errorMap
-  }
-
-  const { internalPlugins } = await loadPresetAndPlugins({
-    preset: presetPath
-  })
 
   for (const internalPlugin of internalPlugins) {
     try {

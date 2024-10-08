@@ -136,7 +136,6 @@ export interface ElintContext {
 /**
  * elint 安装配置
  */
-export interface ElintInstallOptions {
-  presetPath?: string
+export interface ElintInstallOptions extends Omit<ElintBasicOptions, 'fix'> {
   projectPath?: string
 }
