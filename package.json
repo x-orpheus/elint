@@ -7,7 +7,7 @@
     "preinstall": "npx only-allow pnpm",
     "commit": "elint lint commit && pnpm run lint",
     "lint": "elint lint \"packages/**/*\" \"!**/test-preset\" --no-notifier --cache",
-    "start": "ts-node packages/elint/src/cli/index.ts lint \"packages/**/*\" \"!**/test-preset\" --no-notifier --cache",
+    "start": "node --loader ts-node/esm packages/elint/src/cli/index.ts lint \"packages/**/*\" \"!**/test-preset\" --no-notifier --cache",
     "test:unit:elint": "pnpm --filter elint run test:unit",
     "test:system": "pnpm --filter elint run test:system",
     "test": "pnpm -r run test:unit && pnpm run test:system",
