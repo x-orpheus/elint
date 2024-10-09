@@ -15,7 +15,7 @@ function padding(string: string, span = 2): string {
 }
 
 function pluralize(word: string, count: number) {
-  return count <= 1 ? word : `${word}s`
+  return count === 1 ? word : `${word}s`
 }
 
 /**
