@@ -2,11 +2,12 @@
  * lint 测试：主要测试直接 lint 文件
  */
 
-import path from 'path'
+import path from 'node:path'
 import fs from 'fs-extra'
 import resetCacheProject from './utils/reset-cache-project.js'
 import run from './utils/run.js'
 
+/** @type string */
 let tmpDir
 
 beforeEach(async () => {
@@ -45,8 +46,19 @@ test('lint js', async () => {
 
 test('lint js with ignore', async () => {
   // 忽略有问题的文件
-  const eslintignorePath = path.join(tmpDir, '.eslintignore')
-  await fs.appendFile(eslintignorePath, '**/src/index.js')
+  const eslintConfigPath = path.join(tmpDir, 'eslint.config.js')
+
+  let eslintConfigContent = await fs.readFile(eslintConfigPath, 'utf-8')
+
+  eslintConfigContent = eslintConfigContent.replace(
+    /^\]$/m,
+    ",{ignores:['**/src/index.js']}]"
+  )
+
+  console.log('!!!!!', eslintConfigContent)
+
+  await fs.writeFile(eslintConfigPath, eslintConfigContent)
+
   const prettierignorePath = path.join(tmpDir, '.prettierignore')
   await fs.appendFile(prettierignorePath, '**/src/index.js')
 

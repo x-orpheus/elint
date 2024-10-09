@@ -1,13 +1,20 @@
 import { execa } from 'execa'
 
 // 执行命令
+/**
+ * @param {string} command
+ * @param {string} cwd
+ */
 function run(
   command,
   cwd,
   { stdio = 'inherit', disableNotifier = true, customEnv } = {}
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const strs = command.match(/(?:[^\s"]+|"[^"]*")+/g)
+
+  if (!strs) {
+    throw new Error('command error')
+  }
 
   let program = strs[0]
   const argus = strs.slice(1).reduce((pv, s) => {
@@ -28,6 +35,7 @@ function run(
   return execa(program, argus, {
     stdio,
     cwd,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     env: {
       INIT_CWD: cwd,
       FORCE_COLOR: true,

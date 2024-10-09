@@ -1,4 +1,5 @@
 import tseslint from 'typescript-eslint'
+import globals from 'globals'
 import { FlatCompat } from '@eslint/eslintrc'
 
 const compat = new FlatCompat()
@@ -11,6 +12,14 @@ export default tseslint.config(
       parserOptions: {
         projectService: true,
         tsconfigRootDir: import.meta.dirname
+      }
+    }
+  },
+  {
+    files: ['**/*.spec.ts', '**/*.spec.js'],
+    languageOptions: {
+      globals: {
+        ...globals.jest
       }
     }
   },

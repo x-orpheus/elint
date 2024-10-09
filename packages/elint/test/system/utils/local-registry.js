@@ -1,6 +1,6 @@
-import path from 'path'
+import path from 'node:path'
 import fs from 'fs-extra'
-import { fileURLToPath } from 'url'
+import { fileURLToPath } from 'node:url'
 import run from './run.js'
 import { runServer } from 'verdaccio'
 import { verdaccioPort, tempTestPresetDir } from './variable.js'
@@ -12,14 +12,21 @@ export const loginLocalRegistry = async () => {
   )
 }
 
+/** @type (() => Promise<void>) | undefined */
+export let closeLocalRegistry
+
 export const startUpLocalRegistry = async () => {
   const __dirname = path.dirname(fileURLToPath(import.meta.url))
   const configPath = path.join(__dirname, 'verdaccio-config.yaml')
 
+  /** @type {import('node:http').Server} */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const app = await runServer(configPath)
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return new Promise((resolve, reject) => {
     const teardown = async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return new Promise((resolve) => {
         app.close(() => {
           console.log('verdaccio closed')
@@ -31,13 +38,18 @@ export const startUpLocalRegistry = async () => {
     app.listen(verdaccioPort, () => {
       console.log(`verdaccio running on: ${verdaccioPort}`)
 
-      resolve(teardown)
+      resolve()
+
+      closeLocalRegistry = teardown
     })
 
     app.on('error', reject)
   })
 }
 
+/**
+ * @param {string} packageDir
+ */
 export const publishToLocalRegistry = async (packageDir) => {
   await run(
     `pnpm publish --registry=http://localhost:${verdaccioPort} --no-git-check --silent`,
@@ -50,8 +62,12 @@ export const publishToLocalRegistry = async (packageDir) => {
   )
 }
 
+/**
+ * @param {string} packageDir
+ */
 export const bumpPackageVersion = async (packageDir) => {
   const packageJsonPath = path.join(packageDir, 'package.json')
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const packageJson = await fs.readJSON(packageJsonPath)
 
   await fs.writeJSON(packageJsonPath, {

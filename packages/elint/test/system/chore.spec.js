@@ -5,6 +5,7 @@
 import resetCacheProject from './utils/reset-cache-project.js'
 import run from './utils/run.js'
 
+/** @type string */
 let tmpDir
 
 /**

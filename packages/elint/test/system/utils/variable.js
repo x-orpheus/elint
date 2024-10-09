@@ -1,6 +1,6 @@
-import os from 'os'
-import path from 'path'
-import { fileURLToPath } from 'url'
+import os from 'node:os'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -27,11 +27,11 @@ export const testPresetDir = path.join(__dirname, '../test-preset')
 
 export const publishPackageList = [
   'elint',
-  'elint-helpers',
   'plugin-commitlint',
   'plugin-eslint',
   'plugin-prettier',
-  'plugin-stylelint'
+  'plugin-stylelint',
+  'plugin-husky'
 ]
 
 // 需要发布的包

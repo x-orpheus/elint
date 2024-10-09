@@ -1,13 +1,13 @@
 /**
  * 执行一些清理工作
  */
-
 import fs from 'fs-extra'
 import { systemTestTempDir } from './utils/variable.js'
+import { closeLocalRegistry } from './utils/local-registry.js'
 
 const teardown = async () => {
-  if (global.closeVerdaccio) {
-    await global.closeVerdaccio()
+  if (closeLocalRegistry) {
+    await closeLocalRegistry()
   }
 
   // CI 下不用执行清理

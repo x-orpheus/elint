@@ -49,6 +49,14 @@ async function createCacheProject(skipPreparation = false) {
 
     await publishToLocalRegistry(tempTestPresetDir)
 
+    await run('git init', cacheDir)
+    await run('git config user.name "zhang san"', cacheDir)
+    await run('git config user.email "zhangsan@gmail.com"', cacheDir)
+    await run(
+      'git commit --allow-empty -m "build: initial empty commit"',
+      cacheDir
+    )
+
     await run(
       `npm install --silent --registry=http://localhost:${verdaccioPort}`,
       cacheDir

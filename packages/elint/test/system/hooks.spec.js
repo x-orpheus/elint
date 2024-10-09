@@ -6,21 +6,11 @@ import resetCacheProject from './utils/reset-cache-project.js'
 import run from './utils/run.js'
 import initHusky from './utils/init-husky.js'
 
+/** @type string */
 let tmpDir
 
-beforeEach(async () => {
+beforeAll(async () => {
   tmpDir = await resetCacheProject()
-
-  await run('git init', tmpDir)
-  await run('git config user.name "zhang san"', tmpDir)
-  await run('git config user.email "zhangsan@gmail.com"', tmpDir)
-  await run('git commit --allow-empty -m "build: initial empty commit"', tmpDir)
-
-  await run('npm run hooks-install', tmpDir)
-})
-
-afterEach(async () => {
-  await run('npm run hooks-uninstall', tmpDir)
 })
 
 /**

@@ -9,6 +9,7 @@ import resetCacheProject from './utils/reset-cache-project.js'
 import run from './utils/run.js'
 import { verdaccioPort } from './utils/variable.js'
 
+/** @type string */
 let tmpDir
 
 /**

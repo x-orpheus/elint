@@ -2,28 +2,17 @@
  * lint 测试：主要测试 git commit 时，直接读取 staged files 的情况
  */
 
-import { join } from 'path'
+import { join } from 'node:path'
 import fs from 'fs-extra'
 import resetCacheProject from './utils/reset-cache-project.js'
 import run from './utils/run.js'
 import initHusky from './utils/init-husky.js'
 
+/** @type string */
 let tmpDir
 
-beforeEach(async () => {
+beforeAll(async () => {
   tmpDir = await resetCacheProject()
-
-  await run('git init', tmpDir)
-  await run('git config user.name "zhang san"', tmpDir)
-  await run('git config user.email "zhangsan@gmail.com"', tmpDir)
-  await run('git config core.autocrlf false', tmpDir)
-  await run('git commit --allow-empty -m "build: initial empty commit"', tmpDir)
-
-  await run('npm run hooks-install', tmpDir)
-})
-
-afterEach(async () => {
-  await run('npm run hooks-uninstall', tmpDir)
 })
 
 test('git add 符合规范的文件后，修改为不符合，commit 成功', async () => {
