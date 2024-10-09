@@ -79,9 +79,14 @@ const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
       parserOpts: config.parserPreset?.parserOpts as LintOptions['parserOpts']
     }
     const report = await lint(message[0], rules, options)
-    const formatted = format({
+    let formatted = format({
       results: [report]
     })
+
+    // 去除总结
+    if (report.errors.length + report.warnings.length > 0) {
+      formatted = formatted.split('\n').slice(0, -2).join('\n') + '\n'
+    }
 
     result.errorCount = report.errors.length
     result.result = report
