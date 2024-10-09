@@ -76,7 +76,7 @@
     "@types/semver": "^7.5.8",
     "@verdaccio/types": "^10.8.0",
     "npm-auth-to-token": "1.0.0",
-    "verdaccio": "^5.32.1",
+    "verdaccio": "^6.0.0",
     "verdaccio-auth-memory": "^10.2.2",
     "verdaccio-memory": "^10.3.2"
   },
