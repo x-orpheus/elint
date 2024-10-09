@@ -55,8 +55,6 @@ test('lint js with ignore', async () => {
     ",{ignores:['**/src/index.js']}]"
   )
 
-  console.log('!!!!!', eslintConfigContent)
-
   await fs.writeFile(eslintConfigPath, eslintConfigContent)
 
   const prettierignorePath = path.join(tmpDir, '.prettierignore')

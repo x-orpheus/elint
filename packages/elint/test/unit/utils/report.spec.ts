@@ -164,7 +164,9 @@ describe('report 测试', () => {
     result.push(`${chalk.bold('> elint:')}\n`)
     result.push('\n')
     result.push(
-      '  ' + chalk.yellow(`${figures.cross} 2 problems (0 error, 2 warnings)`)
+      '  ' +
+        chalk.yellow(`${figures.cross}`) +
+        ` 2 problems (${chalk.red('0 errors')}, ${chalk.yellow('2 warnings')})`
     )
     result.push('\n')
     result.push('\n')
@@ -209,7 +211,9 @@ describe('report 测试', () => {
     result.push(`${chalk.bold('> elint:')}\n`)
     result.push('\n')
     result.push(
-      '  ' + chalk.red(`${figures.cross} 3 problems (1 error, 2 warnings)`)
+      '  ' +
+        chalk.red(`${figures.cross}`) +
+        ` 3 problems (${chalk.red('1 error')}, ${chalk.yellow('2 warnings')})`
     )
     result.push('\n')
     result.push('\n')
