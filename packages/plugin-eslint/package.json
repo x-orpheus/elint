@@ -31,6 +31,6 @@
   "devDependencies": {
     "@types/eslint": "^9.6.1",
     "elint": "workspace:*",
-    "eslint": "^9.11.1"
+    "eslint": "^9.12.0"
   }
 }
