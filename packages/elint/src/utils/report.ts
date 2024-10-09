@@ -113,15 +113,12 @@ function report(results: ElintResult[]): string {
     reportResults.push({
       title: 'elint',
       success: errorCount === 0,
-      output: chalk[errorCount > 0 ? 'red' : 'yellow'](
-        `${figures.cross} ${errorCount + warningCount} ${pluralize(
-          'problem',
-          errorCount + warningCount
-        )} (${errorCount} ${pluralize(
-          'error',
-          errorCount
-        )}, ${warningCount} ${pluralize('warning', warningCount)})`
-      )
+      output: `${chalk[errorCount > 0 ? 'red' : 'yellow'](figures.cross)} ${errorCount + warningCount} ${pluralize(
+        'problem',
+        errorCount + warningCount
+      )} (${chalk.red(
+        `${errorCount} ${pluralize('error', errorCount)}`
+      )}, ${chalk.yellow(`${warningCount} ${pluralize('warning', warningCount)}`)})`
     })
   } else {
     reportResults.push({
