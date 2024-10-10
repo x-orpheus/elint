@@ -2,7 +2,7 @@
 
 ## 依赖安装
 
-使用 `pnpm` v8 安装依赖
+使用 `pnpm` v9 安装依赖
 
 ```bash
 # 第一次安装时忽略 scripts，因为 prepare 钩子会调用 elint 的方法
@@ -11,7 +11,7 @@ pnpm install --ignore-scripts
 # 编译项目
 pnpm run build
 
-# 安装 git hooks，移动 lint 配置文件
+# 用于执行 elint prepare 命令，完成配置文件移动和插件初始化
 pnpm install
 ```
 
