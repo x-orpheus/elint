@@ -61,9 +61,9 @@ export interface ElintPluginActivateConfig {
    */
   extensions?: string[]
   /**
-   * 是否激活当前 plugin
+   * 是否激活当前 plugin，每一次执行 execute 前都会调用这个函数
    *
-   * 如果传入 extensions 会在判断扩展名后执行此函数
+   * 传入这个函数将会忽略 extensions 配置
    */
   activate?(options: ElintPluginOptions): boolean
 }
@@ -128,13 +128,15 @@ export interface ElintPlugin<Result> {
    *
    * 例如 husky 插件会在这一步来安装 husky 自己
    */
-  prepare?: (ctx: ElintContext) => Promise<void> | void
+  prepare?(ctx: ElintContext): Promise<void> | void
   /**
    * 执行函数
    *
    * 会对每个文件/文本执行
+   *
+   * 当插件 type 为 Common 或小于等于 0 时，此函数将不会被执行
    */
-  execute(
+  execute?(
     text: string,
     options: ElintPluginOptions
   ): Promise<ElintPluginResult<Result>> | ElintPluginResult<Result>

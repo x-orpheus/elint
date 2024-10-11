@@ -34,7 +34,7 @@ export const executeElintPlugin = async <T = unknown>(
   plugin: ElintPlugin<T>,
   pluginOptions: ElintPluginOptions
 ): Promise<void> => {
-  if (!checkElintPluginActivation(plugin, pluginOptions)) {
+  if (!checkElintPluginActivation(plugin, pluginOptions) || !plugin.execute) {
     return
   }
 

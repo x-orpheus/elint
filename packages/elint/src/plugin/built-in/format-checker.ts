@@ -8,7 +8,7 @@ import { ElintPluginType, type ElintPlugin } from '../types.js'
  */
 const formatChecker: ElintPlugin<never> = {
   name: 'builtIn:format-checker',
-  title: 'elint - formatter',
+  title: 'elint - formatter checker',
   type: ElintPluginType.Formatter,
   activateConfig: {
     activate({ isBinary }) {
