@@ -38,8 +38,8 @@ const elintPluginCommitLint: ElintPlugin<LintOutcome> = {
     'commitlint.config.cts'
   ],
   activateConfig: {
-    activate() {
-      return true
+    activate({ git }) {
+      return !!git
     }
   },
   async load(ctx, importFromPreset) {
