@@ -31,14 +31,6 @@ const elintPluginHusky = defineElintPlugin<null>({
     } else {
       throw new Error('husky is not installed')
     }
-  },
-  execute(text) {
-    return {
-      source: text,
-      output: text,
-      errorCount: 0,
-      warningCount: 0
-    }
   }
 })
 
