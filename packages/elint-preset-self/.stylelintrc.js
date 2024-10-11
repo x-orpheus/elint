@@ -1,5 +1,5 @@
 module.exports = {
   rules: {
-    'number-leading-zero': 'never'
+    'length-zero-no-unit': true
   }
 }
