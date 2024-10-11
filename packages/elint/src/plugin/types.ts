@@ -52,7 +52,11 @@ export interface ElintPluginOptions {
   /**
    * 是否二进制文件，如果是二进制文件，则 text 和 source 均为空字符串，读取文件需要插件内部自行处理
    */
-  isBinary?: boolean
+  isBinary: boolean
+  /**
+   * 是否在 git 中调用
+   */
+  git: boolean
 }
 
 export interface ElintPluginActivateConfig {

@@ -19,10 +19,11 @@ import { loadPresetAndPlugins } from './core/load.js'
 const debug = _debug('elint:main')
 
 /**
- * 执行全部 type 为 common 的 plugin
+ * 执行全部 type <= 0 的 plugin
  */
 export async function lintCommon({
   fix = false,
+  git = false,
   preset,
   cwd = getBaseDir(),
   internalLoadedPresetAndPlugins
@@ -42,7 +43,8 @@ export async function lintCommon({
       fix,
       cwd,
       source: elintResult.source,
-      isBinary: elintResult.isBinary
+      isBinary: elintResult.isBinary,
+      git
     })
   }
 
@@ -53,7 +55,8 @@ export async function lintText(
   text: string,
   {
     filePath,
-    isBinary,
+    isBinary = false,
+    git = false,
     fix = false,
     preset,
     cwd = getBaseDir(),
@@ -77,7 +80,8 @@ export async function lintText(
     cwd,
     filePath,
     source: elintResult.source,
-    isBinary
+    isBinary,
+    git
   }
 
   let needFormatChecker = false

@@ -82,6 +82,17 @@ export interface ElintBasicOptions {
    * 内部使用参数
    */
   internalLoadedPresetAndPlugins?: InternalLoadedPresetAndPlugins
+  /**
+   * 是否在 git 中调用
+   *
+   * 在 git 中调用将会调整一些默认行为
+   *
+   * 1. 仅会获取暂存区内满足传入参数的文件和内容
+   * 2. fix 参数将强制改为 false，不进行自动修复
+   *
+   * @default false
+   */
+  git?: boolean
 }
 
 export interface ElintLintTextOptions extends ElintBasicOptions {
@@ -102,17 +113,6 @@ export interface ElintOptions extends ElintBasicOptions {
    * @default false
    */
   noIgnore?: boolean
-  /**
-   * 是否在 git 中调用
-   *
-   * 在 git 中调用将会调整一些默认行为
-   *
-   * 1. 仅会获取暂存区内满足传入参数的文件和内容
-   * 2. fix 参数将强制改为 false，不进行自动修复
-   *
-   * @default false
-   */
-  git?: boolean
   /**
    * 是否开启缓存
    *
