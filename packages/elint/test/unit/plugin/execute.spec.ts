@@ -45,7 +45,9 @@ describe('插件执行测试', () => {
       filePath: 'test.js',
       source: '',
       fix: false,
-      cwd: baseDir
+      cwd: baseDir,
+      isBinary: false,
+      git: false
     })
 
     expect(elintResult.output).toBe('test1')
@@ -58,7 +60,9 @@ describe('插件执行测试', () => {
       filePath: 'test.css',
       source: '',
       fix: false,
-      cwd: baseDir
+      cwd: baseDir,
+      isBinary: false,
+      git: false
     })
 
     expect(elintResult.pluginResults).toBeEmpty()
@@ -70,7 +74,9 @@ describe('插件执行测试', () => {
     await executeElintPlugin(elintResult, testPlugin, {
       source: '',
       fix: false,
-      cwd: baseDir
+      cwd: baseDir,
+      isBinary: false,
+      git: false
     })
 
     expect(elintResult.output).toBe('test1')
@@ -85,13 +91,17 @@ describe('插件执行测试', () => {
     await executeElintPlugin(elintResult1, testPlugin, {
       source: JSON.stringify({ active: true }),
       fix: false,
-      cwd: baseDir
+      cwd: baseDir,
+      isBinary: false,
+      git: false
     })
 
     await executeElintPlugin(elintResult2, testPlugin, {
       source: JSON.stringify({ active: false }),
       fix: false,
-      cwd: baseDir
+      cwd: baseDir,
+      isBinary: false,
+      git: false
     })
 
     expect(elintResult1.output).toBe('test1')

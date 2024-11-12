@@ -23,7 +23,9 @@ describe('插件执行测试', () => {
         filePath: 'test.js',
         source: '',
         fix: false,
-        cwd: baseDir
+        cwd: baseDir,
+        isBinary: false,
+        git: false
       })
     ).toReject()
   })
@@ -33,7 +35,9 @@ describe('插件执行测试', () => {
       filePath: 'test.js',
       source: '',
       fix: false,
-      cwd: baseDir
+      cwd: baseDir,
+      isBinary: false,
+      git: false
     })
 
     expect(result?.output).toBe('test1')

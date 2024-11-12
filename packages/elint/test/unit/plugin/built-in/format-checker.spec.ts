@@ -7,7 +7,9 @@ describe('样式检查插件测试', () => {
     const result = await testPlugin('test1', formatChecker, {
       fix: false,
       source: 'test1',
-      cwd: ''
+      cwd: '',
+      isBinary: false,
+      git: false
     })
 
     expect(result?.errorCount).toBe(0)
@@ -18,7 +20,9 @@ describe('样式检查插件测试', () => {
     const result = await testPlugin('test1', formatChecker, {
       fix: false,
       source: 'test2',
-      cwd: ''
+      cwd: '',
+      isBinary: false,
+      git: false
     })
 
     expect(result?.errorCount).toBe(1)
@@ -30,7 +34,9 @@ describe('样式检查插件测试', () => {
       fix: false,
       source: 'test2',
       cwd: '',
-      filePath: 'filePath'
+      filePath: 'filePath',
+      isBinary: false,
+      git: false
     })
 
     expect(result?.message).toBe(
@@ -44,7 +50,9 @@ describe('样式检查插件测试', () => {
     const result = await testPlugin('test1', formatChecker, {
       fix: true,
       source: 'test2',
-      cwd: ''
+      cwd: '',
+      isBinary: false,
+      git: false
     })
 
     expect(result?.errorCount).toBe(0)
